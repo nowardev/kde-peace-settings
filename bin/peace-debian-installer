@@ -97,7 +97,16 @@ kdesudo kate /etc/apt/sources.list
 
 function_search(){
 
-kdialog --title "Packages" --msgbox  "$(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" krita  )")" 
+
+ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" packagestuff )"
+ 
+
+
+if [[ -z $ans || $ans == packagestuff ]] ; then
+exit 
+else 
+kdialog --title "Packages" --msgbox  "$(apt-cache pkgnames  "$ans")"
+fi 
 
 }
 
@@ -105,13 +114,30 @@ kdialog --title "Packages" --msgbox  "$(apt-cache pkgnames "$(kdialog --title "A
 
 function_reinstall(){
 
-konsole --noclose -e sudo apt-get install --reinstall "$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please insert a keyword" krita)"))"
+
+ans="$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please insert a keyword" krita)"))"
+
+
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+konsole --noclose -e sudo apt-get install --reinstall  "$ans"
+fi 
+
+
 
 }
 
 function_purge(){
 
-konsole --noclose -e sudo apt-get remove --purge "$(kdialog --title $"Purge" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Purge" --textinputbox $"Please insert a keyword" krita)"))"
+ans="$(kdialog --title $"Purge" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Purge" --textinputbox $"Please insert a keyword" krita)"))"
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+konsole --noclose -e sudo apt-get remove --purge  "$ans"
+fi 
 
 
 }
@@ -120,16 +146,36 @@ konsole --noclose -e sudo apt-get remove --purge "$(kdialog --title $"Purge" --c
 
 
 function_aptr(){
-konsole --noclose -e sudo apt-get remove  "$(kdialog --title $"Remove" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Remove" --textinputbox $"Please insert a keyword" krita)"))"
+ans="$(kdialog --title $"Remove" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Remove" --textinputbox $"Please insert a keyword" krita)"))"
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+konsole --noclose -e sudo apt-get remove  "$ans"
+fi  
 
 }
 
 function_searchapti(){
-konsole --noclose -e sudo apt-get install  "$(kdialog --title $"Install" --combobox $"Please select  packages" "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keywords" krita)")"
+ans="$(kdialog --title $"Install" --combobox $"Please select  packages" "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keywords" krita)")"
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+konsole --noclose -e sudo apt-get install "$ans"
+fi 
+
 }
 
 function_apti(){
-konsole --noclose -e sudo apt-get install  "$(kdialog --title $"Install" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keyword" krita)"))"
+ans="$(kdialog --title $"Install" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keyword" krita)"))"
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+konsole --noclose -e sudo apt-get install  "$ans"
+fi 
+
 }
 
 
@@ -137,9 +183,13 @@ konsole --noclose -e sudo apt-get install  "$(kdialog --title $"Install" --combo
 function_hold(){
 
 
-search=$(kdialog --title "Block a Package's Version" --combobox "Please select a package")
+ans="$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" packagestuff )"))"
 
-konsole --noclose -e sudo aptitude hold "$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" krita)"))"
+if [[ -z $ans || "$ans" == packagestuff ]] ; then
+exit 
+else 
+konsole --noclose -e sudo aptitude hold "$ans"
+fi 
 
 }
 
@@ -154,7 +204,7 @@ function_ppa(){
 
 konsole --noclose -e sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
 #sudo apt-get upate 
-
+ 
 }
 
 
@@ -203,6 +253,10 @@ function_apti
 
 searchinstall)
 function_searchapti
+;;
+
+search)
+function_search
 ;;
 
 reinstall)
