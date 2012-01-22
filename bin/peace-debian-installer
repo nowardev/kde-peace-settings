@@ -51,7 +51,25 @@ konsole --noclose -e sudo apt-get upgrade
 
 }
  
- 
+
+function_removeblock(){
+ans=$(kdialog --warningcontinuecancel  $" Are you sure?  
+
+
+You are trying to remove the lock this should be done only if you know whatyour are doing 
+the lock can be removed only by root when an installation has been interrupted badly and the lock is still present ")
+
+if [[ $? == 0 ]]; then 
+konsole --noclose -e sudo rm /var/lib/dpkg/lock 
+konsole --noclose -e sudo apt-get update
+
+
+else
+exit
+
+fi
+
+}
 
  
 function_dpkgi(){
@@ -210,8 +228,11 @@ fi
 
 }
 
+function_installf(){
 
+konsole --noclose -e sudo apt-get install -f 
 
+}
 
 
  
@@ -284,6 +305,10 @@ reinstall)
 function_reinstall
 ;;
 
+installf)
+function_installf
+;;
+
 remove)
 function_aptr
 ;;
@@ -327,7 +352,9 @@ function_ppa
 ppar)
 function_ppar
 ;;
-
+removeblock)
+function_removeblock
+;;
 *)
 kdialog --error "no option ? wrong option sorry exiting "
 exit 

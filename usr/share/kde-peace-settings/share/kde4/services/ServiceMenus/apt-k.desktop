@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
-Actions=update;upgrade;dist-upgrade;search;searchex;searchandinstall;install;purge; remove;dpkgrecover;block;_SEPARATOR_;installpackage;removepackage;blockpackage;infopackage;_SEPARATOR_;edit-sourcelist;ppa
+Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;searchandinstall;install;purge; remove;blockpackage;_SEPARATOR_;installpackage;removepackage;infopackage;_SEPARATOR_;dpgkrecover;removeblock;installf;SEPARATOR_;edit-sourcelist;ppa
 Icon=applications-other
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
@@ -25,11 +25,39 @@ X-KDE-Submenu[it]=APT-DPKG
 #version 0.4
 #license gpl nowardev 2012
 
-[Desktop Action block]
-Exec=peace-debian-installer hold && echo %u >/dev/null
-Icon=dialog-cancel
-Name=Apt-Block program upgrading
-Name[it]=Apt-Blocca aggiornamenti per un pacchetto
+
+[Desktop Action update]
+Exec=peace-debian-installer update && echo %u >/dev/null
+Icon=edit-redo
+Name=Apt-update
+Name[it]=Apt-update
+
+[Desktop Action upgrade]
+Exec=peace-debian-installer upgrade && echo %u >/dev/null
+Icon=go-up
+Name=Apt-upgrade
+Name[it]=installa aggiornamenti
+
+[Desktop Action dist-upgrade]
+Exec=peace-debian-installer distupgrade && echo %u >/dev/null
+Icon=arrow-up-double
+Name=Apt-Dist-upgrade
+Name[it]=Apt-Aggiorna distribuzione
+
+
+[Desktop Action fupug]
+Exec=peace-debian-installer forceupdateupgrade && echo %u >/dev/null
+Icon=go-up
+Name=Force upgrade
+Name[it]=forza aggiornamento
+
+[Desktop Action fupdug]
+Exec=peace-debian-installer forceupdatedistupgrade && echo %u >/dev/null
+Icon=arrow-up-double
+Name=Force dist-upgrade
+Name[it]=forza aggiornamento versione
+
+
 
 [Desktop Action search]
 Exec=peace-debian-installer search && echo %u >/dev/null
@@ -49,17 +77,7 @@ Icon=system-search
 Name=Apt-Search and install
 Name[it]=Apt-Cerca e installa
 
-[Desktop Action dist-upgrade]
-Exec=peace-debian-installer distupgrade && echo %u >/dev/null
-Icon=arrow-up-double
-Name=Apt-Dist-upgrade
-Name[it]=Apt-Aggiorna distribuzione
 
-[Desktop Action edit-sourcelist]
-Exec=peace-debian-installer edit && echo %u >/dev/null
-Icon=document-edit
-Name=Edit repository
-Name[it]=Edita repository
 
 [Desktop Action install]
 Exec=peace-debian-installer install && echo %u >/dev/null
@@ -70,7 +88,7 @@ Name[it]=installa programmi
 [Desktop Action removepackage]
 Exec=$(konsole --noclose -e sudo dpkg -r %u )
 Icon=edit-delete
-Name=Dpkg remove applications
+Name=Dpkg remove package
 Name[it]=Apt rimuovi applicazioni
 
 [Desktop Action installpackage]
@@ -79,17 +97,6 @@ Icon=list-add
 Name=Dpkg-Install package
 Name[it]=Dpkg-installa pacchetto
 
-[Desktop Action reinstall]
-Exec=peace-debian-installer reinstall && echo %u >/dev/null
-Icon=dialog-information
-Name=Info-package
-Name[it]=informazioni pacchetto
-
-[Desktop Action blockpackage]
-Exec=peace-debian-installer hold && echo %u >/dev/null
-Icon=dialog-cancel
-Name=Block Package upgrading
-Name[it]=Blocca aggiornamenti per questo pacchetto
 
 [Desktop Action reinstall]
 Exec=peace-debian-installer reinstall && echo %u >/dev/null
@@ -109,17 +116,18 @@ Icon=edit-delete
 Name=Apt remove applications
 Name[it]=Apt rimuovi applicazioni
 
-[Desktop Action update]
-Exec=peace-debian-installer update && echo %u >/dev/null
-Icon=edit-redo
-Name=Apt-update
-Name[it]=Apt-update
 
-[Desktop Action upgrade]
-Exec=peace-debian-installer upgrade && echo %u >/dev/null
-Icon=go-up
-Name=Apt-upgrade
-Name[it]=installa aggiornamenti
+[Desktop Action blockpackage]
+Exec=peace-debian-installer hold && echo %u >/dev/null
+Icon=dialog-cancel
+Name=Block Package upgrading
+Name[it]=Blocca aggiornamenti per questo pacchetto
+
+[Desktop Action edit-sourcelist]
+Exec=peace-debian-installer edit && echo %u >/dev/null
+Icon=document-edit
+Name=Edit repository
+Name[it]=Edita repository
 
 [Desktop Action ppa]
 Exec= kdesudo software-properties-kde && echo %u >/dev/null
@@ -130,7 +138,18 @@ Name[it]=Gestisci PPA
 
 [Desktop Action dpgkrecover]
 Exec=peace-debian-installer dpkgrecover && echo %u >/dev/null
-Icon=list-add
-Name=Manage PPA
-Name[it]=Gestisci PPA
+Icon=run-build-configure
+Name=dpkg reconfigure all
+Name[it]=dpkg riconfigura tutto
+
+[Desktop Action removeblock]
+Exec=peace-debian-installer removeblock && echo %u >/dev/null
+Icon=edit-bomb
+Name=rm /var/lib/dpkg/lock 
+Name[it]=rm /var/lib/dpkg/lock 
  
+[Desktop Action installf]
+Exec=peace-debian-installer installf && echo %u >/dev/null
+Icon=run-build-configure
+Name=Apt-get install -f 
+Name[it]=Apt-get install -f
