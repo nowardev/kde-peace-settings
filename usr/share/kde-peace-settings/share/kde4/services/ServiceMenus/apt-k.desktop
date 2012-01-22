@@ -1,0 +1,130 @@
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+[Desktop Entry]
+Actions=update;upgrade;dist-upgrade;_SEPARATOR_;installpackage;removepackage;blockpackage;infopackage;_SEPARATOR_;edit-sourcelist;ppa
+Icon=applications-other
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=APT-DPKG 
+X-KDE-Submenu[it]=APT-DPKG 
+#version 0.4
+#license gpl nowardev 2012
+
+[Desktop Action block]
+Exec=peace-debian-installer hold && echo %u >/dev/null
+Icon=dialog-cancel
+Name=Apt-Block program upgrading
+Name[it]=Apt-Blocca aggiornamenti per un pacchetto
+
+[Desktop Action search]
+Exec=peace-debian-installer search && echo %u >/dev/null
+Icon=system-search
+Name=Apt-Search
+Name[it]=Apt-Cerca
+
+[Desktop Action searchandinstall]
+Exec=peace-debian-installer searchinstall  && echo %u >/dev/null
+Icon=system-search
+Name=Apt-Search and install
+Name[it]=Apt-Cerca e installa
+
+[Desktop Action dist-upgrade]
+Exec=peace-debian-installer distupgrade && echo %u >/dev/null
+Icon=arrow-up-double
+Name=Apt-Dist-upgrade
+Name[it]=Apt-Aggiorna distribuzione
+
+[Desktop Action edit-sourcelist]
+Exec=peace-debian-installer edit && echo %u >/dev/null
+Icon=document-edit
+Name=Edit repository
+Name[it]=Edita repository
+
+[Desktop Action install]
+Exec=peace-debian-installer install && echo %u >/dev/null
+Icon=list-add
+Name=Apt Install applications
+Name[it]=installa programmi
+
+[Desktop Action removepackage]
+Exec=$(konsole --noclose -e sudo dpkg -r %u )
+Icon=edit-delete
+Name=Dpkg remove applications
+Name[it]=Apt rimuovi applicazioni
+
+[Desktop Action installpackage]
+Exec=$(konsole --noclose -e sudo dpkg -i %u )
+Icon=list-add
+Name=Dpkg-Install package
+Name[it]=Dpkg-installa pacchetto
+
+[Desktop Action infopackage]
+Exec=peace-debian-installer reinstall dpkginfo "%u"
+Icon=dialog-information
+Name=Info-package
+Name[it]=informazioni pacchetto
+
+[Desktop Action blockpackage]
+Exec=$(konsole --noclose -e sudo aptitude hold  %u )
+Icon=dialog-cancel
+Name=Block Package upgrading
+Name[it]=Blocca aggiornamenti per questo pacchetto
+
+[Desktop Action reinstall]
+Exec=peace-debian-installer reinstall && echo %u >/dev/null
+Icon=list-add
+Name=Apt RE-Install applications
+Name[it]=Apt Re-installa programmi
+
+[Desktop Action purge]
+Exec=peace-debian-installer purge && echo %u >/dev/null
+Icon=edit-clear
+Name=Apt-remove and purge
+Name[it]=Apt rimuovi completamente
+
+[Desktop Action remove]
+Exec=peace-debian-installer remove && echo %u >/dev/null
+Icon=edit-delete
+Name=Apt remove applications
+Name[it]=Apt rimuovi applicazioni
+
+[Desktop Action update]
+Exec=peace-debian-installer update && echo %u >/dev/null
+Icon=edit-redo
+Name=Apt-update
+Name[it]=Apt-update
+
+[Desktop Action upgrade]
+Exec=peace-debian-installer upgrade && echo %u >/dev/null
+Icon=go-up
+Name=Apt-upgrade
+Name[it]=installa aggiornamenti
+
+[Desktop Action ppa]
+Exec= kdesudo software-properties-kde && echo %u >/dev/null
+Icon=list-add
+Name=Manage PPA
+Name[it]=Gestisci PPA
+
+
+[Desktop Action dpgkrecover]
+Exec=peace-debian-installer dpkgrecover && echo %u >/dev/null
+Icon=list-add
+Name=Manage PPA
+Name[it]=Gestisci PPA
+ 

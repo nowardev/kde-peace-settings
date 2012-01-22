@@ -1,0 +1,268 @@
+#!/bin/bash -x
+ 
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+function_update(){
+
+konsole --noclose -e sudo apt-get update
+
+}
+
+function_distupgrade(){
+
+konsole --noclose -e sudo apt-get dist-upgrade
+
+}
+
+function_updatedistupgradeforce(){
+
+konsole --noclose -e sudo apt-get update ; sudo apt-get dist-upgrade -y 
+
+}
+
+
+function_updateupgradeforce(){
+
+konsole --noclose -e sudo apt-get update ; sudo apt-get upgrade  -y 
+
+}
+ 
+
+function_upgrade(){
+
+konsole --noclose -e sudo apt-get upgrade 
+
+}
+ 
+ 
+
+ 
+function_dpkgi(){
+
+konsole --noclose -e sudo dpkg -i "$1"
+
+}
+
+function_dpkgr(){
+
+konsole --noclose -e sudo dpkg -r "$1"
+
+}
+
+function_dpkrecover(){
+
+konsole --noclose -e dpkg --configure -a
+
+}
+
+ 
+function_dpkginfo(){
+
+kdialog --msgbox "$(dpkg -I "$1")"
+
+}
+
+function_dpkginfoinstalled(){
+
+kdialog --msgbox "$(dpkg -s "$1")"
+
+}
+
+ 
+ 
+function_edit(){
+kdesudo kate /etc/apt/sources.list
+
+}
+
+
+
+
+function_search(){
+
+kdialog --title "Packages" --msgbox  "$(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" krita  )")" 
+
+}
+
+
+
+function_reinstall(){
+
+konsole --noclose -e sudo apt-get install --reinstall "$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please insert a keyword" krita)"))"
+
+}
+
+function_purge(){
+
+konsole --noclose -e sudo apt-get remove --purge "$(kdialog --title $"Purge" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Purge" --textinputbox $"Please insert a keyword" krita)"))"
+
+
+}
+
+
+
+
+function_aptr(){
+konsole --noclose -e sudo apt-get remove  "$(kdialog --title $"Remove" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Remove" --textinputbox $"Please insert a keyword" krita)"))"
+
+}
+
+function_searchapti(){
+konsole --noclose -e sudo apt-get install  "$(kdialog --title $"Install" --combobox $"Please select  packages" "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keywords" krita)")"
+}
+
+function_apti(){
+konsole --noclose -e sudo apt-get install  "$(kdialog --title $"Install" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keyword" krita)"))"
+}
+
+
+
+function_hold(){
+
+
+search=$(kdialog --title "Block a Package's Version" --combobox "Please select a package")
+
+konsole --noclose -e sudo aptitude hold "$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" krita)"))"
+
+}
+
+
+
+
+
+ 
+
+
+function_ppa(){
+
+konsole --noclose -e sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
+#sudo apt-get upate 
+
+}
+
+
+function_ppar(){
+
+a=$(kdialog --combobox "Remove ppa"  $(find  /etc/apt/sources.list.d/ -name *.list))
+
+
+
+konsole --noclose -e sudo rm "$a" "$a".save #; sudo apt-get upate 
+
+kdialog --passivepopup   $" PPA Removed   $a" 2
+
+}
+
+
+case "$1" in 
+
+
+update)
+function_update
+;;
+
+upgrade)
+function_upgrade
+;;
+
+distugrade)
+function_distupgrade
+;;
+
+forceupdatedistupgrade)
+function_updatedistupgradeforce
+;;
+
+
+
+forceupdateupgrade)
+function_updateupgradeforce
+;;
+
+install)
+function_apti
+;;
+
+
+searchinstall)
+function_searchapti
+;;
+
+reinstall)
+function_reinstall
+;;
+
+remove)
+function_aptr
+;;
+
+purge)
+function_purge
+;;
+
+
+hold)
+
+function_hold
+;;
+
+
+dpkgi)
+function_dpkgi "$2"
+;;
+
+dpkgr)
+function_dpkgr "$2"
+;;
+
+dpkgrecover)
+function_dpkrecover
+;;
+dpkginfo)
+function_dpkginfo "$2"
+;;
+
+dpkginfoinstalled)
+function_dpkginfoinstalled "$2"
+;;
+
+
+ppa)
+function_ppa
+;;
+ppar)
+function_ppar
+;;
+
+*)
+kdialog --error "no option ? wrong option sorry exiting "
+exit 
+;;
+
+
+esac
+
+
+
+ 
+  
+
+
+ 
