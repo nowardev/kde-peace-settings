@@ -317,7 +317,9 @@ function_dpkginfo "$2"
 dpkginfoinstalled)
 function_dpkginfoinstalled "$2"
 ;;
-
+edit)
+function_edit
+;;
 
 ppa)
 function_ppa
