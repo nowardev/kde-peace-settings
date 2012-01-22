@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
-Actions=update;upgrade;dist-upgrade;_SEPARATOR_;installpackage;removepackage;blockpackage;infopackage;_SEPARATOR_;edit-sourcelist;ppa
+Actions=update;upgrade;dist-upgrade;search;searchex;searchandinstall;install;purge; remove;dpkgrecover;block;_SEPARATOR_;installpackage;removepackage;blockpackage;infopackage;_SEPARATOR_;edit-sourcelist;ppa
 Icon=applications-other
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
@@ -36,6 +36,12 @@ Exec=peace-debian-installer search && echo %u >/dev/null
 Icon=system-search
 Name=Apt-Search
 Name[it]=Apt-Cerca
+
+[Desktop Action searchex]
+Exec=peace-debian-installer search && echo %u >/dev/null
+Icon=system-search
+Name=Apt-Search exacly
+Name[it]=Apt-Cerca esattamente
 
 [Desktop Action searchandinstall]
 Exec=peace-debian-installer searchinstall  && echo %u >/dev/null
@@ -73,14 +79,14 @@ Icon=list-add
 Name=Dpkg-Install package
 Name[it]=Dpkg-installa pacchetto
 
-[Desktop Action infopackage]
-Exec=peace-debian-installer reinstall dpkginfo "%u"
+[Desktop Action reinstall]
+Exec=peace-debian-installer reinstall && echo %u >/dev/null
 Icon=dialog-information
 Name=Info-package
 Name[it]=informazioni pacchetto
 
 [Desktop Action blockpackage]
-Exec=$(konsole --noclose -e sudo aptitude hold  %u )
+Exec=peace-debian-installer hold && echo %u >/dev/null
 Icon=dialog-cancel
 Name=Block Package upgrading
 Name[it]=Blocca aggiornamenti per questo pacchetto

@@ -30,12 +30,12 @@ X-KDE-Submenu[it]=apri cartella con Kate
 [Desktop Action folderappend]
 Exec=ktexeditor-open-folder n "%u"
 Icon=text-editor
-Name=Open folder with kate with backup
-Name[it]=apri cartella con kate con backup
+Name=Open folder with Kate with backup
+Name[it]=Apri cartella con Kate con backup
 
 [Desktop Action folderappendb]
 Exec=ktexeditor-open-folder b "%u"
 Icon=text-editor
-Name=Open folder with kate 
-Name[it]=apri cartella con kate
+Name=Open folder with Kate 
+Name[it]=Apri cartella con Kate
 

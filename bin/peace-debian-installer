@@ -95,7 +95,7 @@ kdesudo kate /etc/apt/sources.list
 
 
 
-function_search(){
+function_searchex(){
 
 
 ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" packagestuff )"
@@ -111,6 +111,22 @@ fi
 }
 
 
+function_search(){
+
+
+ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" packagestuff )"
+ 
+
+
+if [[ -z $ans || $ans == packagestuff ]] ; then
+exit 
+else 
+kdialog --title "Packages" --msgbox  "$(apt-cache search  "$ans")"
+fi 
+
+}
+
+ 
 
 function_reinstall(){
 
@@ -258,6 +274,10 @@ function_searchapti
 
 search)
 function_search
+;;
+
+searchex)
+function_searchex
 ;;
 
 reinstall)
