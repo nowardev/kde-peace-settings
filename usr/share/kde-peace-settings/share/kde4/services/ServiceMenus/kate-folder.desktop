@@ -23,8 +23,8 @@ Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory
 Type=Service
 X-KDE-Priority=TopLevel
-X-KDE-Submenu=open folder with Kate
-X-KDE-Submenu[it]=apri cartella con Kate
+X-KDE-Submenu=Open folder with Kate
+X-KDE-Submenu[it]=Apri cartella con Kate
 
 
 [Desktop Action folderappend]
