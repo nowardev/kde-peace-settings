@@ -2,7 +2,7 @@
 Enabled=false
 
 [Style]
-PluginLib=kwin3_qtcurve 
+PluginLib=kwin3_plastik
 
 #kwin3_plastik
 #kwin3_crystal.so
