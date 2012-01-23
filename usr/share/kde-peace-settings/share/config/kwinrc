@@ -2,4 +2,16 @@
 Enabled=false
 
 [Style]
-PluginLib=kwin3_plastik
+PluginLib=kwin3_qtcurve 
+
+#kwin3_plastik
+#kwin3_crystal.so
+#kwin3_deKorator.so
+#kwin3_laptop.so
+#kwin3_oxygen.so
+#kwin3_plastik.so
+#kwin3_qtcurve.so
+#kwin3_skulpture.so
+#kwin3_tabstrip.so
+
+

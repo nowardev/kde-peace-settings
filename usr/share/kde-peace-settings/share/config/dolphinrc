@@ -16,3 +16,6 @@ ToolBarsMovable=Enabled
 
 [PreviewSettings]
 Plugins=directorythumbnail,imagethumbnail,jpegthumbnail,kffmpegthumbnailer
+
+[MainWindow][Toolbar mainToolBar]
+ToolButtonStyle=IconOnly
