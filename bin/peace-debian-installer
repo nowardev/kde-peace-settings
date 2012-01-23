@@ -33,14 +33,19 @@ konsole --noclose -e sudo apt-get dist-upgrade
 
 function_updatedistupgradeforce(){
 
-konsole --noclose -e sudo apt-get update ; sudo apt-get dist-upgrade -y 
+
+konsole --noclose  -e sudo apt-get dist-upgrade -y 
+
 
 }
 
 
 function_updateupgradeforce(){
 
-konsole --noclose -e sudo apt-get update ; sudo apt-get upgrade  -y 
+
+konsole --noclose -e  sudo apt-get upgrade  -y 
+
+ 
 
 }
  
