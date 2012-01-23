@@ -1,6 +1,3 @@
-#installation
-#copy this on $HOME/.kde/share/kde4/services
-#
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -19,4 +16,20 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-export KDEDIRS=/usr/share/kde-peace-settings/:/usr
+#a="/usr/share/kubuntu-low-fat-settings"
+b="/usr/share/kubuntu-default-settings"
+c="/usr/share/kubuntu-mobile-default-settings"
+
+
+
+if [[ -z "$KDEDIRS" ]]; then 
+export KDEDIRS=/usr/share/kde-peace-settings/:/usr 
+
+else 
+
+export KDEDIRS=/usr/share/kde-peace-settings/:$KDEDIRS:/usr
+
+fi 
+
+
+ 

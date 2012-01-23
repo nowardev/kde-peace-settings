@@ -275,7 +275,7 @@ upgrade)
 function_upgrade
 ;;
 
-distugrade)
+distupgrade)
 function_distupgrade
 ;;
 
