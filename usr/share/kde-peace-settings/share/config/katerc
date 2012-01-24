@@ -14,9 +14,9 @@ Save Meta Infos=true
 Show Full Path in Title=false
 Show Status Bar=true
 
-  
 
 [Kate Document Defaults]
+Line Length Limit=99998
 Allow End of Line Detection=true
 Allow Simple Mode=true
 Automatically Insert Closing Brackets=false
