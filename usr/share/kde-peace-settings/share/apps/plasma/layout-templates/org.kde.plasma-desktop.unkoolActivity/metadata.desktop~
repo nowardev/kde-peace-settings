@@ -1,9 +1,7 @@
 [Desktop Entry]
 Encoding=UTF-8
 Icon=user-identity
-Name=GranPa Activity
-Name[en_GB]=GranPa Activity
-Name[x-test]=xxnGranpa Activityxx
+Name=Unkool Activity
 ServiceTypes=Plasma/LayoutTemplate
 Type=Service
 X-KDE-PluginInfo-Author=nowardev
