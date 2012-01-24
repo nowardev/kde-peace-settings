@@ -89,8 +89,8 @@ ForegroundPositive=0,110,40
 ForegroundVisited=81,24,139
 
 [General]
-ColorScheme=nowardev
-Name=nowardev
+ColorScheme=nowardev v3
+Name=nowardev v3
 shadeSortColumn=true
 
 [KDE]
