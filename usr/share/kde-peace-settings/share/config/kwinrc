@@ -1,8 +1,14 @@
+[Windows]
+
+AutogroupInForeground=true
+AutogroupSimilarWindows=true
+
+
 [Compositing]
 Enabled=false
 
 [Style]
-PluginLib=kwin3_plastik
+PluginLib=kwin3_oxygen
 
 #kwin3_plastik
 #kwin3_crystal.so
