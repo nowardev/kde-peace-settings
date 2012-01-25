@@ -17,7 +17,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
 Type=Application
-Exec=peace-debian-installer men
+Exec=peace-debian-installer menu
 Icon=run-build-configure
 Name=Aptk Menu
 Name[it]=Aptk Menu
