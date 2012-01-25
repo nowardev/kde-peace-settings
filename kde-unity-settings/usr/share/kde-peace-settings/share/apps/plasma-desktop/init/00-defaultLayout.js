@@ -15,11 +15,11 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-loadTemplate("org.kde.plasma-desktop.nowardevPanel")
+loadTemplate("org.kde.plasma-desktop.unityPanel")
 
 for (var i = 0; i < screenCount; ++i) {
     var desktop = new Activity
-    desktop.name = i18n("Desktop")
+    desktop.name = i18n("UnityLike")
     desktop.screen = i
     desktop.wallpaperPlugin = 'image'
     desktop.wallpaperMode = 'SingleImage'
