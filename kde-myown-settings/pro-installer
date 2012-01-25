@@ -1,5 +1,5 @@
  #!/bin/bash
-
+exit
 SUDO_PROG="sudo"
 #SUDO_PROG="su -c"
 
