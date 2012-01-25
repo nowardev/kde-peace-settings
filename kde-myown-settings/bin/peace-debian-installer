@@ -244,8 +244,8 @@ konsole --noclose -e sudo apt-get install -f
 
 
 function_ppa(){
-
-konsole --noclose -e sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
+kdesudo software-properties-kde
+#konsole --noclose -e sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
 #sudo apt-get upate 
  
 }
