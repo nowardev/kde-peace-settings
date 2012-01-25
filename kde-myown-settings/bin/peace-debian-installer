@@ -266,7 +266,7 @@ kdialog --passivepopup   $" PPA Removed   $a" 2
 
 function_menu(){
 
-ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update" upgrade $"Upgrade" distupgrade  $"Force Upgrade" forceupdateupgrade $"Force Dist UpGrade" forceupdatedistupgrade  $"Search" search $"Search exactly" searchex $"Reinstall" reinstall $"Install" install $"Search and install" searchinstall $"Remove " remove $"Purge" purge $"Block upgrade for.."  hold $"Apt get install -f" installf  $"dpkg reconfigure all" dpkgrecover $"Edit repository" edit $"Manage Repository and PPA" ppa  $"Remove block" removeblock)
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update"    upgrade $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f"  dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
 if [[ -z $ans ]] ; then
 exit 
 else 
