@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=user-identity
+Name=Unkool Activity
+ServiceTypes=Plasma/LayoutTemplate
+Type=Service
+X-KDE-PluginInfo-Author=nowardev
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-Email=nowardev@gmail.com
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=nowardev.granpaActivity
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=http://plasma.kde.org/
+X-Plasma-ContainmentCategories=desktop
+X-Plasma-Shell=plasma-desktop
