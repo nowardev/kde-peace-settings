@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=Qt;KDE;System;
+Comment[en_US]=
+Comment=
+Exec=peace-debian-installer distupgrade
+GenericName[en_US]=
+GenericName=
+Icon=arrow-up-double
+MimeType=
+Name[en_US]=Apt-Dist-upgrade
+Name=Apt-Dist-upgrade
+Name[it]=Apt-Aggiorna distribuzione
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
