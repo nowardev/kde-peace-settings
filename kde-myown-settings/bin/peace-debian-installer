@@ -264,6 +264,19 @@ kdialog --passivepopup   $" PPA Removed   $a" 2
 }
 
 
+function_menu(){
+
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update" upgrade $"Upgrade" distupgrade  $"Force Upgrade" forceupdateupgrade $"Force Dist UpGrade" forceupdatedistupgrade  $"Search" search $"Search exactly" searchex $"Reinstall" reinstall $"Install" install $"Search and install" searchinstall $"Remove " remove $"Purge" purge $"Block upgrade for.."  hold $"Apt get install -f" installf  $"dpkg reconfigure all" dpkgrecover $"Edit repository" edit $"Manage Repository and PPA" ppa  $"Remove block" removeblock)
+if [[ -z $ans ]] ; then
+exit 
+else 
+peace-debian-installer "$ans"
+fi 
+exit 
+
+}
+
+
 case "$1" in 
 
 
@@ -360,9 +373,8 @@ function_ppar
 removeblock)
 function_removeblock
 ;;
-*)
-kdialog --error "no option ? wrong option sorry exiting "
-exit 
+menu)
+function_menu
 ;;
 
 
