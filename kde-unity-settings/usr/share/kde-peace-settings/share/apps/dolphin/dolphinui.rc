@@ -86,20 +86,12 @@
     </State>
     <ToolBar noMerge="1" name="mainToolBar" >
         <text context="@title:menu">Main Toolbar</text>
-        <Action name="details"/>
-        <Action name="compact"/>
-        <Action name="icons"/>
-        <Action name="show_hidden_files"/>
-        <Separator name="separator_0"/>
-        <Action name="edit_find"/>
-        <Action name="closed_tabs"/>
-        <Action name="new_tab"/>
-        <Separator name="separator_1"/>
         <Action name="show_preview"/>
         <Action name="reload"/>
         <Action name="go_back"/>
         <Action name="go_forward"/>
         <Action name="go_up"/>
+	<Action name="edit_find"/>
     </ToolBar>
     <ActionProperties scheme="Default">
         <Action priority="0" name="go_back"/>
