@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer purge 
 Icon=edit-clear
-Name=Apt-remove and purge
-Name[it]=Apt rimuovi completamente
+Name=Aptk purge
+Name[it]=Aptk rimuovi completamente
 Categories=Qt;KDE;System;

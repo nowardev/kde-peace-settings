@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer installf 
 Icon=run-build-configure
-Name=Apt-get install -f 
-Name[it]=Apt-get install -f
+Name=Aptk  install -f 
+Name[it]=Aptk install -f
 Categories=Qt;KDE;System;

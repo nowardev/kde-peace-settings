@@ -19,7 +19,7 @@
 Type=Application
 Exec=peace-debian-installer upgrade
 Icon=go-up
-Name=Apt-upgrade
-Name[it]=installa aggiornamenti
+Name=Aptk upgrade
+Name[it]=Aptk installa aggiornamenti
 Categories=Qt;KDE;System;
 

@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer dpkgrecover 
 Icon=run-build-configure
-Name=dpkg reconfigure all
-Name[it]=dpkg riconfigura tutto
+Name=Aptk dpkg reconfigure all
+Name[it]=Aptk dpkg riconfigura tutto
 Categories=Qt;KDE;System;

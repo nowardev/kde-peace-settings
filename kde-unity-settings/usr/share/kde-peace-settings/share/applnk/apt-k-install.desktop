@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer install 
 Icon=list-add
-Name=Apt Install applications
-Name[it]=installa programmi
+Name=Aptk Install applications
+Name[it]=Aptk installa programmi
 Categories=Qt;KDE;System;

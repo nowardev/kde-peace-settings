@@ -19,6 +19,6 @@
 Type=Application
 Exec= kdesudo software-properties-kde 
 Icon=list-add
-Name=Manage PPA
-Name[it]=Gestisci PPA
+Name=Aptk Manage PPA
+Name[it]=Aptk Gestisci PPA
 Categories=Qt;KDE;System;

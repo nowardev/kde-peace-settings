@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer remove 
 Icon=edit-delete
-Name=Apt remove applications
-Name[it]=Apt rimuovi applicazioni
+Name=Aptk remove applications
+Name[it]=Aptk rimuovi applicazioni
 Categories=Qt;KDE;System;

@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer hold 
 Icon=dialog-cancel
-Name=Block Package upgrading
-Name[it]=Blocca aggiornamenti per questo pacchetto
+Name=Aptk Block Package upgrading
+Name[it]=Aptk Blocca aggiornamenti per questo pacchetto
 Categories=Qt;KDE;System;

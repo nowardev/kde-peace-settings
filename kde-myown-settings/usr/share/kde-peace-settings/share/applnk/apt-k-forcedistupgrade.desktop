@@ -19,8 +19,8 @@
 Type=Application
 Exec=peace-debian-installer forceupdatedistupgrade  
 Icon=arrow-up-double
-Name=Force dist-upgrade
-Name[it]=forza aggiornamento versione
+Name=Aptk Force dist-upgrade
+Name[it]=Aptk forza aggiornamento versione
 Categories=Qt;KDE;System;
 
 

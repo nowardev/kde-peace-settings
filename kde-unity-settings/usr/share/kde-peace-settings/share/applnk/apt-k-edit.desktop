@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer edit 
 Icon=document-edit
-Name=Edit repository
-Name[it]=Edita repository
+Name=Aptk Edit repository
+Name[it]=Aptk Edita repository
 Categories=Qt;KDE;System;

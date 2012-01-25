@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer forceupdateupgrade
 Icon=go-up
-Name=Force upgrade
-Name[it]=forza aggiornamento
+Name=Aptk Force upgrade
+Name[it]=Aptk forza aggiornamento
 Categories=Qt;KDE;System;

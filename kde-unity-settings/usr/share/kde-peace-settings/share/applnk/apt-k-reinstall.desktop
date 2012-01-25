@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer reinstall 
 Icon=list-add
-Name=Apt RE-Install applications
-Name[it]=Apt Re-installa programmi
+Name=Aptk RE-Install applications
+Name[it]=Aptk Re-installa programmi
 Categories=Qt;KDE;System;

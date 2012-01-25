@@ -19,6 +19,6 @@
 Type=Application
 Exec=peace-debian-installer removeblock 
 Icon=edit-bomb
-Name=rm /var/lib/dpkg/lock 
-Name[it]=rm /var/lib/dpkg/lock 
+Name=Aptk remove lock
+Name[it]=Aptk rimuovi blocco
 Categories=Qt;KDE;System;

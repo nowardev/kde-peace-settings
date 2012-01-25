@@ -19,8 +19,8 @@
 Type=Application
 Exec=peace-debian-installer search 
 Icon=system-search
-Name=Apt-Search
-Name[it]=Apt-Cerca
+Name=Aptk Search
+Name[it]=Aptk Cerca
 Categories=Qt;KDE;System;
 
 
