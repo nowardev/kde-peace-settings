@@ -92,7 +92,7 @@ Name=Dpkg remove package
 Name[it]=Apt rimuovi applicazioni
 
 [Desktop Action clear]
-Exec=peace-debian-installer clear && echo %u >/dev/null
+Exec=peace-debian-installer clean && echo %u >/dev/null
 Icon=editclear
 Name=Apt clean 
 Name[it]=Apt Pulisci
