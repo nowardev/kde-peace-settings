@@ -21,4 +21,5 @@ Exec=peace-debian-installer menu
 Icon=run-build-configure
 Name=Aptk Menu
 Name[it]=Aptk Menu
+Comment=Software Installer
 Categories=Qt;KDE;System;
