@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
  
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -239,6 +239,18 @@ konsole --noclose -e sudo apt-get install -f
 
 }
 
+function_autoremove(){
+
+konsole --noclose -e sudo apt-get autoremove
+
+}
+
+function_clean(){
+
+konsole --noclose -e sudo apt-get clean
+
+}
+
 
  
 
@@ -266,7 +278,7 @@ kdialog --passivepopup   $" PPA Removed   $a" 2
 
 function_menu(){
 
-ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update"    upgrade $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f"  dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update"    upgrade $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
 if [[ -z $ans ]] ; then
 exit 
 else 
@@ -339,6 +351,14 @@ function_purge
 hold)
 
 function_hold
+;;
+
+autoremove)
+function_autoremove
+;;
+
+clean)
+function_clean
 ;;
 
 
