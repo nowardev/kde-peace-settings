@@ -8,7 +8,12 @@ AutogroupSimilarWindows=true
 Enabled=false
 
 [Style]
+BorderSize=1
+ButtonsOnLeft=
+ButtonsOnRight=HIA__X
+CustomButtonPositions=true
 PluginLib=kwin3_oxygen
+ShowToolTips=false
 
 #kwin3_plastik
 #kwin3_crystal

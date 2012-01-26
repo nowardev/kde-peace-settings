@@ -1,3 +1,4 @@
+#!/usr/bin/env xdg-open
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -14,20 +15,10 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
 [Desktop Entry]
-Encoding=UTF-8
-Name=Remove Panel
-ServiceTypes=Plasma/LayoutTemplate
-Type=Service
-X-KDE-PluginInfo-Author=Nowardev
-X-KDE-PluginInfo-Category=
-X-KDE-PluginInfo-Depends=
-X-KDE-PluginInfo-Email=nowardev@gmail.com
-X-KDE-PluginInfo-EnabledByDefault=true
-X-KDE-PluginInfo-License=GPL
-X-KDE-PluginInfo-Name=org.kde.plasma-desktop.RemovePanel
-X-KDE-PluginInfo-Version=1.0
-X-KDE-PluginInfo-Website=http://nowardev.wordpress.com
-X-Plasma-ContainmentCategories=panel
-X-Plasma-Shell=plasma-desktop
+Type=Application
+Exec=peace-debian-installer menu
+Icon=run-build-configure
+Name=Aptk Menu
+Name[it]=Aptk Menu
+Categories=Qt;KDE;System;

@@ -1,5 +1,5 @@
 [General]
-ColorScheme=nowardev
+ColorScheme=Gentle Nowardev
 shadeSortColumn=true
 widgetStyle=qtcurve
 
@@ -17,3 +17,23 @@ contrast=7
 [KDE-Global GUI Settings]
 GraphicEffectsLevel=0
 
+
+
+
+[KFileDialog Settings]
+Automatically select filename extension=true
+Breadcrumb Navigation=false
+Decoration position=0
+LocationCombo Completionmode=5
+PathCombo Completionmode=5
+Preview Width=137
+Previews=true
+Show Bookmarks=true
+Show Full Path=false
+Show Preview=true
+Show Speedbar=true
+Show hidden files=true
+Sort by=Name
+Sort directories first=true
+Sort reversed=false
+View Style=Simple
