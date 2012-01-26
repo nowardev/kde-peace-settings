@@ -27,32 +27,32 @@ X-KDE-Submenu[it]=APT-DPKG
 
 
 [Desktop Action update]
-Exec=peace-debian-installer update && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer update && echo %u >/dev/null
 Icon=edit-redo
 Name=Apt-update
 Name[it]=Apt-update
 
 [Desktop Action upgrade]
-Exec=peace-debian-installer upgrade && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer upgrade && echo %u >/dev/null
 Icon=go-up
 Name=Apt-upgrade
 Name[it]=installa aggiornamenti
 
 [Desktop Action dist-upgrade]
-Exec=peace-debian-installer distupgrade && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer distupgrade && echo %u >/dev/null
 Icon=arrow-up-double
 Name=Apt-Dist-upgrade
 Name[it]=Apt-Aggiorna distribuzione
 
 
 [Desktop Action fupug]
-Exec=peace-debian-installer forceupdateupgrade && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer forceupdateupgrade && echo %u >/dev/null
 Icon=go-up
 Name=Force upgrade
 Name[it]=forza aggiornamento
 
 [Desktop Action fupdug]
-Exec=peace-debian-installer forceupdatedistupgrade && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer forceupdatedistupgrade && echo %u >/dev/null
 Icon=arrow-up-double
 Name=Force dist-upgrade
 Name[it]=forza aggiornamento versione
@@ -60,19 +60,19 @@ Name[it]=forza aggiornamento versione
 
 
 [Desktop Action search]
-Exec=peace-debian-installer search && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer search && echo %u >/dev/null
 Icon=system-search
 Name=Apt-Search
 Name[it]=Apt-Cerca
 
 [Desktop Action searchex]
-Exec=peace-debian-installer search && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer search && echo %u >/dev/null
 Icon=system-search
 Name=Apt-Search exacly
 Name[it]=Apt-Cerca esattamente
 
 [Desktop Action searchandinstall]
-Exec=peace-debian-installer searchinstall  && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer searchinstall  && echo %u >/dev/null
 Icon=system-search
 Name=Apt-Search and install
 Name[it]=Apt-Cerca e installa
@@ -80,7 +80,7 @@ Name[it]=Apt-Cerca e installa
 
 
 [Desktop Action install]
-Exec=peace-debian-installer install && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer install && echo %u >/dev/null
 Icon=list-add
 Name=Apt Install applications
 Name[it]=installa programmi
@@ -92,13 +92,13 @@ Name=Dpkg remove package
 Name[it]=Apt rimuovi applicazioni
 
 [Desktop Action clear]
-Exec=peace-debian-installer clean && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer clean && echo %u >/dev/null
 Icon=editclear
 Name=Apt clean 
 Name[it]=Apt Pulisci
 
 [Desktop Action autoremove]
-Exec=peace-debian-installer autoremove && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer autoremove && echo %u >/dev/null
 Icon=archive-remove
 Name=Apt Autoremove 
 Name[it]=Apt Rimuovi Auto
@@ -111,32 +111,32 @@ Name[it]=Dpkg-installa pacchetto
 
 
 [Desktop Action reinstall]
-Exec=peace-debian-installer reinstall && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer reinstall && echo %u >/dev/null
 Icon=list-add
 Name=Apt RE-Install applications
 Name[it]=Apt Re-installa programmi
 
 [Desktop Action purge]
-Exec=peace-debian-installer purge && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer purge && echo %u >/dev/null
 Icon=edit-clear
 Name=Apt-remove and purge
 Name[it]=Apt rimuovi completamente
 
 [Desktop Action remove]
-Exec=peace-debian-installer remove && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer remove && echo %u >/dev/null
 Icon=edit-delete
 Name=Apt remove applications
 Name[it]=Apt rimuovi applicazioni
 
 
 [Desktop Action blockpackage]
-Exec=peace-debian-installer hold && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer hold && echo %u >/dev/null
 Icon=dialog-cancel
 Name=Block Package upgrading
 Name[it]=Blocca aggiornamenti per questo pacchetto
 
 [Desktop Action edit-sourcelist]
-Exec=peace-debian-installer edit && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer edit && echo %u >/dev/null
 Icon=document-edit
 Name=Edit repository
 Name[it]=Edita repository
@@ -149,19 +149,19 @@ Name[it]=Gestisci PPA
 
 
 [Desktop Action dpgkrecover]
-Exec=peace-debian-installer dpkgrecover && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer dpkgrecover && echo %u >/dev/null
 Icon=run-build-configure
 Name=dpkg reconfigure all
 Name[it]=dpkg riconfigura tutto
 
 [Desktop Action removeblock]
-Exec=peace-debian-installer removeblock && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer removeblock && echo %u >/dev/null
 Icon=edit-bomb
 Name=rm /var/lib/dpkg/lock 
 Name[it]=rm /var/lib/dpkg/lock 
  
 [Desktop Action installf]
-Exec=peace-debian-installer installf && echo %u >/dev/null
+Exec=konsole --noclose -e  peace-debian-installer installf && echo %u >/dev/null
 Icon=run-build-configure
 Name=Apt-get install -f 
 Name[it]=Apt-get install -f

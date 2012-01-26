@@ -49,7 +49,7 @@ rm /usr/share/kde4/services/ServiceMenus/ptk-service.desktop
  
 rm /usr/bin/peace-debian-install
 rm /usr/share/applications/kde4/aptk.desktop
-rm /usr/share/kde4/services/ServiceMenus/aptk-service.desktop
+rm /usr/share/kde4/services/ServiceMenus/ptk-service.desktop
 
 }
 
