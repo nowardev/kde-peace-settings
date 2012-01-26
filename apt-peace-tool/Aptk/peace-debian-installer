@@ -19,6 +19,15 @@
 
 
 version=1.1
+
+
+function_scriptsearch(){
+searchresult=$(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"insert the application" "packagestuff")")
+
+
+}
+
+
 function_update(){
 
  sudo apt-get update
@@ -34,7 +43,7 @@ function_distupgrade(){
 function_updatedistupgradeforce(){
 
 
-konsole --noclose  -e sudo apt-get dist-upgrade -y 
+ sudo apt-get dist-upgrade -y 
 
 
 }
@@ -235,6 +244,7 @@ function_hold(){
 ans="$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" packagestuff )"))"
 
 if [[ -z $ans || "$ans" == packagestuff ]] ; then
+kdialog --passivepopup $"no package found!"
 exit 
 else 
  sudo aptitude hold "$ans"
@@ -404,6 +414,9 @@ function_removeblock
 ;;
 menu)
 function_menu
+;;
+*)
+kdialog --passivepopup $"No option for peace-debian-installer"
 ;;
 
 
