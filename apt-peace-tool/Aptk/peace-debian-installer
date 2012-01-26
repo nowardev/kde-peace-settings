@@ -79,13 +79,22 @@ fi
  
 function_dpkgi(){
 
- konsole --noclose -e sudo dpkg -i "$1"
+ sudo dpkg -i "$1"
 
 }
 
 function_dpkgr(){
 
-konsole --noclose -e sudo dpkg -r "$1"
+base=$(basename "$1")
+ans="$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please set the name without bad char" "$base")"))"
+
+
+if [[ -z "$ans"  ]] ; then
+exit 
+else 
+ sudo dpkg -r  "$ans"
+fi 
+ 
 
 }
 
