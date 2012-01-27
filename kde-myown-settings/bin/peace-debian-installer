@@ -18,23 +18,32 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-version=1.0
+version=1.1
+
+
+function_scriptsearch(){
+searchresult=$(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"insert the application" "packagestuff")")
+
+
+}
+
+
 function_update(){
 
-konsole --noclose -e sudo apt-get update
+ sudo apt-get update
 
 }
 
 function_distupgrade(){
 
-konsole --noclose -e sudo apt-get dist-upgrade
+ sudo apt-get dist-upgrade
 
 }
 
 function_updatedistupgradeforce(){
 
 
-konsole --noclose  -e sudo apt-get dist-upgrade -y 
+ sudo apt-get dist-upgrade -y 
 
 
 }
@@ -43,7 +52,7 @@ konsole --noclose  -e sudo apt-get dist-upgrade -y
 function_updateupgradeforce(){
 
 
-konsole --noclose -e  sudo apt-get upgrade  -y 
+  sudo apt-get upgrade  -y 
 
  
 
@@ -52,7 +61,7 @@ konsole --noclose -e  sudo apt-get upgrade  -y
 
 function_upgrade(){
 
-konsole --noclose -e sudo apt-get upgrade 
+ sudo apt-get upgrade 
 
 }
  
@@ -65,8 +74,8 @@ You are trying to remove the lock this should be done only if you know whatyour 
 the lock can be removed only by root when an installation has been interrupted badly and the lock is still present ")
 
 if [[ $? == 0 ]]; then 
-konsole --noclose -e sudo rm /var/lib/dpkg/lock 
-konsole --noclose -e sudo apt-get update
+ sudo rm /var/lib/dpkg/lock 
+ sudo apt-get update
 
 
 else
@@ -79,19 +88,28 @@ fi
  
 function_dpkgi(){
 
-konsole --noclose -e sudo dpkg -i "$1"
+ sudo dpkg -i "$1"
 
 }
 
 function_dpkgr(){
 
-konsole --noclose -e sudo dpkg -r "$1"
+base=$(basename "$1")
+ans="$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please set the name without bad char" "$base")"))"
+
+
+if [[ -z "$ans"  ]] ; then
+exit 
+else 
+ sudo dpkg -r  "$ans"
+fi 
+ 
 
 }
 
 function_dpkrecover(){
 
-konsole --noclose -e dpkg --configure -a
+ sudo dpkg --configure -a
 
 }
 
@@ -161,7 +179,7 @@ ans="$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-
 if [[ $? == 1 ]] ; then
 exit 
 else 
-konsole --noclose -e sudo apt-get install --reinstall  "$ans"
+ sudo apt-get install --reinstall  "$ans"
 fi 
 
 
@@ -175,7 +193,7 @@ ans="$(kdialog --title $"Purge" --combobox $"Please select a package" $(apt-cach
 if [[ $? == 1 ]] ; then
 exit 
 else 
-konsole --noclose -e sudo apt-get remove --purge  "$ans"
+ sudo apt-get remove --purge  "$ans"
 fi 
 
 
@@ -190,7 +208,7 @@ ans="$(kdialog --title $"Remove" --combobox $"Please select a package" $(apt-cac
 if [[ $? == 1 ]] ; then
 exit 
 else 
-konsole --noclose -e sudo apt-get remove  "$ans"
+ sudo apt-get remove  "$ans"
 fi  
 
 }
@@ -201,7 +219,7 @@ ans="$(kdialog --title $"Install" --combobox $"Please select  packages" "$(kdial
 if [[ $? == 1 ]] ; then
 exit 
 else 
-konsole --noclose -e sudo apt-get install "$ans"
+ sudo apt-get install "$ans"
 fi 
 
 }
@@ -212,7 +230,7 @@ ans="$(kdialog --title $"Install" --combobox $"Please select a package" $(apt-ca
 if [[ $? == 1 ]] ; then
 exit 
 else 
-konsole --noclose -e sudo apt-get install  "$ans"
+ sudo apt-get install  "$ans"
 fi 
 
 }
@@ -226,28 +244,29 @@ function_hold(){
 ans="$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" packagestuff )"))"
 
 if [[ -z $ans || "$ans" == packagestuff ]] ; then
+kdialog --passivepopup $"no package found!"
 exit 
 else 
-konsole --noclose -e sudo aptitude hold "$ans"
+ sudo aptitude hold "$ans"
 fi 
 
 }
 
 function_installf(){
 
-konsole --noclose -e sudo apt-get install -f 
+ sudo apt-get install -f 
 
 }
 
 function_autoremove(){
 
-konsole --noclose -e sudo apt-get autoremove
+ sudo apt-get autoremove
 
 }
 
 function_clean(){
 
-konsole --noclose -e sudo apt-get clean
+ sudo apt-get clean
 
 }
 
@@ -257,7 +276,7 @@ konsole --noclose -e sudo apt-get clean
 
 function_ppa(){
 kdesudo software-properties-kde
-#konsole --noclose -e sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
+# sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
 #sudo apt-get upate 
  
 }
@@ -269,7 +288,7 @@ a=$(kdialog --combobox "Remove ppa"  $(find  /etc/apt/sources.list.d/ -name *.li
 
 
 
-konsole --noclose -e sudo rm "$a" "$a".save #; sudo apt-get upate 
+ sudo rm "$a" "$a".save #; sudo apt-get upate 
 
 kdialog --passivepopup   $" PPA Removed   $a" 2
 
@@ -396,14 +415,15 @@ function_removeblock
 menu)
 function_menu
 ;;
+*)
+kdialog --passivepopup $"No option for peace-debian-installer"
+;;
 
 
 esac
 
 
-
- 
-  
+exec bash
 
 
  
