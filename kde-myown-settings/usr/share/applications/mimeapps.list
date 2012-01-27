@@ -1,8 +1,8 @@
 
 [Added KDE Service Associations]
-application/xhtml+xml=kwebkitpart.desktop;khtml.desktop;
-application/xml=kwebkitpart.desktop;khtml.desktop;
-text/html=kwebkitpart.desktop;khtml.desktop;
+application/xhtml+xml=khtml.desktop;kwebkitpart.desktop;
+application/xml=khtml.desktop;kwebkitpart.desktop;
+text/html=khtml.desktop;kwebkitpart.desktop;
 
 [Added Associations]
 video/x-flv=vlc.desktop;
