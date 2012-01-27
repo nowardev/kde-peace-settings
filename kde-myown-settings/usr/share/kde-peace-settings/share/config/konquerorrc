@@ -1,0 +1,31 @@
+[$Version]
+update_info=kfmclient_3_2.upd:kfmclient_3_2
+
+[FMSettings]
+AlwaysTabbedMode=false
+KonquerorTabforExternalURL=false
+MMBOpensTab=true
+MouseMiddleClickClosesTab=true
+NewTabsInFront=false
+OpenAfterCurrentPage=false
+PermanentCloseButton=true
+PopupsWithinTabs=true
+TabCloseActivatePrevious=false
+
+[HTML Settings]
+AutomaticDetectionLanguage=1
+
+[SearchBar]
+CompletionMode=5
+CurrentEngine=google
+Mode=1
+SuggestionEnabled=true
+
+[Settings]
+CompletionMode=6
+
+[Undo]
+Number of Closed Windows=12
+
+[UserSettings]
+HomeURL=http://www.kde.org
