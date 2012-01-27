@@ -1,0 +1,10 @@
+SendUserAgent=true
+UserAgentKeys=om
+
+ 
+
+[www.google.com]
+UserAgent=Mozilla/5.0 (X11; U; i686 Linux; en_US) AppleWebKit/533.3 (KHTML, like Gecko) Chrome/5.0.358.0 Safari/533.3
+
+[www.google.it]
+UserAgent=Mozilla/5.0 (X11; U; i686 Linux; en_US) AppleWebKit/533.3 (KHTML, like Gecko) Chrome/5.0.358.0 Safari/533.3
