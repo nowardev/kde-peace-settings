@@ -1,6 +1,3 @@
-[$Version]
-update_info=kfmclient_3_2.upd:kfmclient_3_2
-
 [FMSettings]
 AlwaysTabbedMode=false
 KonquerorTabforExternalURL=false
@@ -24,8 +21,6 @@ SuggestionEnabled=true
 [Settings]
 CompletionMode=6
 
-[Undo]
-Number of Closed Windows=12
 
 [UserSettings]
 HomeURL=http://www.kde.org

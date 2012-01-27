@@ -1,0 +1,11 @@
+[InactiveShadow]
+Size=45
+VerticalOffset=0.1
+
+[Style]
+ScrollBarAddLineButtons=1
+ScrollBarWidth=22
+StackedWidgetTransitionsEnabled=true
+
+[Windeco]
+UseOxygenShadows=false

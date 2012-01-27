@@ -1,11 +1,11 @@
 [Windows]
 
-AutogroupInForeground=true
-AutogroupSimilarWindows=true
+AutogroupInForeground=false
+AutogroupSimilarWindows=false
 
 
 [Compositing]
-Enabled=false
+Enabled=true
 
 [Style]
 BorderSize=1

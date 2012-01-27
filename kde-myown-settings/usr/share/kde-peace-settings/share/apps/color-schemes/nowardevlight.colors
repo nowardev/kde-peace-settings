@@ -89,8 +89,8 @@ ForegroundPositive=78,179,128
 ForegroundVisited=132,91,144
 
 [General]
-ColorScheme=Gentle Nowardev
-Name=Gentle Nowardev
+ColorScheme=nowardevlight
+Name=nowardevlight
 shadeSortColumn=true
 
 [KDE]
