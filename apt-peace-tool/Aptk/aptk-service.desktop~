@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
-Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;searchandinstall;install;purge;remove;blockpackage;_SEPARATOR_;installpackage;removepackage;infopackage;_SEPARATOR_;autoremove;clear;dpgkrecover;removeblock;installf;_SEPARATOR_;edit-sourcelist;ppa;
+Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;searchandinstall;install;purge; remove;blockpackage;_SEPARATOR_;installpackage;removepackage;infopackage;_SEPARATOR_;autoremove;clear;dpgkrecover;removeblock;installf;SEPARATOR_;edit-sourcelist;ppa
 Icon=applications-other
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
@@ -91,12 +91,6 @@ Icon=edit-delete
 Name=Dpkg remove package
 Name[it]=Apt rimuovi applicazioni
 
-[Desktop Action installpackage]
-Exec=konsole --noclose -e  peace-debian-installer dpkgi "%u" --
-Icon=list-add
-Name=Dpkg-Install package
-Name[it]=Dpkg-installa pacchetto
-
 [Desktop Action clear]
 Exec=konsole --noclose -e  peace-debian-installer clean && echo %u >/dev/null
 Icon=editclear
@@ -108,6 +102,12 @@ Exec=konsole --noclose -e  peace-debian-installer autoremove && echo %u >/dev/nu
 Icon=archive-remove
 Name=Apt Autoremove 
 Name[it]=Apt Rimuovi Auto
+
+[Desktop Action installpackage]
+Exec=konsole --noclose -e  peace-debian-installer dpkgi "%u" --
+Icon=list-add
+Name=Dpkg-Install package
+Name[it]=Dpkg-installa pacchetto
 
 
 [Desktop Action reinstall]
@@ -153,12 +153,6 @@ Exec=konsole --noclose -e  peace-debian-installer dpkgrecover && echo %u >/dev/n
 Icon=run-build-configure
 Name=dpkg reconfigure all
 Name[it]=dpkg riconfigura tutto
-
-[Desktop Action infopackage]
-Exec=konsole --noclose -e  peace-debian-installer dpkginfo "%u" && echo %u >/dev/null
-Icon=info
-Name=dpkg infopackage
-Name[it]=dpkg infomazioni pacchetto
 
 [Desktop Action removeblock]
 Exec=konsole --noclose -e  peace-debian-installer removeblock && echo %u >/dev/null
