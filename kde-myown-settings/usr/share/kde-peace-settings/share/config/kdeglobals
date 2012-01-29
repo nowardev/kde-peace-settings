@@ -125,6 +125,14 @@ DisabledEffect=togray
 DisabledSemiTransparent=true
 DisabledValue=1
 
+[WM]
+activeBackground=104,105,107
+activeBlend=255,255,255
+activeFont=Cantarell,10,-1,5,50,0,0,0,0,0
+activeForeground=255,255,255
+inactiveBackground=203,203,204
+inactiveBlend=75,71,67
+inactiveForeground=237,237,238
 
 [General]
 ColorScheme=nowardevlight
