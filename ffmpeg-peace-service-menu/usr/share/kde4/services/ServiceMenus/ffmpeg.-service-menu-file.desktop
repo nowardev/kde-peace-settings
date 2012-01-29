@@ -1,0 +1,29 @@
+[Desktop Entry]
+Actions=append;version
+Icon=dolphin
+ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=FFmpeg Menu
+X-KDE-Submenu[it]=FFmpeg Menu
+
+
+[Desktop Action append]
+Exec=echo "%u" >> $HOME/ffmpeg-service-menu-qt.lst
+Icon=list-add
+Name=Append to FFmpeg 
+Name[it]=Aggiungi a FFmpeg
+
+[Desktop Action appendplay]
+Exec=vservice 3 "%u"
+Icon=media-playback-start
+Name=add and play
+Name[it]=aggiungi e riproduci
+
+ 
+
+[Desktop Action version]
+Exec=kdialog --msgbox "$(cat /usr/bin/vservice | grep version=) Author : Nowardev"
+Icon=dialog-information
+Name=Version
+Name[it]=Versione
