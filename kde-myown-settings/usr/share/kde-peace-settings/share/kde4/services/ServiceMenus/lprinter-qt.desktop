@@ -25,7 +25,7 @@
 #
 #VERSION 0.6
 [Desktop Entry]
-Actions=add;showlist;deleteall;_SEPARATOR_;interactiveeach;globalinteractive;_SEPARATOR_;help;setprinter
+Actions=add;showlist;deleteall;_SEPARATOR_;interactiveeach;globalinteractive;_SEPARATOR_;help;setprinter;
 Icon=preferences-desktop-printer
 ServiceTypes=KonqPopupMenu/Plugin,text/.*,image/.*,application/pdf,application/ps
 Type=Service

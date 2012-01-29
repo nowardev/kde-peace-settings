@@ -24,7 +24,7 @@ Name=folder-append to vlc
 Name[it]=aggiungi cartella a vlc
  
 [Desktop Entry]
-Actions=folderappend;version
+Actions=folderappend;
 Icon=vlc
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory
 Type=Service

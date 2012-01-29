@@ -19,7 +19,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [Desktop Entry]
-Actions=mencoderMediainfo;mediainfo
+Actions=mencoderMediainfo;mediainfo;
 Icon=dialog-information
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service

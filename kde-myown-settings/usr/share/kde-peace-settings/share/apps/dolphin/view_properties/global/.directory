@@ -1,5 +1,5 @@
 [Dolphin]
-AdditionalInfo=Details_Size,Details_Date,Details_Permissions,CustomizedDetails
+AdditionalInfo=Details_Size,Details_Date,CustomizedDetailsDetails_Permissions
 PreviewsShown=true
 ViewMode=1
 

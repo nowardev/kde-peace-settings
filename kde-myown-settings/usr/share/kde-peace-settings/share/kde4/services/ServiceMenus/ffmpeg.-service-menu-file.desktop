@@ -84,7 +84,7 @@ Name=Version
 Name[it]=Versione
 
 [Desktop Entry]
-Actions=append;appendplay;next;playprev;playnext;rotate90;rotate180;rotate270;rotate360;rotate;version
+Actions=append;appendplay;playprev;playnext;rotate90;rotate180;rotate270;rotate360;rotate;version;
 Icon=vlc
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service

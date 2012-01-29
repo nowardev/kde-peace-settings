@@ -18,7 +18,7 @@
 
 
 [Desktop Entry]
-Actions=folderappendb;folderappend
+Actions=folderappendb;folderappend;
 Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory
 Type=Service

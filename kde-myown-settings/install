@@ -42,6 +42,42 @@ cp "$file" /usr/share/applications
  
 done 
 
+#fonts
+
+for file in "$PWD"/etc/fonts/conf.avail/*.conf ; do
+cp "$file"   /etc/fonts/conf.avail/
+done
+#fontconfig
+for file in "$PWD"/usr/share/fontconfig/conf.avail/*.conf ; do
+cp "$file"   /usr/share/fontconfig/conf.avail/
+done
+cp -r "$PWD"/usr/share/fonts/cantarell  /usr/share/fonts/  
+cp -r  "$PWD"/usr/share/fonts/opentype/cantarell /usr/share/fonts/opentype/
+
+
+
+
+
+
+#bug
+for folder in "$PWD"/usr/share/bug/*/ ; do 
+cp -r "$folder" /usr/share/bug/
+done
+
+#doc
+
+for folder in "$PWD"/usr/share/doc/*/ ; do 
+cp -r "$folder" /usr/share/doc/
+done
+
+
+
+for file in "$PWD"/etc/fonts/conf.avail/*.conf ; do
+cp "$file"   /etc/fonts/conf.avail/
+done
+
+
+
 #kde peace settings
 
 cp -r  "$PWD"/usr/share/kde-peace-settings  /usr/share/

@@ -129,6 +129,16 @@ DisabledValue=1
 [General]
 ColorScheme=nowardevlight
 shadeSortColumn=true
+XftAntialias=true
+XftHintStyle=hintfull
+XftSubPixel=rgb
+desktopFont=Cantarell,10,-1,5,50,0,0,0,0,0
+fixed=Monospace,10,-1,5,50,0,0,0,0,0
+font=Cantarell,10,-1,5,50,0,0,0,0,0
+menuFont=Cantarell,10,-1,5,50,0,0,0,0,0
+smallestReadableFont=Cantarell,10,-1,5,50,0,0,0,0,0
+taskbarFont=Cantarell,10,-1,5,50,0,0,0,0,0
+toolBarFont=Cantarell,10,-1,5,50,0,0,0,0,0
 widgetStyle=oxygen
 BrowserApplication[$e]=!firefox
 
