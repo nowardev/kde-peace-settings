@@ -23,21 +23,55 @@ license="GLPv3"
 title=$"FFmpeg Dolphin Service Menu"
 threads=`cat /proc/cpuinfo | grep processor | wc -l` 
 listoffile="$HOME/ffmpeg-service-menu-qt.lst"
+ffmpeg_profile_file="$HOME/.FFmpeg_profiles-qt.lst"
 numberoffile=$(wc -l <$listoffile)
-
 passivepopup="enabled"
 overwrite="-y"
 #DONE
 
+
+
+function_addfile(){
+
+for f in "$(kdialog --title $"Select files you want convert" --separate-output  --multiple --getopenfilename  "$HOME" )"
+do echo "$f" >>"$listoffile" 
+done
+
+}
+
+
+function_add_folder(){
+
+#shopt -s nullglob 
+ kdialog --passivepopup $"adding folder...this could take time..wait"
+while read line ;do 
+
+for extension in 3g2 3gp 4xm IFF ISS MTV RoQ a64 aac ac3 adts aea aiff alaw alsa amr anm apc ape applehttp asf asf_stream ass au avi avm2 avs bethsoftvid bfi bink c93 caf cavsvideo cdg crc daud dfa dirac dnxhd dsicin dts dv dv1394 dvd dxa ea ea_cdata eac3 f32be f32le f64be f64le fbdev ffm ffmetadata film_cpk filmstrip flac flic flv framecrc framemd5 g722 gif gsm gxf h261 h263 h264 idcin image2 image2pipe ingenient ipmovie ipod iv8 ivf jack jv libdc1394 lmlm4 lxf m4v matroska matroska,webm md5 mjpeg mlp mm mmf mov mov,mp4,m4a,3gp,3g2,mj2 mp2 mp3 mp4 mpc mpc8 mpeg mpeg1video mpeg2video mpegts mpegtsraw mpegvideo mpjpeg msnwctcp mulaw mvi mxf mxf_d10 mxg nc nsv null nut nuv ogg oma oss psp psxstr pva qcp r3d rawvideo rcv rl2 rm rpl rso rtp rtsp s16be s16le s24be s24le s32be s32le s8 sap sdp shn siff smk sol sox spdif srt svcd swf thp tiertexseq tmv truehd tta tty txd u16be u16le u24be u24le u32be u32le u8 vc1 vc1test vcd video4linux2 vmd vob voc vqf w64 wav wc3movie webm wsaud wsvqa wtv wv x11grab xa xwma yop yuv4mpegpipe ; do 
+
+if  [[ "$line" == *.$extension ]] ; then
+
+ echo  "$line" >>"$listoffile"
+ 
+fi 
+done
+ 
+done< <(find "$1" -type f)
+ kdialog --passivepopup $"adding folder...done"
+
+}
+
 function_load_profiles(){
 
-while read line; do 
-i=1
-nameprofile[$i]=$(awk '{print $1}')
-ffmpegoptionprofile[$i]=$(awk '{print $2}')
+ 
+ARGS="--menu \"choose your profile\" --"
 
-  kdialog --menu "choose your profile" $(for ((i = 0; i <=${#a[@]} ; i++ )) ; do printf "%s %s " "${nameprofile[i]}" "${ffmpegoptionprofile[i]}"; done)
-done < "$HOME/.FFmpeg_profiles-qt.lst"
+while read FORMAT PROFILE OPTS; do
+
+    ARGS="${ARGS} \"${OPTS}\" \"${PROFILE}\""
+done < $ffmpeg_profile_file
+
+profile=$(echo $ARGS | xargs kdialog)
+outformat=$(awk  -v k="$profile" '/k/{print $1}'  $ffmpeg_profile_file)
 }
 
 
@@ -66,6 +100,11 @@ if [[ "$errors" =~ "ffmpeg-peace.log' for reading (No such file or directory)" ]
 elif [[ "$errors" =~ "Unable to find a suitable output format for" ]]; then 
 kdialog --error $"Unable to find a suitable output format for ..wrong outformat?"
 askopen=1
+elif [[ "$errors" =~ "not found" ]]; then 
+kdialog --error $"No preset found ?"
+askopen=1
+
+
 else
 askopen=0
 fi
@@ -88,6 +127,9 @@ function_check
 
 a=1
 mystufvariabletouseonmyscript=$(kdialog --progressbar $"Starting Conversion..." 100)
+
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+
 qdbus $mystufvariabletouseonmyscript  showCancelButton true 
 
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
@@ -118,29 +160,62 @@ done
 
 }
 
+
+function_ffmpeg_profile (){
+ 
+function_check
+function_load_profiles
+
+a=1
+mystufvariabletouseonmyscript=$(kdialog --progressbar $"Starting Conversion..." 100)
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $mystufvariabletouseonmyscript  showCancelButton true 
+
+until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
+	
+	while read line ; do
+		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line" 
+
+		ffmpeg -i  "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>/tmp/ffmpeg-peace.log
+
+
+
+		value=$(( $(($a*100))/$numberoffile ))
+		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+		a=$(($a+1))
+		done< "$listoffile"
+	if [[ "$value" == 100 ]];then 
+	
+		if [[ "$passivepopup" == "enabled" ]];then
+			kdialog --passivepopup $"Conversions done!"
+		fi
+
+	function_check_for_errors
+		exit
+	fi
+done
+
+
+
+}
+
+
+
+
+
  
  
  function_menu_start(){
  
-ans=$(kdialog --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" e $"Easy" a $"Advanced" p $"Load Profile" add $"Add files" addf $"Add Folders"  v "Version Author Copyright" ex $"Exit")
+ans=$(kdialog --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" e $"Convert Easy" a $"Convert Advanced" p $"Convert Profile" add $"Add Files" addf $"Add Folders" edit $"Open List With Kate Text Editor"  v "Version Author Copyright" ex $"Exit")
  
-
+function_ansmenu
  
  }
  
 
  
- 
-
-
-if [[ -z "$1" ]] ; then
-function_menu_start
-elif [[ "$1" == "start" ]]; then 
-function_menu_start
-
-fi
-
-
+function_ansmenu(){
 case "$ans" in 
  
 e)
@@ -152,13 +227,21 @@ kdialog --msgbox $"Sorry it will take time for this..."
 function_menu_start
  ;;
  
+ p)
+ function_ffmpeg_profile
+ ;;
+ edit)
+ 
+ kate "$listoffile"
+ function_menu_start
+ ;;
 add)
-kdialog --msgbox $"Sorry it will take time for this..."
+function_addfile
 function_menu_start
  ;;
  
 addf)
-kdialog --msgbox $"Sorry it will take time for this..."
+function_add_folder "$(kdialog --getexistingdirectory  "$HOME/Video")"  
 function_menu_start
  ;;
  v)
@@ -167,5 +250,24 @@ kdialog --title "$title" --msgbox "$Version $Author $License"
  ex)
  exit
  ;;
+ *)
+kdialog --title "$title" --yesno $"You have not choose an option do you want exit?"
+	if [[ $? == 1 ]] ; then 
+		function_menu_start
+	else
+		exit
+	fi 
+ ;;
  esac
  
+}
+ 
+
+
+if [[ -z "$1" ]] ; then
+function_menu_start
+elif [[ "$1" == "start" ]]; then 
+function_menu_start
+elif [[ "$1" == "profile" ]]; then 
+function_load_profiles
+fi

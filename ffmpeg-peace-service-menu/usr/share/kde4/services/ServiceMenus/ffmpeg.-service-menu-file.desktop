@@ -1,5 +1,22 @@
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
 [Desktop Entry]
-Actions=append;version
+Actions=append;start;edit;deleteall;version;
 Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service
@@ -14,16 +31,27 @@ Icon=list-add
 Name=Append to FFmpeg 
 Name[it]=Aggiungi a FFmpeg
 
-[Desktop Action appendplay]
-Exec=vservice 3 "%u"
-Icon=media-playback-start
-Name=add and play
-Name[it]=aggiungi e riproduci
+[Desktop Action start]
+Exec=ffmpeg-peace-service-menu start  && echo %u >>/dev/null 
+Icon=start
+Name=FFmpeg Start!
+Name[it]=FFmpeg Inizia!
 
- 
+
+[Desktop Action edit]
+Exec=ffmpeg-peace-service-menu edit && echo %u >>/dev/null 
+Icon=story-editor
+Name=Edit List
+Name[it]=Edita Lista
 
 [Desktop Action version]
 Exec=kdialog --msgbox "$(cat /usr/bin/vservice | grep version=) Author : Nowardev"
 Icon=dialog-information
 Name=Version
 Name[it]=Versione
+
+[Desktop Action deleteall]
+Exec=ffmpeg-peace-service-menu delete-list & echo %u >>/dev/null
+Icon=edit-delete
+Name=Delete list
+Name[it]=Cancella la Lista FFmpeg
