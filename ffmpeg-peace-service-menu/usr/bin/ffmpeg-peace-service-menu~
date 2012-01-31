@@ -57,8 +57,7 @@ USE:
 -e  					Edit conversion list with nano
 -ek					Edit conversion list with kate
 -d					DELETE convesion list
--r					RESTORE you old conversion list
--m					start the kdialog menu need X
+-mq					start the kdialog menu need X
 this script help you to convert files with dolphin and via shell:
 
 this script can use profiles file that is stored here $ffmpeg_profile_file

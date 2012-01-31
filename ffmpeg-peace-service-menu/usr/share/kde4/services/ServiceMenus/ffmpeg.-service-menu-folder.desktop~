@@ -30,7 +30,7 @@ Name=Add Folder to FFmpeg
 Name[it]=Aggiungi Cartella a FFmpeg
 
 [Desktop Action version]
-Exec=ffmpeg-peace-service-menu -v && echo %u >>/dev/null 
+Exec=ffmpeg-peace-service-menu -v
 Icon=dialog-information
 Name=Version
 Name[it]=Versione

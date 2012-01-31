@@ -16,7 +16,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [Desktop Entry]
-Actions=append;start;edit;deleteall;version;
+Actions=append;start;edit;deleteall;
 Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service
@@ -32,26 +32,26 @@ Name=Append to FFmpeg
 Name[it]=Aggiungi a FFmpeg
 
 [Desktop Action start]
-Exec=ffmpeg-peace-service-menu start  && echo %u >>/dev/null 
+Exec=ffmpeg-peace-service-menu -m  && echo %u >>/dev/null 
 Icon=start
 Name=FFmpeg Start!
 Name[it]=FFmpeg Inizia!
 
 
 [Desktop Action edit]
-Exec=ffmpeg-peace-service-menu edit && echo %u >>/dev/null 
+Exec=ffmpeg-peace-service-menu -ek && echo %u >>/dev/null 
 Icon=story-editor
 Name=Edit List
 Name[it]=Edita Lista
 
 [Desktop Action version]
-Exec=kdialog --msgbox "$(cat /usr/bin/vservice | grep version=) Author : Nowardev"
+Exec=ffmpeg-peace-service-menu -v && echo %u >>/dev/null 
 Icon=dialog-information
 Name=Version
 Name[it]=Versione
 
 [Desktop Action deleteall]
-Exec=ffmpeg-peace-service-menu delete-list & echo %u >>/dev/null
+Exec=ffmpeg-peace-service-menu -d & echo %u >>/dev/null
 Icon=edit-delete
 Name=Delete list
 Name[it]=Cancella la Lista FFmpeg
