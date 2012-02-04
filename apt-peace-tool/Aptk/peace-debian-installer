@@ -21,6 +21,7 @@
 version=1.2
 
 
+
 function_scriptsearch(){
 searchresult=$(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"insert the application" $"packagestuff or type exit and click ok")")
 
