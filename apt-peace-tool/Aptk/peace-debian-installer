@@ -18,7 +18,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-version=1.2
+version=1.0.3
 
 
 
@@ -173,7 +173,7 @@ ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"p
 if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
 exit 
 else 
-ans2=$(apt-cache pkgnames  "$ans")
+ans2=$(apt-cache search  "$ans")
 
 	if [[ -z "$ans2" ]];then 
 
@@ -207,13 +207,15 @@ fi
 
 function_purge(){
 
-ans="$(kdialog --title $"Purge" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Purge" --textinputbox $"Please insert a keyword" krita)"))"
+ans="$(kdialog --title $"Apt Purge" --textinputbox $"Please insert packages to purge (note this is for a long list of packages)" $"packagestuff or type exit and click ok")"
 
-if [[ $? == 1 ]] ; then
-exit 
+if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]]; then 
+exit
 else 
  sudo apt-get remove --purge  "$ans"
 fi 
+
+ 
 
 
 }
@@ -233,17 +235,36 @@ fi
 }
 
 function_searchapti(){
-ans="$(kdialog --title $"Install" --combobox $"Please select  packages" "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keywords" krita)")"
-
-if [[ $? == 1 ]] ; then
-
-kdialog --title "Packages" --msgbox  $"No keyword given " ; function_reload "function_searchapti"
-	 
 
 
+ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )"
+ 
+
+
+if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
+exit 
 else 
- sudo apt-get install "$ans"
+
+ans2=$(apt-cache pkgnames  "$ans")
+
+	if [[ -z "$ans2" ]];then 
+
+		  kdialog --title $"Packages" --msgbox  $"Software \ package not found " ; function_reload "function_searchapti"
+	else
+		ans3=$(kdialog --title $"Install" --combobox $"Please select  packages" $ans2)
+		if [[ -z "$ans2" ]];then
+		
+		ans3=$(kdialog --title $"Install" --combobox $"Please select  packages...you have not selected." $ans2 )
+		else
+		 
+		 sudo apt-get install "$ans3"
+		fi
+	 fi
 fi 
+
+
+
+
 
 }
 
@@ -251,12 +272,12 @@ fi
 	 
 
 function_apti(){
-ans="$(kdialog --title $"Install" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keyword" krita)"))"
+ans="$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keyword  (note this is for a long list of packages)" krita)"
 
 if [[ $? == 1 ]] ; then
-kdialog --title "Packages" --msgbox  $"No keyword given " ; function_reload "function_searchapti"
+kdialog --title "Packages" --msgbox  $"No keyword given " ; function_reload "function_apti"
 else 
- sudo apt-get install  "$ans"
+ sudo apt-get install  $ans
 fi 
 
 }

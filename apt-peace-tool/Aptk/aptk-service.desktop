@@ -60,13 +60,13 @@ Name[it]=forza aggiornamento versione
 
 
 [Desktop Action search]
-Exec=konsole --noclose -e  peace-debian-installer search && echo %u >/dev/null
+Exec=peace-debian-installer search && echo %u >/dev/null
 Icon=system-search
-Name=Apt-Search
-Name[it]=Apt-Cerca
+Name=Apt-Search on description 
+Name[it]=Apt-Cerca nella descrizione
 
 [Desktop Action searchex]
-Exec=konsole --noclose -e  peace-debian-installer search && echo %u >/dev/null
+Exec=peace-debian-installer searchex && echo %u >/dev/null
 Icon=system-search
 Name=Apt-Search exacly
 Name[it]=Apt-Cerca esattamente
