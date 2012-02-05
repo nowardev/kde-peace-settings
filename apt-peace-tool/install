@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 
 #
 #Copyright (C) 2012 nowardev nowardev@gmail.com
@@ -35,6 +35,74 @@ cp  peace-debian-installer /usr/bin
 chmod 755 /usr/bin/peace-debian-installer
 cp aptk.desktop  /usr/share/applications/kde4/
 cp aptk-service.desktop /usr/share/kde4/services/ServiceMenus/
+
+echo $"do you want install the alias for apt? 
+
+alias u='sudo apt-get update'
+alias g='sudo apt-get upgrade'
+alias i='sudo apt-get install '
+alias r='sudo apt-get remove '
+alias p='sudo apt-get --purge remove '
+alias s='sudo apt-cache search '
+alias a='sudo apt-get autoremove'
+
+y\n
+"
+read
+case $REPLY in
+[y/Y][e/E][s/S]|[y/Y]) 
+
+
+echo '
+alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias i="sudo apt-get install "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="sudo apt-cache search "
+alias a="sudo apt-get autoremove"
+
+
+
+peacei()
+{
+  cur=`_get_cword`
+  COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+  return 0
+  
+} &&
+complete -F peacei $filenames i
+
+
+peacep()
+{
+  cur=`_get_cword`
+  COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+  return 0
+  
+} &&
+complete -F peacep $filenames p
+
+
+peacer()
+{
+  cur=`_get_cword`
+  COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+  return 0
+  
+} &&
+complete -F peacer $filenames r' >>~/.bashrc
+
+echo "run this now ... source ~/.bashrc to load the new stuff.."
+;;
+ 
+*)
+echo $"Mate ... i am  exiting.. run this anyway  source ~/.bashrc"
+exit
+;;
+esac
+
+
 
 }
 
@@ -81,7 +149,7 @@ function_uninstall
 ;;
 
 *)
-echo "dude u to unistall i to install"
+echo "dude, u to unistall, i to install"
 exit
 ;;
 esac
