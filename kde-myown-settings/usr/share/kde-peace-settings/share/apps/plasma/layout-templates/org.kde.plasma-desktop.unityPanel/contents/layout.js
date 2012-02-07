@@ -149,33 +149,33 @@ icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wm
 
 
 
-var opendocuments = panel.addWidget("lancelot_part");
+//var opendocuments = panel.addWidget("lancelot_part");
  
-opendocuments.writeConfig("iconClickActivation", "true");
-opendocuments.writeConfig("contentsExtenderPosition", "1");
-opendocuments.writeConfig("iconLocation", "document-edit"); 
-opendocuments.writeConfig("showSearchBox", "true");
-opendocuments.writeConfig("partData", "model=OpenDocuments&type=list&version=1.0\n"); 
+//opendocuments.writeConfig("iconClickActivation", "true");
+//opendocuments.writeConfig("contentsExtenderPosition", "1");
+//opendocuments.writeConfig("iconLocation", "document-edit"); 
+//opendocuments.writeConfig("showSearchBox", "true");
+//opendocuments.writeConfig("partData", "model=OpenDocuments&type=list&version=1.0\n"); 
 
 
 
 
 
 
-var newdocuments = panel.addWidget("lancelot_part");
-newdocuments.writeConfig("iconLocation", "document-new");
-newdocuments.writeConfig("iconClickActivation", "true");
-newdocuments.writeConfig("contentsExtenderPosition", "1");
+//var newdocuments = panel.addWidget("lancelot_part");
+//newdocuments.writeConfig("iconLocation", "document-new");
+//newdocuments.writeConfig("iconClickActivation", "true");
+//newdocuments.writeConfig("contentsExtenderPosition", "1");
  
-newdocuments.writeConfig("showSearchBox", "true");
-newdocuments.writeConfig("partData", "model=NewDocuments&type=list&version=1.0\n"); 
+//newdocuments.writeConfig("showSearchBox", "true");
+//newdocuments.writeConfig("partData", "model=NewDocuments&type=list&version=1.0\n"); 
 
-var messagescontact = panel.addWidget("lancelot_part");
-messagescontact.writeConfig("iconLocation", "im-message-new");
-messagescontact.writeConfig("iconClickActivation", "true");
-messagescontact.writeConfig("contentsExtenderPosition", "1");
-messagescontact.writeConfig("showSearchBox", "true");
-messagescontact.writeConfig("partData", "model=Messages&type=list&version=1.0\nmodel=Contacts&type=list&version=1.0"); 
+//var messagescontact = panel.addWidget("lancelot_part");
+//messagescontact.writeConfig("iconLocation", "im-message-new");
+//messagescontact.writeConfig("iconClickActivation", "true");
+//messagescontact.writeConfig("contentsExtenderPosition", "1");
+//messagescontact.writeConfig("showSearchBox", "true");
+//messagescontact.writeConfig("partData", "model=Messages&type=list&version=1.0\nmodel=Contacts&type=list&version=1.0"); 
 
 panel.addWidget("pastebin");
 panel.addWidget("showdesktop");
