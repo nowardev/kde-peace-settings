@@ -30,18 +30,18 @@ function RemoveOldPanels()
 //RemoveOldPanels() //load the function 
  //////////////////////////////////////////////////////////
 var screenrect = screenGeometry(0);  
-function activitynowardev(){
-  
- var activity   = new Activity 
-activity.name = i18n("Nowardev Activity");
+function activitygranpa(){
 
 
- var translatoid = activity.addWidget("translatoid");
+ var screenrect = screenGeometry(0); // get information about your screen h w 
+var activity = new Activity ;
+activity.name = i18n("GranPa Activity");
 
- var yawp = activity.addWidget("yaWP");
+
+var yawp = activity.addWidget("yaWP");
 
 yawp.writeConfig("animation.daysnames","8");
-yawp.writeCodnfig("animation.details","1");
+yawp.writeConfig("animation.details","1");
 yawp.writeConfig("animation.duration","500");
 yawp.writeConfig("animation.icon","3");
 yawp.writeConfig("animation.page","8");
@@ -73,19 +73,44 @@ yawp.currentConfigGroup = new Array('locations')
 
 yawp.writeConfig("city01","accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome");
 yawp.writeConfig("selected","0");
+ 
+yawp.geometry = new QRectF(0,0,screenrect.width/4,screenrect.height/3)
 
-yawp.currentConfigGroup = new Array('ExtenderItems')
+ 
+ 
 
-yawp.writeConfig(" extenderItemPosition","0");
+var pictures = userDataPath("pictures")
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", pictures)
+folderview.geometry = new QRectF(screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
 
 
+var music =  userDataPath('music')
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", music)
+folderview.geometry = new QRectF(2*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
 
+var video = userDataPath('video')
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", video )
+folderview.geometry = new QRectF(3*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
+
+
+var downloads =userDataPath('downloads')
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", downloads)
+folderview.geometry = new QRectF(0,screenrect.height,screenrect.width/4,screenrect.height/3)
+ 
+var shared= "/home/shared"
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", shared )
+folderview.geometry = new QRectF(screenrect.width/4,screenrect.height,screenrect.width/4,screenrect.height/3)
 
 
 }
-activitynowardev()
+activitygranpa()
 
 
 
  
-//loadTemplate("org.kde.plasma-desktop.nowardevPanel")
+//loadTemplate("org.kde.plasma-desktop.granpaPanel")

@@ -1,0 +1,88 @@
+#!/bin/bash 
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+
+function_install(){ 
+
+ 
+#right actions
+for file in "$PWD"/usr/share/kde4/services/*.desktop ; do
+echo "cp "$file"    /usr/share/kde4/services/"
+
+done
+
+
+#plasma files 
+ 
+ for folders in "$PWD"/usr/share/kde4/apps/plasma/layout-templates/*/ ; do
+echo "cp -r "$folders"   /usr/share/kde4/apps/plasma/layout-templates/"
+done
+ 
+
+ 
+}
+
+function_uninstall(){
+
+ for folders in  /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.attemptPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.chromeosActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.chromeosPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.crazyPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome2Activity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome2Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome3Activity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome3Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.kde3Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.macstyleActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.macstylePanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.nowardevActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.nowardevPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.removePanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unityActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unityPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unkool7Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unkoolActivity  ; do
+echo "rm -R $folders"
+done
+
+ 
+ for file in /usr/share/kde4/services/plasma-layout-nowardev.attemptPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.chromeosActivity.desktop  /usr/share/kde4/services/plasma-layout-nowardev.chromeosPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.crazyPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.gnome2Activity.desktop  /usr/share/kde4/services/plasma-layout-nowardev.gnome2Panel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.gnome3Activity.desktop  /usr/share/kde4/services/plasma-layout-nowardev.gnome3Panel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.kde3Panel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.macstyleActivity.desktop  /usr/share/kde4/services/plasma-layout-nowardev.macstylePanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.nowardevActivity.desktop  /usr/share/kde4/services/plasma-layout-nowardev.nowardevPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.removePanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.unityActivity.desktop  /usr/share/kde4/services/plasma-layout-nowardev.unityPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.unkool7Panel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.unkoolActivity.desktop  ; do
+echo "rm  "$file"     "
+done
+
+echo "this is the output,  i have not tested the unistall function so please if you want unistall just use the output the script has written"
+ 
+}
+
+
+
+if [ "$(id -u)" = 0 ]; then 
+	echo "you have the power lol" 
+	echo "installing..."
+else 
+	echo "YOU ARE NOT ROOT TO INSTALL  YOU MUST BE ROOT. "
+	echo "have you typed wrong password?"
+	exit 0
+fi
+
+echo "Do you want install or unistall  (i\u)"
+read
+case $REPLY in
+[i/I][n/N][s/S][t/T][a/A][l/L][l/L]|[i/I]) 
+
+
+
+function_install
+
+
+;;
+ 
+[u/U][n/N][s/S][t/T][a/A][l/L][l/L]|[u/U])
+function_uninstall
+;;
+
+*)
+echo "dude u to unistall i to install"
+exit
+;;
+esac
+
