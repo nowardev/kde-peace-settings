@@ -106,7 +106,7 @@ icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wm
 
 // var quick = panel.addWidget("quickaccess"); 
 
-// panel.addWidget("trash");
+  panel.addWidget("trash");
 
 
   
@@ -114,16 +114,16 @@ icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wm
 
 // var yawp = panel.addWidget("yaWP");
 
-// yawp.writeConfig("animation.daysnames","8");
-// yawp.writeCodnfig("animation.details","1");
-// yawp.writeConfig("animation.duration","500");
-// yawp.writeConfig("animation.icon","3");
-// yawp.writeConfig("animation.page","8");
-// yawp.writeConfig("custom.fontcolor.lowtemp","30,28,27");
-// yawp.writeConfig("custom.fontcolor.normal","20,19,18");
-// yawp.writeConfig("custom.fontcolor.shadows","255,255,255,100");
-// yawp.writeConfig("custom.fontcolor.usage","false");
-// yawp.writeConfig("custom.theme.background.enabled","false");
+//yawp.writeConfig("animation.daysnames","8");
+//yawp.writeCodnfig("animation.details","1");
+//yawp.writeConfig("animation.duration","500");
+//yawp.writeConfig("animation.icon","3");
+//yawp.writeConfig("animation.page","8");
+//yawp.writeConfig("custom.fontcolor.lowtemp","30,28,27");
+//yawp.writeConfig("custom.fontcolor.normal","20,19,18");
+//yawp.writeConfig("custom.fontcolor.shadows","255,255,255,100");
+//yawp.writeConfig("custom.fontcolor.usage","false");
+//yawp.writeConfig("custom.theme.background.enabled","false");
 //yawp.writeConfig("custom.theme.enabled","false");
 //yawp.writeConfig("custom.theme.file","");
 //yawp.writeConfig("panel.forecast.days","1");
@@ -143,12 +143,12 @@ icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wm
 //yawp.writeConfig("traverse locations timeout","30");
 //yawp.writeConfig("update interval","45")
  
-// yawp.currentConfigGroup = new Array('locations')
+//yawp.currentConfigGroup = new Array('locations')
 
 //yawp.writeConfig("city01","accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome");
 //yawp.writeConfig("selected","0");
 
-// yawp.currentConfigGroup = new Array('ExtenderItems')
+//yawp.currentConfigGroup = new Array('ExtenderItems')
 
 //yawp.writeConfig(" extenderItemPosition","0");
 
@@ -185,6 +185,10 @@ lockout.writeConfig("showSwitchUserButton","true")
 }
 
 nowardev()
+
+
+
+
 
 
  
