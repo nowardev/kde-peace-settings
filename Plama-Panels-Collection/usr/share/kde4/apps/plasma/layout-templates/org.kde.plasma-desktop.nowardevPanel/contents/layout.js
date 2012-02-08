@@ -65,7 +65,7 @@ panel.height = 30
 
  var launcher = panel.addWidget("launcher");
 //launcher.writeConfig("icon", "start-here");
-panel.addWidget("showdesktop")
+//panel.addWidget("showdesktop")
   panel.addWidget("panelspacer_internal");
 //var runcommand = panel.addWidget("runcommand");
 //runcommand.writeConfig("width",screenrect.width/10 );
@@ -104,53 +104,53 @@ icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wm
  
 
 
-var quick = panel.addWidget("quickaccess"); 
+//var quick = panel.addWidget("quickaccess"); 
 
 panel.addWidget("trash");
 
 
   
-var translatoid = panel.addWidget("translatoid");
+//var translatoid = panel.addWidget("translatoid");
 
-var yawp = panel.addWidget("yaWP");
+//var yawp = panel.addWidget("yaWP");
 
-yawp.writeConfig("animation.daysnames","8");
-yawp.writeConfig("animation.details","1");
-yawp.writeConfig("animation.duration","500");
-yawp.writeConfig("animation.icon","3");
-yawp.writeConfig("animation.page","8");
-yawp.writeConfig("custom.fontcolor.lowtemp","30,28,27");
-yawp.writeConfig("custom.fontcolor.normal","20,19,18");
-yawp.writeConfig("custom.fontcolor.shadows","255,255,255,100");
-yawp.writeConfig("custom.fontcolor.usage","false");
-yawp.writeConfig("custom.theme.background.enabled","false");
-yawp.writeConfig("custom.theme.enabled","false");
-yawp.writeConfig("custom.theme.file","");
-yawp.writeConfig("panel.forecast.days","1");
-yawp.writeConfig("panel.forecast.format","3");
-yawp.writeConfig("panel.layout.compact","false");
-yawp.writeConfig("panel.today.format","3");
-yawp.writeConfig("panel.tooltip.extended.enabled","true");
-yawp.writeConfig("panel.tooltip.extended.format","5");
-yawp.writeConfig("start delay","0");
-yawp.writeConfig("system.distance","2007");
-yawp.writeConfig("system.pressure","5007");
-yawp.writeConfig("system.speed","9001");
-yawp.writeConfig("system.temperature","6001");
-yawp.writeConfig("text.shadows","false");
-yawp.writeConfig("theme","default");
-yawp.writeConfig("traverse locations","false");
-yawp.writeConfig("traverse locations timeout","30");
-yawp.writeConfig("update interval","45")
+//yawp.writeConfig("animation.daysnames","8");
+//yawp.writeConfig("animation.details","1");
+//yawp.writeConfig("animation.duration","500");
+//yawp.writeConfig("animation.icon","3");
+//yawp.writeConfig("animation.page","8");
+//yawp.writeConfig("custom.fontcolor.lowtemp","30,28,27");
+//yawp.writeConfig("custom.fontcolor.normal","20,19,18");
+//yawp.writeConfig("custom.fontcolor.shadows","255,255,255,100");
+//yawp.writeConfig("custom.fontcolor.usage","false");
+//yawp.writeConfig("custom.theme.background.enabled","false");
+//yawp.writeConfig("custom.theme.enabled","false");
+//yawp.writeConfig("custom.theme.file","");
+//yawp.writeConfig("panel.forecast.days","1");
+//yawp.writeConfig("panel.forecast.format","3");
+//yawp.writeConfig("panel.layout.compact","false");
+//yawp.writeConfig("panel.today.format","3");
+//yawp.writeConfig("panel.tooltip.extended.enabled","true");
+//yawp.writeConfig("panel.tooltip.extended.format","5");
+//yawp.writeConfig("start delay","0");
+//yawp.writeConfig("system.distance","2007");
+//yawp.writeConfig("system.pressure","5007");
+//yawp.writeConfig("system.speed","9001");
+//yawp.writeConfig("system.temperature","6001");
+//yawp.writeConfig("text.shadows","false");
+//yawp.writeConfig("theme","default");
+//yawp.writeConfig("traverse locations","false");
+//yawp.writeConfig("traverse locations timeout","30");
+//yawp.writeConfig("update interval","45")
  
-yawp.currentConfigGroup = new Array('locations')
+//yawp.currentConfigGroup = new Array('locations')
 
-yawp.writeConfig("city01","accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome");
-yawp.writeConfig("selected","0");
+//yawp.writeConfig("city01","accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome");
+//yawp.writeConfig("selected","0");
 
-yawp.currentConfigGroup = new Array('ExtenderItems')
+//yawp.currentConfigGroup = new Array('ExtenderItems')
 
-yawp.writeConfig(" extenderItemPosition","0");
+//yawp.writeConfig(" extenderItemPosition","0");
 
 
 
