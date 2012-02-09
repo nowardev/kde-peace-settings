@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -16,7 +16,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
+version=1.7
 
 function_install(){ 
 
@@ -40,12 +40,12 @@ done
 
 function_uninstall(){
 
- for folders in  /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.attemptPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.chromeosActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.chromeosPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.crazyPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome2Activity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome2Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome3Activity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome3Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.kde3Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.macstyleActivity  /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.macstylePanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.nowardevActivity /usr/share/kde4/apps/aplasma/layout-templates/org.kde.plasma-desktop.nowardevPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.removePanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unityActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unityPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unkool7Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unkoolActivity ; do 
+ for folders in  /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.attemptPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.chromeosActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.chromeosPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.crazyPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome2Activity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome2Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome3Activity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.gnome3Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.kde3Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.macstyleActivity  /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.macstylePanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.nowardevActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.nowardevPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.removePanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unityActivity /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unityPanel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unkool7Panel /usr/share/kde4/apps/plasma/layout-templates/org.kde.plasma-desktop.unkoolActivity ; do 
 rm -R $folders
 done
 
  
- for file in /usr/share/kde4/services/plasma-layout-nowardev.attemptPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.chromeosActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.chromeosPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.crazyPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome2Activity.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome2Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome3Activity.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome3Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.kde3Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.macstyleActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.macstylePanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.nowardevActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.nowardevPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.removePanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.unityActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.unityPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.unkool7Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.unkoolActivity.desktop; do
+ for file in /usr/share/kde4/services/plasma-layout-nowardev.attemptPanel.desktop  /usr/share/kde4/services/plasma-layout-nowardev.chromeosActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.chromeosPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.crazyPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome2Activity.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome2Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome3Activity.desktop /usr/share/kde4/services/plasma-layout-nowardev.gnome3Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.kde3Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.macstyleActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.macstylePanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.nowardevActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.nowardevPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.removePanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.unityActivity.desktop /usr/share/kde4/services/plasma-layout-nowardev.unityPanel.desktop /usr/share/kde4/services/plasma-layout-nowardev.unkool7Panel.desktop /usr/share/kde4/services/plasma-layout-nowardev.unkoolActivity.desktop ; do
 rm  "$file"
 done
 
@@ -64,7 +64,13 @@ else
 	exit 0
 fi
 
-echo "Do you want install or unistall  (i\u)"
+echo "
+###############################################
+i     to install Plasma Panels Collection $version
+u    to unistall Plasma Panels Collection $version
+###############################################
+
+Do you want install or unistall  (i\u)"
 read
 case $REPLY in
 [i/I][n/N][s/S][t/T][a/A][l/L][l/L]|[i/I]) 
@@ -72,13 +78,14 @@ case $REPLY in
 
 
 function_install
-
+echo "done"
 
 ;;
  
 [u/U][n/N][s/S][t/T][a/A][l/L][l/L]|[u/U])
 function_uninstall
-;;
+echo " done"
+;; 
 
 *)
 echo "dude u to unistall i to install"
