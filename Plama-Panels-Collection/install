@@ -49,7 +49,7 @@ done
 rm  "$file"
 done
 
-echo "this is the output,  i have not tested the unistall function so please if you want unistall just use the output the script has written"
+ 
  
 }
 
