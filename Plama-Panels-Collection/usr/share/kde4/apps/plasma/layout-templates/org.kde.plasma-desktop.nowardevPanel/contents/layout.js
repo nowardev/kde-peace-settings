@@ -43,7 +43,7 @@ function RemoveOldPanels()
                                     }
 }
 
-//RemoveOldPanels() //load the function 
+// RemoveOldPanels() //load the function 
  //////////////////////////////////////////////////////////
 
 
@@ -54,21 +54,30 @@ var screenrect = screenGeometry(0);  // get the geometry of your screen
 
 function nowardev(){
 var panel = new Panel
-if (panelIds.length == 1) {
-    // panel.location = 'bottom'
-    panel.location = 'top'
-    //panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
-}
+// if (panelIds.length == 1) {
+    
+//     }
 
-panel.height = 30
+panel.location = 'top'; // panel.location = 'bottom'
+//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
+ 
 
+panel.height = 30 ;
 
- var launcher = panel.addWidget("launcher");
+var launcher = panel.addWidget("launcher");
 //launcher.writeConfig("icon", "start-here");
-//panel.addWidget("showdesktop")
-  panel.addWidget("panelspacer_internal");
+panel.addWidget("showdesktop");
+
+
+var menubar = panel.addWidget("menubar");
+
+ 
+ 
+
+// panel.addWidget("panelspacer_internal");
 //var runcommand = panel.addWidget("runcommand");
 //runcommand.writeConfig("width",screenrect.width/10 );
+
 panel.addWidget("pastebin");
 
 
@@ -91,7 +100,7 @@ icontasks.writeConfig("showOnlyCurrentDesktop","false");
 icontasks.writeConfig("showOnlyCurrentScreen","false");
 icontasks.writeConfig("showProgress","true");
 icontasks.writeConfig("showSeparator","0");
-icontasks.writeConfig("sortingStrategy","2");
+icontasks.writeConfig("sortingStrategy","1");
 icontasks.writeConfig("spacing","0");
 icontasks.writeConfig("style","2");
 icontasks.writeConfig("toolTips","0");
@@ -99,7 +108,7 @@ icontasks.writeConfig("unity","true");
 //icontasks.writeConfig("Enabled","true")
 
 icontasks.currentConfigGroup = new Array('Launchers')
-icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings");
+icontasks.writeConfig("Items","file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/vlc.desktop?wmClass=Vlc,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings");
 
  
 
@@ -166,7 +175,7 @@ var systemtray = panel.addWidget("systemtray");
 var clock = panel.addWidget("digital-clock");
 clock.writeConfig("showDate", "false");
 clock.writeConfig("showDay", "false");
-clock.writeConfig("showSeconds", "true");
+clock.writeConfig("showSeconds", "false");
 clock.writeConfig("showYear", "false");
 clock.writeConfig("showShadow", "false");
 //clock.writeConfig("showTimezone", "true");
@@ -186,9 +195,3 @@ lockout.writeConfig("showSwitchUserButton","true")
 
 nowardev()
 
-
-
-
-
-
- 

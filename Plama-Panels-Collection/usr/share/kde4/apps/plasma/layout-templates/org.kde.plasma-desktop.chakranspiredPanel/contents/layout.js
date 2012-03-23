@@ -197,7 +197,7 @@ icontasks.writeConfig("Items","file:////usr/share/applications/kde4/dolphin.desk
 // messagescontact.writeConfig("partData", "model=Messages&type=list&version=1.0\nmodel=Contacts&type=list&version=1.0"); 
 
 
- sleep(7000)
+ sleep(5000)
 panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
 
 //var lockout = panel.addWidget("lockout");
