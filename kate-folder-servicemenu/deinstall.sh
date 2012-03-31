@@ -218,7 +218,7 @@ neutral)
 function_main
 ;;
 *)
-kdialog --passivepopup $":P no option so... installation aborted" 2
+kdialog --passivepopup $":P no option so... exiting" 2
 exit 0
 ;;
 esac
