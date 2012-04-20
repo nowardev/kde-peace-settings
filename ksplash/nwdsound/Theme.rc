@@ -1,0 +1,9 @@
+[KSplash Theme: nwdsound]
+Name = Fading Kde Text with rotating gear and audio
+Description = you need to install libdeclarative-multimedia libqtmultimediakit1  on debian\kubuntu  KDE text fade with rotating gears and sound
+Version = 1.0
+Author = Nowardev <nowardev at gmail.com>
+Homepage = http://www.nowardev.wordpress.com
+
+# Theme behaviour settings.
+Engine = KSplashQML

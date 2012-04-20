@@ -1,0 +1,9 @@
+[KSplash Theme: nwd1]
+Name = Fading Kde with rotating gear version 1
+Description = KDE text fade with a gear that will appear
+Version = 1.0
+Author = Nowardev <nowardev at gmail.com>
+Homepage = http://www.nowardev.wordpress.com
+
+# Theme behaviour settings.
+Engine = KSplashQML

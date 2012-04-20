@@ -1,0 +1,9 @@
+[KSplash Theme: GraphireKubuntuBig]
+Name = Kubuntu QML
+Description = Animated KDE logo For kubuntu
+Version = 1.0
+Author = Nowardev <nowardev at gmail.com>
+Homepage = http://www.nowardev.wordpress.com
+
+# Theme behaviour settings.
+Engine = KSplashQML
