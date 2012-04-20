@@ -1,0 +1,14 @@
+Source: kde-service-menu-vlc
+Section: kde
+Priority: extra
+Maintainer: Nowardev Peace  <nowardev@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: http://kde-apps.org/content/show.php?content=118298
+
+
+Package: kde-service-menu-vlc
+Architecture: all
+Depends: kate, dolphin
+Description: vlc service menu for dolphin
+ It's a service menu for dolphin that allows you to add files and folders in your vlc playlist, Note you HAVE TO ENABLE DBUS INTERFACE on vlc's  settings.
