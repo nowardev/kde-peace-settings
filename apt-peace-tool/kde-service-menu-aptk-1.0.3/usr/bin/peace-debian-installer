@@ -1,0 +1,473 @@
+#!/bin/bash -x
+ 
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+version=1.0.3
+
+
+
+function_scriptsearch(){
+searchresult=$(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"insert the application" $"packagestuff or type exit and click ok")")
+
+
+}
+
+
+function_update(){
+
+ sudo apt-get update
+
+}
+
+function_distupgrade(){
+
+ sudo apt-get dist-upgrade
+
+}
+
+function_updatedistupgradeforce(){
+
+
+ sudo apt-get dist-upgrade -y 
+
+
+}
+
+
+function_updateupgradeforce(){
+
+
+  sudo apt-get upgrade  -y 
+
+ 
+
+}
+ 
+
+function_upgrade(){
+
+ sudo apt-get upgrade 
+
+}
+ 
+
+function_removeblock(){
+ans=$(kdialog --warningcontinuecancel  $" Are you sure?  
+
+
+You are trying to remove the lock this should be done only if you know whatyour are doing 
+the lock can be removed only by root when an installation has been interrupted badly and the lock is still present ")
+
+if [[ $? == 0 ]]; then 
+ sudo rm /var/lib/dpkg/lock 
+ sudo apt-get update
+
+
+else
+exit
+
+fi
+
+}
+
+ 
+function_dpkgi(){
+
+ sudo dpkg -i "$1"
+
+}
+
+function_dpkgr(){
+
+base=$(basename "$1")
+ans="$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please set the name without bad char" "$base")"))"
+
+
+if [[ -z "$ans"  ]] ; then
+exit 
+else 
+ sudo dpkg -r  "$ans"
+fi 
+ 
+
+}
+
+function_dpkrecover(){
+
+ sudo dpkg --configure -a
+
+}
+
+ 
+function_dpkginfo(){
+
+kdialog --msgbox "$(dpkg -I "$1")"
+
+}
+
+function_dpkginfoinstalled(){
+
+kdialog --msgbox "$(dpkg -s "$1")"
+
+}
+
+ 
+ 
+function_edit(){
+kdesudo kate /etc/apt/sources.list
+
+}
+
+function_reload(){
+$1
+}
+
+
+function_searchex(){
+
+
+ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )"
+ 
+
+
+if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
+exit 
+else 
+
+ans2=$(apt-cache pkgnames  "$ans")
+
+	if [[ -z "$ans2" ]];then 
+
+		  kdialog --title "Packages" --msgbox  $"Software \ package not found " ; function_reload "function_searchex"
+	else
+		  kdialog --title "Packages" --msgbox  "$ans2"
+	 fi
+fi 
+
+}
+
+
+function_search(){
+
+
+ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )"
+ 
+
+
+if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
+exit 
+else 
+ans2=$(apt-cache search  "$ans")
+
+	if [[ -z "$ans2" ]];then 
+
+		  kdialog --title "Packages" --msgbox  $"Software \ package not found " ; function_reload "function_search"
+	else
+		  kdialog --title "Packages" --msgbox  "$ans2"
+	 fi
+
+fi 
+
+}
+
+ 
+
+function_reinstall(){
+
+
+ans="$(kdialog --title $"Reinstall" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Reinstall" --textinputbox $"Please insert a keyword" krita)"))"
+
+
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+ sudo apt-get install --reinstall  "$ans"
+fi 
+
+
+
+}
+
+function_purge(){
+
+ans="$(kdialog --title $"Apt Purge" --textinputbox $"Please insert packages to purge (note this is for a long list of packages)" $"packagestuff or type exit and click ok")"
+
+if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]]; then 
+exit
+else 
+ sudo apt-get remove --purge  "$ans"
+fi 
+
+ 
+
+
+}
+
+
+
+
+function_aptr(){
+ans="$(kdialog --title $"Remove" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Remove" --textinputbox $"Please insert a keyword" krita)"))"
+
+if [[ $? == 1 ]] ; then
+exit 
+else 
+ sudo apt-get remove  "$ans"
+fi  
+
+}
+
+function_searchapti(){
+
+
+ans="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )"
+ 
+
+
+if [[ -z $ans || $ans == "packagestuff or type exit and click ok" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
+exit 
+else 
+
+ans2=$(apt-cache pkgnames  "$ans")
+
+	if [[ -z "$ans2" ]];then 
+
+		  kdialog --title $"Packages" --msgbox  $"Software \ package not found " ; function_reload "function_searchapti"
+	else
+		ans3=$(kdialog --title $"Install" --combobox $"Please select  packages" $ans2)
+		if [[ -z "$ans2" ]];then
+		
+		ans3=$(kdialog --title $"Install" --combobox $"Please select  packages...you have not selected." $ans2 )
+		else
+		 
+		 sudo apt-get install "$ans3"
+		fi
+	 fi
+fi 
+
+
+
+
+
+}
+
+
+	 
+
+function_apti(){
+ans="$(kdialog --title $"Apt Install" --textinputbox $"Please insert a keyword  (note this is for a long list of packages)" krita)"
+
+if [[ $? == 1 ]] ; then
+kdialog --title "Packages" --msgbox  $"No keyword given " ; function_reload "function_apti"
+else 
+ sudo apt-get install  $ans
+fi 
+
+}
+
+
+
+
+function_hold(){
+
+
+ans="$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )"))"
+
+if [[ -z $ans || "$ans" == "packagestuff or type exit and click ok" ]] ; then
+kdialog --passivepopup $"no package found!"
+exit 
+else 
+ sudo aptitude hold "$ans"
+fi 
+
+}
+
+function_installf(){
+
+ sudo apt-get install -f 
+
+}
+
+function_autoremove(){
+
+ sudo apt-get autoremove
+
+}
+
+function_clean(){
+
+ sudo apt-get clean
+
+}
+
+
+ 
+
+
+function_ppa(){
+kdesudo software-properties-kde
+# sudo add-apt-repository $(kdialog --title PPA --textinputbox  "PPA"  ppa:name/test ; sleep 20 ; exit )
+#sudo apt-get upate 
+ 
+}
+
+
+function_ppar(){
+
+a=$(kdialog --combobox "Remove ppa"  $(find  /etc/apt/sources.list.d/ -name *.list))
+
+
+
+ sudo rm "$a" "$a".save #; sudo apt-get upate 
+
+kdialog --passivepopup   $" PPA Removed   $a" 2
+
+}
+
+
+function_menu(){
+
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update"    upgrade $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
+if [[ -z $ans ]] ; then
+exit 
+else 
+peace-debian-installer "$ans"
+fi 
+exit 
+
+}
+
+
+case "$1" in 
+
+
+update)
+function_update
+;;
+
+upgrade)
+function_upgrade
+;;
+
+distupgrade)
+function_distupgrade
+;;
+
+forceupdatedistupgrade)
+function_updatedistupgradeforce
+;;
+
+
+
+forceupdateupgrade)
+function_updateupgradeforce
+;;
+
+install)
+function_apti
+;;
+
+
+searchinstall)
+function_searchapti
+;;
+
+search)
+function_search
+;;
+
+searchex)
+function_searchex
+;;
+
+reinstall)
+function_reinstall
+;;
+
+installf)
+function_installf
+;;
+
+remove)
+function_aptr
+;;
+
+purge)
+function_purge
+;;
+
+
+hold)
+
+function_hold
+;;
+
+autoremove)
+function_autoremove
+;;
+
+clean)
+function_clean
+;;
+
+
+dpkgi)
+function_dpkgi "$2"
+;;
+
+dpkgr)
+function_dpkgr "$2"
+;;
+
+dpkgrecover)
+function_dpkrecover
+;;
+dpkginfo)
+function_dpkginfo "$2"
+;;
+
+dpkginfoinstalled)
+function_dpkginfoinstalled "$2"
+;;
+edit)
+function_edit
+;;
+
+ppa)
+function_ppa
+;;
+ppar)
+function_ppar
+;;
+removeblock)
+function_removeblock
+;;
+menu)
+function_menu
+;;
+*)
+kdialog --passivepopup $"No option for peace-debian-installer"
+;;
+
+
+esac
+
+
+exec bash
