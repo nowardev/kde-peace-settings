@@ -1,0 +1,8 @@
+[Dolphin]
+AdditionalInfo=Details_Size,Details_Date,CustomizedDetailsDetails_Permissions
+PreviewsShown=true
+ViewMode=1
+
+
+[Settings]
+HiddenFilesShown=true

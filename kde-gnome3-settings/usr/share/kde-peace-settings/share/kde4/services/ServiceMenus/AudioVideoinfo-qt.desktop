@@ -1,0 +1,40 @@
+#installation
+#copy this on $HOME/.kde/share/kde4/services
+#
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+[Desktop Entry]
+Actions=mencoderMediainfo;mediainfo;
+Icon=dialog-information
+ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+Type=Service
+X-KDE-Priority=TopLevel
+
+[Desktop Action mediainfo]
+Exec=kdialog --msgbox "$(ffmpeg -i %u 2>&1 |grep -E '(Duration)|(Stream)' )"
+Icon=dialog-information
+Name=info about the media
+Name[it]=informazioni sul file multimediale
+Name[ru]=Информация о медиафайле ffmpeg
+ 
+[Desktop Action mencoderMediainfo]
+Exec=kdialog --msgbox "$(mplayer -identify %u  -ao null -vo null -frames 0 2>/dev/null | grep ^ID_ )"
+Icon=dialog-information
+Name=info about the media Mencoder
+Name[it]=informazioni sul file Mencoder
+Name[ru]=Информация о медиафайле mencoderù

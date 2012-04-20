@@ -1,0 +1,13 @@
+Format-Specification: http://wiki.debian.org/Proposals/CopyrightFormat?action=recall&rev=455
+
+Upstream-Name: kde-peace-settings
+Upstream-Maintainer: Nowardev <nowardev@gmail.com>
+Upstream-Source: http://code.google.com/p/no-war-kubuntu-pack/
+
+Files: *
+Copyright: Copyright 2011, Nowardev <nowardev@gmail.com>
+License: GPL-3+
+
+License: GPL-3+
+ On Debian systems the full text of the GNU General Public License can be found
+ in the `/usr/share/common-licenses/GPL' file.

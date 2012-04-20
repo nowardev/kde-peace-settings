@@ -1,0 +1,29 @@
+
+Cantarell in Debian: 
+=========================
+
+Several parts of the upstream source tree (http://live.gnome.org/CantarellFonts) are left out because they are not currently ready to be used.
+
+We currently only package the .otf files.
+The OpenType files are not rebuilt from the source files (the current buildpath is overridden) but they are usable sources that you can modify with fontforge. 
+
+Be aware that no Reserved Font Names have been declared for this font family and that branches of modified versions can create name collisions and rendering regressions.
+
+
+To follow best practises in packaging open fonts:
+- README has been renamed to FONTLOG.txt
+- COPYING has been renamed to OFL.txt
+
+A fontconfig configuration file is provided but is not installed by default, see /etc/fonts/conf.avail/
+
+We are waiting for resolution of various upstream bugs around following community best practises in tree structure, versionning consistency and reproducable build system: 
+https://bugzilla.gnome.org/show_bug.cgi?id=644126
+https://bugzilla.gnome.org/show_bug.cgi?id=644187
+https://bugzilla.gnome.org/show_bug.cgi?id=635383
+
+
+-- 
+The pkg-fonts team (Debian Fonts Task Force)
+http://pkg-fonts.alioth.debian.org/
+
+
