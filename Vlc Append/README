@@ -21,5 +21,10 @@
 
 INSTALLATION
 
+if you have vlc 1.x you should install vlc-append 0.5 version that is tested for vlc 1.x
+
+
+if you have vlc 2.x you shoudl install  vlc-append 0.6 
+
 
 sudo ./install 

@@ -1,0 +1,66 @@
+#!/bin/bash 
+##license gpl 
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+ 
+version="0.2"
+author="Nowardev"
+
+functionstartkate()
+{
+kateisrunning=$(pgrep kate)
+if [[ $? == 1 ]]; then
+kate   & kdialog --passivepopup "kate is starting..  " 1
+else
+echo katec is running..
+fi
+}
+
+functionstartkate
+
+function_open_files(){
+
+
+
+
+
+while read line ;do  
+
+if  [[ "$line"  =~ ".svn" || "$line"  =~ ".git" ]] ;then
+	echo $line is not to open
+else
+
+if  [[ ! -z $(file "$line" | grep text )  ]];then 
+
+	if  [[ "$1" == "b" ]];then
+	    if  [[ "$line"  != *~  ]] ;then
+	     kate "$line"
+	    fi 
+
+		
+	 elif [[ "$1" == "n" ]];then
+		kate "$line"
+	  
+	fi
+fi
+fi
+done< <(find "$2" -type f)
+}
+
+ 
+
+ 
+function_open_files "$1" "$2"
+# " ${f#"$1: "} remove filename: " at the start In case the file is  "./blah/foo/text/somebinaryfile"
+#find "$1" \( -name .git -o -name .svn -o -name *~ \) -prune -o -type f -exec bash -c 'f=$(file -i "$1"); [[ ${f#"$1: "} = *text* ]]' _ {} \; -exec kate {} +
