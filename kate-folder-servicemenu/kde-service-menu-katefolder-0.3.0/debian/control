@@ -1,0 +1,16 @@
+Source: kde-service-menu-katefolder
+Section: kde
+Priority: extra
+Maintainer: Nowardev Peace <nowardev@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: www.nowardev.wordpress.com
+
+
+Package: kde-service-menu-katefolder
+Architecture: all
+Depends: dolphin, kate 
+Description: kate folder service menu
+ This service menu can open every file 
+ you have in a folder with kate , recursively
+ it should work with every text-like files
