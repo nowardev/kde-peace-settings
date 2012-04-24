@@ -1,0 +1,7 @@
+[KdmGreeterTheme]
+Greeter=nowardev_kdm_v2.xml
+Name=Nowardev-KDM_v2
+Author=nowardev nowardev@gmail.com
+Copyright=GPL V3
+Screenshot=screenshot.jpeg
+X-Ubuntu-Gettext-Domain=desktop_kdebase-workspace

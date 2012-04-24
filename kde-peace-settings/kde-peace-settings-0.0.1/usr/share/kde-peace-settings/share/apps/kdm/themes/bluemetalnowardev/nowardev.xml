@@ -1,0 +1,296 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE greeter SYSTEM "greeter.dtd">
+<greeter>
+	<style font="cantarel 12" base-color="#40c0c0c0"/>
+	<item type="svg" background="true">
+		
+	<normal file="graphite1600_v8.png"/>
+	 
+		<pos x="0" y="0" width="100%" height="100%"/>
+	</item>
+	
+<!-- what contains the buttons clock and menus on top
+  -->
+	<item type="rect" background="true">
+<!-- dock on top color
+  -->
+		<normal color="#40c0c0c0"/>
+		<pos x="0" y="5" width="100%" height="35"/>
+		<fixed>
+<!-- dock on top color
+  -->   
+
+								
+					<!--kde failsafe kde work etc modes  -->
+
+					 
+					<!--menu button-->
+					
+ 
+						 
+							<item type="label" id="system_button" button="true">
+								<normal color="#DCDCDC" font="cantarel 12"/>
+								<prelight color="#FFFFFF" font="cantarel 12"/>
+								<active color="#FFFFFF" font="cantarel 12"/>
+								<pos y="10" x="170"   />
+								<stock type="system"/>
+							</item>
+						  
+					<!--session button-->
+							<item type="label" id="session_button" button="true">
+								<normal color="#DCDCDC" font="cantarel 12"/>
+								<prelight color="#FFFFFF" font="cantarel 12"/>
+								<active color="#FFFFFF" font="cantarel 12"/>
+								<pos x="10" y="50%" anchor="w"/>
+								<stock type="session"/>
+							</item>
+ 
+					
+
+ 
+					
+<!--
+
+###########################clock##################################
+	-->
+					
+						<item type="label" id="clock">
+							<normal color="#DCDCDC" font="cantarel 18"/>
+							<pos x="-20" y="16" anchor="e"/>
+							<text>%c</text>
+						</item>
+<!--
+
+###########################clock###################################
+	-->	
+					
+
+
+		</fixed>
+	</item>
+<!--
+
+#############################################################
+	-->
+
+	
+	
+	<item type="rect" id="timed-label">
+		<normal color="#FFFFFF" alpha="0.9"/>
+		<pos anchor="c" x="50%" y="40%" width="box" height="box"/>
+		<box orientation="vertical" xpadding="50" ypadding="5" spacing="0">
+			<item type="label">
+				<normal color="#DCDCDC" font="Sans 25"/>
+				<pos x="50%" anchor="n"/>
+				<stock type="timed-label"/>
+			</item>
+		</box>
+	</item>
+
+	<!--
+
+##############################################################
+	-->
+	
+	
+<!--
+
+###########################user password and nickname  ###################################
+	-->	
+	
+	<item type="rect" id="greeter">
+		<pos anchor="c" x="50%" y="85%" width="box" height="1"/>
+		<box orientation="horizontal" xpadding="0" ypadding="0" spacing="20">
+		  
+
+			
+			<item type="rect" id="verify">
+				<normal color="#DCDCDC" alpha="0.3"/>
+				<pos anchor="w" width="box" height="box"/>
+				<box orientation="vertical" min-width="340" xpadding="30" ypadding="20" spacing="20">
+				  
+					<item type="label">
+						<pos anchor="n" x="50%"/>
+						<normal color="#DCDCDC" font="Sans 30"/>
+						<stock type="welcome-label"/>
+					</item>
+					
+					<item type="rect" id="talker">
+					  <normal color="#DCDCDC" font="Sans 30"/>
+						<pos anchor="n" x="50%" width="box" height="box"/>
+						
+					</item>
+<!--
+
+###########################user password and nickname  ###################################
+	-->	
+					
+				</box>
+				
+	<!-- Login-Error -->	
+				<fixed>
+					<item type="label" id="pam-error">
+						<pos anchor="s" x="50%" y="-5"/>
+						<normal color="#DCDCDC" font="Sans Bold 12"/>
+						<text/>
+					</item>
+					
+					<!--
+
+###########################caps lock error #####################################################################
+	-->
+					
+					<item type="rect" id="caps-lock-warning">
+						<normal color="#FFFFFF" alpha="0.5"/>
+						<pos anchor="n" x="50%" y="125%" width="box" height="box"/>
+						<box orientation="vertical" xpadding="50" ypadding="5" spacing="0">
+							<item type="label">
+								<normal color="#ff0000" font="Sans 29"/>
+								<pos x="50%" anchor="n"/>
+								<stock type="caps-lock-warning"/>
+							</item>
+						</box>
+					</item>
+					
+					<!--
+
+###########################caps lock error #####################################################################
+	-->
+				</fixed>
+			</item>
+		</box>
+	</item>
+	
+	<!--
+	
+	
+
+###########################user list  ###################################
+	-->	<!--	 
+			<item type="list" id="userlist">
+				<color labelcolor="#40c0c0c0" altlabelcolor="#40e0e0e0"/>
+				<pos max-height="50%^" anchor="c" x="50%" y="50%" width="box" height="box"/>
+ 
+				 
+
+			</item>-->
+ 
+<!--
+
+###########################user list  ###################################
+	-->
+</greeter>
+<!--
+
+					<item type="rect" id="language_button" button="true">
+						<normal color="#ffffff"/>
+						<pos y="50%" anchor="w" width="box" height="box"/>
+						<box orientation="horizontal" spacing="10" xpadding="10">
+							<item type="pixmap">
+								<normal file="options.png" tint="#dddddd"/>
+								<prelight file="options.png"/>
+								<active file="options.png" tint="#ff0000"/>
+								<pos y="50%" anchor="w"/>
+							</item>
+							<item type="label">
+								<normal color="#DCDCDC" font="cantarel 12"/>
+								<prelight color="#666666" font="cantarel 12"/>
+								<active color="#ff0000" font="cantarel 12"/>
+								<pos y="50%" anchor="w"/>
+								<stock type="language"/>
+							</item>
+						</box>
+					</item>
+					
+					
+	-->	
+	
+	
+	<!-- box orientation="vertical" xpadding="0" ypadding="0" spacing="10" -->
+<!--
+						<box orientation="horizontal" xpadding="0" ypadding="0" spacing="0">
+							<item type="rect">
+								<normal color="#FF8080" alpha="0.0"/>
+								<pos anchor="w" y="50%" width="box" height="box"/>
+								<box orientation="vertical" xpadding="0" ypadding="0" spacing="16">
+									<item type="label">
+										<show type="plugin-domain-entry"/>
+										<buddy idref="domain-entry"/>
+										<pos anchor="ne" x="100%"/>
+										<normal color="#DCDCDC" font="cantarel 12"/>
+										<stock type="domain-label"/>
+									</item>
+									<item type="label">
+										<buddy idref="user-entry"/>
+										<pos anchor="ne" x="100%"/>
+										<normal color="#DCDCDC" font="cantarel 12"/>
+										<stock type="username-label"/>
+									</item>
+									<item type="label">
+										<buddy idref="pw-entry"/>
+										<pos anchor="ne" x="100%"/>
+										<normal color="#DCDCDC" font="cantarel 12"/>
+										<stock type="password-label"/>
+									</item>
+								</box>
+							</item>
+							<item type="rect">
+								<normal color="#FF80FF" alpha="0.0"/>
+								<pos anchor="w" y="50%" width="box" height="box"/>
+								<box orientation="vertical" xpadding="0" ypadding="0" spacing="10">
+									<item type="entry" id="domain-entry">
+										<show type="plugin-domain-entry"/>
+										<pos anchor="n" x="50%" height="24" width="150"/>
+									</item>
+									<item type="entry" id="user-entry">
+										<pos anchor="n" x="50%" height="24" width="150"/>
+									</item>
+									<item type="entry" id="pw-entry">
+										<pos anchor="n" x="50%" height="24" width="150"/>
+									</item>
+								</box>
+							</item>
+						</box>
+-->
+
+<!--
+					<item type="rect" id="disconnect_button" button="true">
+						<normal color="#ffffff"/>
+						<show modes="flexi,remote"/>
+						<pos y="50%" anchor="w" width="box" height="box"/>
+						<box orientation="horizontal" spacing="10" xpadding="10">
+							<item type="pixmap">
+								<normal file="options.png" tint="#dddddd"/>
+								<prelight file="options.png"/>
+								<active file="options.png" tint="#ff0000"/>
+								<pos y="50%" anchor="w"/>
+							</item>
+							<item type="label">
+								<normal color="#DCDCDC" font="cantarel 12"/>
+								<prelight color="#666666" font="cantarel 12"/>
+								<active color="#ff0000" font="cantarel 12"/>
+								<pos y="50%" anchor="w"/>
+								<stock type="disconnect"/>
+								<show modes="remote"/>
+							</item>
+							<item type="label">
+								<normal color="#DCDCDC" font="cantarel 12"/>
+								<prelight color="#666666" font="cantarel 12"/>
+								<active color="#ff0000" font="cantarel 12"/>
+								<pos y="50%" anchor="w"/>
+								<stock type="quit"/>
+								<show modes="flexi"/>
+							</item>
+						</box>
+					</item>
+					
+					
+					
+					
+					
+					
+						<item type="pixmap" background="true">
+		<normal file="nowardev-kdelogo.png"/>
+		<pos x="50%" y="50%" anchor="se"/>
+	</item>
+-->

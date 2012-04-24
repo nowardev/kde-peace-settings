@@ -1,0 +1,25 @@
+Source: kde-peace-settings
+Section: kde
+Priority: extra
+Maintainer: Nowardev Peace <nowardev@gmail.com>
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: www.nowardev.wordpress.com
+
+Package: kde-peace-settings
+Architecture: all
+Conflicts: kubuntu-default-settings, kubuntu-desktop, kubuntu-full, kubuntu-firefox-installer,  kubuntu-konqueror-shortcuts, kubuntu-low-fat-settings,  kubuntu-mobile, kubuntu-netbook-default-setting, kubuntu-netbook, kubuntu-mobile-default-settings,rekonq,dragonplayer 	
+Replaces: kubuntu-default-settings, kubuntu-desktop, kubuntu-full, kubuntu-firefox-installer,  kubuntu-konqueror-shortcuts, kubuntu-low-fat-settings,  kubuntu-mobile, kubuntu-netbook-default-setting, kubuntu-netbook, kubuntu-mobile-default-settings,rekonq,dragonplayer 
+Depends: alsa-base, alsa-utils, anacron, ark, akonadi-kde-resource-googledata, akonadiconsole, bc, ca-certificates, dc, dolphin, digikam, foomatic-db-compressed-ppds, foomatic-filters, genisoimage, ghostscript-x, inputattach, kde-window-manager, kde-workspace-bin, kde-zeroconf, kdemultimedia-kio-plugins, kdepasswd, kdm, khelpcenter4, klipper, kmix, konsole, ksnapshot, kde-service-menu-fuseiso, kffmpegthumbnailer,kipi-plugins,ksysguard, language-selector-kde, lftp, libpam-ck-connector, libsasl2-modules, libxp6, nvidia-common, okular, openprinting-ppds, phonon-backend-vlc, plasma-desktop, plasma-netbook, pnm2ppa, rfkill, software-properties-kde, systemsettings, ttf-dejavu-core, ttf-freefont, ubuntu-extras-keyring, unzip, wireless-tools, wpasupplicant, x-ttcidfont-conf, xdg-user-dirs, xkb-data, xorg, zip 
+Recommends: acpi-support, akregator, apport-kde, apturl-kde, avahi-autoipd, avahi-daemon, bluedevil, bluez, bluez-alsa, bluez-cups, brltty, c2esp, cdrdao, cryptsetup, cups, cups-bsd, cups-client, vlc, kmplayer, kdenlive, foo2zjs, gnupg-agent, gpgsm, gstreamer0.10-qapt, gtk2-engines-oxygen, gwenview, hplip, ibus-qt4, im-switch, jockey-kde, k3b, kaccessible, kaddressbook, kamera, kate, kcalc, kde-config-gtk, kde-config-touchpad, kdegraphics-strigi-analyzer, kdenetwork-filesharing, kdepim-kresources, kdepim-runtime, kdepim-strigi-plugins, kdepim-wizards, kdesudo, kerneloops-daemon, kmag, kmail, kmousetool, knotes, kontact, kopete, korganizer,  kppp, ksystemlog, ktimetracker, ktorrent,  kvkbd, kwalletmanager, laptop-detect, libnss-mdns, libqca2-plugin-ossl, libreoffice-calc, libreoffice-impress, libreoffice-kde, libreoffice-style-oxygen, libreoffice-writer, min12xxw, mobile-broadband-provider-info, muon, muon-installer, muon-notifier, okular-extra-backends, oxygen-cursor-theme, oxygen-icon-theme, oxygen-icon-theme-complete, partitionmanager, pcmciautils, pinentry-qt4,plasma-widget-activitymanager, plasma-widget-folderview,  plasma-widget-lancelot, plasma-widget-menubar, plasma-widget-message-indicator, plasma-widget-networkmanagement, plasma-widget-quickaccess, plasma-widget-takeoff, plasma-widget-translatoid, plasma-widget-veromix, plasma-widgets-addons, plasma-widgets-workspace,policykit-desktop-privileges, printer-applet, ptouch-driver, pulseaudio, pulseaudio-module-bluetooth, pxljr, qapt-deb-installer, konversation, rastertosag-gdi, konqueror, kpart-webkit,  konq-plugins, chromium-browser, chromium-codecs-ffmpeg-extra, splix, system-config-printer-kde, ttf-indic-fonts-core, ttf-kacst-one, ttf-khmeros-core, ttf-lao, ttf-liberation, ttf-punjabi-fonts, ttf-takao-pgothic, ttf-thai-tlwg, ttf-ubuntu-font-family, ttf-unfonts-core, ttf-wqy-microhei, udisks, upower, usb-creator-kde, userconfig, xcursor-themes, xdg-utils, samba, winbind 
+Description: This is the kde-peace-settings a collection of settings and plasma panels plus normal 
+ dependences that make kubuntu better for a normal user:
+ -ark now extract and autoclose itself opening the ouput folder
+ dolphinrc ha konsole and up button by default
+ -katerc has konsole by default autosyncronized with documents
+ -kwin has desktop effects disabled by default
+ -knotify has not the system sound
+ -nepomuck is disable by default
+ kcmclockrc  kdedrc  kdeglobals  knotifyrc  krunnerrc  ksmserverrc 
+ it installs some software for a normal multimedia userconfig
+

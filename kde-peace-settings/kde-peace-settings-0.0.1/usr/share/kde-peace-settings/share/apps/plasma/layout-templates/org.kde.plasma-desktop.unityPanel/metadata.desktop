@@ -1,0 +1,16 @@
+[Desktop Entry]
+Encoding=UTF-8
+Name=Unity Panel
+Type=Service
+ServiceTypes=Plasma/LayoutTemplate
+X-Plasma-Shell=plasma-desktop
+X-Plasma-ContainmentCategories=panel
+X-KDE-PluginInfo-Author=Nowardev
+X-KDE-PluginInfo-Email=nowardev@gmail.com
+X-KDE-PluginInfo-Name=nowardev.unityPanel
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=http://nowardev.wordpress.com
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-EnabledByDefault=true

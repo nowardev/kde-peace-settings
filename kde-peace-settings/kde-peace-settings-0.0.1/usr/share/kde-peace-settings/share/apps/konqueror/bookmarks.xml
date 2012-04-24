@@ -1,0 +1,361 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE xbel>
+<xbel folded="no" xmlns:bookmark="http://www.freedesktop.org/standards/desktop-bookmarks" xmlns:mime="http://www.freedesktop.org/standards/shared-mime-info" xmlns:kdepriv="http://www.kde.org/kdepriv" dbusName="konqueror">
+ <folder folded="yes">
+  <title>KDE</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="bookmark_folder"/>
+   </metadata>
+  </info>
+  <bookmark href="http://kde-apps.org/">
+   <title>KDE-Apps.org</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="text-html"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+  </bookmark>
+  <bookmark href="http://www.kde.org/">
+   <title>KDE site</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="text-html"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+  </bookmark>
+  <bookmark href="http://techbase.kde.org/">
+   <title>KDE TechBase</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/techbase.kde.org_favicon"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://techbase.kde.org/Welcome_to_KDE_TechBase_(it)">
+   <title>Welcome to KDE TechBase (it) - KDE TechBase</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/techbase.kde.org_favicon"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+ </folder>
+ <folder folded="no">
+  <title>google</title>
+  <bookmark href="http://www.youtube.com/">
+   <title>YouTube</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/s.ytimg.com_yt_favicon-refresh-vfldLzJxy"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://www.google.com/">
+   <title>Google</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.google.it"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://mail.google.com">
+   <title>Gmail </title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="text-html"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://translate.google.com/?hl=it">
+   <title>Google Traduttore</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/translate.google.com"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://maps.google.com/maps?ct=reset">
+   <title>Google Maps</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/maps.gstatic.com"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://www.google.com/imghp?hl=en&amp;tab=vi">
+   <title>Google Images</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.google.com"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://picasa.google.com/intl/it">
+   <title>Picasa</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="text-html"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>Mon, 12 Mar 2012 15:42:43 GMT</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://www.google.com/videohp?hl=en">
+   <title>Google Videos</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.google.com"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://www.google.com/shopping?hl=en&amp;tab=wf">
+   <title>Google Product Search</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.google.com"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://www.google.it/shopping?hl=en&amp;tab=wf">
+   <title>Google Shopping</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.google.it"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://code.google.com/hosting/">
+   <title>Google Project Hosting</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.gstatic.com_codesite_ph_images_phosting"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://accounts.google.com/ServiceLogin?service=blogger">
+   <title>Blogger: Crea il tuo blog gratuito</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/accounts.google.com"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://plus.google.com/">
+   <title>Browser non più supportato</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="text-html"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://www.google.com/calendar/render">
+   <title>Google Calendar</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/calendar.google.com_googlecalendar_images_favicon_v2010_16"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://groups.google.com/grphp?hl=en&amp;pli=1">
+   <title>Google Groups</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/groups.google.com_groups_img_3_favicon"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://docs.google.com/#home">
+   <title>Home page - Google Documenti</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/ssl.gstatic.com_docs_doclist_images_favicon"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+ </folder>
+ <folder folded="yes">
+  <title>BANK</title>
+  <bookmark href="https://www.quiubi.it/page/qui-ubi">
+   <title>Qui UBI - La tua Banca via internet, telefono, cellulare e sportelli automatici - UBI Banca</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.quiubi.it_ubi-banca-theme_images_liferay"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>OK</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://www.unicredit.it/it/privati.html">
+   <title>UniCredit: Conti correnti online - Mutui - Carte di credito - Investimenti - Prestiti - UniCredit</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.unicredit.it_etc_designs_unicredit_favicon"/>
+    </metadata>
+    <metadata owner="http://www.kde.org">
+     <linkstate>Checking...</linkstate>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://www.poste.it/privati/">
+   <title>Sub-home Privati - Poste.it</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.poste.it"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://www.paypal.com/it/cgi-bin/webscr?cmd=_home&amp;country_lang.x=true">
+   <title>Benvenuto - PayPal</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/www.paypalobjects.com_en_US_i_icon_pp_favicon_x"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+ </folder>
+ <folder folded="yes">
+  <title>social</title>
+  <bookmark href="http://www.facebook.com/">
+   <title>Facebook</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/static.ak.fbcdn.net_rsrc.php_yi_r_q9U99v3_saj"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://twitter.com/">
+   <title>Twitter</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/twitter.com_phoenix_favicon"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="http://identi.ca/">
+   <title>Public timeline - Identi.ca</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/identi.ca"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+ </folder>
+ <folder folded="yes">
+  <title>ubuntu</title>
+  <bookmark href="http://wiki.ubuntu-it.org/Documentazione/Indice">
+   <title>Documentazione/Indice - Wiki di ubuntu-it</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/wiki.ubuntu-it.org_htdocs_favicon"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+  <bookmark href="https://wiki.ubuntu.com/">
+   <title>Home - Ubuntu Wiki</title>
+   <info>
+    <metadata owner="http://freedesktop.org">
+     <bookmark:icon name="favicons/wiki.ubuntu.com"/>
+    </metadata>
+   </info>
+   <desc/>
+  </bookmark>
+ </folder>
+ <bookmark href="https://www.dropbox.com/">
+  <title>Dropbox - Simplify your life</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="favicons/www.dropbox.com_static_25748_images_dropbox_webclip"/>
+   </metadata>
+  </info>
+  <desc/>
+ </bookmark>
+ <bookmark href="http://nowardev.wordpress.com/">
+  <title>NoWarTools</title>
+  <info>
+   <metadata owner="http://freedesktop.org">
+    <bookmark:icon name="favicons/1.gravatar.com_blavatar_33e2451aa2a79a7b7f4d71baf97331ec"/>
+   </metadata>
+  </info>
+  <desc/>
+ </bookmark>
+</xbel>
