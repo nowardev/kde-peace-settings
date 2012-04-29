@@ -1,9 +1,29 @@
+[FMSettings]
+AlwaysTabbedMode=false
+KonquerorTabforExternalURL=false
+MMBOpensTab=true
+MouseMiddleClickClosesTab=true
+NewTabsInFront=false
+OpenAfterCurrentPage=false
+PermanentCloseButton=true
+PopupsWithinTabs=true
+TabCloseActivatePrevious=false
+
+[HTML Settings]
+AutomaticDetectionLanguage=1
+
+[SearchBar]
+CompletionMode=5
+CurrentEngine=google
+Mode=1
+SuggestionEnabled=true
+
+[Settings]
+CompletionMode=6
+
 [Java/JavaScript Settings]
 EnableJava=true
 JavaPath[$e]=java
 
-[SearchBar]
-CurrentEngine=google_kubuntu
-
 [UserSettings]
-HomeURL=http://www.kubuntu.org
+HomeURL=http://www.kde.org

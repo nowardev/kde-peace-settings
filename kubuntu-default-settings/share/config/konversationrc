@@ -1,22 +1,11 @@
 [Channel 0]
+Name=#kde
+Password=
+
+[Channel 1]
+Name=#kde
+Password=
+
+[Channel 2]
 Name=#kubuntu
-
-[General Options]
-TrayNotify=true
-TrayNotifyOnlyOwnNick=true
-ShowTrayIcon=false
-
-[Path Settings]
-LogfilePath=~/.kde/share/apps/konversation/logs
-
-[Server 0]
-Server=irc.ubuntu.com
-Port=8001
-
-[ServerGroup 0]
-AutoJoinChannels=Channel 0
-ServerList=Server 0
-Name=Ubuntu IRC
-
-[Sort Nicknames]
-SortByStatus=true
+Password=

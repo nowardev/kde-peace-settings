@@ -1,20 +1,28 @@
-[Desktops]
-Number=2
+[Windows]
+
+AutogroupInForeground=false
+AutogroupSimilarWindows=false
+
+
+[Compositing]
+Enabled=true
 
 [Style]
+BorderSize=1
+ButtonsOnLeft=
+ButtonsOnRight=HIA__X
+CustomButtonPositions=true
 PluginLib=kwin3_oxygen
+ShowToolTips=false
 
-[Effect-Cube]
-CapColor=0,0,0
+#kwin3_plastik
+#kwin3_crystal
+#kwin3_deKorator
+#kwin3_laptop
+#kwin3_oxygen
+#kwin3_plastik
+#kwin3_qtcurve
+#kwin3_skulpture
+#kwin3_tabstrip
 
-[Windows]
-TitlebarDoubleClickCommand=Maximize
 
-[Plugins]
-kwin4_effect_boxswitchEnabled=true
-kwin4_effect_coverswitchEnabled=true
-kwin4_effect_cubeEnabled=true
-
-[Effect-CoverSwitch]
-TabBox=true
-TabBoxAlternative=false
