@@ -1,0 +1,17 @@
+[Animation]
+Frames=10
+
+[Appearance]
+BackgroundColorOpacity=70
+Translucency=true
+
+[Dialogs]
+FirstRun=false
+
+[Favorite Profiles]
+Favorites=
+
+[Window]
+Height=90
+KeepOpen=false
+Width=90

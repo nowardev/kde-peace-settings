@@ -1,0 +1,11 @@
+[Geometry]
+ColumnOrder=0
+ColumnWidths=246
+TotalColumn=-1
+UnreadColumn=-1
+
+[TipOfDay]
+RunOnStart=false
+
+[Reader]
+htmlMail=true

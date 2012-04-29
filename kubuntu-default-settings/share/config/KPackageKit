@@ -1,0 +1,7 @@
+[Notify]
+#notify when updates are available
+notifyUpdates=2
+
+[requirementsDialog]
+#don't show confirmation when installing
+autoConfirm=true

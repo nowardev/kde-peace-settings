@@ -1,0 +1,13 @@
+Package: kubuntu-default-settings
+Version: 1:12.04ubuntu4
+Architecture: all
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Installed-Size: 920
+Pre-Depends: dpkg (>= 1.15.7.2)
+Depends: python, ttf-ubuntu-font-family, libnewt0.52 (>= 0.52.11-2ubuntu7)
+Replaces: kdelibs5-data (<< 4:4.3.90-0ubuntu1)
+Section: kde
+Priority: optional
+Description: Default settings and artwork for the Kubuntu desktop
+ This package contains the default settings used by Kubuntu. It also
+ includes artwork and Kubuntu branding.

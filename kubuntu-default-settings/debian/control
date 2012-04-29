@@ -1,0 +1,28 @@
+Source: kubuntu-default-settings
+Section: kde
+Priority: optional
+Maintainer: Kubuntu Developers <kubuntu-devel@lists.ubuntu.com>
+Build-Depends: debhelper (>= 9), pkg-kde-tools (>= 0.9.2ubuntu14)
+Standards-Version: 3.9.3
+Vcs-Bzr: https://code.launchpad.net/~kubuntu-packagers/kubuntu-default-settings/kubuntu-default-settings
+Vcs-Browser: http://bazaar.launchpad.net/~kubuntu-packagers/kubuntu-default-settings/kubuntu-default-settings
+
+Package: kubuntu-default-settings
+Architecture: all
+Pre-Depends: ${misc:Pre-Depends}
+Depends: ${misc:Depends}, python, ttf-ubuntu-font-family, libnewt0.52 (>= 0.52.11-2ubuntu7)
+Replaces: kdelibs5-data (<< 4:4.3.90-0ubuntu1)
+Description: Default settings and artwork for the Kubuntu desktop
+ This package contains the default settings used by Kubuntu. It also
+ includes artwork and Kubuntu branding.
+
+Package: plymouth-theme-kubuntu-logo
+Architecture: all
+Depends: ${misc:Depends}, plymouth, plymouth-label
+Provides: plymouth-theme
+Description: graphical boot animation and logger - kubuntu-logo theme
+ Plymouth is an application that runs very early in the boot process
+ (even before the root filesystem is mounted!) that provides a graphical
+ boot animation while the boot process happens in the background.
+ .
+ This package contains the default kubuntu-logo theme.

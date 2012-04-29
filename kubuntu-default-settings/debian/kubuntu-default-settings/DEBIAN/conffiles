@@ -1,0 +1,5 @@
+/etc/kubuntu-default-settings/hidden-media
+/etc/kubuntu-default-settings/directory-home
+/etc/kubuntu-default-settings/directory-media
+/etc/X11/Xsession.d/80kubuntu-xmodmap
+/etc/kde4rc

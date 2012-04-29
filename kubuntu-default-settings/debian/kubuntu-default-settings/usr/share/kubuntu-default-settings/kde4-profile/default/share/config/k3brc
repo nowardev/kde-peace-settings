@@ -1,0 +1,6 @@
+[General Options]
+Show splash=false
+check system config=false
+
+[TipOfDay]
+RunOnStart=false

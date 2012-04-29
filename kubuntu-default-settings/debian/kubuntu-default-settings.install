@@ -1,0 +1,32 @@
+etc/*	etc/
+usr-share/*	usr/share/kubuntu-default-settings/
+usr-share-kde4/*	usr/share/kde4/
+share/	usr/share/kubuntu-default-settings/kde4-profile/default/
+
+kconf_update/*	usr/share/apps/kconf_update
+
+misc/cursors/*	usr/share/icons/
+misc/emoticons.xml	usr/share/icons/oxygen/22x22/emotes/
+
+kubuntu-logo.png usr/share/pixmaps
+
+#TODO: polish the accessibility profiles
+
+#mkdir -p "$(SETTINGS_DIR)/kde4-profile/lesser-visual-impairment/share/config/"
+#cp -r accessibility/lesser-visual-impairment/* "$(SETTINGS_DIR)/kde4-profile/lesser-visual-impairment/share/config/"
+#rm "$(SETTINGS_DIR)/kde4-profile/lesser-visual-impairment/share/config/TODO_kickerrc2plasmarc" # TODO needs porting
+
+#mkdir -p "$(SETTINGS_DIR)/kde4-profile/moderate-visual-impairment/share/config/"
+#cp -r accessibility/moderate-visual-impairment/* "$(SETTINGS_DIR)/kde4-profile/moderate-visual-impairment/share/config/"
+#rm "$(SETTINGS_DIR)/kde4-profile/moderate-visual-impairment/share/config/TODO_kickerrc2plasmarc" # TODO needs porting
+
+#mkdir -p "$(SETTINGS_DIR)/kde4-profile/minor-motor-difficulties/share/config/"
+#cp -r accessibility/minor-motor-difficulties/* "$(SETTINGS_DIR)/kde4-profile/minor-motor-difficulties/share/config/"
+#rm "$(SETTINGS_DIR)/kde4-profile/minor-motor-difficulties/share/config/TODO_kickerrc2plasmarc" # TODO needs porting
+
+#mkdir -p "$(SETTINGS_DIR)/kde4-profile/motor-difficulties-pointing-devices/share/config/"
+#cp -r accessibility/motor-difficulties-pointing-devices/* "$(SETTINGS_DIR)/kde4-profile/motor-difficulties-pointing-devices/share/config/"
+
+#mkdir -p "$(KDM_OVERRIDE)"
+#install -m644 kdm-settings/20_kubuntu_default_settings "$(KDM_OVERRIDE)"
+

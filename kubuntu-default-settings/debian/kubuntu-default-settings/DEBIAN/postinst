@@ -1,0 +1,45 @@
+#! /bin/sh
+set -e
+
+# Automatically added by dh_installdeb
+dpkg-maintscript-helper rm_conffile /etc/X11/Xsession.d/80qtgraphicssystem 1:12.04ubuntu2 -- "$@"
+# End automatically added section
+
+
+case "$1" in
+  configure)
+    # Kubuntu prefers legacy newt colors over Aubergine by default
+    if update-alternatives --query newt-palette | grep -qs "Status: auto"; then
+      update-alternatives --set newt-palette /etc/newt/palette.original
+    fi
+
+    # clean the driver database for kdeprint
+    if [ -x /usr/sbin/foomatic-cleanupdrivers ]; then
+      foomatic-cleanupdrivers
+    fi
+
+	# create links for .hidden files, don't bail out if s.th. goes wrong.
+	if [ -d /media ]; then
+		if [ ! -e /media/.hidden ]; then
+			ln -s /etc/kubuntu-default-settings/hidden-media /media/.hidden || \
+				echo "Could not create symlink /media/.hidden, skipping."
+		fi
+		if [ ! -e /media/.directory ]; then
+			ln -s /etc/kubuntu-default-settings/directory-media /media/.directory || \
+				echo "Could not create symlink /media/.directory, skipping."
+		fi
+	fi 
+	if [ -d /home ]; then
+		if [ ! -e /home/.directory ]; then
+			ln -s /etc/kubuntu-default-settings/directory-home /home/.directory || \
+				echo "Could not create symlink /home/.directory, skipping."
+		fi
+	fi
+
+	# remove symlink created by k-d-s <= 1:11.04ubuntu2
+	if [ -h /usr/share/hal/fdi/policy/10osvendor/20-ntfs-config-write-policy.fdi ]; then
+		rm /usr/share/hal/fdi/policy/10osvendor/20-ntfs-config-write-policy.fdi || \
+			echo "Could not remove symlink /usr/share/hal/fdi/policy/10osvendor/20-ntfs-config-write-policy.fdi, skipping."
+	fi
+  ;;
+esac

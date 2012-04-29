@@ -1,0 +1,9 @@
+[KSplash Theme: Kubuntu]
+Name = Kubuntu
+Description = Kubuntu
+Version = 1.0
+Author = Harald Sitter <apachelogger@ubuntu.com>
+Homepage = http://www.kubuntu.org
+
+# Theme behaviour settings.
+Engine = KSplashQML

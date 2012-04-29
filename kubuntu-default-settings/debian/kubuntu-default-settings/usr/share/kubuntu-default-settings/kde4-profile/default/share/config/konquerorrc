@@ -1,0 +1,9 @@
+[Java/JavaScript Settings]
+EnableJava=true
+JavaPath[$e]=java
+
+[SearchBar]
+CurrentEngine=google_kubuntu
+
+[UserSettings]
+HomeURL=http://www.kubuntu.org

@@ -1,0 +1,3 @@
+[AppletGlobals][plasma_applet_launcher]
+SwitchTabsOnHover=false
+askBeforeRemoval=true
