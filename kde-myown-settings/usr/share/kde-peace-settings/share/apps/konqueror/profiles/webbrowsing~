@@ -1,0 +1,9 @@
+[Profile]
+ 
+Name=Web Browsing
+RootItem=View0
+ToolBarsMovable=Disabled
+View0_ServiceName=khtml
+View0_ServiceType=text/html
+View0_URL=bookmarks:
+ 
