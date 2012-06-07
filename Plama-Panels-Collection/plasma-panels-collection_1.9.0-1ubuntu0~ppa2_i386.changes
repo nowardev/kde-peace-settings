@@ -1,0 +1,31 @@
+Format: 1.8
+Date: Thu, 07 Jun 2012 10:49:56 +0200
+Source: plasma-panels-collection
+Binary: plasma-panels-collection
+Architecture: source all
+Version: 1.9.0-1ubuntu0~ppa2
+Distribution: precise
+Urgency: low
+Maintainer: Peace Nowardev <nowardev@gmail.com>
+Changed-By: Peace Nowardev <nowardev@gmail.com>
+Description: 
+ plasma-panels-collection - Collection of Plasma panels
+Changes: 
+ plasma-panels-collection (1.9.0-1ubuntu0~ppa2) precise; urgency=low
+ .
+   * Initial release
+Checksums-Sha1: 
+ 6002e1dc57fdec9d6e8287341540c3bda7d482a3 1019 plasma-panels-collection_1.9.0-1ubuntu0~ppa2.dsc
+ eda232462082fc0cb43e0f897a0a144e8f2a6ce9 14888 plasma-panels-collection_1.9.0.orig.tar.gz
+ b176441800c5c3cf237645bdd9077ecf93b303a7 1763 plasma-panels-collection_1.9.0-1ubuntu0~ppa2.debian.tar.gz
+ 0ba5f7a51796b30783818ba48249ebec1ed913a0 18150 plasma-panels-collection_1.9.0-1ubuntu0~ppa2_all.deb
+Checksums-Sha256: 
+ 50030e3e6ec379d7e3afdc228d63f7f4adfa272f1c9f198a2699819bdc75ad9d 1019 plasma-panels-collection_1.9.0-1ubuntu0~ppa2.dsc
+ 1cefb5e3d9b3cd4a71f3c24be798249e7ad48e594b1cbed8af9eea18d263ae2a 14888 plasma-panels-collection_1.9.0.orig.tar.gz
+ c3ae2e4135f00c01cb641cc6c9f94cad0b99b7d02b3eba354aac854335429b04 1763 plasma-panels-collection_1.9.0-1ubuntu0~ppa2.debian.tar.gz
+ a444111fbf9f2aa3c14ba1c0e6ebb0f998ce29b5c0baac4cecd8312ce23431ff 18150 plasma-panels-collection_1.9.0-1ubuntu0~ppa2_all.deb
+Files: 
+ 9c9867d7ff12fd0d313284b713cf26e7 1019 kde extra plasma-panels-collection_1.9.0-1ubuntu0~ppa2.dsc
+ 87c07697998043084ce0643a903c7694 14888 kde extra plasma-panels-collection_1.9.0.orig.tar.gz
+ c208d1beed56ee00253ddd774f40779a 1763 kde extra plasma-panels-collection_1.9.0-1ubuntu0~ppa2.debian.tar.gz
+ a5515ff20dca424e0df20beb87408f68 18150 kde extra plasma-panels-collection_1.9.0-1ubuntu0~ppa2_all.deb
