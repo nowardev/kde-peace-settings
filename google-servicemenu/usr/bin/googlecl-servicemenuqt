@@ -1,0 +1,330 @@
+#!/bin/bash 
+#This file is part of kde-peace-settings.
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+scriptversion="0.1"
+listoffiles="$HOME/.local/share/googlecl/google-servicemenuqtlist.lst"
+numberoffile=$(wc -l <$listoffile)
+
+ 
+#  IOError: [Errno 2] No such file or directory: '/home/sem/.local/share/googlecl/yt_devkey'  mkdir -p ~/.local/share/googlecl
+
+
+
+function_list(){
+
+a=0
+while read line
+do 
+youtubelinks[$a]="$line"
+done < $(google youtube list | awk -F ',' '{print $2}')
+
+a=0
+while read line
+do 
+youtubevideotitle[$a]="$line"
+done < <(google youtube list | awk -F ',' '{print $1}')
+
+}
+
+
+functionuploadyotube(){
+
+category=$(kdialog --title $"GoogleCl service menuf or kde" --menu   $"Please specify category"  Autos  "Autos & Vehicles "  Comedy "Comedy "   Education "Education "  Entertainment "Entertainment "  Film "Film & Animation "  Games "Gaming "  Howto "Howto & Style "  Music "Music "  News "News & Politics "  Nonprofit "Nonprofits & Activism "  People "People & Blogs "  Animals "Pets & Animals "  Tech "Science & Technology "  Sports "Sports "  Travel "Travel & Events "  )
+
+
+
+a=1
+mystufvariabletouseonmyscript=$(kdialog --progressbar $"Starting Conversion..." 100)
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $mystufvariabletouseonmyscript  showCancelButton true 
+
+until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
+
+	while read line ;do 
+		
+		google youtube post --category "$category" "$line"
+		
+		
+		value=$(( $(($a*100))/$numberoffile ))
+		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+		a=$(($a+1))
+	done<$listoffiles
+done
+
+}
+ 
+
+ 
+ 
+ 
+function_checkversion(){
+vversion=$(vlc --version 2>&1| awk  '/VLC/{print $3}')
+if [[ "$vversion" == 2.*.* ]];then
+dbusversion="2"
+elif [[ "$vversion" == 1.*.* ]];then
+dbusversion="1"
+fi
+
+dbustest=$(awk '/control=dbus/{print}' "$HOME/.config/vlc/vlcrc")
+
+if [[  -z "$dbustest" ]] ; then 
+
+ 
+
+kdialog --msgbox $"
+
+debug: 
+
+Version : $dbusversion.*.*
+Dbus Enabled : No
+
+Vlc hasn't dbus option activated, The service menu can't work in this situation, please enable it.
+
+To enable it just do this:
+
+Vlc-> tools -> Preferences -> Show all -> Interface -> Control Interface ->Enable DBus...Exiting"
+
+
+fi
+
+# 
+# if  [[ $? == 0 ]]; then 
+# sed 's/control=.*$/control=dbus/g' -i "$HOME/.config/vlc/vlcrc"
+# 
+# else
+# 
+# kdialog --error $"VLC append service menu needs dbus enabled on vlc settings so... exiting"
+# fi
+
+
+
+}
+ 
+functionstartvlc()
+{
+vlcisrunning=$(pgrep vlc)
+if [[ $? == 1 ]]; then
+vlc   & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 
+sleep 2
+else
+echo vlc is running..
+fi
+}
+
+
+
+
+function_help()
+{
+
+
+
+    echo "license GPL"
+    echo    "This program is free software: you can redistribute it and/or modify"
+    echo    "it under the terms of the GNU General Public License as published by"
+    echo    "the Free Software Foundation, either version 3 of the License, or"
+    echo    "any later version."
+    echo ""
+    echo    "This program is distributed in the hope that it will be useful,"
+    echo    "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+    echo    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+    echo    "GNU General Public License for more details."
+    echo ""
+    echo    "You should have received a copy of the GNU General Public License"
+    echo    "along with this program.  If not, see <http://www.gnu.org/licenses/>"
+    echo ""
+    echo ""
+    echo "Developed by nowardev peace nowardev@gmail.com"
+    echo ""
+    echo "NOTE VLC DBUS MUST BE ENABLED please go on "
+    echo "Tools -> Preferences -> Show all -> Interface -> Control Interface and Enable DBus"
+    echo ""
+    echo "To test try this on your terminal"
+    echo ""
+    echo "qdbus org.mpris.vlc /TrackList   org.freedesktop.MediaPlayer.AddTrack    \"myfile\" 0"
+    echo ""
+    echo ""
+    echo ""
+    echo ""
+    echo "vlcservice <option> <file>"
+    echo ""
+    echo "options:"
+    echo ""
+    echo "1 Normal add track to vlc"
+    echo ""
+    echo "2 Add track and try to play previews track"
+    echo ""
+    echo "folder  add a folder , only the multimedia files, to vlc "
+    echo ""
+    echo ""
+    echo "example"
+    echo ""
+    echo "vservice 1 /home/$USER/myfile.oga"
+    echo ""
+    echo "vservice 2 /home/$USER/myfile.ogv"
+    echo ""
+    echo "vservice folder \"/home/$USER/testfolder\""
+   
+
+}
+
+
+
+function_debug()
+{
+ echo "mode $1  file $2 version $version" >>/tmp/debug_vlc_append
+ echo "$(lsb_release -a )" >>/tmp/debug_vlc_append
+ echo "$(uname -r )" >>/tmp/debug_vlc_append
+}
+
+################VLC 1.*######################################################
+function_vlc_play_mode1()
+{
+qdbus org.mpris.vlc /TrackList   org.freedesktop.MediaPlayer.AddTrack    "$1" 0
+}
+
+function_vlc_play_mode2()
+{
+qdbus org.mpris.vlc /Player   org.freedesktop.MediaPlayer.Prev ; sleep 1 ; qdbus org.mpris.vlc /TrackList   org.freedesktop.MediaPlayer.AddTrack "$1" 0 
+}
+
+
+
+function_vlc_play_mode3(){
+
+#shopt -s nullglob 
+
+while read line ;do 
+
+for extension in 3g2 3gp 4xm IFF ISS MTV RoQ a64 aac ac3 adts aea aiff alaw alsa amr anm apc ape applehttp asf asf_stream ass au avi avm2 avs bethsoftvid bfi bink c93 caf cavsvideo cdg crc daud dfa dirac dnxhd dsicin dts dv dv1394 dvd dxa ea ea_cdata eac3 f32be f32le f64be f64le fbdev ffm ffmetadata film_cpk filmstrip flac flic flv framecrc framemd5 g722 gif gsm gxf h261 h263 h264 idcin image2 image2pipe ingenient ipmovie ipod iv8 ivf jack jv libdc1394 lmlm4 lxf m4v matroska matroska,webm md5 mjpeg mlp mm mmf mov mov,mp4,m4a,3gp,3g2,mj2 mp2 mp3 mp4 mpc mpc8 mpeg mpeg1video mpeg2video mpegts mpegtsraw mpegvideo mpjpeg msnwctcp mulaw mvi mxf mxf_d10 mxg nc nsv null nut nuv ogg oma oss psp psxstr pva qcp r3d rawvideo rcv rl2 rm rpl rso rtp rtsp s16be s16le s24be s24le s32be s32le s8 sap sdp shn siff smk  sox spdif svcd swf thp tiertexseq tmv truehd tta tty txd u16be u16le u24be u24le u32be u32le u8 vc1 vc1test vcd video4linux2 vmd vob voc vqf w64 wav wc3movie webm wsaud wsvqa wtv wv x11grab xa xwma yop yuv4mpegpipe ; do 
+
+if  [[ "$line" == *.$extension ]] ; then
+
+ qdbus org.mpris.vlc /TrackList   org.freedesktop.MediaPlayer.AddTrack "$line" 0 
+ 
+fi 
+done
+ 
+done< <(find "$1" -type f)
+
+
+}
+###############################################################################
+
+
+
+
+
+##########################VLC 2.X#############################################
+
+function_vlc2_play_mode1()
+{
+qdbus  org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.TrackList.AddTrack  "file://$1" / false
+}
+
+function_vlc2_play_mode2()
+{
+qdbus  org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.TrackList.AddTrack  "file://$1" / false
+}
+
+
+function_vlc2_play_mode3(){
+
+#shopt -s nullglob 
+
+while read line ;do 
+
+for extension in 3g2 3gp 4xm IFF ISS MTV RoQ a64 aac ac3 adts aea aiff alaw alsa amr anm apc ape applehttp asf asf_stream ass au avi avm2 avs bethsoftvid bfi bink c93 caf cavsvideo cdg crc daud dfa dirac dnxhd dsicin dts dv dv1394 dvd dxa ea ea_cdata eac3 f32be f32le f64be f64le fbdev ffm ffmetadata film_cpk filmstrip flac flic flv framecrc framemd5 g722 gif gsm gxf h261 h263 h264 idcin image2 image2pipe ingenient ipmovie ipod iv8 ivf jack jv libdc1394 lmlm4 lxf m4v matroska matroska,webm md5 mjpeg mlp mm mmf mov mov,mp4,m4a,3gp,3g2,mj2 mp2 mp3 mp4 mpc mpc8 mpeg mpeg1video mpeg2video mpegts mpegtsraw mpegvideo mpjpeg msnwctcp mulaw mvi mxf mxf_d10 mxg nc nsv null nut nuv ogg oma oss psp psxstr pva qcp r3d rawvideo rcv rl2 rm rpl rso rtp rtsp s16be s16le s24be s24le s32be s32le s8 sap sdp shn siff smk  sox spdif srt svcd swf thp tiertexseq tmv truehd tta tty txd u16be u16le u24be u24le u32be u32le u8 vc1 vc1test vcd video4linux2 vmd vob voc vqf w64 wav wc3movie webm wsaud wsvqa wtv wv x11grab xa xwma yop yuv4mpegpipe ; do 
+
+if  [[ "$line" == *.$extension ]] ; then
+
+qdbus  org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.TrackList.AddTrack  "file://$line" / false
+
+ 
+fi 
+done
+ 
+done< <(find "$1" -type f)
+
+}
+##########################################################################
+
+
+
+
+
+if ! pgrep vlc >/dev/null; then vlc  & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 ;fi
+ 
+function_checkversion
+
+
+if [[ ! -e "$2" ]];then 
+     
+function_help
+     function_debug $1 $2
+      echo "no file given"
+      echo file $2 
+      exit
+elif [[ -z "$1"  ]] ; then 
+      function_help
+      function_debug $1 $2
+      echo "no no mode selected"
+      exit
+else
+	if [[ "$dbusversion" == 2 ]] ; then 
+
+
+		if [[ "$1" == 1 ]] ; then 
+			function_vlc2_play_mode1 "$2"
+			function_debug $1 $2
+			echo "mode $1  file $2 version $version"
+		elif [[ "$1" == 2 ]] ; then
+			function_vlc2_play_mode2 "$2"
+			function_debug $1 $2
+		elif [[ "$1" == 3 ]] ; then
+			function_vlc2_play_mode1 "$2" ; qdbus  org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play
+		  function_debug $1 $2
+		elif [[ "$1" == folder ]] ; then 
+			function_vlc2_play_mode3  "$2"
+			function_debug $1 $2
+		else 
+		 function_help
+		 function_debug $1 $2
+		fi
+	elif [[ "$dbusversion" == 1 ]] ; then 
+	
+		if [[ "$1" == 1 ]] ; then 
+			function_vlc_play_mode1 "$2"
+			function_debug $1 $2
+			echo "mode $1  file $2 version $version"
+		elif [[ "$1" == 2 ]] ; then
+			function_vlc_play_mode2 "$2"
+			function_debug $1 $2
+		elif [[ "$1" == 3 ]] ; then
+			function_vlc_play_mode1 "$2" ; qdbus  org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play
+		  function_debug $1 $2
+		elif [[ "$1" == folder ]] ; then 
+			function_vlc_play_mode3  "$2"
+			function_debug $1 $2
+		else 
+		 function_help
+		 function_debug $1 $2
+		fi
+	else 
+	echo $"unable to get the version ? "
+		
+	fi
+fi
+
