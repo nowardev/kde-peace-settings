@@ -8,7 +8,7 @@ X-KDE-Submenu=Vlc Folder Append
 X-KDE-Submenu[it]=Aggiungi cartella a vlc
 
 
-[Desktop Action folderappend]
+[Desktop Action youtubeup]
 Exec= vservice folder "%u"
 Icon=go-up
 Name=Upload to My Youtube Channel

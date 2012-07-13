@@ -9,7 +9,7 @@ X-KDE-Submenu[it]=Aggiungi cartella a vlc
 
 
 [Desktop Action youtubeup]
-Exec= vservice folder "%u"
+Exec= googlecl-servicemenuqt youtubeup "%u"
 Icon=go-up
 Name=Upload to My Youtube Channel
 Name[it]=Carica sul mio canale youtube
