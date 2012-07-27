@@ -18,7 +18,7 @@
  
 
 bin="/usr/local/bin/"
-folder_local_bash_scripts="$HOME/.local/peace_bash_scripts"
+folder_local_bash_scripts="$HOME/bin"
 prefix="$(kde4-config --prefix)"
 localprefix="$(kde4-config --localprefix)"
 
@@ -88,8 +88,9 @@ fi
 
 #if the variable is NOT EMPTY then don't do again export 
 if  [[ -z $(echo "$PATH"| grep  "$folder_local_bash_scripts") ]]; then
-
+"export PATH=$PATH:$folder_local_bash_scripts"
 #execute the command everytiem you login
+
 echo "export PATH=$PATH:$folder_local_bash_scripts" >> "$HOME/.bash_profile" 
 
  
