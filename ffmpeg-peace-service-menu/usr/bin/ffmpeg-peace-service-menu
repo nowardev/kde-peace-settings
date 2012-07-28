@@ -22,7 +22,10 @@
 #TO DO 
 
 # CHECK THE function_check_for_errors(
-
+#changelog
+# Fix in the while loop due ffmpeg bug 
+# Fix in awk stuff
+# some other work 
 Version="0.0.2"
 Author="nowardev@gmail.com"
 License="GLPv3"
