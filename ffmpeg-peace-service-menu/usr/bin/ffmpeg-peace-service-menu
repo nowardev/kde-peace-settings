@@ -20,13 +20,14 @@
 
 
 #TO DO 
-
-# CHECK THE function_check_for_errors(
+#fix advanced menu and other extra ooptions 
+# 
 #changelog
 # Fix in the while loop due ffmpeg bug 
 # Fix in awk stuff
 # some other work 
-Version="0.0.2"
+#fixed check erorr 
+Version="0.0.3"
 Author="nowardev@gmail.com"
 License="GLPv3"
 title=$"FFmpeg Dolphin Service Menu"
@@ -225,7 +226,19 @@ fi
 }
 
 
+function_message_error(){
 
+if [[ -z "$(pidof X)" ]] ; then 
+
+echo "$1"
+
+else 
+
+kdialog --error "$1"
+fi 
+
+
+}
 
 function_help(){
 
@@ -846,7 +859,7 @@ mkdir "$outfolder"_decompiled
 
 
 $ffmpegpath -i   "$line" -sameq "$outfolder"_decompiled/"${name%%.*}.${wav}" 2> "$templog"
-$ffmpegpath -i  "$line"  "$outfolder"_decompiled/"$name"%d.$(kdialog --combobox "picture format " jpg png ) 2> "$templog"
+$ffmpegpath -i  "$line"  "$outfolder"_decompiled/"$name"%d.$(kdialog --combobox "picture format " jpg png ) 2>> "$templog"
 
  
 
@@ -907,73 +920,52 @@ errors[1]="for reading (No such file or directory)"
 errors[2]="Unable to find a suitable output format for"
 errors[3]="not found"
 errors[4]="Error while opening encoder"
+errors[5]="Fail"
+errors[6]="rror"
 
  
-
+askopen=0
 for err in "${errors[@]}"; do
 tester=$(grep "$err" "$templog")
 
-if [[ ! -z $? ]]; then 
+if [[ ! -z $? ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
+askopen=1
 
-		if [[ "$errors" == " for reading (No such file or directory)" ]] ; then 
-				function_message $"Unable ot open "$templog" this is bad! "
-				askopen=1
-		elif [[ "$errors" =~ "Unable to find a suitable output format for" ]]; then 
-			function_message $"Unable to find a suitable output format for ..wrong outformat?"
-				askopen=1
-		elif [[ "$errors" =~ "not found" ]]; then 
-			function_message $"No preset found ?"
-			askopen=1
-		elif [[ "$errors" =~ "Error while opening encoder" ]]; then 
-			function_message $"Error while opening encoder "
-			askopen=1
-		elif [[ "$errors" =~ "No such file or directory" ]]; then 
-			function_message $"No such file or directory"
-			askopen=1
-
-
-		else
-			askopen=0
-
-		fi
-fi 
+fi
 done
-# 	#program[2]=kdialog
-# 	for err in "${errors[@]}"; do 
-# 	if [[ "$err" ~=  ]]; then 
-# 	
-# 	
-# 	
-# 	
-# 	
-# 	! type -p "$program" >/dev/null;
-# 	then echo "$program not found; PLEASE INSTALL IT" >&2
-# 	echo "error exiting..." >&2
-# 	exit 1; 
-# 	fi; done 
 
-	
-# if [[ "$errors" =~ " for reading (No such file or directory)" ]] ; then 
-# 	kdialog --error $"Unable ot open "$templog" this is bad! "
-# 	askopen=1
-# elif [[ "$errors" =~ "Unable to find a suitable output format for" ]]; then 
-# kdialog --error $"Unable to find a suitable output format for ..wrong outformat?"
-# askopen=1
-# elif [[ "$errors" =~ "not found" ]]; then 
-# kdialog --error $"No preset found ?"
-# askopen=1
-# elif [[ "$errors" =~ "Error while opening encoder" ]]; then 
-# kdialog --error $"Error while opening encoder "
-# askopen=1
+# if [[ ! -z $? ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
+
+# 
+# 		if [[ "$errors" == " for reading (No such file or directory)" ]] ; then 
+# 				function_message $"Unable ot open "$templog" this is bad! "
+# 				askopen=1
+# 		el
+
+# 		if [[ "$errors" =~ "Unable to find a suitable output format for" ]]; then 
+# 			function_message $"Unable to find a suitable output format for ..wrong outformat?"
+# 				askopen=1
+# 		elif [[ "$errors" =~ "not found" ]]; then 
+# 			function_message $"No preset found ?"
+# 			askopen=1
+# 		elif [[ "$errors" =~ "Error while opening encoder" ]]; then 
+# 			function_message $"Error while opening encoder "
+# 			askopen=1
+# 		elif [[ "$errors" == "No such file or directory" ]]; then 
+# 			function_message $"No such file or directory"
+# 			askopen=1
 # 
 # 
-# else
-# askopen=0
+# 		else
+# 			askopen=0
 # 
-# fi
+# 		fi
+# fi 
+
+ 
 
 if [[ "$askopen" == 1 ]]; then 
-
+	function_message_error $"FFmpeg failed! check the log!"
 	ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log?")
 		if [[ $? == 0 ]] ; then
 			kate "$templog"
@@ -998,25 +990,18 @@ fi
 
 function_ffmpeg_easy (){
  
-# function_check
-# 
-# 
-# 
+function_check
+ 
 a=1
 mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
 
 qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
 
 qdbus $mystufvariabletouseonmyscript  showCancelButton true 
-# outformat=mp2
+ 
 outformat=$(kdialog --combobox $"Convert to..keeping the same quality" mp3 mp2 aac ape mp4 mov avi mpg mpeg webm wmv theora flv asf sticaz --default webm)
 
-
-# kdialog --title "$title"  --menu $"Process  Menu"   "kill" "Stop FFmpeg" 
-
-# 		until test "true" != `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
-# 
-# done
+ 
  until test "true" = $(qdbus  $mystufvariabletouseonmyscript wasCancelled) ; do
 
 	  while  read <&3 line ; do 
@@ -1032,37 +1017,27 @@ outformat=$(kdialog --combobox $"Convert to..keeping the same quality" mp3 mp2 a
 		echo "$ffmpegpath -i   \""$line"\"  "$easyprofile" "$overwrite" \""${line%%.*}.$outformat\""
 		
 		" >> "$templog"
-		
-# 		 -threads $threads -y $overwrite 2>>"$templog" 
-		
-		
-		$ffmpegpath -i  "$line"   $easyprofile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog"
-# 		$ffmpegpath -i   "$line"     "${line%%.*}.$outformat" 
  
 		
-
-		
-		
-		
-# 		echo "
-# 		
-# 		">> "$templog"
-# 
-# 
+		$ffmpegpath -i  "$line"   $easyprofile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog"
+ 
 		value=$(($(($a*100))/$numberoffile))
 		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
 		a=$(($a+1))
 		done 3< "$listoffile"
 	if [[ "$value" == 100 ]];then 
-	
+		
+		function_check_for_errors
+		
 		if [[ "$passivepopup" == "enabled" ]];then
 			 function_passivepoup $"FFmpeg service menu : Jobs done!"
 		fi
- exit
+
+		exit
 	fi
 
 
-# function_check_for_errors
+
 		done
 }
 
