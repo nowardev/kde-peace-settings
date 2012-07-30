@@ -20,13 +20,12 @@
 
 
 #TO DO 
-#fix advanced menu and other extra ooptions 
-# 
+
+# CHECK THE function_check_for_errors(
 #changelog
 # Fix in the while loop due ffmpeg bug 
 # Fix in awk stuff
 # some other work 
-#fixed check erorr 
 Version="0.0.3"
 Author="nowardev@gmail.com"
 License="GLPv3"
@@ -87,7 +86,7 @@ overwrite="-y"
 
 *)
 overwrite=""
-echo stocaz>/tmp/filedimerda
+ 
 ;;
 esac
 
@@ -95,9 +94,9 @@ esac
 if [[ -z "$threads"  ]];then
 
 threadsdetected=$(cat /proc/cpuinfo | grep processor | wc -l)
-	if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
-	threads=1
-	fi 
+    if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
+    threads=1
+    fi 
  
 echo $"unable to detect cpu number ... bug?"
 fi
@@ -117,9 +116,9 @@ overwrite="$REPLY"
 echo $"How many cpu should FFmpeg use? 1 2 3 4 5 etc "
 read  "$REPLY"
 threads="$REPLY"
-	if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
-	threads=1
-	fi 
+    if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
+    threads=1
+    fi 
 echo $"Write your easy profile that FFmpeg should use if you don't know type -sameq"
 read  "$REPLY"
 easyprofile="$REPLY"
@@ -129,14 +128,14 @@ ffmpegpath="$REPLY"
 
 
 
-	else	
-		overwrite=$(kdialog --combobox $"always overwrite files " yes no --default no )
-		threads=$(kdialog --combobox $"How many core should FFmpeg use" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 --default 1)
-		easyprofile=$(kdialog --textinputbox  $"write here your easy profile" --  -sameq )
-		ffmpegpath=$(kdialog --title $"WHERE SHOULD I LOOK FOR FFMPEG BINARY?" --getopenfilename  "/usr/local/bin")
+    else    
+        overwrite=$(kdialog --combobox $"always overwrite files " yes no --default no )
+        threads=$(kdialog --combobox $"How many core should FFmpeg use" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 --default 1)
+        easyprofile=$(kdialog --textinputbox  $"write here your easy profile" --  -sameq )
+        ffmpegpath=$(kdialog --title $"WHERE SHOULD I LOOK FOR FFMPEG BINARY?" --getopenfilename  "/usr/local/bin")
 
-	fi
-	
+    fi
+    
 
 
 echo "overwrite: $overwrite" >"$ffmpeg_service_menu_settings"
@@ -159,20 +158,20 @@ ffmpegpath=$(type -p ffmpeg)
 
 if [[ -z "$ffmpegpath"  ]]; then #if is empty
 
-	if [[ -z "$(pidof X)" ]] ; then
-		echo $"ffmpeg is not system installed, please give me a ffmpeg's path"
-		read  "$REPLY"
-		ffmpegpath="$REPLY"
-			if [[ -z "$ffmpegpath"  ]]; then 
-				echo $"ffmpegpath empty... exiting"
-			fi
-	else	
-		kdialog --title $"INSERT FFMPEG PATH" --textinputbox $"ffmpeg is not installed in your system or i am not able to detect it, please give me a ffmpeg's path"
-		ffmpegpath=$(kdialog --getopenfilename  "/usr/local/bin")
-			if [[ -z "$ffmpegpath"  ]]; then 
-				kdialog --passivepopup $"ffmpegpath empty... exiting" 3
-			fi
-	fi
+    if [[ -z "$(pidof X)" ]] ; then
+        echo $"ffmpeg is not system installed, please give me a ffmpeg's path"
+        read  "$REPLY"
+        ffmpegpath="$REPLY"
+            if [[ -z "$ffmpegpath"  ]]; then 
+                echo $"ffmpegpath empty... exiting"
+            fi
+    else    
+        kdialog --title $"INSERT FFMPEG PATH" --textinputbox $"ffmpeg is not installed in your system or i am not able to detect it, please give me a ffmpeg's path"
+        ffmpegpath=$(kdialog --getopenfilename  "/usr/local/bin")
+            if [[ -z "$ffmpegpath"  ]]; then 
+                kdialog --passivepopup $"ffmpegpath empty... exiting" 3
+            fi
+    fi
 
 
 fi 
@@ -180,27 +179,27 @@ fi
 
 if [[ -z "$(pidof X)" ]] ; then 
 
-	program[0]=ffmpeg
-	program[1]=awk
-	#program[2]=kdialog
-	for program in "${program[@]}"; 
-	do if ! type -p "$program" >/dev/null;
-	then echo "$program not found; PLEASE INSTALL IT" >&2
-	echo "error exiting..." >&2
-	exit 1; 
-	fi; done
+    program[0]=ffmpeg
+    program[1]=awk
+    #program[2]=kdialog
+    for program in "${program[@]}"; 
+    do if ! type -p "$program" >/dev/null;
+    then echo "$program not found; PLEASE INSTALL IT" >&2
+    echo "error exiting..." >&2
+    exit 1; 
+    fi; done
 
 else
-# 	program[0]=ffmpeg
-	program[1]=awk
-# 	program[2]=kdialog
-	for program in "${program[@]}"; 
-	do if ! type -p "$program" >/dev/null;
-	then kdialog --msgbox $"$program not found; PLEASE INSTALL IT" >&2
-	echo "error exiting..." >&2
-	exit 1; 
-	fi; done
-	
+#     program[0]=ffmpeg
+    program[1]=awk
+#     program[2]=kdialog
+    for program in "${program[@]}"; 
+    do if ! type -p "$program" >/dev/null;
+    then kdialog --msgbox $"$program not found; PLEASE INSTALL IT" >&2
+    echo "error exiting..." >&2
+    exit 1; 
+    fi; done
+    
 fi 
 
 else
@@ -253,14 +252,14 @@ kdialog --title "$title" --msgbox $"FFmpeg peace service menu help
 USE:
 
 -h print this help
--f <file1> <file2> ...			Add files to conversion list
--fo <folder1> <folder2>... 		Add Folders to conversion list
--fox <folder1> <folder2>... 		Add Folders to conversion list  
--e  					Edit conversion list with nano
--ek					Edit conversion list with kate  
--d					DELETE convesion list
--r					RESTORE you old conversion list
--mx					start the kdialog menu  
+-f <file1> <file2> ...            Add files to conversion list
+-fo <folder1> <folder2>...         Add Folders to conversion list
+-fox <folder1> <folder2>...         Add Folders to conversion list  
+-e                      Edit conversion list with nano
+-ek                    Edit conversion list with kate  
+-d                    DELETE convesion list
+-r                    RESTORE you old conversion list
+-mx                    start the kdialog menu  
 this script help you to convert files with dolphin and via shell:
 
 this script can use profiles file that is stored here $ffmpeg_profile_file
@@ -283,14 +282,14 @@ echo $"FFmpeg peace service menu help
 USE:
 
 -h print this help
--f <file1> <file2> ...			Add files to conversion list
--fo <folder1> <folder2>... 		Add Folders to conversion list
--fox <folder1> <folder2>... 		Add Folders to conversion list need X server
--e  					Edit conversion list with nano
--ek					Edit conversion list with kate need X server
--d					DELETE convesion list
--r					RESTORE you old conversion list
--mx					start the kdialog menu need X server
+-f <file1> <file2> ...            Add files to conversion list
+-fo <folder1> <folder2>...         Add Folders to conversion list
+-fox <folder1> <folder2>...         Add Folders to conversion list need X server
+-e                      Edit conversion list with nano
+-ek                    Edit conversion list with kate need X server
+-d                    DELETE convesion list
+-r                    RESTORE you old conversion list
+-mx                    start the kdialog menu need X server
 this script help you to convert files with dolphin and via shell:
 
 this script can use profiles file that is stored here $ffmpeg_profile_file
@@ -317,19 +316,22 @@ function_delete(){
 if [[ -e "$listoffile" ]] ; then
 status=""
   mv "$listoffile"  $HOME/.local/share/Trash/files/ 
+function_passivepoup $"Old log $listoffile deleted!"
  else
-status= $"i can't do it i can't find the file."
+function_passivepoup $"i can't do it i can't find the file."
 
 fi 
 
 if [[ -e "$templog" ]] ; then
 status=""
-  mv "$templog"  $HOME/.local/share/Trash/files/ 
+  mv "$templog"  "$HOME"/.local/share/Trash/files/
+function_passivepoup $"Old log $templog deleted"
  else
-status= $"i can't do it i can't find the log file."
+function_passivepoup $"i can't do it i can't find the log file."
 
 fi 
 
+function_menu_start
 
 }
 
@@ -340,12 +342,24 @@ fi
 
 function_restore(){
 
-if [[ -e $HOME/.local/share/Trash/files/ffmpeg-service-menu-qt.lst ]] ; then
-status=""
+if [[ -e "$HOME"/.local/share/Trash/files/ffmpeg-service-menu-qt.lst ]] ; then
+
  mv   $HOME/.local/share/Trash/files/ffmpeg-service-menu-qt.lst "$listoffile"
+function_passivepoup $"List of files $templog Restored"
  else
-status= $"i can't do it i can't find the file."
+function_passivepoup $"i can't do it i can't find List of file in your trash."
 fi
+
+if [[ -e  "$HOME/.local/share/Trash/files/ffmpeg_peace_dolphin_service_menu.log"  ]] ; then
+ 
+  mv "$templog"  $HOME/.local/share/Trash/files/ 
+function_passivepoup $"Old log $templog Restored"
+ else
+function_passivepoup $"i can't do it i can't find the log file."
+
+fi 
+
+function_menu_start
 }
 
 
@@ -361,17 +375,17 @@ $1
 function_passivepoup(){
 if [[ "$passivepopup" == "enabled" ]] ; then 
 
-	if [[ ! -z "$1" ]] ;then
-		kdialog --passivepopup "$1" "$2"
-			if [[ -z "$2" ]];then
-		
-				kdialog --passivepopup "$1" 
-			else
-				kdialog --passivepopup "$1" "$2"
-			fi
-	else
-	kdialog --error $"no text for popup given :S"
-	fi 
+    if [[ ! -z "$1" ]] ;then
+        kdialog --passivepopup "$1" "$2"
+            if [[ -z "$2" ]];then
+        
+                kdialog --passivepopup "$1" 
+            else
+                kdialog --passivepopup "$1" "$2"
+            fi
+    else
+    kdialog --error $"no text for popup given :S"
+    fi 
 else
 echo "$1"
 fi 
@@ -764,11 +778,11 @@ function_menu_start
  ;;
  *)
 kdialog --title "$title" --yesno $"You have not choose an option do you want exit?"
-	if [[ $? == 1 ]] ; then 
-		function_menu_start
-	else
-		exit
-	fi 
+    if [[ $? == 1 ]] ; then 
+        function_menu_start
+    else
+        exit
+    fi 
  ;;
  esac
  
@@ -805,34 +819,34 @@ qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose tr
 qdbus $mystufvariabletouseonmyscript  showCancelButton true 
 
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
-	outformat=$(kdialog --combobox $"Convert to..keeping the same quality" mp3 mp2 aac ape mp4 mov avi mpg mpeg webm wmv ogv flv asf  --default webm)
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line" 
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line"  "-i $subtitleprofile" "$overwrite" "${line%%.*}.$outformat"
-		
-		" >> "$templog"
-		$ffmpegpath -i   "$line" -newsubtitle ${line%%.*}.srt  $subtitleprofile   $overwrite "${line%%.*}.$outformat"  2>>"$templog"
-		echo "
-		
-		">> "$templog"
+    outformat=$(kdialog --combobox $"Convert to..keeping the same quality" mp3 mp2 aac ape mp4 mov avi mpg mpeg webm wmv ogv flv asf  --default webm)
+    while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line" 
+        echo "Log File $line
+        
+        ">> "$templog"
+        echo "$ffmpegpath -i   "$line"  "-i $subtitleprofile" "$overwrite" "${line%%.*}.$outformat"
+        
+        " >> "$templog"
+        $ffmpegpath -i   "$line" -newsubtitle ${line%%.*}.srt  $subtitleprofile   $overwrite "${line%%.*}.$outformat"  2>>"$templog"
+        echo "
+        
+        ">> "$templog"
 
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		done 3< "$listoffile"
-	if [[ "$value" == 100 ]];then 
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"Conversions done!"
-		fi
+        value=$(( $(($a*100))/$numberoffile ))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then 
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"Conversions done!"
+        fi
 
-	function_check_for_errors
-		exit
-	fi
+    function_check_for_errors
+        exit
+    fi
 done
 
 
@@ -844,9 +858,9 @@ done
 
 function_decompile(){
 
-case $1 in 
+if [[ ! -z "$(pidof X)" ]] ; then
 
-x)
+ pictureformat=$(kdialog --combobox "picture format " jpg png --default jpg )
 
 while  read <&3 line ; do 
 outfolder="${line%%.*}" # remove extensions like .ogg .ogv .txt
@@ -858,55 +872,53 @@ name="${name%%.*}" # remove extensions like .ogg .ogv .txt
 mkdir "$outfolder"_decompiled
 
 
-$ffmpegpath -i   "$line" -sameq "$outfolder"_decompiled/"${name%%.*}.${wav}" 2> "$templog"
-$ffmpegpath -i  "$line"  "$outfolder"_decompiled/"$name"%d.$(kdialog --combobox "picture format " jpg png ) 2>> "$templog"
+$ffmpegpath -i   "$line" -sameq $overwrite "$outfolder"_decompiled/"${name%%.*}.wav" 2> "$templog"
+$ffmpegpath -i  "$line"  $overwrite  "$outfolder"_decompiled/"$name"%d.$pictureformat 2>> "$templog"
 
  
 
-done < "$listoffile" 
-;;
+done  3< "$listoffile" 
 
-*)
-	echo "image format j\p (jpeg\png)"
-	read
+else 
+    echo "image format j\p (jpeg\png)"
+    read
 
-	case $REPLY in
-	jpg|j)
-	imageformat=jpg
-	;;
+    case $REPLY in
+    jpg|j)
+    imageformat=jpg
+    ;;
 
-	png|p)
-	imageformat=png
-	;;
-	esac
-
-
-	while  read <&3 line ; do 
-	outfolder="${line%%.*}" # remove extensions like .ogg .ogv .txt
-
-	name="${line##*/}" # remove the folders /asdfa/myfile.ogg.txt.like----->/myfile.ogg.txt.like
-	name="${name%%.*}" # remove extensions like .ogg .ogv .txt
+    png|p)
+    imageformat=png
+    ;;
+    esac
 
 
-	mkdir "$outfolder"_decompiled
+    while  read <&3 line ; do 
+    outfolder="${line%%.*}" # remove extensions like .ogg .ogv .txt
 
-	echo $"Processing $line
-	
-	$ffmpegpath -i   "$line" -sameq "$outfolder"_decompiled/"${name%%.*}.wav"
-	$ffmpegpath -i  "$line"  "$outfolder"_decompiled/"$name"%d."$imageformat"
-		
-	">> "$templog"
-	$ffmpegpath -i   "$line" -sameq "$outfolder"_decompiled/"${name%%.*}.wav" 2>> "$templog"
-	$ffmpegpath -i  "$line"  "$outfolder"_decompiled/"$name"%d."$imageformat" 2>> "$templog"
-	echo $"end
-	
-	">> "$templog"
+    name="${line##*/}" # remove the folders /asdfa/myfile.ogg.txt.like----->/myfile.ogg.txt.like
+    name="${name%%.*}" # remove extensions like .ogg .ogv .txt
+
+
+    mkdir "$outfolder"_decompiled
+
+    echo $"Processing $line
+    
+    $ffmpegpath -i   "$line" $overwrite -sameq "$outfolder"_decompiled/"${name%%.*}.wav"
+    $ffmpegpath -i  "$line" $overwrite  "$outfolder"_decompiled/"$name"%d."$imageformat"
+        
+    ">> "$templog"
+    $ffmpegpath -i   "$line" $overwrite -sameq "$outfolder"_decompiled/"${name%%.*}.wav" 2>> "$templog"
+    $ffmpegpath -i  "$line" $overwrite  "$outfolder"_decompiled/"$name"%d."$imageformat" 2>> "$templog"
+    echo $"end
+    
+    ">> "$templog"
  
 
-	done < "$listoffile" 
-;;
+    done  3< "$listoffile" 
 
-esac
+fi 
 }
 
 
@@ -921,15 +933,17 @@ errors[2]="Unable to find a suitable output format for"
 errors[3]="not found"
 errors[4]="Error while opening encoder"
 errors[5]="Fail"
-errors[6]="rror"
+# errors[6]="rror"
 
  
 askopen=0
 for err in "${errors[@]}"; do
 tester=$(grep "$err" "$templog")
 
-if [[ ! -z $? ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
+if [[  $? == 0 ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
 askopen=1
+else 
+function_delete
 
 fi
 done
@@ -937,41 +951,41 @@ done
 # if [[ ! -z $? ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
 
 # 
-# 		if [[ "$errors" == " for reading (No such file or directory)" ]] ; then 
-# 				function_message $"Unable ot open "$templog" this is bad! "
-# 				askopen=1
-# 		el
+#         if [[ "$errors" == " for reading (No such file or directory)" ]] ; then 
+#                 function_message $"Unable ot open "$templog" this is bad! "
+#                 askopen=1
+#         el
 
-# 		if [[ "$errors" =~ "Unable to find a suitable output format for" ]]; then 
-# 			function_message $"Unable to find a suitable output format for ..wrong outformat?"
-# 				askopen=1
-# 		elif [[ "$errors" =~ "not found" ]]; then 
-# 			function_message $"No preset found ?"
-# 			askopen=1
-# 		elif [[ "$errors" =~ "Error while opening encoder" ]]; then 
-# 			function_message $"Error while opening encoder "
-# 			askopen=1
-# 		elif [[ "$errors" == "No such file or directory" ]]; then 
-# 			function_message $"No such file or directory"
-# 			askopen=1
+#         if [[ "$errors" =~ "Unable to find a suitable output format for" ]]; then 
+#             function_message $"Unable to find a suitable output format for ..wrong outformat?"
+#                 askopen=1
+#         elif [[ "$errors" =~ "not found" ]]; then 
+#             function_message $"No preset found ?"
+#             askopen=1
+#         elif [[ "$errors" =~ "Error while opening encoder" ]]; then 
+#             function_message $"Error while opening encoder "
+#             askopen=1
+#         elif [[ "$errors" == "No such file or directory" ]]; then 
+#             function_message $"No such file or directory"
+#             askopen=1
 # 
 # 
-# 		else
-# 			askopen=0
+#         else
+#             askopen=0
 # 
-# 		fi
+#         fi
 # fi 
 
  
 
 if [[ "$askopen" == 1 ]]; then 
-	function_message_error $"FFmpeg failed! check the log!"
-	ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log?")
-		if [[ $? == 0 ]] ; then
-			kate "$templog"
-		else 
-			function_menu_start
-		fi
+    function_message_error $"FFmpeg failed! check the log!"
+    ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log?")
+        if [[ $? == 0 ]] ; then
+            kate "$templog"
+        else 
+            function_menu_start
+        fi
 elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then 
 
 function_delete
@@ -1004,41 +1018,41 @@ outformat=$(kdialog --combobox $"Convert to..keeping the same quality" mp3 mp2 a
  
  until test "true" = $(qdbus  $mystufvariabletouseonmyscript wasCancelled) ; do
 
-	  while  read <&3 line ; do 
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $line" 
-		
-		
-		echo "Log File $line
-				
-		">> "$templog"
-		
-		
-		
-		echo "$ffmpegpath -i   \""$line"\"  "$easyprofile" "$overwrite" \""${line%%.*}.$outformat\""
-		
-		" >> "$templog"
+      while  read <&3 line ; do 
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $line" 
+        
+        
+        echo "Log File $line
+                
+        ">> "$templog"
+        
+        
+        
+        echo "$ffmpegpath -i   \""$line"\"  "$easyprofile" "$overwrite" \""${line%%.*}.$outformat\""
+        
+        " >> "$templog"
  
-		
-		$ffmpegpath -i  "$line"   $easyprofile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog"
+        
+        $ffmpegpath -i  "$line"   $easyprofile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog"
  
-		value=$(($(($a*100))/$numberoffile))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		done 3< "$listoffile"
-	if [[ "$value" == 100 ]];then 
-		
-		function_check_for_errors
-		
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"FFmpeg service menu : Jobs done!"
-		fi
+        value=$(($(($a*100))/$numberoffile))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then 
+        
+        function_check_for_errors
+        
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"FFmpeg service menu : Jobs done!"
+        fi
 
-		exit
-	fi
+        exit
+    fi
 
 
 
-		done
+        done
 }
 
 
@@ -1081,34 +1095,34 @@ echo "start new conversion loop using profile
 "> "$templog"
  
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
-	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
-		
-		$ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
+    
+    while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
+        echo "Log File $line
+        
+        ">> "$templog"
+        echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
+        
+        $ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
 
 
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
-		
-		" >> "$templog"
-		done 3< "$listoffile"
-	if [[ "$value" == 100 ]];then 
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"Conversions done!"
-		fi
+        value=$(( $(($a*100))/$numberoffile ))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        echo "
+        
+        " >> "$templog"
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then 
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"Conversions done!"
+        fi
 
-	function_check_for_errors
-		exit
-	fi
+    function_check_for_errors
+        exit
+    fi
 done
 
 
@@ -1129,34 +1143,34 @@ echo "start new conversion loop using profile
 "> "$templog"
  
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
-	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
-		
-		$ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
+    
+    while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
+        echo "Log File $line
+        
+        ">> "$templog"
+        echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
+        
+        $ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
 
 
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
-		
-		" >> "$templog"
-		done 3< "$listoffile"
-	if [[ "$value" == 100 ]];then 
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"Conversions done!"
-		fi
+        value=$(( $(($a*100))/$numberoffile ))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        echo "
+        
+        " >> "$templog"
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then 
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"Conversions done!"
+        fi
 
-	function_check_for_errors
-		exit
-	fi
+    function_check_for_errors
+        exit
+    fi
 done
 
 
@@ -1178,34 +1192,34 @@ echo "start new conversion loop using profile
 "> "$templog"
  
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
-	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
-		
-		$ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
+    
+    while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
+        echo "Log File $line
+        
+        ">> "$templog"
+        echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
+        
+        $ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
 
 
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
-		
-		" >> "$templog"
-		done 3< "$listoffile"
-	if [[ "$value" == 100 ]];then 
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"Conversions done!"
-		fi
+        value=$(( $(($a*100))/$numberoffile ))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        echo "
+        
+        " >> "$templog"
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then 
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"Conversions done!"
+        fi
 
-	function_check_for_errors
-		exit
-	fi
+    function_check_for_errors
+        exit
+    fi
 done
 
 
@@ -1226,39 +1240,39 @@ echo "start new conversion loop using profile
 "> "$templog"
  
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
-	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile -y  "${line%%.*}.$outformat"" >> "$templog"
-		
-		$ffmpegpath -i   "$line"  $profile -y   "${line%%.*}.$outformat"  2>>"$templog"
+    
+    while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
+        echo "Log File $line
+        
+        ">> "$templog"
+        echo "$ffmpegpath -i   "$line" $profile -y  "${line%%.*}.$outformat"" >> "$templog"
+        
+        $ffmpegpath -i   "$line"  $profile -y   "${line%%.*}.$outformat"  2>>"$templog"
 
 
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
-		
-		" >> "$templog"
-		done 3< "$listoffile"
-		
-		
+        value=$(( $(($a*100))/$numberoffile ))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        echo "
+        
+        " >> "$templog"
+        done 3< "$listoffile"
+        
+        
  
 
 
-	if [[ "$value" == 100 ]];then 
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"Conversions done!"
-		fi
+    if [[ "$value" == 100 ]];then 
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"Conversions done!"
+        fi
 
-	function_check_for_errors
-		exit
-	fi
+    function_check_for_errors
+        exit
+    fi
 done
 
 
@@ -1280,40 +1294,40 @@ echo "start new conversion loop using profile
 "> "$templog"
  
 until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
-	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
-		$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
-		" >> "$templog"
-		
-		$ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog"
-		
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
-		
-		$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog"
+    
+    while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
+        echo "Log File $line
+        
+        ">> "$templog"
+        echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
+        $ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
+        " >> "$templog"
+        
+        $ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog"
+        
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
+        
+        $ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog"
 
 
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
-		
-		" >> "$templog"
-		done 3< "$listoffile"
-	if [[ "$value" == 100 ]];then 
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepoup $"Conversions done!"
-		fi
+        value=$(( $(($a*100))/$numberoffile ))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        echo "
+        
+        " >> "$templog"
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then 
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"Conversions done!"
+        fi
 
-	function_check_for_errors
-		exit
-	fi
+    function_check_for_errors
+        exit
+    fi
 done
 
 
@@ -1374,9 +1388,9 @@ function_ffmpeg_easy
 ;;
  
  a)
-kdialog --msgbox $"Sorry it will take time for this..." 
-exit
-# function_menu_advanced
+# kdialog --msgbox $"Sorry it will take time for this..." 
+# function_menu_start
+function_menu_advanced
 #function_menu_start #
  ;;
 
@@ -1430,11 +1444,11 @@ function_menu_start
  ;;
  *)
 kdialog --title "$title" --yesno $"You have not choose an option do you want exit?"
-	if [[ $? == 1 ]] ; then 
-		function_menu_start
-	else
-		exit
-	fi 
+    if [[ $? == 1 ]] ; then 
+        function_menu_start
+    else
+        exit
+    fi 
  ;;
  esac
  
@@ -1450,10 +1464,12 @@ kdialog --title "$title" --yesno $"You have not choose an option do you want exi
 ####################START SCRIPT############################
 function_load_settings
 
-echo $ffmpegpath
+
 checkprogram
-echo $ffmpegpath
-echo "Version $Version
+
+
+echo $ffmpegpath >>"$templog"
+echo "Version $Version 
 Author $Author
 License $License 
 List of Files location $listoffile
@@ -1468,60 +1484,62 @@ OverWrite files if they are present ? $overwrite
 Cpu used $threads
 Cpu detected $(cat /proc/cpuinfo | grep processor | wc -l)
 Number of files  $numberoffile
-Easy profile used $easyprofile"
-
+Easy profile used $easyprofile" >>"$templog"
 
 if  [[ $1 == -*  ]]; then
     case "$1" in
-	-h|--help|-\?) function_help; exit 0;;
-	-hx) function_help x; exit 0;;
+    -h|--help|-\?) function_help; exit 0;;
+    -hx) function_help x; exit 0;;
       
-	-f) if (($# > 1)); then
+    -f) if (($# > 1)); then
             shift ;for file in "$@"; do
-		echo "$file" >>$listoffile
+        echo "$file" >>$listoffile
 
-		done
+        done
           else
             echo $"-f requires files" 1>&2
             exit 1
           fi ;;
           
-	-fo) if (($# > 1)); then
+    -fo) if (($# > 1)); then
             shift ;for folder in "$@"; do
-		function_add_folder_shell "$folder"  
-		done
+        function_add_folder_shell "$folder"  
+        done
           else
             echo $"-f requires a folder at least" 1>&2
             exit 1
           fi ;;
          -fox)if (($# > 1)); then
             shift ;for folder in "$@"; do
-		function_add_folder "$folder"  
-		done
+        function_add_folder "$folder"  
+        done
           else
             kdialog --error $"-f requires a folder at least" 1>&2
             exit 1
           fi
          ;;
-	-mx) function_menu_start 
-	;;
-	-e)  nano "$listoffile" 
-	;;
-	-ek)  kate "$listoffile" 
-	;;
-	-d) function_delete
-	;;
-	-r)  function_restore
-	;;
-	-decompile)
-	function_build
-	;;
-	setf)
-	function_set_ffmpegpath
-	;;
-	--) shift; break;;
-	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+    -mx) function_menu_start 
+    ;;
+    -e)  nano "$listoffile" 
+    ;;
+    -ek)  kate "$listoffile" 
+    ;;
+    -d) function_delete
+    ;;
+    -r)  function_restore
+    ;;
+    -decompile)
+    function_build
+    ;;
+    setf)
+    function_set_ffmpegpath
+    ;;
+    --) shift; break;;
+    -*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
     esac
 else
 function_help; exit 1
 fi
+
+
+
