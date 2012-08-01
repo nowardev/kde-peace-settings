@@ -25,9 +25,9 @@
 #changelog
 # Fix in the while loop due ffmpeg bug 
 # Fix in awk stuff
-# some other work 
-#work on formats for fffmpeg 
-Version="0.0.5"
+# some other work
+#fixed function check , if number of file is empty then recalculate it 
+Version="0.0.6"
 Author="nowardev@gmail.com"
 License="GLPv3"
 title=$"FFmpeg Dolphin Service Menu"
@@ -712,6 +712,9 @@ function_menu_start
 fi
 
 
+if [[ -z "$numberoffile" ]] ; then 
+numberoffile=$(wc -l <"$listoffile")
+fi 
  
 
 
@@ -1043,7 +1046,7 @@ qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose tr
 
 qdbus $mystufvariabletouseonmyscript  showCancelButton true 
  
-outformat=$(kdialog --combobox $"Convert to..keeping the same quality" 3gp act aiff aac alac amr atrac  Au awb dct dss dvf flac gsm iklax ivs m4a m4p mmf mp3 mpc msv mxp4 ogg oga ra rm ram raw tta vox wav wma  ape mp4 mov avi mpg mpeg webm wmv theora flv asf sticaz --default "$defaultformat" )
+outformat=$(kdialog --combobox $"Convert to..keeping the same quality" 3gp act aiff aac alac amr atrac  Au awb dct dss dvf flac gsm iklax ivs m4a m4p mmf mp3 mp2 mpc msv mxp4 ogg oga ra rm ram raw tta vox wav wma  ape mp4 mov avi mpg mpeg webm wmv theora flv asf sticaz --default "$defaultformat" )
 
 if [[ -z "$outformat" ]] ; then 
 
