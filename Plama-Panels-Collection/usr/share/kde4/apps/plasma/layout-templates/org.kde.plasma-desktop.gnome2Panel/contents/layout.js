@@ -40,22 +40,22 @@ function RemoveOldPanels()
        }
         else 	{
 	  panelById(panelIds[i]).remove()
-	  	} 
+	  	}
                                     }
 }
 
-//RemoveOldPanels() //load the function 
+//RemoveOldPanels() //load the function
  //////////////////////////////////////////////////////////
 
 
-var screenrect = screenGeometry(0); // get information about your screen h w 
+var screenrect = screenGeometry(0); // get information about your screen h w
 //start another function to create panels layout
 function gnome2(){
         var panel = new Panel
     if (panelIds.length == 1) {
         // panel.location = 'bottom'
         panel.location = 'top'
-	//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
+	//panel.hiding= 'autohide' //"windowscover" or "windowsbelow"
     }
 
 
@@ -79,7 +79,7 @@ function gnome2(){
     launcher.writeConfig("contentsExtenderPosition", "1");
     launcher.writeConfig("searchHistory", "firefox");
     launcher.writeConfig("showSearchBox", "true");
-    launcher.writeConfig("partData","model=Places&type=list&version=1.0\nmodel=Devices%2FFixed&type=list&version=1.0\nmodel=Devices%2FRemovable&type=list&version=1.0\n"); 
+    launcher.writeConfig("partData","model=Places&type=list&version=1.0\nmodel=Devices%2FFixed&type=list&version=1.0\nmodel=Devices%2FRemovable&type=list&version=1.0\n");
  
 
 
@@ -88,8 +88,14 @@ function gnome2(){
     launchersystem.writeConfig("relativePath", "System/");
     launchersystem.writeConfig("format", "Description");
 
-    var systemsettings = panel.addWidget("quicklaunch");
-    systemsettings.writeConfig("iconUrls","file:////usr/share/applications/kde4/systemsettings.desktop");
+    var launchersettings = panel.addWidget("simplelauncher");
+    launchersettings.writeConfig("icon", "preferences-system");
+    launchersettings.writeConfig("format", "Description");
+    launchersettings.writeConfig("showMenuTitles", "true");
+    launchersettings.writeConfig("views", "Settings");
+
+ //   var systemsettings = panel.addWidget("quicklaunch");
+ //   systemsettings.writeConfig("iconUrls","file:////usr/share/applications/kde4/systemsettings.desktop");
 
     var help = panel.addWidget("quicklaunch");
     //qlaunch.writeConfig("iconSize", "24");
@@ -98,7 +104,7 @@ function gnome2(){
 
     panel.addWidget("panelspacer_internal");
 
-    var quick = panel.addWidget("quickaccess"); 
+    var quick = panel.addWidget("quickaccess");
     var dolphin = panel.addWidget("quicklaunch");
     dolphin.writeConfig("iconUrls","file:////usr/share/applications/kde4/dolphin.desktop");
     
@@ -117,8 +123,8 @@ function gnome2(){
 
     //var stanndard = panel.addWidget("quicklaunch");
 
-    // 
-    // 
+    //
+    //
     //panel.addWidget("smooth-tasks");
 
 
@@ -149,13 +155,20 @@ weather.writeConfig("visibilityUnit","2007");
     clock.writeConfig("plainClockColor", "255,255,255");
     clock.writeConfig("plainClockDrawShadow", "false");
 
+    
+    var launcher = panel.addWidget("simplelauncher");
+    launcher.writeConfig("format", "Description");
+    launcher.writeConfig("showMenuTitles", "true");
+    launcher.writeConfig("views", "SwitchUser,SaveSession,LockScreen,Logout,Standby,SuspendDisk,SuspendRAM,Restart,Shutdown");
+    launcher.writeConfig("icon", "system-shutdown");
 
-   var  lockout = panel.addWidget("lockout");
-    //lockout.writeConfig("showHibernateButton","true");
-    lockout.writeConfig("showLogoutButton","true");
-    lockout.writeConfig("showLockButton","false");
-    lockout.writeConfig("showSleepButton","false");
-    lockout.writeConfig("showSwitchUserButton","true");
+
+//    var  lockout = panel.addWidget("lockout");
+//     //lockout.writeConfig("showHibernateButton","true");
+//     lockout.writeConfig("showLogoutButton","true");
+//     lockout.writeConfig("showLockButton","false");
+//     lockout.writeConfig("showSleepButton","false");
+//     lockout.writeConfig("showSwitchUserButton","true");
 
 
 
@@ -168,7 +181,7 @@ weather.writeConfig("visibilityUnit","2007");
     if (panelIds.length == 2) {
         // we are the only panel, so set the location for the user panel.location = 'bottom'
         panel.location = 'bottom'
-	//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
+	//panel.hiding= 'autohide' //"windowscover" or "windowsbelow"
     }
 
     panel.height = screenrect.height/30;
