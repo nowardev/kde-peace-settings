@@ -129,18 +129,23 @@ function gnome2(){
 
 
     panel.addWidget("panelspacer_internal");
-var weather = panel.addWidget("weather");
-weather.writeConfig("Share","false");
-weather.writeConfig("pressureUnit","5008");
-weather.writeConfig("source","wettercom|weather|Verona, Veneto, IT|IT0VE0284;Verona");
-weather.writeConfig("speedUnit","9001");
-weather.writeConfig("temperatureUnit","6001");
-weather.writeConfig("updateInterval","30");
-weather.writeConfig("visibilityUnit","2007");
+   
+    var weather = panel.addWidget("weather");
+    weather.writeConfig("Share","false");
+    weather.writeConfig("pressureUnit","5008");
+    weather.writeConfig("source","wettercom|weather|Verona, Veneto, IT|IT0VE0284;Verona");
+    weather.writeConfig("speedUnit","9001");
+    weather.writeConfig("temperatureUnit","6001");
+    weather.writeConfig("updateInterval","30");
+    weather.writeConfig("visibilityUnit","2007");
+    
+    
     panel.addWidget("sm_cpu");
     panel.addWidget("sm_ram");
     panel.addWidget("sm_temperature");
-    panel.addWidget("systemtray");
+    
+    var tray=  panel.addWidget("systemtray");
+    tray.writeConfig("ShowHardware","false");
 
     var clock = panel.addWidget("digital-clock");
     clock.writeConfig("showDate", "true");
