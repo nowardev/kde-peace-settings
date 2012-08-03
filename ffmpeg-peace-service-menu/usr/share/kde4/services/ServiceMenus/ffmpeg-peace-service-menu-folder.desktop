@@ -1,27 +1,29 @@
-#Copyright (C) 2012 nowardev nowardev@gmail.com
- 
-#This file is part of kde-peace-settings.
- 
-#kde-peace-settings is free software: you can redistribute it and/or modify
-#it under the terms of the GNU General Public License as published by
-#the Free Software Foundation, either version 3 of the License, or
-#(at your option) any later version.
-#
-#This program is distributed in the hope that it will be useful,
-#but WITHOUT ANY WARRANTY; without even the implied warranty of
-#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#GNU General Public License for more details.
-#
-#You should have received a copy of the GNU General Public License
-#along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
-Actions=folderappend;version;
-Icon=dolphin
+Actions=folderappend;edit;deleteall;start;version;
+Icon=video-x-generic
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory
 Type=Service
 X-KDE-Priority=TopLevel
-X-KDE-Submenu=Vlc Folder Append
-X-KDE-Submenu[it]=Aggiungi cartella a vlc
+X-KDE-Submenu=FFmpeg Menu
+X-KDE-Submenu[it]=FFmpeg Menu
+
+[Desktop Action deleteall]
+Exec=ffmpeg-peace-service-menu -d & echo %u >>/dev/null
+Icon=edit-delete
+Name=Delete list
+Name[it]=Cancella la Lista FFmpeg
+
+[Desktop Action edit]
+Exec=ffmpeg-peace-service-menu -ek && echo %u >>/dev/null
+Icon=story-editor
+Name=Edit List
+Name[it]=Edita Lista
+
+[Desktop Action start]
+Exec=ffmpeg-peace-service-menu -mx  && echo %u >>/dev/null
+Icon=dialog-ok
+Name=FFmpeg Start!
+Name[it]=FFmpeg Inizia!
 
 [Desktop Action folderappend]
 Exec=ffmpeg-peace-service-menu -fox "%u"
@@ -30,7 +32,10 @@ Name=Add Folder to FFmpeg
 Name[it]=Aggiungi Cartella a FFmpeg
 
 [Desktop Action version]
-Exec=kdialog --info $(ffmpeg-peace-service-menu -h)  && echo %u >>/dev/null 
+Exec=ffmpeg-peace-service-menu -hx  && echo %u >>/dev/null
 Icon=dialog-information
 Name=Version
 Name[it]=Versione
+
+
+
