@@ -319,7 +319,7 @@ function_passivepoup $"Old list  $listoffile deleted and Old log $templog delete
 
 elif [[ ! -e "$listoffile" ]] ; then
 function_passivepoup $"i can't do it i can't find the file $listoffile"
-elif [[ ! -e "$listoffile" ]] ; then
+elif [[ ! -e "$templog" ]] ; then
 function_passivepoup $"i can't do it i can't find the file $templog"
 else
 function_passivepoup $"i can't do it i can't find the file $templog $listoffile"
