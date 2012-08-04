@@ -961,7 +961,7 @@ errors[3]="not found"
 errors[4]="Error while opening encoder"
 errors[5]="Fail"
 errors[6]="Unknown encoder"
-
+errors[7]="is experimental and might produce bad results."
  
 askopen=0
 for err in "${errors[@]}"; do
