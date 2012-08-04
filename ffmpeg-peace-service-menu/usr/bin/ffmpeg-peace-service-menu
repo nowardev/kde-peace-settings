@@ -27,7 +27,7 @@
 # Fix in awk stuff
 # some other work
 #fixed function check , if number of file is empty then recalculate it
-Version="0.0.7"
+Version="0.0.8"
 Author="nowardev@gmail.com"
 License="GLPv3"
 title=$"FFmpeg Dolphin Service Menu"
@@ -312,15 +312,15 @@ esac
 
 function_delete(){
 if [[ -e "$listoffile" && -e "$templog"   ]] ; then
-status=""
+# status=""
 mv "$listoffile"  $HOME/.local/share/Trash/files/
 mv "$templog"  "$HOME"/.local/share/Trash/files/
-function_passivepoup $"Old list  $listoffile deleted and Old log $templog deleted"
-
-elif [[ ! -e "$listoffile" ]] ; then
-function_passivepoup $"i can't do it i can't find the file $listoffile"
-elif [[ ! -e "$templog" ]] ; then
-function_passivepoup $"i can't do it i can't find the file $templog"
+# function_passivepoup $"Old list  $listoffile deleted and Old log $templog deleted"
+# 
+# elif [[ ! -e "$listoffile" ]] ; then
+# function_passivepoup $"i can't do it i can't find the file $listoffile"
+# elif [[ ! -e "$templog" ]] ; then
+# function_passivepoup $"i can't do it i can't find the file $templog"
 else
 function_passivepoup $"i can't do it i can't find the file $templog $listoffile"
 fi
@@ -376,7 +376,7 @@ function_passivepoup(){
 if [[ "$passivepopup" == "enabled" ]] ; then
 
     if [[ ! -z "$1" ]] ;then
-        kdialog --passivepopup "$1" "$2"
+
             if [[ -z "$2" ]];then
         
                 kdialog --passivepopup "$1"
@@ -971,7 +971,7 @@ if [[  $? == 0 ]]; then #if  $? the last command is not empty ! -z then you have
 founderr="$err"
 askopen=1
 else
-function_delete
+askopen=0
 
 fi
 done
@@ -983,7 +983,7 @@ if [[ "$askopen" == 1 ]]; then
     function_message_error $"FFmpeg failed! check the log!"
     ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? $founderr")
         if [[ $? == 0 ]] ; then
-            kwrite "$templog"
+            kde-open "$templog"
             function_delete standard
         else
             function_menu_start
@@ -991,6 +991,9 @@ if [[ "$askopen" == 1 ]]; then
 elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
 
 function_delete standard
+
+elif [[ "$askopen" == 0 ]]; then
+function_delete silent
 fi
 }
 
