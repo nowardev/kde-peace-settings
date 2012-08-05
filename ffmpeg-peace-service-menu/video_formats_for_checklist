@@ -1,8 +1,8 @@
 264 264 off
 3g2 3g2 off
-3gp 3gp off
-3gp2 3gp2 off
-3gpp 3gpp off
+3gp 3gp on
+3gp2 3gp2 on
+3gpp 3gpp on
 3gpp2 3gpp2 off
 3mm 3mm off
 3p2 3p2 off
@@ -23,11 +23,11 @@ amx amx off
 anim anim off
 arcut arcut off
 arf arf off
-asf asf off
+asf asf on
 asx asx off
 avb avb off
 avd avd off
-avi avi off
+avi avi on
 avp avp off
 avs avs off
 avs avs off
@@ -84,7 +84,7 @@ dpa dpa off
 dpg dpg off
 dream dream off
 dsy dsy off
-dv dv off
+dv dv on
 dv-avi dv-avi off
 dv4 dv4 off
 dvdmedia dvdmedia off
@@ -109,7 +109,7 @@ fcproject fcproject off
 flc flc off
 flh flh off
 fli fli off
-flv flv off
+flv flv on
 flx flx off
 gfp gfp off
 gl gl off
@@ -162,7 +162,7 @@ mj2 mj2 off
 mjp mjp off
 mjpg mjpg off
 mk3d mk3d off
-mkv mkv off
+mkv mkv on
 mmv mmv off
 mnv mnv off
 mob mob off
@@ -171,18 +171,18 @@ modd modd off
 moff moff off
 moi moi off
 moov moov off
-mov mov off
+mov mov on
 movie movie off
 mp21 mp21 off
 mp21 mp21 off
 mp2v mp2v off
-mp4 mp4 off
+mp4 mp4 on
 mp4v mp4v off
 mpe mpe off
-mpeg mpeg off
-mpeg4 mpeg4 off
+mpeg mpeg on
+mpeg4 mpeg4 on
 mpf mpf off
-mpg mpg off
+mpg mpg on
 mpg2 mpg2 off
 mpgindex mpgindex off
 mpl mpl off
@@ -212,7 +212,7 @@ nsv nsv off
 nuv nuv off
 nvc nvc off
 ogm ogm off
-ogv ogv off
+ogv ogv on
 ogx ogx off
 osp osp off
 pac pac off
@@ -246,7 +246,7 @@ rcd rcd off
 rcproject rcproject off
 rdb rdb off
 rec rec off
-rm rm off
+rm rm on
 rmd rmd off
 rmd rmd off
 rmp rmp off
@@ -287,7 +287,7 @@ stl stl off
 str str off
 stx stx off
 svi svi off
-swf swf off
+swf swf on
 swi swi off
 swt swt off
 tda3mt tda3mt off
@@ -300,7 +300,7 @@ tp0 tp0 off
 tpd tpd off
 tpr tpr off
 trp trp off
-ts ts off
+ts ts on
 tsp tsp off
 tvs tvs off
 usm usm off
@@ -336,12 +336,12 @@ vse vse off
 vsp vsp off
 w32 w32 off
 wcp wcp off
-webm webm off
+webm webm on
 wlmp wlmp off
 wm wm off
 wmd wmd off
 wmmp wmmp off
-wmv wmv off
+wmv wmv on
 wmx wmx off
 wot wot off
 wp3 wp3 off
@@ -359,4 +359,3 @@ zm1 zm1 off
 zm2 zm2 off
 zm3 zm3 off
 zmv zmv off
-
