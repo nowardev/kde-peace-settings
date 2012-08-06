@@ -616,8 +616,8 @@ done < $ffmpeg_profile_file_audio
 ansprofile=$(echo $ARGS | xargs kdialog)
 
 if [[ -z "$ansprofile" ]]; then
-kdialog --error $"No profile given please select a profile"
-function_reload_function "function_load_profiles"
+function_message_error  $"No profile given please select a profile"
+function_menu_start
 fi
 echo $ansprofile
 
@@ -649,8 +649,8 @@ done < $ffmpeg_profile_file_device
 ansprofile=$(echo $ARGS | xargs kdialog)
 
 if [[ -z "$ansprofile" ]]; then
-kdialog --error $"No profile given please select a profile"
-function_reload_function "function_load_profiles"
+function_message_error  $"No profile given please select a profile"
+function_menu_start
 fi
 echo $ansprofile
 profile=$(awk '{$1 = "" ; print}'<< _EOF
@@ -680,8 +680,8 @@ done < $ffmpeg_profile_file_video
 ansprofile=$(echo $ARGS | xargs kdialog)
 
 if [[ -z "$ansprofile" ]]; then
-kdialog --error $"No profile given please select a profile"
-function_reload_function "function_load_profiles"
+function_message_error  $"No profile given please select a profile"
+function_menu_start
 fi
 echo $ansprofile
 profile=$(awk '{$1 = "" ; print}'<< _EOF
@@ -870,7 +870,7 @@ function_ansmenu_advanced(){
 case "$ansadvanced" in
  
 compile)
-function_compile
+function_compile_check
 ;;
 
 decompile)
@@ -1029,6 +1029,7 @@ for program in "${program[@]}";do
 			echo "error exiting..." >&2
 			exit 1;
 		fi
+	fi
 done
 
 releases[1]=1204
@@ -1038,7 +1039,7 @@ for r in "$releases" ; do
 
 	if [[ "$r" == $release ]] ; then
 		function_compile_ffmpeg_$release
-
+	fi
 
 
 
@@ -1056,9 +1057,41 @@ done
  
 }
 
+function_imagemagick_convert(){
+if [[ -d /tmp/temp_ffmpeg_service_menu_folder/ ]] ; then
+echo $"/tmp/temp_ffmpeg_service_menu_folder/ exist"
+else
+mkdir "/tmp/temp_ffmpeg_service_menu_folder/"
 
+fi 
 
-function_compile(){
+if [[ -d /tmp/temp_ffmpeg_service_menu_folder/temp_converted_folder ]] ; then
+echo $"folder /tmp/temp_ffmpeg_service_menu_folder/temp_converted_folder exist"
+else 
+	mkdir /tmp/temp_ffmpeg_service_menu_folder/temp_converted_folder
+fi
+	
+while  read  line ; do
+counter=$(printf %03d $x)
+
+# 
+# name="${line##*/}" # remove the folders /asdfa/myfile.ogg.txt.like----->/myfile.ogg.txt.like
+# name="${name%%.*}" # remove extensions like .ogg .ogv .txt
+# outfolder="${line%%.*}" # remove extensions like .ogg .ogv .txt
+convert "$line" /tmp/temp_ffmpeg_service_menu_folder/temp_converted_folder/"img$counter".jpg
+x=$(($x+1))
+done  < "$listoffile"
+
+}
+
+function_compile_check(){
+
+function_check
+
+name_compiledvideo=$(kdialog --title $"insert the video name" --inputbox $"Please insert video name"  )
+outformat=$(kdialog --title $"which format do you want use" --combobox $"Which format do you want use to build your video?" $commonvideoformats )
+audiotrack=$( kdialog --title $"Audio track leave empty if you don't want it" --getopenfilename $HOME)
+
 
 program[0]=convert
 
@@ -1073,6 +1106,7 @@ for program in "${program[@]}";do
 			function_message_error $"$program not found; PLEASE INSTALL IT" >&2
 			function_menu_start
 		fi
+	fi
 done
 
  
@@ -1089,8 +1123,10 @@ while  read  line ; do
 	fi 
 	testextension=${line##*.}
 		if [[ "$testextension" == "$extension" ]] ; then
+		echo "it seems all ok..."
 		else
-		function_passivepoup $"multiple formats in your picture i need to convert them before in png"
+		echo  $"multiple formats in your picture i need to convert them before in png"
+		function_imagemagick_convert
 		fi 
 	$(($z+1))
 	
@@ -1099,12 +1135,16 @@ while  read  line ; do
 done  < "$listoffile"
 
   #ffmpeg -f image2 -i img%d.jpg /tmp/a.mpg
+
+
+}
+
+function_compile_video(){
+
 if [[ ! -d "/tmp/temp_ffmpeg_service_menu_folder" ]];then 
 mkdir "/tmp/temp_ffmpeg_service_menu_folder"
 fi 
-name_compiledvideo=$(kdialog --title $"insert the video name" --inputbox $"Please insert video name"  )
-outformat=$(kdialog --title $"which format do you want use" --combobox $"Which format do you want use to build your video?" $commonvideoformats )
-audiotrack=$( kdialog --title $"Audio track leave empty if you don't want it" --getopenfilename $HOME)
+
 
 if [[ -z "$name_compiledvideo" ]];then
 function_message_error $"No name give back to main menu..."
@@ -1123,10 +1163,7 @@ if [[ -z "$audiotrack" ]] ;then
 else
 	ffmpeg -f image2 -i img%d.jpg -newaudio "$audiotrack" /tmp/"$name_compiledvideo.$outformat"
 fi
-
 }
-
-
 
 function_decompile(){
 
@@ -1705,25 +1742,38 @@ done
 function_build(){
 
 
-whichprofile=$(kdialog --combobox $"Which cathegory do you want?"  $"audio" $"device" $"video"  --default $"video" )
+whichprofile=$(kdialog --combobox $"Which cathegory do you want?"  audio device video  --default video )
 
-newprofile=$(kdialog --title "$title" --inputbox $"Name of your profile, don't use special characters " $"new_profile_name")
+newnameprofile=$(kdialog --title "$title" --inputbox $"Name of your profile, don't use special characters " $"new_profile_name")
 
-format=$(kdialog --combobox Format  mp3 mp2 aac ape mp4 mov avi mpg mpeg webm wmv theora flv asf )
+if [[ "$whichprofile" == audio ]] ; then 
+format=$(kdialog --combobox $"choose your format"  $commonaudioformats  )
+elif [[ "$whichprofile" == device ]] ; then 
+format=$(kdialog --combobox $"choose your format"  $commonaudioformats $commonvideoformats  )
+elif [[ "$whichprofile" == video ]] ; then 
+format=$(kdialog --combobox $"choose your format"  $commonvideoformats  )
+fi 
+
+
+if [[ "$whichprofile" == device || "$whichprofile" == video ]] ; then 
 vbitrate=$(kdialog --combobox $"Video Bit Rate" 100k 200k 500k 1000k 2000k 3000k 4000k 5000k  --default 1000k )
+fi 
 
+
+if [[ "$whichprofile" == device || "$whichprofile" == video  ]] ; then 
 videoc=$(kdialog --combobox $"Choose a Codec Video" 4xm  8bps  FRWU  a64multi  a64multi5  aasc  amv  anm  ansi  asv1  asv2  aura  aura2  avs  bethsoftvid  bfi  binkvideo  bmp  c93  camstudio  camtasia  cavs  cdgraphics  cinepak  cljr  cyuv  dfa  dnxhd  dpx  dsicinvideo  dvvideo  dxa  eacmv  eamad  eatgq  eatgv  eatqi  escape124  ffv1  ffvhuff  flashsv  flic  flv  fraps  gif  h261  h263  h263i  h263p  h264  h264_vdpau  huffyuv  idcinvideo  iff_byterun1  iff_ilbm  indeo2  indeo3  indeo5  interplayvideo  jpegls  jv  kgv1  kmvc  lagarith  libdirac  libopenjpeg  libschroedinger  libtheora  libvpx  libx264  libxvid  ljpeg  loco  mdec  mimic  mjpeg  mjpegb  mmvideo  motionpixels  mpeg1video  mpeg1video_vdpau  mpeg2video  mpeg4  mpeg4_vdpau  mpegvideo  mpegvideo_vdpau  mpegvideo_xvmc  msmpeg4  msmpeg4v1  msmpeg4v2  msrle  msvideo1  mszh  mxpeg  nuv  pam  pbm  pcx  pgm  pgmyuv  pgssub  pictor  png  ppm  ptx  qdraw  qpeg  qtrle  r10k  r210  rawvideo  rl2  roqvideo  rpza  rv10  rv20  rv30  rv40  sgi  smackvid  smc  
 snow  sp5x  srt  sunrast  svq1  svq3  targa  theora  thp  tiertexseqvideo  tiff  tmv  truemotion1  truemotion2  txd  ultimotion  v210  v210x  vb  vc1  vc1_vdpau  vcr1  vmdvideo  vmnc  vp3  vp5  vp6  vp6a  vp6f  vp8  vqavideo  wmv1  wmv2  wmv3  wmv3_vdpau  wnv1  xan_wc3  xan_wc4  xl  yop  zlib  zmbv)
-
-  kdialog --combobox $" Video L Size Fullscreen($defaulresolutionL) :"  2048 1920 1280 1080 1024 800 720 640 576 480 320 240 272 --default  $defaulresolutionL  --title $"Prefered Video resolution"
-
-   kdialog --combobox $"Video H Size Fullscreen($defaulresolutionH) :"  2048 1920 1280 1080 1024 800 720 640 576 480 320  240 272   --default  $defaulresolutionH  --title $"Prefered Video"
-   
 framerate=$(kdialog --combobox $"Choose Your Prefered Frame for seconds Value for mencoder:" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 29 21 22 23 24 25 27 28 29 30000/1001 30 --default 25  --title $"Frame for seconds Value")
+kdialog --combobox $" Video L Size Fullscreen($defaulresolutionL) :"  2048 1920 1280 1080 1024 800 720 640 576 480 320 240 272 --default  $defaulresolutionL  --title $"Prefered Video resolution"
+
+kdialog --combobox $"Video H Size Fullscreen($defaulresolutionH) :"  2048 1920 1280 1080 1024 800 720 640 576 480 320  240 272   --default  $defaulresolutionH  --title $"Prefered Video"
+
+fi 
 
 
-abitrate=$(kdialog --combobox   $"Audio Bit Rate"32k 64k 128k 256k --default 128k)
-samplerate=$(kdialog --combobox $"Sample Rate Hz" 22050 44100 48000  --default 44100 )
+
+abitrate=$(kdialog --combobox   $"Audio Bit Rate" 32k 64k 128k 256k 320k  --default 128k)
+samplerate=$(kdialog --combobox $"Sample Rate Hz" 11025 22050 44100 48000  --default 44100 )
 acodec=$(kdialog --combobox $"Choose Audio Codec"   aac  aac_latm  ac3  ac3_fixed adpcm_4xm  adpcm_adx  adpcm_ct  adpcm_ea  adpcm_ea_maxis_xa  adpcm_ea_r1  adpcm_ea_r2  adpcm_ea_r3  adpcm_ea_xas  adpcm_ima_amv  adpcm_ima_dk3  adpcm_ima_dk4  adpcm_ima_ea_eacs  adpcm_ima_ea_sead  adpcm_ima_iss  adpcm_ima_qt  adpcm_ima_smjpeg  adpcm_ima_wav  adpcm_ima_ws  adpcm_ms  adpcm_sbpro_2  adpcm_sbpro_3  adpcm_sbpro_4  adpcm_swf  adpcm_thp  adpcm_xa  adpcm_yamaha  alac  als  amrnb  amrwb    atrac1  atrac3  binkaudio_dct  binkaudio_rdft  cook  dca  dsicinaudio  eac3  flac  g722  g726  gsm  gsm_ms  imc  interplay_dpcm  libfaac  libgsm  libgsm_ms  libmp3lame  libopencore_amrnb  libopencore_amrwb  libspeex  libvo_aacenc  libvo_amrwbenc  libvorbis  mace3  mace6  mlp  mp1  mp1float  mp2  mp2float  mp3  mp3adu  mp3adufloat  mp3float  mp3on4  mp3on4float  mpc7  mpc8  nellymoser  pcm_alaw  pcm_bluray  pcm_dvd  pcm_f32be  pcm_f32le  pcm_f64be  pcm_f64le  pcm_lxf  pcm_mulaw  pcm_s16be  pcm_s16le  pcm_s16le_ planar  pcm_s24be  pcm_s24daud  pcm_s24le  pcm_s32be  pcm_s32le  pcm_s8  pcm_u16be  pcm_u16le  pcm_u24be  pcm_u24le  pcm_u32be  pcm_u32le  pcm_u8  pcm_zork  pgssub  qcelp  qdm2  real_144  real_288  roq_dpcm  s302m  shorten  sipr  smackaud  sol_dpcm  srt  truehd  truespeech  tta  twinvq  vmdaudio  vorbis  wavpack  wmapro  wmav1  wmav2  wmavoice  ws_sn)
 
 
@@ -1731,8 +1781,39 @@ acodec=$(kdialog --combobox $"Choose Audio Codec"   aac  aac_latm  ac3  ac3_fixe
 newprofile=$(awk 'gsub(/ /,"_")' << _EOF $newprofile
 _EOF)
 
+if [[ "$whichprofile" == audio ]] ; then 
+userprofile="$newnameprofile $format -acodec $acodec   -ab $abitrate -b $vbitrate   -ar $samplerate" 
 
-echo "$newprofile $format -acodec $acodec -vcodec $vcodec -ab $abitrate -b $vbitrate -fps $framerate -ar $samplerate" >>"$ffmpeg_profile_file"
+elif [[ "$whichprofile" == device ]] ; then 
+userprofile="$newnameprofile $format -acodec $acodec -vcodec $vcodec -ab $abitrate -b $vbitrate -fps $framerate -ar $samplerate" 
+
+elif [[ "$whichprofile" == video ]] ; then 
+userprofile="$newnameprofile $format -acodec $acodec -vcodec $vcodec -ab $abitrate -b $vbitrate -fps $framerate -ar $samplerate" 
+fi 
+
+stuffer=$(kdialog --title $"User profile" --textinputbox $"this is the line do you want save it or add other stuff ?" -- "$userprofile" )
+
+if [[ ! -z "$stuffer"  ]] ; then
+	if [[ "$whichprofile" == audio ]] ; then 
+		echo "$stuffer" >>"$ffmpeg_profile_file_audio"
+
+	elif [[ "$whichprofile" == device ]] ; then 
+		echo "$stuffer" >>"$ffmpeg_profile_file_device"
+	elif [[ "$whichprofile" == video ]] ; then 
+		echo "$stuffer" >>"$ffmpeg_profile_file_video"
+	fi 
+
+
+
+
+else
+function_message_error $"Error you profile is empty are you a fuckin idiot? hahaaha -.-... exiting"
+
+
+fi
+
+function_menu_start
+ 
 
 }
 
@@ -1743,7 +1824,7 @@ echo "$newprofile $format -acodec $acodec -vcodec $vcodec -ab $abitrate -b $vbit
  function_menu_start(){
  # a $"Convert Advanced User" pd $"Convert Using a  Profile Dual Pass X2 slower"
  
-ans=$(kdialog --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Convert Extra" setf $"Set ffmpeg path"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit")
+ans=$(kdialog --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Extra" setf $"Set ffmpeg path"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
  
 function_ansmenu
  
