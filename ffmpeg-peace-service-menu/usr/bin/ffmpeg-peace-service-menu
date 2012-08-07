@@ -58,7 +58,15 @@ ffmpeg_service_menu_settings="$HOME/.FFmpeg_service_menu_settings"
 resetlistafterconversion="yes"
 passivepopup="enabled"
 
-
+# resolutionH=$(($(xrandr 2>&1| awk '/*+/{gsub(/  /,"");gsub(/x/," ") ;print $2}')/2))
+# resolutionL=$(($(xrandr 2>&1| awk '/*+/{gsub(/  /,"");gsub(/x/," ") ;print $1}')/5))
+# resolutionLbis=$(($(xrandr 2>&1| awk '/*+/{gsub(/  /,"");gsub(/x/," ") ;print $1}')/2))
+# 
+# if [[ -z "$resolutionH" && -z "$resolutionL" ]] ; then 
+# geometry="--geometry 500x300"
+# else 
+# geometry=""
+# fi 
 
 threads=$(cat /proc/cpuinfo | grep processor | wc -l)
 numberoffile=$(wc -l <"$listoffile")
@@ -95,9 +103,22 @@ easyprofile=$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settin
 ffmpegpath=$(awk  -F':' '/ffmpegpath:/{print $2}' "$ffmpeg_service_menu_settings")
 commonaudioformats=$(awk  -F':' '/common audio formats:/{print $2}' "$ffmpeg_service_menu_settings")
 commonvideoformats=$(awk  -F':' '/common video formats:/{print $2}' "$ffmpeg_service_menu_settings")
+filtercommonaudioformats="$(awk '{ for(i=1; i<=NF; i++) {printf( "\*\.%s ", $i )}}' << _EOF
+$commonaudioformats
+_EOF
+)"
+
+filtercommonvideoformats="$(awk '{ for(i=1; i<=NF; i++) {printf( "\*\.%s ", $i )}}' << _EOF
+$commonvideoformats
+_EOF
+)"
+# commonvideoformats='ogv mkv mp4'; read -ra exts <<< "$commonvideoformats"; echo "${exts[*]/#/*.}"
+
+
 defaultformat=$(awk  -F':' '/prefered default format:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
 passivepopup=$(awk  -F':' '/passive popup:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
 numberofpass=$(awk  -F':' '/number of pass:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
+
 
 case "$overwrite" in
 
@@ -1100,13 +1121,14 @@ else
 fi
 	
 while  read  line ; do
-counter=$(printf %03d $x)
+counter=$(printf %09d $x)
 
 # 
 # name="${line##*/}" # remove the folders /asdfa/myfile.ogg.txt.like----->/myfile.ogg.txt.like
 # name="${name%%.*}" # remove extensions like .ogg .ogv .txt
 # outfolder="${line%%.*}" # remove extensions like .ogg .ogv .txt
 convert "$line" /tmp/temp_ffmpeg_service_menu_folder/temp_converted_folder/"img$counter".jpg
+echo "/tmp/temp_ffmpeg_service_menu_folder/temp_converted_folder/"img$counter".jpg" >>/tmp/ffmpeg_service_menu_temp_listoffile.lst
 x=$(($x+1))
 done  < "$listoffile"
 
@@ -1116,7 +1138,7 @@ function_compile_check(){
 
 function_check
 
-name_compiledvideo=$(kdialog --title $"insert the video name" --inputbox $"Please insert video name"  )
+name_compiledvideo=$(kdialog --title $"insert the video name" --getopenfilename $HOME "$filtercommonvideoformats|Video Files"  )
 outformat=$(kdialog --title $"which format do you want use" --combobox $"Which format do you want use to build your video?" $commonvideoformats )
 audiotrack=$( kdialog --title $"Audio track leave empty if you don't want it" --getopenfilename $HOME)
 
@@ -1167,7 +1189,16 @@ function_compile_video
 
 }
 
+function_wget_profile(){
+
+wget "$1" -O "$2"
+}
+
 function_compile_video(){
+
+if  [[ -e "/tmp/ffmpeg_service_menu_temp_listoffile.lst" ]] ;then
+listoffile="/tmp/ffmpeg_service_menu_temp_listoffile.lst"
+fi 
 
 if [[ ! -d "/tmp/temp_ffmpeg_service_menu_folder" ]];then 
 mkdir "/tmp/temp_ffmpeg_service_menu_folder"
@@ -1182,15 +1213,26 @@ fi
 if [[ -z "$audiotrack" ]] ;then
 	x=1
 		while  read  line ; do
-		counter=$(printf %03d $x)
-		ln -s "$i" /tmp/temp_ffmpeg_service_menu_folder/img"$counter".jpg
+		counter=$(printf %09d $x)
+		ln -s "$line" /tmp/temp_ffmpeg_service_menu_folder/img"$counter".jpg
 		x=$(($x+1))
 		done  < "$listoffile"
 
-	ffmpeg -f image2 -i img%d.jpg /tmp/"$name_compiledvideo.$outformat"
+		echo "$ffmpegpath -f image2 -i /tmp/temp_ffmpeg_service_menu_folder/img%09d.jpg /tmp/"$name_compiledvideo.$outformat"" 
+	$ffmpegpath -f image2 -i /tmp/temp_ffmpeg_service_menu_folder/img%09d.jpg "$name_compiledvideo.$outformat"   >>"$templog"
 else
-	ffmpeg -f image2 -i img%d.jpg -newaudio "$audiotrack" /tmp/"$name_compiledvideo.$outformat"
+	echo "$ffmpegpath -f image2 -i /tmp/temp_ffmpeg_service_menu_folder/img%09d.jpg -newaudio "$audiotrack" /tmp/"$name_compiledvideo.$outformat""
+	$ffmpegpath -f image2 -i /tmp/temp_ffmpeg_service_menu_folder/img%09d.jpg -newaudio "$audiotrack" "$name_compiledvideo.$outformat"  >>"$templog"
 fi
+
+if [[ -e "$name_compiledvideo.$outformat" && ! -s "$name_compiledvideo.$outformat" ]]; then #if doens't empty and exist
+function_delete
+else 
+kdialog --title $"FFmpeg service menu error" --yesnocancel $"FFmpeg has failed to create the file $name_compiledvideo.$outformat do you want to check the log $templog ?"
+	if [[ $? == 0 ]] ;then 
+	kde-open "$templog"
+	fi 
+fi 
 }
 
 function_decompile(){
@@ -1279,6 +1321,7 @@ errors[9]="Undefined constant or missing"
 errors[10]="Error setting option flags to value" 
 errors[11]="Unable to parse option value"
 errors[12]="could not find codec parameters"
+errors[13]="Could find no file with with path 'img%d.jpg'"
  
 askopen=0
 for err in "${errors[@]}"; do
@@ -1852,7 +1895,7 @@ function_menu_start
  function_menu_start(){
  # a $"Convert Advanced User" pd $"Convert Using a  Profile Dual Pass X2 slower"
  
-ans=$(kdialog --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Extra" setf $"Set ffmpeg path"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
+ans=$(kdialog  --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Extra" setf $"Set ffmpeg path"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
  
 function_ansmenu
  
