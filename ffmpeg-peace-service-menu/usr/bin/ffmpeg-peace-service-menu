@@ -27,9 +27,26 @@
 # Fix in awk stuff
 # some other work
 #fixed function check , if number of file is empty then recalculate it
-Version="0.0.9"
+Version="0.1.0"
 Author="nowardev@gmail.com"
 License="GLPv3"
+license="Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+This file is part of kde-peace-settings.
+ 
+kde-peace-settings is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>."
+
 title=$"FFmpeg Dolphin Service Menu"
 listoffile="$HOME/ffmpeg-service-menu-qt.lst"
 easyprofile_file="$HOME/.FFmpeg_easy_profile"
@@ -220,8 +237,6 @@ echo "cpu: $threads" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
 echo "easyprofile: $easyprofile" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
-echo "ffmpegpath: "$ffmpegpath"" >>"$ffmpeg_service_menu_settings"
-echo "" >>"$ffmpeg_service_menu_settings"
 echo "prefered default format: $defaultformat" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
 echo "common audio formats: $commonaudioformats"  >>$ffmpeg_service_menu_settings
@@ -230,7 +245,8 @@ echo "common video formats: $commonvideoformats"  >>$ffmpeg_service_menu_setting
 echo "" >>"$ffmpeg_service_menu_settings"
 echo "passive popup: $passivepopup"  >>$ffmpeg_service_menu_settings
 echo "" >>"$ffmpeg_service_menu_settings"
-
+echo "ffmpegpath: "$ffmpegpath"" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
  
 function_load_settings
 }
@@ -337,7 +353,7 @@ fi
 
 function_help(){
 
-helptext=$"FFmpeg peace service menu Author: $Author Version: $Version License: $licenses 
+helptext=$"FFmpeg peace service menu Author: $Author Version: $Version License: $license 
 
 
 USE:
@@ -600,6 +616,10 @@ fi
 
 fi
 
+awk '!/ffmpeg/'  $ffmpeg_service_menu_settings >  /tmp/temp_awk_ffmpeg_peace_service_menu.lst
+echo "ffmpegpath: "$ffmpegpath"" >>"/tmp/temp_awk_ffmpeg_peace_service_menu.lst"
+mv /tmp/temp_awk_ffmpeg_peace_service_menu.lst "$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
 
 }
 
@@ -703,14 +723,14 @@ function_generate_audio_preset(){
 echo "Ac3_HQ_Stereo ac3 -f ac3 -acodec ac3 -ab 384k -ar 48000 -ac 2
 Ac3_MQ_Stereo ac3 -f ac3 -acodec ac3 -ab 192k -ar 48000 -ac 2
 Ac3_LQ_Stereo ac3 -f ac3 -acodec ac3 -ab 64k -ar 48000 -ac 2
-OGG OGG -acodec vorbis -aq 60 -ac 2 -vn
+OGG OGG -aq 60 -ac 2 
 MP3_HQ mp3 -acodec libmp3lame -ab 384k -ac 2 -ar 44100
 MP3_MQ mp3 -acodec libmp3lame -ab 160k -ac 2 -ar 44100
 MP3_LQ mp3 -acodec libmp3lame -ab 64k -ac 2 -ar 44100
 MP3_(Mono) mp3 -acodec libmp3lame -ab 32k -ac 1 -ar 22050
 MPEG4_Audio m4a -vn -acodec libfaac -ab 112k -ac 2
 Wav_for_CD wav -vn -ar 44100
-WMA wma -vn  -acodec wmav2 -ab 160k" > $ffmpeg_profile_file_audio
+WMA wma -acodec wmav2 -ab 160k" > $ffmpeg_profile_file_audio
 
 }
 
@@ -859,7 +879,7 @@ function_message $"This has to become"
 function_menu_advanced(){
 
  
-ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function" addsubtitle $"Add Subtitle" resize $"Resize Video" addfilter $"Add A Filter"  v "Version Author Copyright" ex $"Exit")
+ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function" addsubtitle $"Add Subtitle" resize $"Resize Video" addfilter $"Add A Filter"  cf $"Compile FFmpeg (for debian\kubuntu)"  v "Version Author Copyright" back $"Back")
 function_ansmenu_advanced
 
 }
@@ -878,7 +898,9 @@ function_decompile
 ;;
 
 resize)
-function_resize
+#function_resize
+function_message $"This has to come"
+function_menu_start
 ;;
 build)
 
@@ -887,11 +909,17 @@ function_build #function_menu_advanced
 
 addsubtitle)
 #function_add_subtitle
+function_message $"This has to come"
+function_menu_start
  ;;
 addfilter)
- function_add_filter
+function_message $"This has to come"
+function_menu_start
+#function_add_filter
  ;;
-  
+ cf)
+ konsole --noclose -e ffmpeg-peace-service-menu -cf
+ ;;
  help)
  function_help x
  ;;
@@ -900,8 +928,8 @@ addfilter)
 kdialog --title "$title" --msgbox "$Version $Author $License"
 function_menu_start
  ;;
- ex)
- exit
+ back)
+ function_menu_start
  ;;
  *)
 kdialog --title "$title" --yesno $"You have not choose an option do you want exit?"
@@ -981,10 +1009,10 @@ done
 
 function_compile_ffmpeg_1204(){
 
-sudo apt-get build-dep ffmpeg ; sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev 
+sudo apt-get -y build-dep ffmpeg ; sudo apt-get -y install build-essential libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev 
  
  if [[ -d "$HOME/ffmpeg" ]]; then  #if exist folder
-cd "$HOME/ffmpeg" ; git pull 
+cd "$HOME/ffmpeg" ;make clean; git pull 
 else 
 git clone git://source.ffmpeg.org/ffmpeg.git $HOME/ffmpeg; cd  $HOME/ffmpeg 
 fi
@@ -994,19 +1022,19 @@ fi
 
 function_compile_ffmpeg_1210(){
 
-sudo apt-get build-dep ffmpeg ; sudo apt-get install libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev ;sudo apt-get install libass-dev libbluray-dev libfontconfig1-dev libcelt-dev libmodplug-dev libopencv-dev librtmp-dev libv4l-dev libvo-aacenc-dev libvo-amrwbenc-dev
+sudo apt-get -y build-dep ffmpeg ; sudo apt-get -y install build-essential libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev ;sudo apt-get install libass-dev libbluray-dev libfontconfig1-dev libcelt-dev libmodplug-dev libopencv-dev librtmp-dev libv4l-dev libvo-aacenc-dev libvo-amrwbenc-dev libssl-dev 
 
 if [[ -d "$HOME/ffmpeg" ]]; then  #if exist folder
-cd "$HOME/ffmpeg" ; git pull 
+cd "$HOME/ffmpeg" ;make clean; git pull 
 else 
 git clone git://source.ffmpeg.org/ffmpeg.git $HOME/ffmpeg; cd  $HOME/ffmpeg 
 fi 
-./configure --enable-gpl --enable-version3 --enable-nonfree  --enable-gray --enable-avresample --enable-x11grab --enable-dxva2 --enable-vaapi --enable-vda --enable-vdpau  --enable-bzlib --enable-frei0r --enable-gnutls --enable-libass --enable-libbluray  --enable-libcdio --enable-libdc1394 --enable-libfaac --enable-libfreetype --enable-libgsm  --enable-libmodplug --enable-libmp3lame  --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopencv --enable-libopenjpeg --enable-libpulse --enable-librtmp --enable-libschroedinger --enable-libspeex  --enable-libtheora --enable-libv4l2 --enable-libvo-aacenc --enable-libvo-amrwbenc  --enable-libvorbis --enable-libvpx --enable-libx264  --enable-libxvid --enable-openal --enable-openssl --enable-zlib --enable-pic --enable-sram --enable-hardcoded-tables --enable-memalign-hack --enable-coverage   --enable-extra-warnings --enable-random --enable-fontconfig;make -j$(($threadsdetected+1))
+./configure --enable-gpl --enable-version3 --enable-nonfree  --enable-gray --enable-avresample --enable-x11grab --enable-vaapi --enable-vda --enable-vdpau  --enable-bzlib --enable-frei0r --enable-gnutls --enable-libass --enable-libbluray  --enable-libcdio --enable-libdc1394 --enable-libfaac --enable-libfreetype --enable-libgsm  --enable-libmodplug --enable-libmp3lame  --enable-libopencore-amrnb --enable-libopencore-amrwb --enable-libopencv --enable-libopenjpeg --enable-libpulse --enable-librtmp --enable-libschroedinger --enable-libspeex  --enable-libtheora --enable-libv4l2 --enable-libvo-aacenc --enable-libvo-amrwbenc  --enable-libvorbis --enable-libvpx --enable-libx264  --enable-libxvid  --enable-openssl --enable-zlib --enable-pic --enable-sram --enable-hardcoded-tables --enable-memalign-hack --enable-coverage   --enable-extra-warnings --enable-random --enable-fontconfig;make -j$(($threadsdetected+1))
 }
 
 function_compile_ffmpeg_fromgit(){
-
-program[0]=make
+threadsdetected=$(cat /proc/cpuinfo | grep processor | wc -l)
+# program[0]=make
 program[1]=git
 program[2]=awk
     
@@ -1019,7 +1047,7 @@ fi
 
 for program in "${program[@]}";do 
 
-	if [[ ! $(type -p "$program" >/dev/null) ]];then 
+	if [[ -z $(type -p "$program") ]];then 
 		if [[ -z "$(pidof X)" ]] ; then
 			echo "$program not found; PLEASE INSTALL IT" >&2
 			echo "error exiting..." >&2
@@ -1032,10 +1060,10 @@ for program in "${program[@]}";do
 	fi
 done
 
-releases[1]=1204
-releases[2]=1210
+releases[1]="1204"
+releases[2]="1210"
 
-for r in "$releases" ; do 
+for r in "${releases[@]}" ; do 
 
 	if [[ "$r" == $release ]] ; then
 		function_compile_ffmpeg_$release
@@ -1097,7 +1125,7 @@ program[0]=convert
 
 for program in "${program[@]}";do 
 
-	if [[ ! $(type -p "$program" >/dev/null) ]];then 
+	if [[ ! $(type -p "$program" ) ]];then 
 		if [[ -z "$(pidof X)" ]] ; then
 			echo "$program not found; PLEASE INSTALL IT" >&2
 			echo "error exiting..." >&2
@@ -1128,14 +1156,14 @@ while  read  line ; do
 		echo  $"multiple formats in your picture i need to convert them before in png"
 		function_imagemagick_convert
 		fi 
-	$(($z+1))
+	z=$(($z+1))
 	
 	
 
 done  < "$listoffile"
 
   #ffmpeg -f image2 -i img%d.jpg /tmp/a.mpg
-
+function_compile_video
 
 }
 
@@ -1763,7 +1791,7 @@ fi
 if [[ "$whichprofile" == device || "$whichprofile" == video  ]] ; then 
 videoc=$(kdialog --combobox $"Choose a Codec Video" 4xm  8bps  FRWU  a64multi  a64multi5  aasc  amv  anm  ansi  asv1  asv2  aura  aura2  avs  bethsoftvid  bfi  binkvideo  bmp  c93  camstudio  camtasia  cavs  cdgraphics  cinepak  cljr  cyuv  dfa  dnxhd  dpx  dsicinvideo  dvvideo  dxa  eacmv  eamad  eatgq  eatgv  eatqi  escape124  ffv1  ffvhuff  flashsv  flic  flv  fraps  gif  h261  h263  h263i  h263p  h264  h264_vdpau  huffyuv  idcinvideo  iff_byterun1  iff_ilbm  indeo2  indeo3  indeo5  interplayvideo  jpegls  jv  kgv1  kmvc  lagarith  libdirac  libopenjpeg  libschroedinger  libtheora  libvpx  libx264  libxvid  ljpeg  loco  mdec  mimic  mjpeg  mjpegb  mmvideo  motionpixels  mpeg1video  mpeg1video_vdpau  mpeg2video  mpeg4  mpeg4_vdpau  mpegvideo  mpegvideo_vdpau  mpegvideo_xvmc  msmpeg4  msmpeg4v1  msmpeg4v2  msrle  msvideo1  mszh  mxpeg  nuv  pam  pbm  pcx  pgm  pgmyuv  pgssub  pictor  png  ppm  ptx  qdraw  qpeg  qtrle  r10k  r210  rawvideo  rl2  roqvideo  rpza  rv10  rv20  rv30  rv40  sgi  smackvid  smc  
 snow  sp5x  srt  sunrast  svq1  svq3  targa  theora  thp  tiertexseqvideo  tiff  tmv  truemotion1  truemotion2  txd  ultimotion  v210  v210x  vb  vc1  vc1_vdpau  vcr1  vmdvideo  vmnc  vp3  vp5  vp6  vp6a  vp6f  vp8  vqavideo  wmv1  wmv2  wmv3  wmv3_vdpau  wnv1  xan_wc3  xan_wc4  xl  yop  zlib  zmbv)
-framerate=$(kdialog --combobox $"Choose Your Prefered Frame for seconds Value for mencoder:" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 29 21 22 23 24 25 27 28 29 30000/1001 30 --default 25  --title $"Frame for seconds Value")
+framerate=$(kdialog --combobox $"Choose Your Prefered Frame for seconds Value for mencoder:" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 29 21 22 23 24 25 27 28 29 30000/1001 30 60 120 --default 25  --title $"Frame for seconds Value")
 kdialog --combobox $" Video L Size Fullscreen($defaulresolutionL) :"  2048 1920 1280 1080 1024 800 720 640 576 480 320 240 272 --default  $defaulresolutionL  --title $"Prefered Video resolution"
 
 kdialog --combobox $"Video H Size Fullscreen($defaulresolutionH) :"  2048 1920 1280 1080 1024 800 720 640 576 480 320  240 272   --default  $defaulresolutionH  --title $"Prefered Video"
