@@ -1,5 +1,5 @@
 [Desktop Entry]
-Actions=append;start;edit;deleteall;info;
+Actions=append;start;edit;deleteall;analyze;info;
 Icon=video-x-generic
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service
@@ -24,6 +24,14 @@ Exec=ffmpeg-peace-service-menu -ek && echo %u >>/dev/null
 Icon=story-editor
 Name=Edit List
 Name[it]=Edita Lista
+
+
+[Desktop Action analyze]
+Exec=ffmpeg-peace-service-menu -a %u 
+Icon=dialog-information
+Name=Info File
+Name[it]=Informazioni File
+
 
 [Desktop Action info]
 Exec=ffmpeg-peace-service-menu -hx  && echo %u >>/dev/null
