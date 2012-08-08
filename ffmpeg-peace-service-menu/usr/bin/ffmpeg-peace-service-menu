@@ -1322,7 +1322,8 @@ errors[10]="Error setting option flags to value"
 errors[11]="Unable to parse option value"
 errors[12]="could not find codec parameters"
 errors[13]="Could find no file with with path 'img%d.jpg'"
- 
+errors[14]="Could not write header for output file"
+
 askopen=0
 for err in "${errors[@]}"; do
 tester=$(grep "$err" "$templog")
@@ -1466,10 +1467,72 @@ fi
 
 
 
-
-
-
 function_ffmpeg_single_pass (){
+
+a=1
+mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $mystufvariabletouseonmyscript  showCancelButton true
+echo "start new conversion loop using profile
+
+"> "$templog"
+ 
+ while  read <&3 line ; do
+        qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $line"
+        echo "Log File $line
+                
+        ">> "$templog"
+        
+        
+        
+        echo "$ffmpegpath -i   \""$line"\"  "$easyprofile" "$overwrite" \""${line%%.*}.$outformat\""
+        
+        " >> "$templog"
+ 
+        
+        $ffmpegpath -i  "$line"   $profile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog" & pid=$!
+		while kill -0 $pid ; do #check if you can send message to ffmpeg 
+		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+		kill $pid
+		function_check_for_errors
+		exit
+		fi
+		done
+# 		if wait $pid ; then echo "ffmpeg suceeded"; fi  
+ 
+        value=$(($(($a*100))/$numberoffile))
+        qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+        a=$(($a+1))
+        done 3< "$listoffile"
+    if [[ "$value" == 100 ]];then
+        
+        function_check_for_errors
+        
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepoup $"FFmpeg service menu : Jobs done!"
+        fi
+
+        exit
+    fi
+
+ 
+ 
+
+
+     
+        
+
+
+
+
+
+        
+ 
+
+}
+
+
+function_ffmpeg_single_pass_test (){
  a=1
 mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
 qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
@@ -1778,12 +1841,26 @@ until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
         $ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
         " >> "$templog"
         
-         $ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog"
+         $ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+         
+		while kill -0 $pid ; do #check if you can send message to ffmpeg 
+		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+		kill $pid
+		function_check_for_errors
+		exit
+		fi
+		done
          
         qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
         
-        $ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog"
-
+        $ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+		while kill -0 $pid ; do #check if you can send message to ffmpeg 
+		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+		kill $pid
+		function_check_for_errors
+		exit
+		fi
+		done
 
         value=$(( $(($a*100))/$numberoffile ))
         qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
