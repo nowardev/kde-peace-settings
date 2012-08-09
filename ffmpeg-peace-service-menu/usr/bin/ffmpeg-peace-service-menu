@@ -27,7 +27,7 @@
 # Fix in awk stuff
 # some other work
 #fixed function check , if number of file is empty then recalculate it
-Version="0.1.0"
+Version="0.1.1"
 Author="nowardev@gmail.com"
 License="GLPv3"
 license="Copyright (C) 2012 nowardev nowardev@gmail.com
@@ -272,7 +272,51 @@ echo "" >>"$ffmpeg_service_menu_settings"
 function_load_settings
 }
 
+function_test_ffmpeg () {
 
+encoderfail=""
+encodersuccess=""
+for codecs in  $commonaudioformats $commonvideoformats ; do 
+
+encoderfailtest=$(ffmpeg -codecs 2>&1 | grep "$codecs" | grep E)
+
+	if [[ -z "$encoderfailtest" ]] ; then
+		encoderfail="$encoderfail $encoderfailtest"
+	else  
+		encodersuccess="$encodersuccess $encodersuccesstest"
+	fi 
+
+done
+
+
+
+encoderfail=$(awk '{gsub(/ /,""); print}' << _EOF 
+$encoderfail
+_EOF
+)
+
+
+
+if [[ -z $encoderfail ]] ;then
+function_message $" FFMPEG TEST SUCCEEDED
+
+You can encode in
+
+
+$commonaudioformats 
+
+and
+
+$commonvideoformats 
+
+WITHOUT PROBLEMS
+
+if you get errors you need to upgrade profiles if you used those to convert your files"
+else
+function_message_error $"you can't encode in $encoderfail please install the packages you need or compile ffmpeg properly "
+fi 
+
+}
 
 function_delete_settings () {
 
@@ -443,14 +487,14 @@ if [[ -e "$listoffile" && -e "$templog"   ]] ; then
 # status=""
 mv "$listoffile"  $HOME/.local/share/Trash/files/
 mv "$templog"  "$HOME"/.local/share/Trash/files/
-# function_passivepoup $"Old list  $listoffile deleted and Old log $templog deleted"
+# function_passivepopup_test $"Old list  $listoffile deleted and Old log $templog deleted"
 # 
 # elif [[ ! -e "$listoffile" ]] ; then
-# function_passivepoup $"i can't do it i can't find the file $listoffile"
+# function_passivepopup_test $"i can't do it i can't find the file $listoffile"
 # elif [[ ! -e "$templog" ]] ; then
-# function_passivepoup $"i can't do it i can't find the file $templog"
+# function_passivepopup_test $"i can't do it i can't find the file $templog"
 else
-function_passivepoup $"i can't do it i can't find the file $templog $listoffile"
+function_passivepopup_test $"i can't do it i can't find the file $templog $listoffile"
 fi
 
 
@@ -475,7 +519,7 @@ if [[ -e "$HOME"/.local/share/Trash/files/ffmpeg-service-menu-qt.lst && -e  "$HO
  mv   "$HOME/.local/share/Trash/files/ffmpeg-service-menu-qt.lst" "$listoffile"
  mv   "$HOME/.local/share/Trash/files/ffmpeg_peace_dolphin_service_menu.log"  "$templog"
  
-function_passivepoup $"List of files and $templog Restored"
+function_passivepopup_test $"List of files and $templog Restored"
 
 elif [[ ! -e "$HOME/.local/share/Trash/files/ffmpeg-service-menu-qt.lst" ]] ; then
 function_message_error $"i can't do it i can't find List of file  in your trash."
@@ -500,20 +544,40 @@ function_reload_function(){
 $1
 }
 
-function_passivepoup(){
+
+function_passivepopup (){
+
+kdialog --passivepopup "$1" "$2"
+
+}
+
+function_passivepopup_test (){
+
+
 if [[ "$passivepopup" == "enabled" ]] ; then
 
-    if [[ ! -z "$1" ]] ;then
-
-            if [[ -z "$2" ]];then
+	if [[ ! -z "$1" ]] ;then
+    
+		if [[ "$1" == "FFmpeg service menu : Jobs done!"  ]]; then 
+		
+		function_passivepopup "$1" 3
+		
+		else
+			if [[ -z "$2" ]];then
         
-                kdialog --passivepopup "$1"
-            else
-                kdialog --passivepopup "$1" "$2"
-            fi
-    else
-    kdialog --error $"no text for popup given :S"
-    fi
+				function_passivepopup "$1"
+			else
+				function_passivepopup "$1" "$2"
+			fi
+		fi
+	else
+		function_message_error $"no text for popup given :S"
+	fi
+ 
+            
+            
+
+    
 else
 echo "$1"
 fi
@@ -539,7 +603,7 @@ done
 function_add_folder_faster(){
 
 #shopt -s nullglob
- function_passivepoup $"adding folder...this could take time..wait"
+ function_passivepopup_test $"adding folder...this could take time..wait"
 while read line ;do
 
 for extension in 3g2 3gp 4xm IFF ISS MTV RoQ a64 aac ac3 adts aea aiff alaw alsa amr anm apc ape applehttp asf asf_stream ass au avi avm2 avs bethsoftvid bfi bink c93 caf cavsvideo cdg crc daud dfa dirac dnxhd dsicin dts dv dv1394 dvd dxa ea ea_cdata eac3 f32be f32le f64be f64le fbdev ffm ffmetadata film_cpk filmstrip flac flic flv framecrc framemd5 g722 gif gsm gxf h261 h263 h264 idcin image2 image2pipe ingenient ipmovie ipod iv8 ivf jack jv libdc1394 lmlm4 lxf m4v  mkv webm md5 mjpeg mlp mm mmf mov mov mp4 m4a 3gp 3g2 mj2 mp2 mp3 mp4 mpc mpc8 mpeg mpeg1video mpeg2video mpg mpegts mpegtsraw mpegvideo mpjpeg msnwctcp mulaw mvi mxf mxf_d10 mxg nc nsv null nut nuv ogg oma oss psp psxstr pva qcp r3d rawvideo rcv rl2 rm rpl rso rtp rtsp s16be s16le s24be s24le s32be s32le s8 sap sdp shn siff smk sol sox spdif srt svcd swf thp tiertexseq tmv truehd tta tty txd u16be u16le u24be u24le u32be u32le u8 vc1 vc1test vcd video4linux2 vmd vob voc vqf w64 wav wc3movie webm wsaud wsvqa wtv wv x11grab xa xwma yop yuv4mpegpipe ; do
@@ -552,7 +616,7 @@ fi
 done
  
 done< <(find "$1" -type f)
- function_passivepoup $"adding folder...done"
+ function_passivepopup_test $"adding folder...done"
 
 }
 
@@ -563,7 +627,7 @@ function_add_folder(){
  
 
 #shopt -s nullglob
- function_passivepoup $"adding folder...this could take time..wait"
+ function_passivepopup_test $"adding folder...this could take time..wait"
 while read line ;do
 
 for extension in $commonaudioformats $commonvideoformats ; do
@@ -576,7 +640,7 @@ fi
 done
  
 done< <(find "$1" -type f)
- function_passivepoup $"adding folder...done"
+ function_passivepopup_test $"adding folder...done"
 
 }
 
@@ -866,20 +930,20 @@ fi
 
 
 if [[ ! -e "$ffmpeg_profile_file_audio" ]] ; then
- function_passivepoup $"i can't find the ffmpeg profile files.. autogenerating $ffmpeg_profile_file"
+ function_passivepopup_test $"i can't find the ffmpeg profile files.. autogenerating $ffmpeg_profile_file"
  
 function_generate_audio_preset
 fi
 
 if [[ ! -e "$ffmpeg_profile_file_device" ]] ; then
- function_passivepoup $"i can't find the ffmpeg profile files.. autogenerating $ffmpeg_profile_file"
+ function_passivepopup_test $"i can't find the ffmpeg profile files.. autogenerating $ffmpeg_profile_file"
  
 function_generate_device_preset
 fi
 
 
 if [[ ! -e "$ffmpeg_profile_file_video" ]] ; then
- function_passivepoup $"i can't find the ffmpeg profile files.. autogenerating $ffmpeg_profile_file"
+ function_passivepopup_test $"i can't find the ffmpeg profile files.. autogenerating $ffmpeg_profile_file"
  
 function_generate_video_preset
 fi
@@ -1017,7 +1081,7 @@ until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
     if [[ "$value" == 100 ]];then
     
         if [[ "$passivepopup" == "enabled" ]];then
-             function_passivepoup $"Conversions done!"
+             function_passivepopup_test $"Conversions done!"
         fi
 
     function_check_for_errors
@@ -1453,7 +1517,7 @@ fi
 #         function_check_for_errors
 #         
 #         if [[ "$passivepopup" == "enabled" ]];then
-#              function_passivepoup $"FFmpeg service menu : Jobs done!"
+#              function_passivepopup_test $"FFmpeg service menu : Jobs done!"
 #         fi
 # 
 #         exit
@@ -1509,7 +1573,7 @@ echo "start new conversion loop using profile
         function_check_for_errors
         
         if [[ "$passivepopup" == "enabled" ]];then
-             function_passivepoup $"FFmpeg service menu : Jobs done!"
+             function_passivepopup_test $"FFmpeg service menu : Jobs done!"
         fi
 
         exit
@@ -1570,7 +1634,7 @@ echo "start new conversion loop using profile
         function_check_for_errors
         
         if [[ "$passivepopup" == "enabled" ]];then
-             function_passivepoup $"FFmpeg service menu : Jobs done!"
+             function_passivepopup_test $"FFmpeg service menu : Jobs done!"
         fi
 
         exit
@@ -1631,7 +1695,7 @@ fi
 #     if [[ "$value" == 100 ]];then
 #     
 #         if [[ "$passivepopup" == "enabled" ]];then
-#              function_passivepoup $"Conversions done!"
+#              function_passivepopup_test $"Conversions done!"
 #         fi
 # 
 #     function_check_for_errors
@@ -1688,7 +1752,7 @@ fi
 #     if [[ "$value" == 100 ]];then
 #     
 #         if [[ "$passivepopup" == "enabled" ]];then
-#              function_passivepoup $"Conversions done!"
+#              function_passivepopup_test $"Conversions done!"
 #         fi
 # 
 #     function_check_for_errors
@@ -1747,7 +1811,7 @@ fi
 #     if [[ "$value" == 100 ]];then
 #     
 #         if [[ "$passivepopup" == "enabled" ]];then
-#              function_passivepoup $"Conversions done!"
+#              function_passivepopup_test $"Conversions done!"
 #         fi
 # 
 #     function_check_for_errors
@@ -1809,7 +1873,7 @@ fi
 #     if [[ "$value" == 100 ]];then
 #     
 #         if [[ "$passivepopup" == "enabled" ]];then
-#              function_passivepoup $"Conversions done!"
+#              function_passivepopup_test $"Conversions done!"
 #         fi
 # 
 #     function_check_for_errors
@@ -1877,7 +1941,7 @@ until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
     if [[ "$value" == 100 ]];then
     
         if [[ "$passivepopup" == "enabled" ]];then
-             function_passivepoup $"Conversions done!"
+             function_passivepopup_test $"Conversions done!"
         fi
 
     function_check_for_errors
@@ -1969,10 +2033,10 @@ function_menu_start
  
  
  
- function_menu_start(){
+ function_menu_start (){
  # a $"Convert Advanced User" pd $"Convert Using a  Profile Dual Pass X2 slower"
  
-ans=$(kdialog  --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Extra" setf $"Set ffmpeg path"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
+ans=$(kdialog  --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Extra" setf $"Set ffmpeg path" tf $"Test FFmpeg Encoders"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
  
 function_ansmenu
  
@@ -2044,6 +2108,10 @@ function_menu_start
 addf)
 function_add_folder "$(kdialog --getexistingdirectory  "$HOME/Video")"  
 function_menu_start
+ ;;
+ tf)
+ function_passivepopup_test $"FFmpeg Peace Service Menu : FFmpeg Encoders Test Started"
+ function_test_ffmpeg
  ;;
  v)
 kdialog --title "$title" --msgbox "$Version $Author $License"
@@ -2143,9 +2211,14 @@ if  [[ $1 == -*  ]]; then
     -cf)
     function_compile_ffmpeg_fromgit
     ;;
-    -mx) function_menu_start
+    -tf)
+    function_test_ffmpeg
     ;;
-    -r)  function_restore
+    -mx)
+    function_menu_start
+    ;;
+    -r) 
+    function_restore
     ;;
     setf)
     function_set_ffmpegpath
