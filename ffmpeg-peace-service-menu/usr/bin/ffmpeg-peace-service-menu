@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 
 #
 #Copyright (C) 2012 nowardev nowardev@gmail.com
@@ -183,16 +183,16 @@ commonaudioformats="3gp aiff aac ac3 alac ape atrac  flac  m4a m4p midi mmf mp3 
 commonvideoformats="3gp 3gp2 3gpp asf avi dv flv m2ts mkv mov mpg  mpeg mpeg4 mp4 ogv rm swf ts vob vp8 xvid webm wmv"
 
 echo $"always overwrite files yes\no"
-read  "$REPLY"
+read   
 overwrite="$REPLY"
 echo $"How many cpu should FFmpeg use? 1 2 3 4 5 etc "
-read  "$REPLY"
+read   
 threads="$REPLY"
 	if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
 		threads=1
 	fi
 echo $"Write your easy profile that FFmpeg should use if you don't know type -sameq"
-read  "$REPLY"
+read   
 	if [[ -z $REPLY ]];then
 	   easyprofile="-sameq"
 	else 
@@ -201,7 +201,7 @@ read  "$REPLY"
 
 easyprofile="$REPLY"
 echo $"Where is ffmpeg path ? should be in $(type -p ffmpeg) leave empty if you know it's on /usr/bin/ffmpeg "
-read  "$REPLY"
+read  -e 
 	if [[ -z $REPLY ]];then
 	   ffmpegpath="$(type -p ffmpeg)"
 	else 
@@ -210,25 +210,26 @@ read  "$REPLY"
 
 
 echo $"Choose your prefered format"
-read  "$REPLY"
+read  
 defaultformat="$REPLY"
-echo $"Audio Formats i should detect if i add a folder : now it's  $commonaudioformats \n do you want add one ?"
-read  "$REPLY"
+echo $"Audio Formats i should detect if i add a folder : now they are  $commonaudioformats \n do you want add one ?"
+read   
 	if [[ -z $REPLY ]];then
 		echo $commonaudioformats 
 	else 
 		commonaudioformats="$commonaudioformats $REPLY"
 	fi
-commonaudioformats="$REPLY"
-echo $"Video Formats i should detect if i add a folder : now it's  $commonvideoformats \n do you want add one ?"
-read  "$REPLY"
+ 
+echo $"Video Formats i should detect if i add a folder : now they are  $commonvideoformats \n do you want add one ?"
+read  
 	if [[ -z $REPLY ]];then
 		echo $commonvideoformats 
 	else 
 		commonvideoformats="$commonvideoformats $REPLY"
 	fi
+echo
 echo $"Passive popup should be enabled or disabled ? (enabled\disabled)"
-read  "$REPLY"
+read  
 passivepopup="$REPLY"
 
 echo $"How many pass should ffmpeg make ? 1 for sigle pass ( reccomended) 2 for double pass this will take 2x time to encode... "
@@ -386,7 +387,7 @@ fi
 
 else
 
-echo $"ffmpeg path already set"
+echo $"Check FFmpeg ....Ok"
 
 fi
 
@@ -491,7 +492,7 @@ function_delete (){
 if [[ -e "$listoffile" && -e "$templog"   ]] ; then
 
 
-function_message "mv "$listoffile"  $HOME/.local/share/Trash/files/
+function_passivepopup_test "mv "$listoffile"  $HOME/.local/share/Trash/files/
 mv "$templog"  "$HOME"/.local/share/Trash/files/ "
 mv "$listoffile"  $HOME/.local/share/Trash/files/
 mv "$templog"  "$HOME"/.local/share/Trash/files/
@@ -608,6 +609,84 @@ echo "$1"
 fi 
 }
 
+function_open_log () {
+ if (( askopen >= 1 )); then 
+	function_message_error $"FFmpeg failed! check the log!"
+	if [[ ! -z "$pidofx" ]]; then 
+		ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? Errors Found $askopen")
+			if [[ $? == 0 ]] ; then
+				kde-open "$templog"
+				function_delete standard
+			else
+				function_menu_start
+			fi
+	else
+		read -p $"Do you want open the log ?  (y\n\m m for main menu )" choice
+			case $read in 
+			y|Y|yes|YES)
+			nano "$templog"
+			function_delete silent
+			;;
+			n|N|no|NO)
+			function_menu_start
+			;;
+			*)
+			echo $"Hey! i have said y or n you fucking idiot have choosen $choice .."
+			exit 1
+			;;
+			esac
+			
+
+	fi 
+elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
+
+function_delete standard
+
+elif [[ "$askopen" == 0 ]]; then
+function_delete silent
+fi
+
+}
+
+function_check_for_errors (){
+
+
+founderr=""
+errors[0]="No such file or directory"
+errors[1]="for reading (No such file or directory)"
+errors[2]="Unable to find a suitable output format for"
+errors[3]="not found"
+errors[4]="Error while opening encoder"
+errors[5]="Fail"
+errors[6]="Unknown encoder"
+errors[7]="is experimental and might produce bad results"
+errors[8]="maybe incorrect parameters such as bit_rate, rate, width or height"
+errors[9]="Undefined constant or missing"
+errors[10]="Error setting option flags to value" 
+errors[11]="Unable to parse option value"
+errors[12]="could not find codec parameters"
+errors[13]="Could find no file with with path 'img%d.jpg'"
+errors[14]="Could not write header for output file"
+errors[15]="Invalid data found when processing input"
+
+askopen=0
+for err in "${errors[@]}"; do
+tester=$(grep "$err" "$templog")
+
+if [[  $? == 0 ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
+founderr="$err"
+askopen=$(($askopen+1))
+else
+askopen=$askopen
+
+fi
+done
+
+
+function_open_log 
+
+
+}
 
 
 
@@ -616,20 +695,25 @@ function_addfile (){
 
 if [[ ! -z "$pidofx" ]]; then 
 	usersfiles="$(kdialog --title $"Select files you want convert" --separate-output  --multiple -getopenfilename "$HOME" )"
+	for f in "$usersfiles";	do
+		echo "$f" >>"$listoffile"
+	done
 
 else
 	cd "$HOME"
 	echo "$PWD"
 	echo $"Add Files Tab Autocompletion is activated ;)"
-	read -e usersfiles
-fi
-if [[ ! -z "$usersfiles" ]];then 
-	for f in $usersfiles
-	do echo "$f" >>"$listoffile"
-	done
-else
+	read -e -a files
+	if [[ ! -z "${files[@]}" ]];then 
+		for f in "${files[@]}";do
+			echo "$f" >>"$listoffile"
+		done
+	else
 	function_message_error $"Hey you fucking idiot you have not give me the file!"
-fi 
+	fi 
+fi
+
+
 }
 
 
@@ -701,7 +785,7 @@ function_set_ffmpegpath(){
 if [[ -z "$pidofx" ]] ; then
 
 echo $"Set ffmpeg path"
-read
+read -e 
 
 if [[ -z "$REPLY" ]] ; then
 
@@ -734,23 +818,28 @@ echo "" >>"$ffmpeg_service_menu_settings"
 }
 
  function_menu_profiles_antix () {
+REPLY=""
+profilename=() #reset arrays
+profileoutformat=()
+profilearray=()
  i=0
 while read line ; do 
-profilename[i]=$(awk '{print $1}' << _EOF
+profilename[i]="$(awk '{print $1}' << _EOF
 $line
 _EOF
-)
+)"
+profileoutformat[i]="$(awk '{print $2}' << _EOF
+$line
+_EOF
+)"
+profilearray[i]="$(awk '{for(a=3;a<NF ; a++) {print $a}}' << _EOF
+$line
+_EOF
+)"
 i=$(($i+1))
-profileoutformat[i]=$(awk '{print $2}' << _EOF
-$line
-_EOF
-)
-profilearray[i]=$(awk '{for(a=3;a<NF ; a++) {print $a}}' << _EOF
-$line
-_EOF
-)
 done < "$1"
 
+echo $i >/tmp/a
 a=0
 b=7
 
@@ -769,20 +858,33 @@ for e in "${profilename[@]}" ; do
 c=$(($b+$a))
 tput cup $c 16
 echo "$(($a+1)). ${profilename[$a]}"
-a=$(($a+1))
- 
+a=$(($a+1)) 
 done
+
+tput cup $(($c+1)) 16
+echo $(($a+1)). $"Back To the Main Menu"
+
+tput bold
 tput cup $(($c+2)) 16
-read -p "Enter Your Choice (1-${#profilename[@]})" choice
-ansprofile="${profilearray[$(($choice-1))]}"
-echo $ansprofile
-if [[ -z "$ansprofile" ]]; then
-function_message_error  $"No profile given please select a profile"
-function_menu_start
-else
-profile="$ansprofile"
-outformat="${profileoutformat[$(($choice-1))]}"
-fi 
+echo $"Enter Your Choice (1-$((${#profilename[@]}+1)))"
+read 
+ansprofile="${profilearray[$(($REPLY-1))]}"
+
+# case "$ansprofile" in 
+# "Back To the Main Menu")
+# function_menu_start
+# ;;
+# *)
+# 	if [[ -z "$ansprofile" ]]; then
+# 		function_message_error  $"No profile given please select a profile"
+# 		function_menu_start
+# 	else
+# 	profile=""$ansprofile""
+# 	outformat="${profileoutformat[$(($REPLY-1))]}"
+# 	fi 
+# ;;
+# esac
+echo ""$ansprofile""
  
 }
 
@@ -799,7 +901,7 @@ if [[ ! -z "$pidofx" ]] ; then
 	ansprofile=$(echo $ARGS | xargs kdialog)
 
 	if [[ -z "$ansprofile" ]]; then
-	function_message_error  $"No profile given please select a profile"
+	function_passivepopup_test  $"No profile given please select a profile"
 	function_menu_start
 	fi
 	echo $ansprofile
@@ -836,7 +938,7 @@ if [[ ! -z "$pidofx" ]] ; then
 	ansprofile=$(echo $ARGS | xargs kdialog)
 
 	if [[ -z "$ansprofile" ]]; then
-	function_message_error  $"No profile given please select a profile"
+	function_passivepopup_test  $"No profile given please select a profile"
 	function_menu_start
 	fi
 	echo $ansprofile
@@ -860,7 +962,7 @@ fi
 }
 
 
-function_load_profiles_video(){
+function_load_profiles_video (){
 
 if [[ ! -z "$pidofx" ]] ; then  
 	ARGS="--menu \"choose your profile\" --"
@@ -873,7 +975,7 @@ if [[ ! -z "$pidofx" ]] ; then
 	ansprofile=$(echo $ARGS | xargs kdialog)
 
 	if [[ -z "$ansprofile" ]]; then
-	function_message_error  $"No profile given please select a profile"
+	function_passivepopup_test  $"No profile given please select a profile"
 	function_menu_start
 	fi
 	echo $ansprofile
@@ -890,7 +992,7 @@ _EOF
 
 	echo $outformat
 else
-	 function_menu_profiles_antix "$ffmpeg_profile_file_device" Device
+	 function_menu_profiles_antix "$ffmpeg_profile_file_video" Video
 fi
 }
 
@@ -901,13 +1003,16 @@ echo "Ac3_HQ_Stereo ac3 -f ac3 -acodec ac3 -ab 384k -ar 48000 -ac 2
 Ac3_MQ_Stereo ac3 -f ac3 -acodec ac3 -ab 192k -ar 48000 -ac 2
 Ac3_LQ_Stereo ac3 -f ac3 -acodec ac3 -ab 64k -ar 48000 -ac 2
 OGG OGG -aq 60 -ac 2 
+OGG_HQ ogg -ab 384k -ac 2 -ar 44100
+OGG_MQ ogg  -ab 160k -ac 2 -ar 44100
+OGG_LQ ogg  -ab 64k -ac 2 -ar 44100
 MP3_HQ mp3 -acodec libmp3lame -ab 384k -ac 2 -ar 44100
 MP3_MQ mp3 -acodec libmp3lame -ab 160k -ac 2 -ar 44100
 MP3_LQ mp3 -acodec libmp3lame -ab 64k -ac 2 -ar 44100
 MP3_(Mono) mp3 -acodec libmp3lame -ab 32k -ac 1 -ar 22050
 MPEG4_Audio m4a -vn -acodec libfaac -ab 112k -ac 2
 Wav_for_CD wav -vn -ar 44100
-WMA wma -acodec wmav2 -ab 160k" > $ffmpeg_profile_file_audio
+WMA wma -acodec wmav2 -ab 160k" > "$ffmpeg_profile_file_audio"
 
 }
 
@@ -965,7 +1070,7 @@ Power_Point wmv -vcodec wmv2  -acodec wmav2 -aspect 4:3 -b 500k -ab 32k -ac 1 -a
 Xbox_360 wmv -vcodec wmv2  -acodec wmav2 -b 1200k -ab 160k -r 25 -s 720x480
 Zune wmv -vcodec wmv2  -acodec wmav2 -b 640k -ab 128k -r 23.97 -s 320x240
 Zen_Fullscreen avi -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 320x240 -aspect 4:3 -maxrate 1800kb -b 1500k  -acodec libmp3lame -ar 48000 -ab 128k -ac 2
-Zen_Widescreen avi -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 320x240 -aspect 16:9 -maxrate 1800kb -b 1500k  -acodec libmp3lame -ar 48000 -ab 128k -ac 2 "> $ffmpeg_profile_file_device
+Zen_Widescreen avi -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 320x240 -aspect 16:9 -maxrate 1800kb -b 1500k  -acodec libmp3lame -ar 48000 -ab 128k -ac 2 "> "$ffmpeg_profile_file_device"
 }
 
 
@@ -995,7 +1100,7 @@ XviD_Widescreen avi -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 704x384 -aspec
 XviD_Widescreen_Anamorphic avi -f avi -r 29.97 -croptop 58 -cropbottom 62 -vcodec libxvid -vtag XVID -s 640x272 -aspect 2.35 -maxrate 1800kb -b 1500k -qmin 3 -qmax 5 -bufsize 4096 -mbd 2 -bf 2 -flags +4mv -trellis -aic -cmp 2 -subcmp 2 -g 300 -acodec libmp3lame -ar 48000 -ab 128k -ac 2
 XviD_FullScreen avi -f avi -r 29.97 -vcodec libxvid -vtag XVID -s 640x480 -aspect 4:3 -maxrate 1800kb -b 1500k -qmin 3 -qmax 5 -bufsize 4096 -mbd 2 -bf 2 -flags +4mv -trellis -aic -cmp 2 -subcmp 2 -g 300 -acodec libmp3lame -ar 48000 -ab 128k -ac 2
 WMV2_Generic wmv -vcodec wmv2  -acodec wmav2 -b 1000k -ab 160k -r 25
-WMV_for_Web_Use wmv -vcodec wmv2  -acodec wmav2 -b 640k -ab 128k -r 29.97 -s 320x240"> $ffmpeg_profile_file_video
+WMV_for_Web_Use wmv -vcodec wmv2  -acodec wmav2 -b 640k -ab 128k -r 29.97 -s 320x240"> "$ffmpeg_profile_file_video"
 }
 
 
@@ -1050,10 +1155,21 @@ function_message $"This has to become"
 }
 
 
+ function_menu_advanced (){
+ # a $"Convert Advanced User" pd $"Convert Using a  Profile Dual Pass X2 slower"
+if [[ -z "$pidofx" ]] ; then 
+clear
+function_menu_advanced_second_antix
+else 
+function_menu_advanced_second
+fi 
+ 
+function_ansmenu
+ 
+ }
+ 
 
-
-
-function_menu_advanced (){
+function_menu_advanced_second (){
 
  
 ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function" addsubtitle $"Add Subtitle" resize $"Resize Video" addfilter $"Add A Filter"  cf $"Compile FFmpeg (for debian\kubuntu)"  v "Version Author Copyright" back $"Back")
@@ -1061,8 +1177,72 @@ function_ansmenu_advanced
 
 }
 
-function_menu_advanced_antix (){
-function_message_error $"this has to come"
+function_menu_advanced_second_antix (){
+tput cup 3 14
+tput setaf 2
+
+
+echo "http://code.google.com/p/kde-peace-settings/source/browse/"
+
+tput cup 5 17 
+tput rev 
+echo $"Main Menu FFmpeg Dolphin Service Menu"
+tput sgr0
+
+
+
+menutextadvanced[0]=$" Decompile"
+menutextadvanced[1]=$" Compile"
+menutextadvanced[2]=$" Build Your Own Function"
+menutextadvanced[3]=$" Add Subtitle"
+menutextadvanced[4]=$" Resize Video"
+menutextadvanced[5]=$" Add A Filter"
+menutextadvanced[6]=$" Compile FFmpeg (for debian\kubuntu)"
+menutextadvanced[7]=$" Version Author Copyright"
+menutextadvanced[8]=$" Back to Main Menu"
+ 
+
+ 
+
+menulabeladvanced[0]=$"decompile"
+menulabeladvanced[1]=$"compile"
+menulabeladvanced[2]=$"build"
+menulabeladvanced[3]=$"addsubtitle"
+menulabeladvanced[4]=$"resize"
+menulabeladvanced[5]=$"addfilter"
+menulabeladvanced[6]=$"cf"
+menulabeladvanced[7]=$"v"
+menulabeladvanced[8]=$"back"
+ 
+
+a=0
+b=7
+echo 
+for menut in "${menutextadvanced[@]}" ; do 
+c=$(($b+$a))
+
+tput cup $c 16
+echo "$(($a+1)). ${menutextadvanced[$a]}"
+a=$(($a+1))
+ 
+done
+
+
+
+
+tput bold
+tput cup $(($c+2)) 16
+read -p $"Enter Your Choice (1-"$a")" choice
+
+
+tput sgr0 
+# if ! [[ "$choice" =~ ^[0-9]+$ ]] ;then 
+# function_menu_start
+# fi 
+ansadvanced="${menulabeladvanced[$(($choice-1))]}"
+echo $ansadvanced
+
+function_ansmenu_advanced
 }
 
 
@@ -1193,7 +1373,12 @@ function_compile_ffmpeg_1204(){
 sudo apt-get -y build-dep ffmpeg ; sudo apt-get -y install build-essential libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev 
  
  if [[ -d "$HOME/ffmpeg" ]]; then  #if exist folder
-cd "$HOME/ffmpeg" ;make clean; git pull 
+cd "$HOME/ffmpeg" 
+read -p $"Do you want run make clean ? y\n"
+	if [[ "$REPLY" == "y" ]] ; then 
+	make clean
+	fi 
+git pull 
 else 
 git clone git://source.ffmpeg.org/ffmpeg.git $HOME/ffmpeg; cd  $HOME/ffmpeg 
 fi
@@ -1206,7 +1391,12 @@ function_compile_ffmpeg_1210(){
 sudo apt-get -y build-dep ffmpeg ; sudo apt-get -y install build-essential libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev ;sudo apt-get install libass-dev libbluray-dev libfontconfig1-dev libcelt-dev libmodplug-dev libopencv-dev librtmp-dev libv4l-dev libvo-aacenc-dev libvo-amrwbenc-dev libssl-dev 
 
 if [[ -d "$HOME/ffmpeg" ]]; then  #if exist folder
-cd "$HOME/ffmpeg" ;make clean; git pull 
+cd "$HOME/ffmpeg"
+read -p $"Do you want run make clean ? y\n"
+	if [[ "$REPLY" == "y" ]] ; then 
+	make clean
+	fi 
+git pull 
 else 
 git clone git://source.ffmpeg.org/ffmpeg.git $HOME/ffmpeg; cd  $HOME/ffmpeg 
 fi 
@@ -1388,14 +1578,21 @@ fi
 if [[ -e "$name_compiledvideo.$outformat" && ! -s "$name_compiledvideo.$outformat" ]]; then #if doens't empty and exist
 function_delete
 else 
-kdialog --title $"FFmpeg service menu error" --yesnocancel $"FFmpeg has failed to create the file $name_compiledvideo.$outformat do you want to check the log $templog ?"
-	if [[ $? == 0 ]] ;then 
-	kde-open "$templog"
-	fi 
-fi 
+
+function_message_error $"FFmpeg has failed to create the file $name_compiledvideo.$outformat"
+askopen=2
+function_open_log
+
+# kdialog --title $"FFmpeg service menu error" --yesnocancel $"FFmpeg has failed to create the file $name_compiledvideo.$outformat do you want to check the log $templog ?"
+# 	if [[ $? == 0 ]] ;then 
+# 	kde-open "$templog"
+# 	fi 
+# fi 
+fi
 }
 
-function_decompile(){
+function_decompile (){
+askopen=""
 
 if [[ ! -z "$pidofx" ]] ; then
 
@@ -1462,85 +1659,6 @@ fi
 
 
 
-function_open_log () {
-
-if [[ "$askopen" > 1 ]]; then
-	function_message_error $"FFmpeg failed! check the log!"
-	if [[ ! -z "$pidofx" ]]; then 
-		ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? Errors Found $askopen")
-			if [[ $? == 0 ]] ; then
-				kde-open "$templog"
-				function_delete standard
-			else
-				function_menu_start
-			fi
-	else
-		read -p $"Do you want open the log ?  (y\n\m m for main menu )" choice
-			case $read in 
-			y|Y|yes|YES)
-			nano "$templog"
-			function_delete silent
-			;;
-			n|N|no|NO)
-			function_menu_start
-			;;
-			*)
-			echo $"Hey! i have said y or n you fucking idiot have choosen $choice .."
-			exit 1
-			;;
-			esac
-			
-
-	fi 
-elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
-
-function_delete standard
-
-elif [[ "$askopen" == 0 ]]; then
-function_delete silent
-fi
-
-}
-
-function_check_for_errors (){
-
-
-founderr=""
-errors[0]="No such file or directory"
-errors[1]="for reading (No such file or directory)"
-errors[2]="Unable to find a suitable output format for"
-errors[3]="not found"
-errors[4]="Error while opening encoder"
-errors[5]="Fail"
-errors[6]="Unknown encoder"
-errors[7]="is experimental and might produce bad results"
-errors[8]="maybe incorrect parameters such as bit_rate, rate, width or height"
-errors[9]="Undefined constant or missing"
-errors[10]="Error setting option flags to value" 
-errors[11]="Unable to parse option value"
-errors[12]="could not find codec parameters"
-errors[13]="Could find no file with with path 'img%d.jpg'"
-errors[14]="Could not write header for output file"
-errors[15]="Invalid data found when processing input"
-
-askopen=0
-for err in "${errors[@]}"; do
-tester=$(grep "$err" "$templog")
-
-if [[  $? == 0 ]]; then #if  $? the last command is not empty ! -z then you have to fuck D:
-founderr="$err"
-askopen=$(($askopen+1))
-else
-askopen=$askopen
-
-fi
-done
-
-
-function_open_log 
-
-
-}
 
 
 function_analyze(){
@@ -1571,39 +1689,6 @@ kdialog --title $"FFprobe Dolphin Service Menu" --msgbox "$info"
 
 }
 
-
-function_ffmpeg_easy (){
- 
- 
-function_check
-profile="$easyprofile"
-if [[ ! -z  "$pidofx" ]] ; then  
-	
-	outformat=$(kdialog --combobox $"Convert to..keeping the same quality" $commonaudioformats $commonvideoformats --default "$defaultformat" )
-
-
-else
-	tput clear
-	function_commonformats_antix "$commonaudioformats" "$commonvideoformats"
-fi 
-
-if [[ -z "$outformat" ]] ; then
-
-function_menu_start
-
-fi
-
-if [[ -z "$numberofpass" ]]; then 
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 1 ]]; then
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 3 ]];then
-function_ffmpeg_double_pass
-else 
-function_ffmpeg_single_pass
-fi 
-
-}
 
 function_commonformats_antix (){
 # set -x
@@ -1636,359 +1721,47 @@ a=$(($a+1))
  
 done
 
-tput cup $(($c+2)) 16
-read -p "Enter Your Choice (1-${#formats[@]})" choice
-outformat=${formats[$(($choice-1))]}
+tput cup $(($c+1)) 16
+read -p "Enter Your Choice (1-$((${#formats[@]}+1)))" choice
+outformat="${formats[$(($choice-1))]}"
 set +x
 
 }
 
-
-function_ffmpeg_single_pass (){
-
-
-a=1
-
-if [[ ! -z "$pidofx"  ]] ; then  
-
-	mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
-	qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
-	qdbus $mystufvariabletouseonmyscript  showCancelButton true
-	echo "start new conversion loop using profile
+function_ffmpeg_easy (){
+ 
+ 
+function_check
+profile="$easyprofile"
+if [[ ! -z  "$pidofx" ]] ; then  
 	
-	"> "$templog"
- 
-	while  read <&3 line ; do
-			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $line"
-			echo "Log File $line
-				
-			">> "$templog"
-		
-		
-		
-			echo "$ffmpegpath -i   \""$line"\"  "$profile" "$overwrite" \""${line%%.*}.$outformat\""
-		
-			" >> "$templog"
- 
-		
-			$ffmpegpath -i  "$line"   $profile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog" & pid=$!
-			while kill -0 $pid ; do #check if you can send message to ffmpeg 
-				if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
-				kill $pid
-				qdbus $mystufvariabletouseonmyscript close
-				function_check_for_errors
-				exit
-				fi
-			done
-			value=$(($(($a*100))/$numberoffile))
-			qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-			a=$(($a+1))
-	done 3< "$listoffile"
-		if [[ "$value" == 100 ]];then
-		
-			function_check_for_errors
-		
-			if [[ "$passivepopup" == "enabled" ]];then
-				function_passivepopup_test $"FFmpeg service menu : Jobs done!"
-			fi
+	outformat=$(kdialog --combobox $"Convert to..keeping the same quality" $commonaudioformats $commonvideoformats --default "$defaultformat" )
 
-			exit
-		fi
+
 else
-
-
-$"FFmpeg Dolphin Service Menu Starting Conversion..."
-	while  read <&3 line ; do
-		echo "$ffmpegpath -i   \""$line"\"  "$profile" "$overwrite" \""${line%%.*}.$outformat\"""
-		echo
-
-		$ffmpegpath -i  "$line"   $profile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog"
-		value=$(($(($a*100))/$numberoffile))
-		echo " $a of $numberoffile $value%"
-		a=$(($a+1))
-		done 3< "$listoffile"
-		if [[ "$value" == 100 ]];then
-		
-			function_check_for_errors
-		
-			if [[ "$passivepopup" == "enabled" ]];then
-				function_passivepopup_test $"FFmpeg service menu : Jobs done!"
-			fi
-
-			exit
-		fi
-
-fi 
- 
-
-}
-
-
- 
-
-
-
-function_ffmpeg_profile (){
- 
-function_check
-function_load_profiles_video
-if [[ -z "$numberofpass" ]]; then 
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 1 ]]; then
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 3 ]];then
-function_ffmpeg_double_pass
-else 
-function_ffmpeg_single_pass
+	tput clear
+	function_commonformats_antix "$commonaudioformats" "$commonvideoformats"
 fi 
 
+if [[ -z "$outformat" ]] ; then
 
+function_menu_start
 
-}
-
-function_ffmpeg_profile_device (){
- 
-function_check
-function_load_profiles_device
-if [[ -z "$numberofpass" ]]; then 
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 1 ]]; then
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 3 ]];then
-function_ffmpeg_double_pass
-else 
-function_ffmpeg_single_pass
-fi 
-
-# a=1
-# mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
-# qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
-# qdbus $mystufvariabletouseonmyscript  showCancelButton true
-# echo "start new conversion loop using profile
-# 
-# "> "$templog"
-#  
-# until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
-#	 
-#	 while  read <&3 line ; do
-#		 qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-#		 echo "Log File $line
-#		 
-#		 ">> "$templog"
-#		 echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
-#		 
-#		 $ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
-# 
-# 
-# 
-#		 value=$(( $(($a*100))/$numberoffile ))
-#		 qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-#		 a=$(($a+1))
-#		 echo "
-#		 
-#		 " >> "$templog"
-#		 done 3< "$listoffile"
-#	 if [[ "$value" == 100 ]];then
-#	 
-#		 if [[ "$passivepopup" == "enabled" ]];then
-#			  function_passivepopup_test $"Conversions done!"
-#		 fi
-# 
-#	 function_check_for_errors
-#		 exit
-#	 fi
-# done
-
-
-
-}
-
-
-function_ffmpeg_profile_video (){
- 
-function_check
-function_load_profiles_video
+fi
 
 if [[ -z "$numberofpass" ]]; then 
 function_ffmpeg_single_pass
 elif [[ $numberofpass == 1 ]]; then
 function_ffmpeg_single_pass
-elif [[ $numberofpass == 3 ]];then
+elif [[ $numberofpass == 2 ]];then
 function_ffmpeg_double_pass
 else 
 function_ffmpeg_single_pass
 fi 
 
-# a=1
-# mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
-# qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
-# qdbus $mystufvariabletouseonmyscript  showCancelButton true
-# echo "start new conversion loop using profile
-# 
-# "> "$templog"
-#  
-# until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
-#	 
-#	 while  read <&3 line ; do
-#		 qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-#		 echo "Log File $line
-#		 
-#		 ">> "$templog"
-#		 echo "$ffmpegpath -i   "$line" $profile  -sameq "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
-#		 
-#		 $ffmpegpath -i   "$line"  $profile "$overwrite" "${line%%.*}.$outformat"  2>>"$templog"
-# 
-# 
-# 
-#		 value=$(( $(($a*100))/$numberoffile ))
-#		 qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-#		 a=$(($a+1))
-#		 echo "
-#		 
-#		 " >> "$templog"
-#		 done 3< "$listoffile"
-#	 if [[ "$value" == 100 ]];then
-#	 
-#		 if [[ "$passivepopup" == "enabled" ]];then
-#			  function_passivepopup_test $"Conversions done!"
-#		 fi
-# 
-#	 function_check_for_errors
-#		 exit
-#	 fi
-# done
-
-
-
-}
-
-function_ffmpeg_profile_audio (){
-checkprogram
-function_check
-function_load_profiles_audio
-
-if [[ -z "$numberofpass" ]]; then 
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 1 ]]; then
-function_ffmpeg_single_pass
-elif [[ $numberofpass == 3 ]];then
-function_ffmpeg_double_pass
-else 
-function_ffmpeg_single_pass
-fi 
-# a=1
-# mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
-# qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
-# qdbus $mystufvariabletouseonmyscript  showCancelButton true
-# echo "start new conversion loop using profile
-# 
-# "> "$templog"
-#  
-# until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
-#	 
-#	 while  read <&3 line ; do
-#		 qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
-#		 echo "Log File $line
-#		 
-#		 ">> "$templog"
-#		 echo "$ffmpegpath -i   "$line" $profile -y  "${line%%.*}.$outformat"" >> "$templog"
-#		 
-#		 $ffmpegpath -i   "$line"  $profile -y   "${line%%.*}.$outformat"  2>>"$templog"
-# 
-# 
-# 
-#		 value=$(( $(($a*100))/$numberoffile ))
-#		 qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-#		 a=$(($a+1))
-#		 echo "
-#		 
-#		 " >> "$templog"
-#		 done 3< "$listoffile"
-#		 
-#		 
-#  
-# 
-# 
-#	 if [[ "$value" == 100 ]];then
-#	 
-#		 if [[ "$passivepopup" == "enabled" ]];then
-#			  function_passivepopup_test $"Conversions done!"
-#		 fi
-# 
-#	 function_check_for_errors
-#		 exit
-#	 fi
-# done
-
-
-
 }
 
 
-function_ffmpeg_double_pass (){
- 
-a=1
-mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
-qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
-qdbus $mystufvariabletouseonmyscript  showCancelButton true
- 
-
-until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
-	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
-		echo "Log File $line
-		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
-		$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
-		" >> "$templog"
-		
-		 $ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
-		 
-		while kill -0 $pid ; do #check if you can send message to ffmpeg 
-		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
-		kill $pid
-		function_check_for_errors
-		exit
-		fi
-		done
-		 
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
-		
-		$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
-		while kill -0 $pid ; do #check if you can send message to ffmpeg 
-		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
-		kill $pid
-		function_check_for_errors
-		exit
-		fi
-		done
-
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
-		
-		" >> "$templog"
-		done 3< "$listoffile"
-		
-		
- 
-
-
-	if [[ "$value" == 100 ]];then
-	
-		if [[ "$passivepopup" == "enabled" ]];then
-			 function_passivepopup_test $"Conversions done!"
-		fi
-
-	function_check_for_errors
-		exit
-	fi
-done
-
-}
 
 function_build(){
 
@@ -2070,6 +1843,199 @@ function_menu_start
 }
 
 
+
+function_ffmpeg_single_pass (){
+
+askopen=""
+a=1
+
+if [[ ! -z "$pidofx"  ]] ; then  
+
+	mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+	qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+	qdbus $mystufvariabletouseonmyscript  showCancelButton true
+	echo "start new conversion loop using profile
+	
+	"> "$templog"
+ 
+	while  read <&3 line ; do
+			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $line"
+			echo "Log File $line
+				
+			">> "$templog"
+		
+		
+		
+			echo "$ffmpegpath -i   \""$line"\"  "$profile" "$overwrite" \""${line%%.*}.$outformat\""
+		
+			" >> "$templog"
+ 
+		
+			$ffmpegpath -i  "$line"   $profile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog" & pid=$!
+			while kill -0 $pid ; do #check if you can send message to ffmpeg 
+				if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+				kill $pid
+				qdbus $mystufvariabletouseonmyscript close
+				function_check_for_errors
+				exit
+				fi
+			done
+			value=$(($(($a*100))/$numberoffile))
+			qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+			a=$(($a+1))
+	done 3< "$listoffile"
+		if [[ "$value" == 100 ]];then
+		
+			function_check_for_errors
+		
+			if [[ "$passivepopup" == "enabled" ]];then
+				function_passivepopup_test $"FFmpeg service menu : Jobs done!"
+			fi
+
+			exit
+		fi
+else
+
+
+echo $"FFmpeg Dolphin Service Menu Starting Conversion..."
+	while  read <&3 line ; do
+		echo "$ffmpegpath -i   \""$line"\"  "$profile" "$overwrite" \""${line%%.*}.$outformat\"""
+		echo
+
+		$ffmpegpath -i  "$line"   $profile   $overwrite   "${line%%.*}.$outformat" 2>>"$templog"
+		value=$(($(($a*100))/$numberoffile))
+		echo " $a of $numberoffile $value%"
+		a=$(($a+1))
+		done 3< "$listoffile"
+		if [[ "$value" == 100 ]];then
+		
+			function_check_for_errors
+		
+			if [[ "$passivepopup" == "enabled" ]];then
+				function_passivepopup_test $"FFmpeg service menu : Jobs done!"
+			fi
+
+			exit
+		fi
+
+fi 
+ 
+
+}
+
+function_ffmpeg_double_pass (){
+askopen=""
+a=1
+mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $mystufvariabletouseonmyscript  showCancelButton true
+ 
+
+until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
+	
+	while  read <&3 line ; do
+		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
+		echo "Log File $line
+		
+		">> "$templog"
+		echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
+		$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
+		" >> "$templog"
+		
+		 $ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+		 
+		while kill -0 $pid ; do #check if you can send message to ffmpeg 
+		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+		kill $pid
+		function_check_for_errors
+		exit
+		fi
+		done
+		 
+		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
+		
+		$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+		while kill -0 $pid ; do #check if you can send message to ffmpeg 
+		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+		kill $pid
+		function_check_for_errors
+		exit
+		fi
+		done
+
+		value=$(( $(($a*100))/$numberoffile ))
+		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+		a=$(($a+1))
+		echo "
+		
+		" >> "$templog"
+		done 3< "$listoffile"
+		
+		
+ 
+
+
+	if [[ "$value" == 100 ]];then
+	
+		if [[ "$passivepopup" == "enabled" ]];then
+			 function_passivepopup_test $"Conversions done!"
+		fi
+
+	function_check_for_errors
+		exit
+	fi
+done
+
+}
+
+ 
+
+function_ffmpeg_profile  (){
+
+checkprogram
+function_check
+
+case "$1" in 
+audio)
+function_load_profiles_audio
+;;
+device)
+function_load_profiles_device
+;;
+video)
+function_load_profiles_video
+;;
+esac
+ 
+if [[ -z "$ansprofile"   ]] ;then 
+function_menu_start
+elif [[ "$ansprofile" == "Back To the Main Menu" ]]; then 
+function_menu_start
+else 
+	if [[ -z "$numberofpass" ]]; then 
+		function_ffmpeg_single_pass
+	elif [[ $numberofpass == 1 ]]; then
+		function_ffmpeg_single_pass
+	elif [[ $numberofpass == 2 ]];then
+		function_ffmpeg_double_pass
+	else 
+	function_ffmpeg_single_pass
+	fi 
+fi 
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
  
  
  
@@ -2090,7 +2056,7 @@ function_ansmenu
  function_menu_first (){
  # a $"Convert Advanced User" pd $"Convert Using a  Profile Dual Pass X2 slower"
  
-ans=$(kdialog  --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  a $"Extra" setf $"Set ffmpeg path" tf $"Test FFmpeg Encoders"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
+ans=$(kdialog  --title $"Main Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option"  add $"Add Files" addf $"Add Folders" edit $"Open List With Text Editor" d $"Remove List" r $"Restore old List" e $"Convert Made Easy" pa $"Convert Using a  Profile Audio" pd  $"Convert Using a  Profile Device" pv $"Convert Using a  Profile Video"  extra $"Extra" setf $"Set ffmpeg path" tf $"Test FFmpeg Encoders"   ds $"Remove Settings & rebuild them" dp $"Remove Profiles & rebuild them" es $"Edit Settings" v "Version Author Copyright" help $"Help" ex $"Exit"  --default $"Add Files")
  
 function_ansmenu
  
@@ -2138,7 +2104,7 @@ menulabel[5]=$"e"
 menulabel[6]=$"pa"
 menulabel[7]=$"pd"
 menulabel[8]=$"pv"
-menulabel[9]=$"a"
+menulabel[9]=$"extra"
 menulabel[10]=$"setf"
 menulabel[11]=$"tf"
 menulabel[12]=$"ds"
@@ -2187,7 +2153,7 @@ e)
 function_ffmpeg_easy
 ;;
  
- a)
+ extra)
 # kdialog --msgbox $"Sorry it will take time for this..."
 # function_menu_start
 function_menu_advanced
@@ -2204,14 +2170,14 @@ function_menu_advanced
  function_restore
  ;;
  pa)
-function_ffmpeg_profile_audio
+function_ffmpeg_profile audio
  ;;
  pd)
- function_ffmpeg_profile_device
+ function_ffmpeg_profile device
  ;;
  
  pv)
- function_ffmpeg_profile_video
+ function_ffmpeg_profile video
  ;;
  p)
  function_ffmpeg_profile
@@ -2232,14 +2198,19 @@ function_ffmpeg_profile_audio
  function_menu_start
  ;;
  es)
- kde-open "$ffmpeg_service_menu_settings"
- function_menu_start
+  	if [[ ! -z "$pidofx" ]]; then 
+		 kde-open "$ffmpeg_service_menu_settings" 
+	else
+		nano "$ffmpeg_service_menu_settings" 
+	fi 
+function_load_settings
+function_menu_start
  ;;
  dp)
  function_delete_profiles
  ;;
  help)
- function_help x
+ function_help
  ;;
 add)
 function_addfile
@@ -2265,7 +2236,13 @@ function_menu_start
  function_test_ffmpeg
  ;;
  v)
-kdialog --title "$title" --msgbox "$Version $Author $License"
+ 	if [[ ! -z "$pidofx" ]]; then 
+		kdialog --title "$title" --msgbox "$Version $Author $License"
+	else
+		echo $"Version $Version Author $Author License $License"
+
+	fi 
+
 function_menu_start
  ;;
  ex)
@@ -2385,24 +2362,4 @@ else
 function_help; exit 1
 fi
 
-# 
-# 
-# allvideoformat="264 3g2 3gp 3gp2 3gpp 3gpp2 3mm 3p2 60d 787 890 aaf aep aepx aet aetx ajp ale am amc amv amx anim arcut arf asf asx avb avd avi avp avs avs axm bdm bdmv bdt2 bdt3 bik bin bix bmk bnp box bs4 bsf byu camproj camrec camv cel cine cip clpi cmmp cmmtpl cmproj cmrec cpi cst cvc d2v d3v dat dav dce dck dcr dcr ddat dif dir divx dlx dmb dmsd dmsd3d dmsm dmsm3d dmss dmx dnc dpa dpg dream dsy dv dv-avi dv4 dvdmedia dvr dvr-ms dvx dxr dzm dzp dzt edl evo eye ezt f4p f4v fbr fbr fbz fcp fcproject flc flh fli flv flx gfp gl gom grasp gts gvi gvp h264 hdmov hkm ifo imovieproj imovieproject ircp irf ism ismc ismv iva ivf ivr ivs izz izzy jss jts jtv k3g lrec lsf lsx m15 m1pg m1v m21 m21 m2a m2p m2t m2ts m2v m4e m4u m4v m75 meta mgv mj2 mjp mjpg mk3d mkv mmv mnv mob mod modd moff moi moov mov movie mp21 mp21 mp2v mp4 mp4v mpe mpeg mpeg4 mpf mpg mpg2 mpgindex mpl mpls mpsub mpv mpv2 mqv msdvd mse msh mswmm mts mtv mvb mvc mvd mve mvex mvp mvp mvy mxf mys ncor nsv nuv nvc ogm ogv ogx osp pac par pds pgi photoshow piv playlist plproj pmf pmv pns ppj prel pro prproj prtl psh pssd pva pvr pxv qt qtch qtl qtm qtz r3d rcd rcproject rdb rec rm rmd rmd rmp rms rmv rmvb roq rp rsx rts rts rum rv rvl sbk sbt scc scm scm scn screenflow sec seq sfd sfvidcap siv smi smi smil smk sml smv spl sqz srt ssm stl str stx svi swf swi swt tda3mt tdx tivo tix tod tp tp0 tpd tpr trp ts tsp tvs usm vc1 vcpf vcr vcv vdo vdr vdx veg vem vep vf vft vfw vfz vgz vid video viewlet viv vivo vlab vob vp3 vp6 vp7 vpj vro vs4 vse vsp w32 wcp webm wlmp wm wmd wmmp wmv wmx wot wp3 wpl wtv wvx xej xel xesc xfl xlmv xvid yuv zm1 zm2 zm3 zmv"
-# 
-# 
-# allaudioformats="3ga 4mp 669 6cm 8cm 8med 8svx a2m a52 aa aa3 aac aax ab abc abm ac3 acd acd-bak acd-zip acm acp act adg adt adts adv afc agm ahx aif aifc aiff ais akp al alac alaw alc all als amf amr ams ams amxd aob ape apf apl aria ariax asd ase at3 atrac au au aud aup avastsounds avr awb ay b4s band bap bcs bdd bidule box brstm bun bwf c01 caf caff cda cdda cdlx cdo cdr cel cfa cfxr cidb cmf copy cpr cpt csh cwp d00 d01 dcf dcm dct ddt dewf df2 dfc dig dig djr dls dm dmf dmsa dmse dra drg ds ds2 dsf dsm dsp dss dtm dts dtshd dvf dwa dwd ear efa efe efk efq efs efv emd emp emx emy esps expressionmap f2r f32 f3r f4a f64 far fda fff flac flp fls frg fsm ftm fzb fzf fzv g721 g723 g726 gbproj gbs gig gio gio gm gp5 gpbank gpk gpx gro groove gsm gsm h0 hdp hma hmi hsb ics iff igp igr imf imp ins ins isma it iti its jam jam jo jo-7z k25 k26 kar kfn kin kit kmp koz koz kpl krz ksc ksf kt2 kt3 ktp l la lof logic lqt lso lvp lwv m1a m3u m3u8 m4a m4b m4p m4r ma1 mbr mdl med mgv mid midi miniusf mka mlp mmf mmm mmp mo3 mod mp1 mp2 mp3 mpa mpc mpga mpu mp_ mscx mscz msv mt2 mt9 mte mtf mti mtm mtp mts mu3 mui mus mus mus musa mux mux muz mws mx3 mx4 mx5 mx5template mxl mxmf myr mzp nap nbs ncw nkb nkc nki nkm nks nkx npl nra nrt nsa nsf nst ntn nvf nwc odm ofr oga ogg okt oma omf omg omx orc ots ove ovw ovw pac pat pbf pca pcast pcg pcm pd peak pek pho phy pk pkf pla pls plst ply pna pno ppc ppcx prg prg psf psm psy ptf ptm pts pvc qcp r r1m ra ram raw rax rbs rbs rcy record rex rfl rip rmf rmi rmj rmm rmx rng rns rol rsn rso rti rtm rts rvx rx2 s3i s3m s3z saf sam sap sb sbg sbi sbk sc2 sd sd sd2 sd2f sdat sdii sds sdt sdx seg seq ses sesx sf sf2 sfap0 sfk sfl sfs shn sib sid sma smf smp smp snd snd snd sng sng sou sph sppack sprg spx sseq sseq ssnd stap stm stx sty sty svd svx sw swa sxt syh syn syn syw syx tak tak td0 tfmx tg thx toc tsp tta tun txw u u8 uax ub ulaw ult ulw uni usf usflib uw uwf v2m vag val vap vb vc3 vdj vgm vgz vlc vmd vmf vmf vmo voc voi vox vpm vqf vrf vsq vtx vyf w01 w64 wav wav wave wax wem wfb wfd wfp wma wow wpk wpp wproj wrk wtpl wtpt wus wut wv wvc wve wwu wyz xa xa xfs xi xm xmf xmi xmz xp xrns xsb xspf xt xwb ym zpa zpl zvd zvr "
-# 
-# function_test_service(){
-# 
-# echo 3gp 3gp2 3gpp asf avi dv flv mkv mov mpg  mpeg mpeg4 mp4 ogv rm swf ts vp8 webm wmv | awk '{ for(i=1; i<=NF; i++) {printf( "\|\| \$i \=\= \"%s\"", $i )}}'
-# 
-# 
-# 
-# echo 264 3g2 3gp 3gp2 3gpp 3gpp2 3mm 3p2 60d 787 890 aaf aep aepx aet aetx ajp ale am amc amv amx anim arcut arf asf asx avb avd avi avp avs avs axm bdm bdmv bdt2 bdt3 bik bin bix bmk bnp box bs4 bsf byu camproj camrec camv cel cine cip clpi cmmp cmmtpl cmproj cmrec cpi cst cvc d2v d3v dat dav dce dck dcr dcr ddat dif dir divx dlx dmb dmsd dmsd3d dmsm dmsm3d dmss dmx dnc dpa dpg dream dsy dv dv-avi dv4 dvdmedia dvr dvr-ms dvx dxr dzm dzp dzt edl evo eye ezt f4p f4v fbr fbr fbz fcp fcproject flc flh fli flv flx gfp gl gom grasp gts gvi gvp h264 hdmov hkm ifo imovieproj imovieproject ircp irf ism ismc ismv iva ivf ivr ivs izz izzy jss jts jtv k3g lrec lsf lsx m15 m1pg m1v m21 m21 m2a m2p m2t m2ts m2v m4e m4u m4v m75 meta mgv mj2 mjp mjpg mk3d mkv mmv mnv mob mod modd moff moi moov mov movie mp21 mp21 mp2v mp4 mp4v mpe mpeg mpeg4 mpf mpg mpg2 mpgindex mpl mpls mpsub mpv mpv2 mqv msdvd mse msh mswmm mts mtv mvb mvc mvd mve mvex mvp mvp mvy mxf mys ncor nsv nuv nvc ogm ogv ogx osp pac par pds pgi photoshow piv playlist plproj pmf pmv pns ppj prel pro prproj prtl psh pssd pva pvr pxv qt qtch qtl qtm qtz r3d rcd rcproject rdb rec rm rmd rmd rmp rms rmv rmvb roq rp rsx rts rts rum rv rvl sbk sbt scc scm scm scn screenflow sec seq sfd sfvidcap siv smi smi smil smk sml smv spl sqz srt ssm stl str stx svi swf swi swt tda3mt tdx tivo tix tod tp tp0 tpd tpr trp ts tsp tvs usm vc1 vcpf vcr vcv vdo vdr vdx veg vem vep vf vft vfw vfz vgz vid video viewlet viv vivo vlab vob vp3 vp6 vp7 vpj vro vs4 vse vsp w32 wcp webm wlmp wm wmd wmmp wmv wmx wot wp3 wpl wtv wvx xej xel xesc xfl xlmv xvid yuv zm1 zm2 zm3 zmv | awk '{ for(i=1; i<=NF; i++) if ( $i == "3gp"|| $i == "aiff"|| $i == "aac"|| $i == "ac3"|| $i == "alac"|| $i == "ape"|| $i == "atrac"|| $i == "flac"|| $i == "m4a"|| $i == "m4p"|| $i == "midi"|| $i == "mmf"|| $i == "mp3"|| $i == "mp2"|| $i == "ogg"|| $i == "oga"|| $i == "ra"|| $i == "rm"|| $i == "ram"|| $i == "tta"|| $i == "wav"|| $i == "wavpack"|| $i == "wma" || $i == "3gp"|| $i == "3gp2"|| $i == "3gpp"|| $i == "asf"|| $i == "avi"|| $i == "dv"|| $i == "flv"|| $i == "mkv"|| $i == "mov"|| $i == "mpg"|| $i == "mpeg"|| $i == "mpeg4"|| $i == "mp4"|| $i == "ogv"|| $i == "rm"|| $i == "swf"|| $i == "ts"|| $i == "vp8"|| $i == "webm"|| $i == "wmv")  {printf("%s ",$i);printf("%s on\n", $i);  } else  {printf("%s ",$i);printf("%s off\n", $i);  }  } ' > /tmp/log 
-# 
-# 
-# 
-# 
-# }
-# 
-
+ 
