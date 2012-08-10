@@ -79,7 +79,7 @@ function gnome2(){
     launcher.writeConfig("contentsExtenderPosition", "1");
     launcher.writeConfig("searchHistory", "firefox");
     launcher.writeConfig("showSearchBox", "true");
-    launcher.writeConfig("partData","model=Places&type=list&version=1.0\nmodel=Devices%2FFixed&type=list&version=1.0\nmodel=Devices%2FRemovable&type=list&version=1.0\n");
+    launcher.writeConfig("partData","model=Devices%2FRemovable&type=list&version=1.0\nmodel=Places&type=list&version=1.0\nmodel=Devices%2FFixed&type=list&version=1.0\n");
  
 
 
