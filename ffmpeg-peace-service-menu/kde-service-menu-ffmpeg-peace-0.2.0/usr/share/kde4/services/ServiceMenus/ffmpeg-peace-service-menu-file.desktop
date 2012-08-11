@@ -1,11 +1,17 @@
 [Desktop Entry]
-Actions=folderappend;edit;deleteall;start;version;
+Actions=append;start;edit;deleteall;analyze;info;
 Icon=video-x-generic
-ServiceTypes=KonqPopupMenu/Plugin,inode/directory
+ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service
 X-KDE-Priority=TopLevel
 X-KDE-Submenu=FFmpeg Menu
 X-KDE-Submenu[it]=FFmpeg Menu
+
+[Desktop Action append]
+Exec=echo "%u" >> $HOME/ffmpeg-service-menu-qt.lst
+Icon=list-add
+Name=Append to FFmpeg
+Name[it]=Aggiungi a FFmpeg
 
 [Desktop Action deleteall]
 Exec=ffmpeg-peace-service-menu -d & echo %u >>/dev/null
@@ -19,22 +25,24 @@ Icon=story-editor
 Name=Edit List
 Name[it]=Edita Lista
 
+
+[Desktop Action analyze]
+Exec=ffmpeg-peace-service-menu -a %u 
+Icon=dialog-information
+Name=Info File
+Name[it]=Informazioni File
+
+
+[Desktop Action info]
+Exec=ffmpeg-peace-service-menu -hx  && echo %u >>/dev/null
+Icon=dialog-information
+Name=Version
+Name[it]=Versione
+
 [Desktop Action start]
 Exec=ffmpeg-peace-service-menu -mx  && echo %u >>/dev/null
 Icon=dialog-ok
 Name=FFmpeg Start!
 Name[it]=FFmpeg Inizia!
-
-[Desktop Action folderappend]
-Exec=ffmpeg-peace-service-menu -fox "%u"
-Icon=list-add
-Name=Add Folder to FFmpeg
-Name[it]=Aggiungi Cartella a FFmpeg
-
-[Desktop Action version]
-Exec=ffmpeg-peace-service-menu -hx  && echo %u >>/dev/null
-Icon=dialog-information
-Name=Version
-Name[it]=Versione
 
 
