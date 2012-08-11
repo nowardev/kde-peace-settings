@@ -313,7 +313,7 @@ function_edit_profile () {
 ans=""
 if [[ -z "$pidofx" ]];then
 
-	editprofile=(audio device video $"Back To the Main Menu")
+	editprofile=(Audio Device Video $"Back To the Main Menu")
 	a=0
 	b=7
 
@@ -2491,7 +2491,7 @@ if  [[ $1 == -*  ]]; then
 	setf)
 	function_set_ffmpegpath
 	;;
-	--) shift; break;;
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	esac
 else
