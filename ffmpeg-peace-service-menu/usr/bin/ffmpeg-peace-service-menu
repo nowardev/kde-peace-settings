@@ -1987,10 +1987,24 @@ fi
 }
 
 
-
-
-
 function_analyze (){
+
+
+if [[ -z "$1" ]] ; then 
+
+function_message_error $"No input given"
+else
+info=$($probe "$1" 2>&1)
+
+fi
+
+function_info_message "info for $1 $info"
+
+}
+
+
+
+function_analyze_old (){
 echo $2
 
 if [[ -z "$probe" ]] ; then 
@@ -2686,7 +2700,8 @@ if  [[ $1 == -*  ]]; then
 		  fi
 		 ;;
 	-a)
-	function_analyze n "$2"
+	function_analyze "$2"
+# 	function_analyze n "$2"
 	;;
 	-e)  nano "$listoffile"
 	;;
