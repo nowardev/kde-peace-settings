@@ -1,5 +1,4 @@
-#!/bin/bash
-
+#!/bin/bash 
 #
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -19,15 +18,26 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
-#TO DO
+ 
+lockdir=/tmp/ffmpeg_avconv_service_menu.lock
+ if mkdir "$lockdir"
+ then
+     echo >&2 "successfully acquired lock"
 
-# CHECK THE function_check_for_errors(
-#changelog
-# Fix in the while loop due ffmpeg bug
-# Fix in awk stuff
-# some other work
-#fixed function check , if number of file is empty then recalculate it
-Version="0.2.0"
+     # Remove lockdir when the script finishes, or when it receives a signal
+     trap 'rm -rf "$lockdir"' 0    # remove directory when script finishes
+     trap "exit 2" 1 2 3 15        # terminate script when receiving signal
+
+     # Optionally create temporary files in this directory, because
+     # they will be removed automatically:
+     tmpfile=$lockdir/filelist
+
+ else
+     echo >&2 "cannot acquire lock, giving up on $lockdir if you want run this script you need to do rm -R $lockdir"
+     exit 0
+ fi
+ 
+Version="0.2.1"
 Author="nowardev@gmail.com"
 License="GLPv3"
 license="Copyright (C) 2012 nowardev nowardev@gmail.com
@@ -68,7 +78,7 @@ easyprofile=$(awk -F':' '/easyprofile:/{print $2}' "$easyprofile_file")
 
 
 
-if [[ -z "$threads" || $threads  =~ ^[0-9]+$  ]];then
+if [[ -z "$threads" || $threads == [[:digit:]]  ]];then
 threads="1"
 echo $"unable to detect cpu number ... bug?"
 fi
@@ -82,7 +92,7 @@ fi
 
 #DONE
 
-fuction_set_antix (){
+function_set_antix (){
 
 pidofx=""
 }
@@ -119,13 +129,13 @@ if  [[ ! -e  "$ffmpeg_service_menu_settings" ]] ; then
 function_create_settings
 fi
 
-overwrite=$(awk -F':' '/overwrite:/{gsub(/ /,""); print $2}' "$ffmpeg_service_menu_settings")
-threads=$(awk  -F':' '/cpu:/{print $2}' "$ffmpeg_service_menu_settings")
-easyprofile=$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")
-ffmpegpath=$(awk  -F':' '/ffmpegpath or avconvpath :/{print $2}' "$ffmpeg_service_menu_settings")
-probe=$(awk  -F':' '/ffprobe or avprobe :/{print $2}' "$ffmpeg_service_menu_settings")
-commonaudioformats=$(awk  -F':' '/common audio formats:/{print $2}' "$ffmpeg_service_menu_settings")
-commonvideoformats=$(awk  -F':' '/common video formats:/{print $2}' "$ffmpeg_service_menu_settings")
+overwrite="$(awk -F':' '/overwrite:/{gsub(/ /,""); print $2}' "$ffmpeg_service_menu_settings")"
+threads="$(awk  -F':' '/cpu:/{print $2}' "$ffmpeg_service_menu_settings")"
+easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
+ffmpegpath="$(awk  -F':' '/ffmpegpath or avconvpath:/{print $2}' "$ffmpeg_service_menu_settings")"
+probe="$(awk  -F':' '/ffprobe or avprobe:/{print $2}' "$ffmpeg_service_menu_settings")"
+commonaudioformats="$(awk  -F':' '/common audio formats:/{print $2}' "$ffmpeg_service_menu_settings")"
+commonvideoformats="$(awk  -F':' '/common video formats:/{print $2}' "$ffmpeg_service_menu_settings")"
 filtercommonaudioformats="$(awk '{ for(i=1; i<=NF; i++) {printf( "\*\.%s ", $i )}}' << _EOF
 $commonaudioformats
 _EOF
@@ -138,12 +148,28 @@ _EOF
 # commonvideoformats='ogv mkv mp4'; read -ra exts <<< "$commonvideoformats"; echo "${exts[*]/#/*.}"
 
 
-defaultformat=$(awk  -F':' '/prefered default format:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
-passivepopup=$(awk  -F':' '/passive popup:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
-numberofpass=$(awk  -F':' '/number of pass:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
-dependences=$( awk '/dependences: /{for(a=2;a<NF;a++) {printf( "%s " , $a)}}' "$ffmpeg_service_menu_settings")
-configure=$( awk '/configure: /{for(a=2;a<NF;a++) {printf( "%s " , $a)}}' "$ffmpeg_service_menu_settings")
+defaultformat="$(awk  -F':' '/prefered default format:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")"
+passivepopup="$(awk  -F':' '/passive popup:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")"
+numberofpass="$(awk  -F':' '/number of pass:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")"
+dependences="$( awk '/dependences: /{for(a=2;a<NF;a++) {printf( "%s " , $a)}}' "$ffmpeg_service_menu_settings")"
+configure="$( awk '/configure: /{for(a=2;a<NF;a++) {printf( "%s " , $a)}}' "$ffmpeg_service_menu_settings")"
 
+screencastfunctionfastcpu="$( awk  '/Screencast Fast Cpu:/{for(i=4;i<=NF; i++) {printf( " %s " , $i)}}'  "$ffmpeg_service_menu_settings" |awk '{gsub(/hw 0\,0/,"hw\:0\,0"); print}')"
+
+screencastfunctionfastcpu_detect="$( awk  '/Screencast Fast Cpu Detect Window:/{for(i=6;i<=NF; i++) {printf( " %s " , $i)}}'  "$ffmpeg_service_menu_settings" |awk '{gsub(/hw 0\,0/,"hw\:0\,0"); print}')"
+
+screencastfunctionslowcpu="$( awk  '/Screencast Slow Cpu:/{for(i=4;i<=NF; i++) {printf( " %s " , $i)}}'  "$ffmpeg_service_menu_settings" |awk '{gsub(/hw 0\,0/,"hw\:0\,0"); print}')"
+
+screencastfunctionslowcpu_detect="$( awk  '/Screencast Slow Cpu Detect Window:/{for(i=6;i<=NF; i++) {printf( " %s " , $i)}}'  "$ffmpeg_service_menu_settings" |awk '{gsub(/hw 0\,0/,"hw\:0\,0"); print}')"
+ 
+ 
+ echo "$screencastfunctionfastcpu" >/tmp/a
+ echo "$screencastfunctionslowcpu" >>/tmp/a
+ echo "$screencastfunctionfastcpu_detect" >>/tmp/a
+ echo "$screencastfunctionslowcpu_detect" >>/tmp/a
+ 
+
+#awk  '/Screencast Slow Cpu Detect Window:/{for(i=6;i<=NF; i++) {printf( " %s " , $i)}}' |awk {gsub(/hw 0,0/,"hw:0,0"); print}
 case "$overwrite" in
 
  [y/Y]|[-y/-Y]|[y/Y][e/E][s/S])
@@ -193,12 +219,19 @@ esac
 # numberofpass=$(awk  -F':' '/number of pass:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
 }
 
-function_create_settings(){
+function_create_settings (){
+commonaudioformats="3gp aiff aac ac3 alac ape atrac  flac  m4a m4p midi mmf mp3 mp2 ogg oga ra rm ram tta wav wavpack wma"
+commonvideoformats="3gp 3gp2 3gpp asf avi dv flv m2ts mkv mov mpg  mpeg mpeg4 mp4 ogv rm swf ts vob vp8 xvid webm wmv"
+screencastfunctionfastcpu="-s $(xrandr | awk '/, current /{gsub(/\,/,""); print $8"x"$10}') -i :0.0   -r 15 -vcodec h264   -f alsa -ac 2  -i hw:0,0 -ar 48000  -acodec pcm_s16le  -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
+screencastfunctionfastcpu_detect=" -r 15 -vcodec h264   -f alsa -ac 2  -i hw:0,0 -ar 48000  -acodec pcm_s16le  -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
+
+screencastfunctionslowcpu="-s $(xrandr | awk '/, current /{gsub(/\,/,""); print $8"x"$10}') -i :0.0   -f  alsa  -ac 2 -ar 48000  -i hw:0,0   -acodec pcm_s16le  -vcodec  ljpeg -r 15  -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
+screencastfunctionslowcpu_detect="-f  alsa  -i hw:0,0  -ac 2 -ar 48000 -acodec pcm_s16le -r 15 -vcodec  ljpeg -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
 
 
 if [[ -z "$pidofx" ]] ; then
-commonaudioformats="3gp aiff aac ac3 alac ape atrac  flac  m4a m4p midi mmf mp3 mp2 ogg oga ra rm ram tta wav wavpack wma"
-commonvideoformats="3gp 3gp2 3gpp asf avi dv flv m2ts mkv mov mpg  mpeg mpeg4 mp4 ogv rm swf ts vob vp8 xvid webm wmv"
+
+
 
 echo $"always overwrite files yes\no"
 read   
@@ -218,6 +251,7 @@ read
 	fi
 
 easyprofile="$REPLY"
+$REPLY=""
 echo $"Where is ffmpeg or avconv path ? should be in $(type -p ffmpeg) leave empty if you know it's on /usr/bin/ffmpeg "
 read  -e 
 	if [[ -z $REPLY ]];then
@@ -232,53 +266,119 @@ read  -e
 	else 
 		probe="$REPLY"
 	fi	
+REPLY=""
 
 
-
-echo $"Choose your prefered format"
+echo $"Choose your prefered format leave empty for mp3"
 read  
 defaultformat="$REPLY"
-echo $"Audio Formats i should detect if i add a folder : now they are  $commonaudioformats \n do you want add one ?"
+	if [[ -z $REPLY ]];then
+		defaultformat="mp3"
+	else 
+		defaultformat="$REPLY"
+	fi
+
+
+REPLY=""
+echo $"Audio Formats i should detect if i add a folder : now they are  $commonaudioformats \n do you want add one ? press enter or leave empty if you don't know"
 read   
 	if [[ -z $REPLY ]];then
 		echo $commonaudioformats 
 	else 
 		commonaudioformats="$commonaudioformats $REPLY"
 	fi
- 
-echo $"Video Formats i should detect if i add a folder : now they are  $commonvideoformats \n do you want add one ?"
+echo
+REPLY=""
+echo $"Video Formats i should detect if i add a folder : now they are  $commonvideoformats \n do you want add one ? press enter or leave empty if you don't know"
 read  
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 		echo $commonvideoformats 
 	else 
 		commonvideoformats="$commonvideoformats $REPLY"
 	fi
+REPLY=""
 echo
-echo $"Passive popup should be enabled or disabled ? (enabled\disabled)"
+echo $"Passive popup should be enabled or disabled ? (enabled\disabled) leave empty for enabled"
 read  
-passivepopup="$REPLY"
+	if [[ -z "$REPLY" ]];then
+		passivepopup="enabled"
+	else 
+		passivepopup="$REPLY"
+	fi
 
-echo $"How many pass should ffmpeg make ? 1 for sigle pass ( reccomended) 2 for double pass this will take 2x time to encode... "
+REPLY=""
+echo
+echo $"How many pass should ffmpeg make ? 1 for sigle pass ( reccomended) 2 for double pass this will take 2x time to encode... press enter or leave empty if you don't know"
+read 
+	if [[ -z $REPLY ]];then
+		numberofpass="1" 
+	else 
+		numberofpass="$REPLY"
+	fi
+echo
+REPLY=""
+echo $"FFmpeg or Avconv Function to record video (VERSION SMALL SIZE FILE BUT MUCH MORE WORK FOR CPU)"
+echo 
+echo "this is the current version $screencastfunctionfastcpu  press ENTER if you don't know or you just like it"
 read  "$REPLY"
 	if [[ -z $REPLY ]];then
-		$numberofpass="1" 
+		screencastfunctionfastcpu=$screencastfunctionfastcpu
 	else 
-		$numberofpass="$REPLY"
-	fi
+		screencastfunctionfastcpu="$REPLY"
+	fi 
+REPLY=""
+echo
+echo $"FFmpeg or Avconv Function to record video VERSION DETECT WINDOW SMALL SIZE FILE BUT MUCH MORE WORK FOR CPU)"
+echo 
+echo "this is the current version $screencastfunctionfastcpu_detect  press ENTER if you don't know or you just like it"
+read  "$REPLY"
+	if [[ -z "$REPLY" ]];then
+		echo $"Default $screencastfunctionfastcpu_detect choosen"
+	else 
+		screencastfunctionfastcpu_detect="$REPLY"
+	fi 
+REPLY=""
+echo
+echo $"FFmpeg or Avconv Function to record video (VERSION FAST BUT BIG FILES)"
+echo 
+echo "this is the current version $screencastfunctionslowcpu  press ENTER if you don't know or you just like it"
+read  "$REPLY"
+	if [[ -z "$REPLY" ]];then
+		echo $"Default $screencastfunctionslowcpu choosen"
+	else 
+		screencastfunctionslowcpu="$REPLY"
+	fi 	
+REPLY=""
+echo 
+echo $"FFmpeg or Avconv Function to record video (DETECT WINDOW VERSION FAST BUT BIG FILES)"
+echo 
+echo "this is the current version $screencastfunctionslowcpu_detect  press ENTER if you don't know or you just like it"
+read  "$REPLY"
+	if [[ -z "$REPLY" ]];then
+		echo $"Default $screencastfunctionslowcpu_detect choosen"
+	else 
+		screencastfunctionslowcpu_detect="$REPLY"
+	fi 	
  
+	
 else	
-		overwrite=$(kdialog --combobox $"always overwrite files " yes no --default no )
-		threads=$(kdialog --combobox $"How many core should FFmpeg use" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 --default 1)
-		easyprofile=$(kdialog --textinputbox  $"write here your easy profile" --  -sameq )
-		ffmpegpath=$(kdialog --title $"WHERE SHOULD I LOOK FOR FFMPEG BINARY?" --getopenfilename  "/usr/bin" ffmpeg )
-		probe=$(kdialog --title $"WHERE SHOULD I LOOK FOR FFPROBE OR AVPROBE BINARY?" --getopenfilename  "/usr/bin" ffprobe )
-		commonaudioformats=$(kdialog --title $"audio detected formats for folders" --checklist  $"AUDIO Select the formats FFmpeg service menu should detected when you would like add a folder" 3ga 3ga off 4mp 4mp off 669 669 off 6cm 6cm off 8cm 8cm off 8med 8med off 8svx 8svx off a2m a2m off a52 a52 off aa aa off aa3 aa3 off aac aac on aax aax off ab ab off abc abc off abm abm off ac3 ac3 on acd acd off acd-bak acd-bak off acd-zip acd-zip off acm acm off acp acp off act act off adg adg off adt adt off adts adts off adv adv off afc afc off agm agm off ahx ahx off aif aif off aifc aifc off aiff aiff on ais ais off akp akp off al al off alac alac on alaw alaw off alc alc off all all off als als off amf amf off amr amr off ams ams off ams ams off amxd amxd off aob aob off ape ape on apf apf off apl apl off aria aria off ariax ariax off asd asd off ase ase off at3 at3 off atrac atrac on au au off au au off aud aud off aup aup off avastsounds avastsounds off avr avr off awb awb off ay ay off b4s b4s off band band off bap bap off bcs bcs off bdd bdd off bidule bidule off box box off brstm brstm off bun bun off bwf bwf off c01 c01 off caf caf off caff caff off cda cda off cdda cdda off cdlx cdlx off cdo cdo off cdr cdr off cel cel off cfa cfa off cfxr cfxr off cidb cidb off cmf cmf off copy copy off cpr cpr off cpt cpt off csh csh off cwp cwp off d00 d00 off d01 d01 off dcf dcf off dcm dcm off dct dct off ddt ddt off dewf dewf off df2 df2 off dfc dfc off dig dig off dig dig off djr djr off dls dls off dm dm off dmf dmf off dmsa dmsa off dmse dmse off dra dra off drg drg off ds ds off ds2 ds2 off dsf dsf off dsm dsm off dsp dsp off dss dss off dtm dtm off dts dts off dtshd dtshd off dvf dvf off dwa dwa off dwd dwd off ear ear off efa efa off efe efe off efk efk off efq efq off efs efs off efv efv off emd emd off emp emp off emx emx off emy emy off esps esps off expressionmap expressionmap off f2r f2r off f32 f32 off f3r f3r off f4a f4a off f64 f64 off far far off fda fda off fff fff off flac flac on flp flp off fls fls off frg frg off fsm fsm off ftm ftm off fzb fzb off fzf fzf off fzv fzv off g721 g721 off g723 g723 off g726 g726 off gbproj gbproj off gbs gbs off gig gig off gio gio off gio gio off gm gm off gp5 gp5 off gpbank gpbank off gpk gpk off gpx gpx off gro gro off groove groove off gsm gsm off gsm gsm off h0 h0 off hdp hdp off hma hma off hmi hmi off hsb hsb off ics ics off iff iff off igp igp off igr igr off imf imf off imp imp off ins ins off ins ins off isma isma off it it off iti iti off its its off jam jam off jam jam off jo jo off jo-7z jo-7z off k25 k25 off k26 k26 off kar kar off kfn kfn off kin kin off kit kit off kmp kmp off koz koz off koz koz off kpl kpl off krz krz off ksc ksc off ksf ksf off kt2 kt2 off kt3 kt3 off ktp ktp off l l off la la off lof lof off logic logic off lqt lqt off lso lso off lvp lvp off lwv lwv off m1a m1a off m3u m3u off m3u8 m3u8 off m4a m4a on m4b m4b off m4p m4p on m4r m4r off ma1 ma1 off mbr mbr off mdl mdl off med med off mgv mgv off mid mid off midi midi on miniusf miniusf off mka mka off mlp mlp off mmf mmf on mmm mmm off mmp mmp off mo3 mo3 off mod mod off mp1 mp1 off mp2 mp2 on mp3 mp3 on mpa mpa off mpc mpc off mpga mpga off mpu mpu off mp_ mp_ off mscx mscx off mscz mscz off msv msv off mt2 mt2 off mt9 mt9 off mte mte off mtf mtf off mti mti off mtm mtm off mtp mtp off mts mts off mu3 mu3 off mui mui off mus mus off mus mus off mus mus off musa musa off mux mux off mux mux off muz muz off mws mws off mx3 mx3 off mx4 mx4 off mx5 mx5 off mx5template mx5template off mxl mxl off mxmf mxmf off myr myr off mzp mzp off nap nap off nbs nbs off ncw ncw off nkb nkb off nkc nkc off nki nki off nkm nkm off nks nks off nkx nkx off npl npl off nra nra off nrt nrt off nsa nsa off nsf nsf off nst nst off ntn ntn off nvf nvf off nwc nwc off odm odm off ofr ofr off oga oga on ogg ogg on okt okt off oma oma off omf omf off omg omg off omx omx off orc orc off ots ots off ove ove off ovw ovw off ovw ovw off pac pac off pat pat off pbf pbf off pca pca off pcast pcast off pcg pcg off pcm pcm off pd pd off peak peak off pek pek off pho pho off phy phy off pk pk off pkf pkf off pla pla off pls pls off plst plst off ply ply off pna pna off pno pno off ppc ppc off ppcx ppcx off prg prg off prg prg off psf psf off psm psm off psy psy off ptf ptf off ptm ptm off pts pts off pvc pvc off qcp qcp off r r off r1m r1m off ra ra on ram ram on raw raw off rax rax off rbs rbs off rbs rbs off rcy rcy off record record off rex rex off rfl rfl off rip rip off rmf rmf off rmi rmi off rmj rmj off rmm rmm off rmx rmx off rng rng off rns rns off rol rol off rsn rsn off rso rso off rti rti off rtm rtm off rts rts off rvx rvx off rx2 rx2 off s3i s3i off s3m s3m off s3z s3z off saf saf off sam sam off sap sap off sb sb off sbg sbg off sbi sbi off sbk sbk off sc2 sc2 off sd sd off sd sd off sd2 sd2 off sd2f sd2f off sdat sdat off sdii sdii off sds sds off sdt sdt off sdx sdx off seg seg off seq seq off ses ses off sesx sesx off sf sf off sf2 sf2 off sfap0 sfap0 off sfk sfk off sfl sfl off sfs sfs off shn shn off sib sib off sid sid off sma sma off smf smf off smp smp off smp smp off snd snd off snd snd off snd snd off sng sng off sng sng off sou sou off sph sph off sppack sppack off sprg sprg off spx spx off sseq sseq off sseq sseq off ssnd ssnd off stap stap off stm stm off stx stx off sty sty off sty sty off svd svd off svx svx off sw sw off swa swa off sxt sxt off syh syh off syn syn off syn syn off syw syw off syx syx off tak tak off tak tak off td0 td0 off tfmx tfmx off tg tg off thx thx off toc toc off tsp tsp off tta tta on tun tun off txw txw off u u off u8 u8 off uax uax off ub ub off ulaw ulaw off ult ult off ulw ulw off uni uni off usf usf off usflib usflib off uw uw off uwf uwf off v2m v2m off vag vag off val val off vap vap off vb vb off vc3 vc3 off vdj vdj off vgm vgm off vgz vgz off vlc vlc off vmd vmd off vmf vmf off vmf vmf off vmo vmo off voc voc off voi voi off vox vox off vpm vpm off vqf vqf off vrf vrf off vsq vsq off vtx vtx off vyf vyf off w01 w01 off w64 w64 off wav wav on wav wav on wave wave off wax wax off wem wem off wfb wfb off wfd wfd off wfp wfp off wma wma on wow wow off wpk wpk off wpp wpp off wproj wproj off wrk wrk off wtpl wtpl off wtpt wtpt off wus wus off wut wut off wv wv off wvc wvc off wve wve off wwu wwu off wyz wyz off xa xa off xa xa off xfs xfs off xi xi off xm xm off xmf xmf off xmi xmi off xmz xmz off xp xp off xrns xrns off xsb xsb off xspf xspf off xt xt off xwb xwb off ym ym off zpa zpa off zpl zpl off zvd zvd off zvr zvr off | awk '{gsub(/\"/,""); print }'  )
-		commonvideoformats=$(kdialog --title $"video detected formats for folders" --checklist  $"VIDEO Select the formats FFmpeg service menu should detected when you would like add a folder" 264 264 off 3g2 3g2 off 3gp 3gp on 3gp2 3gp2 on 3gpp 3gpp on 3gpp2 3gpp2 off 3mm 3mm off 3p2 3p2 off 60d 60d off 787 787 off 890 890 off aaf aaf off aep aep off aepx aepx off aet aet off aetx aetx off ajp ajp off ale ale off am am off amc amc off amv amv off amx amx off anim anim off arcut arcut off arf arf off asf asf on asx asx off avb avb off avd avd off avi avi on avp avp off avs avs off avs avs off axm axm off bdm bdm off bdmv bdmv off bdt2 bdt2 off bdt3 bdt3 off bik bik off bin bin off bix bix off bmk bmk off bnp bnp off box box off bs4 bs4 off bsf bsf off byu byu off camproj camproj off camrec camrec off camv camv off cel cel off cine cine off cip cip off clpi clpi off cmmp cmmp off cmmtpl cmmtpl off cmproj cmproj off cmrec cmrec off cpi cpi off cst cst off cvc cvc off d2v d2v off d3v d3v off dat dat off dav dav off dce dce off dck dck off dcr dcr off dcr dcr off ddat ddat off dif dif off dir dir off divx divx off dlx dlx off dmb dmb off dmsd dmsd off dmsd3d dmsd3d off dmsm dmsm off dmsm3d dmsm3d off dmss dmss off dmx dmx off dnc dnc off dpa dpa off dpg dpg off dream dream off dsy dsy off dv dv on dv-avi dv-avi off dv4 dv4 off dvdmedia dvdmedia off dvr dvr off dvr-ms dvr-ms off dvx dvx off dxr dxr off dzm dzm off dzp dzp off dzt dzt off edl edl off evo evo off eye eye off ezt ezt off f4p f4p off f4v f4v off fbr fbr off fbr fbr off fbz fbz off fcp fcp off fcproject fcproject off flc flc off flh flh off fli fli off flv flv on flx flx off gfp gfp off gl gl off gom gom off grasp grasp off gts gts off gvi gvi off gvp gvp off h264 h264 off hdmov hdmov off hkm hkm off ifo ifo off imovieproj imovieproj off imovieproject imovieproject off ircp ircp off irf irf off ism ism off ismc ismc off ismv ismv off iva iva off ivf ivf off ivr ivr off ivs ivs off izz izz off izzy izzy off jss jss off jts jts off jtv jtv off k3g k3g off lrec lrec off lsf lsf off lsx lsx off m15 m15 off m1pg m1pg off m1v m1v off m21 m21 off m21 m21 off m2a m2a off m2p m2p off m2t m2t off m2ts m2ts off m2v m2v off m4e m4e off m4u m4u off m4v m4v off m75 m75 off meta meta off mgv mgv off mj2 mj2 off mjp mjp off mjpg mjpg off mk3d mk3d off mkv mkv on mmv mmv off mnv mnv off mob mob off mod mod off modd modd off moff moff off moi moi off moov moov off mov mov on movie movie off mp21 mp21 off mp21 mp21 off mp2v mp2v off mp4 mp4 on mp4v mp4v off mpe mpe off mpeg mpeg on mpeg4 mpeg4 on mpf mpf off mpg mpg on mpg2 mpg2 off mpgindex mpgindex off mpl mpl off mpls mpls off mpsub mpsub off mpv mpv off mpv2 mpv2 off mqv mqv off msdvd msdvd off mse mse off msh msh off mswmm mswmm off mts mts off mtv mtv off mvb mvb off mvc mvc off mvd mvd off mve mve off mvex mvex off mvp mvp off mvp mvp off mvy mvy off mxf mxf off mys mys off ncor ncor off nsv nsv off nuv nuv off nvc nvc off ogm ogm off ogv ogv on ogx ogx off osp osp off pac pac off par par off pds pds off pgi pgi off photoshow photoshow off piv piv off playlist playlist off plproj plproj off pmf pmf off pmv pmv off pns pns off ppj ppj off prel prel off pro pro off prproj prproj off prtl prtl off psh psh off pssd pssd off pva pva off pvr pvr off pxv pxv off qt qt off qtch qtch off qtl qtl off qtm qtm off qtz qtz off r3d r3d off rcd rcd off rcproject rcproject off rdb rdb off rec rec off rm rm on rmd rmd off rmd rmd off rmp rmp off rms rms off rmv rmv off rmvb rmvb off roq roq off rp rp off rsx rsx off rts rts off rts rts off rum rum off rv rv off rvl rvl off sbk sbk off sbt sbt off scc scc off scm scm off scm scm off scn scn off screenflow screenflow off sec sec off seq seq off sfd sfd off sfvidcap sfvidcap off siv siv off smi smi off smi smi off smil smil off smk smk off sml sml off smv smv off spl spl off sqz sqz off srt srt off ssm ssm off stl stl off str str off stx stx off svi svi off swf swf on swi swi off swt swt off tda3mt tda3mt off tdx tdx off tivo tivo off tix tix off tod tod off tp tp off tp0 tp0 off tpd tpd off tpr tpr off trp trp off ts ts on tsp tsp off tvs tvs off usm usm off vc1 vc1 off vcpf vcpf off vcr vcr off vcv vcv off vdo vdo off vdr vdr off vdx vdx off veg veg off vem vem off vep vep off vf vf off vft vft off vfw vfw off vfz vfz off vgz vgz off vid vid off video video off viewlet viewlet off viv viv off vivo vivo off vlab vlab off vob vob off vp3 vp3 off vp6 vp6 off vp7 vp7 off vpj vpj off vro vro off vs4 vs4 off vse vse off vsp vsp off w32 w32 off wcp wcp off webm webm on wlmp wlmp off wm wm off wmd wmd off wmmp wmmp off wmv wmv on wmx wmx off wot wot off wp3 wp3 off wpl wpl off wtv wtv off wvx wvx off xej xej off xel xel off xesc xesc off xfl xfl off xlmv xlmv off xvid xvid off yuv yuv off zm1 zm1 off zm2 zm2 off zm3 zm3 off zmv zmv off | awk '{gsub(/\"/,""); print }'  )
+		overwrite="$(kdialog --combobox $"always overwrite files " yes no --default no )"
+		threads="$(kdialog --combobox $"How many core should FFmpeg use" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 --default 1)"
+		easyprofile="$(kdialog --textinputbox  $"write here your easy profile" --  -sameq )"
+		ffmpegpath="$(kdialog --title $"WHERE SHOULD I LOOK FOR FFMPEG BINARY?" --getopenfilename  "/usr/bin" ffmpeg )"
+		probe="$(kdialog --title $"WHERE SHOULD I LOOK FOR FFPROBE OR AVPROBE BINARY?" --getopenfilename  "/usr/bin" ffprobe )"
+		commonaudioformats="$(kdialog --title $"audio detected formats for folders" --checklist  $"AUDIO Select the formats FFmpeg service menu should detected when you would like add a folder" 3ga 3ga off 4mp 4mp off 669 669 off 6cm 6cm off 8cm 8cm off 8med 8med off 8svx 8svx off a2m a2m off a52 a52 off aa aa off aa3 aa3 off aac aac on aax aax off ab ab off abc abc off abm abm off ac3 ac3 on acd acd off acd-bak acd-bak off acd-zip acd-zip off acm acm off acp acp off act act off adg adg off adt adt off adts adts off adv adv off afc afc off agm agm off ahx ahx off aif aif off aifc aifc off aiff aiff on ais ais off akp akp off al al off alac alac on alaw alaw off alc alc off all all off als als off amf amf off amr amr off ams ams off ams ams off amxd amxd off aob aob off ape ape on apf apf off apl apl off aria aria off ariax ariax off asd asd off ase ase off at3 at3 off atrac atrac on au au off au au off aud aud off aup aup off avastsounds avastsounds off avr avr off awb awb off ay ay off b4s b4s off band band off bap bap off bcs bcs off bdd bdd off bidule bidule off box box off brstm brstm off bun bun off bwf bwf off c01 c01 off caf caf off caff caff off cda cda off cdda cdda off cdlx cdlx off cdo cdo off cdr cdr off cel cel off cfa cfa off cfxr cfxr off cidb cidb off cmf cmf off copy copy off cpr cpr off cpt cpt off csh csh off cwp cwp off d00 d00 off d01 d01 off dcf dcf off dcm dcm off dct dct off ddt ddt off dewf dewf off df2 df2 off dfc dfc off dig dig off dig dig off djr djr off dls dls off dm dm off dmf dmf off dmsa dmsa off dmse dmse off dra dra off drg drg off ds ds off ds2 ds2 off dsf dsf off dsm dsm off dsp dsp off dss dss off dtm dtm off dts dts off dtshd dtshd off dvf dvf off dwa dwa off dwd dwd off ear ear off efa efa off efe efe off efk efk off efq efq off efs efs off efv efv off emd emd off emp emp off emx emx off emy emy off esps esps off expressionmap expressionmap off f2r f2r off f32 f32 off f3r f3r off f4a f4a off f64 f64 off far far off fda fda off fff fff off flac flac on flp flp off fls fls off frg frg off fsm fsm off ftm ftm off fzb fzb off fzf fzf off fzv fzv off g721 g721 off g723 g723 off g726 g726 off gbproj gbproj off gbs gbs off gig gig off gio gio off gio gio off gm gm off gp5 gp5 off gpbank gpbank off gpk gpk off gpx gpx off gro gro off groove groove off gsm gsm off gsm gsm off h0 h0 off hdp hdp off hma hma off hmi hmi off hsb hsb off ics ics off iff iff off igp igp off igr igr off imf imf off imp imp off ins ins off ins ins off isma isma off it it off iti iti off its its off jam jam off jam jam off jo jo off jo-7z jo-7z off k25 k25 off k26 k26 off kar kar off kfn kfn off kin kin off kit kit off kmp kmp off koz koz off koz koz off kpl kpl off krz krz off ksc ksc off ksf ksf off kt2 kt2 off kt3 kt3 off ktp ktp off l l off la la off lof lof off logic logic off lqt lqt off lso lso off lvp lvp off lwv lwv off m1a m1a off m3u m3u off m3u8 m3u8 off m4a m4a on m4b m4b off m4p m4p on m4r m4r off ma1 ma1 off mbr mbr off mdl mdl off med med off mgv mgv off mid mid off midi midi on miniusf miniusf off mka mka off mlp mlp off mmf mmf on mmm mmm off mmp mmp off mo3 mo3 off mod mod off mp1 mp1 off mp2 mp2 on mp3 mp3 on mpa mpa off mpc mpc off mpga mpga off mpu mpu off mp_ mp_ off mscx mscx off mscz mscz off msv msv off mt2 mt2 off mt9 mt9 off mte mte off mtf mtf off mti mti off mtm mtm off mtp mtp off mts mts off mu3 mu3 off mui mui off mus mus off mus mus off mus mus off musa musa off mux mux off mux mux off muz muz off mws mws off mx3 mx3 off mx4 mx4 off mx5 mx5 off mx5template mx5template off mxl mxl off mxmf mxmf off myr myr off mzp mzp off nap nap off nbs nbs off ncw ncw off nkb nkb off nkc nkc off nki nki off nkm nkm off nks nks off nkx nkx off npl npl off nra nra off nrt nrt off nsa nsa off nsf nsf off nst nst off ntn ntn off nvf nvf off nwc nwc off odm odm off ofr ofr off oga oga on ogg ogg on okt okt off oma oma off omf omf off omg omg off omx omx off orc orc off ots ots off ove ove off ovw ovw off ovw ovw off pac pac off pat pat off pbf pbf off pca pca off pcast pcast off pcg pcg off pcm pcm off pd pd off peak peak off pek pek off pho pho off phy phy off pk pk off pkf pkf off pla pla off pls pls off plst plst off ply ply off pna pna off pno pno off ppc ppc off ppcx ppcx off prg prg off prg prg off psf psf off psm psm off psy psy off ptf ptf off ptm ptm off pts pts off pvc pvc off qcp qcp off r r off r1m r1m off ra ra on ram ram on raw raw off rax rax off rbs rbs off rbs rbs off rcy rcy off record record off rex rex off rfl rfl off rip rip off rmf rmf off rmi rmi off rmj rmj off rmm rmm off rmx rmx off rng rng off rns rns off rol rol off rsn rsn off rso rso off rti rti off rtm rtm off rts rts off rvx rvx off rx2 rx2 off s3i s3i off s3m s3m off s3z s3z off saf saf off sam sam off sap sap off sb sb off sbg sbg off sbi sbi off sbk sbk off sc2 sc2 off sd sd off sd sd off sd2 sd2 off sd2f sd2f off sdat sdat off sdii sdii off sds sds off sdt sdt off sdx sdx off seg seg off seq seq off ses ses off sesx sesx off sf sf off sf2 sf2 off sfap0 sfap0 off sfk sfk off sfl sfl off sfs sfs off shn shn off sib sib off sid sid off sma sma off smf smf off smp smp off smp smp off snd snd off snd snd off snd snd off sng sng off sng sng off sou sou off sph sph off sppack sppack off sprg sprg off spx spx off sseq sseq off sseq sseq off ssnd ssnd off stap stap off stm stm off stx stx off sty sty off sty sty off svd svd off svx svx off sw sw off swa swa off sxt sxt off syh syh off syn syn off syn syn off syw syw off syx syx off tak tak off tak tak off td0 td0 off tfmx tfmx off tg tg off thx thx off toc toc off tsp tsp off tta tta on tun tun off txw txw off u u off u8 u8 off uax uax off ub ub off ulaw ulaw off ult ult off ulw ulw off uni uni off usf usf off usflib usflib off uw uw off uwf uwf off v2m v2m off vag vag off val val off vap vap off vb vb off vc3 vc3 off vdj vdj off vgm vgm off vgz vgz off vlc vlc off vmd vmd off vmf vmf off vmf vmf off vmo vmo off voc voc off voi voi off vox vox off vpm vpm off vqf vqf off vrf vrf off vsq vsq off vtx vtx off vyf vyf off w01 w01 off w64 w64 off wav wav on wav wav on wave wave off wax wax off wem wem off wfb wfb off wfd wfd off wfp wfp off wma wma on wow wow off wpk wpk off wpp wpp off wproj wproj off wrk wrk off wtpl wtpl off wtpt wtpt off wus wus off wut wut off wv wv off wvc wvc off wve wve off wwu wwu off wyz wyz off xa xa off xa xa off xfs xfs off xi xi off xm xm off xmf xmf off xmi xmi off xmz xmz off xp xp off xrns xrns off xsb xsb off xspf xspf off xt xt off xwb xwb off ym ym off zpa zpa off zpl zpl off zvd zvd off zvr zvr off | awk '{gsub(/\"/,""); print }'  )"
+		commonvideoformats="$(kdialog --title $"video detected formats for folders" --checklist  $"VIDEO Select the formats FFmpeg service menu should detected when you would like add a folder" 264 264 off 3g2 3g2 off 3gp 3gp on 3gp2 3gp2 on 3gpp 3gpp on 3gpp2 3gpp2 off 3mm 3mm off 3p2 3p2 off 60d 60d off 787 787 off 890 890 off aaf aaf off aep aep off aepx aepx off aet aet off aetx aetx off ajp ajp off ale ale off am am off amc amc off amv amv off amx amx off anim anim off arcut arcut off arf arf off asf asf on asx asx off avb avb off avd avd off avi avi on avp avp off avs avs off avs avs off axm axm off bdm bdm off bdmv bdmv off bdt2 bdt2 off bdt3 bdt3 off bik bik off bin bin off bix bix off bmk bmk off bnp bnp off box box off bs4 bs4 off bsf bsf off byu byu off camproj camproj off camrec camrec off camv camv off cel cel off cine cine off cip cip off clpi clpi off cmmp cmmp off cmmtpl cmmtpl off cmproj cmproj off cmrec cmrec off cpi cpi off cst cst off cvc cvc off d2v d2v off d3v d3v off dat dat off dav dav off dce dce off dck dck off dcr dcr off dcr dcr off ddat ddat off dif dif off dir dir off divx divx off dlx dlx off dmb dmb off dmsd dmsd off dmsd3d dmsd3d off dmsm dmsm off dmsm3d dmsm3d off dmss dmss off dmx dmx off dnc dnc off dpa dpa off dpg dpg off dream dream off dsy dsy off dv dv on dv-avi dv-avi off dv4 dv4 off dvdmedia dvdmedia off dvr dvr off dvr-ms dvr-ms off dvx dvx off dxr dxr off dzm dzm off dzp dzp off dzt dzt off edl edl off evo evo off eye eye off ezt ezt off f4p f4p off f4v f4v off fbr fbr off fbr fbr off fbz fbz off fcp fcp off fcproject fcproject off flc flc off flh flh off fli fli off flv flv on flx flx off gfp gfp off gl gl off gom gom off grasp grasp off gts gts off gvi gvi off gvp gvp off h264 h264 off hdmov hdmov off hkm hkm off ifo ifo off imovieproj imovieproj off imovieproject imovieproject off ircp ircp off irf irf off ism ism off ismc ismc off ismv ismv off iva iva off ivf ivf off ivr ivr off ivs ivs off izz izz off izzy izzy off jss jss off jts jts off jtv jtv off k3g k3g off lrec lrec off lsf lsf off lsx lsx off m15 m15 off m1pg m1pg off m1v m1v off m21 m21 off m21 m21 off m2a m2a off m2p m2p off m2t m2t off m2ts m2ts off m2v m2v off m4e m4e off m4u m4u off m4v m4v off m75 m75 off meta meta off mgv mgv off mj2 mj2 off mjp mjp off mjpg mjpg off mk3d mk3d off mkv mkv on mmv mmv off mnv mnv off mob mob off mod mod off modd modd off moff moff off moi moi off moov moov off mov mov on movie movie off mp21 mp21 off mp21 mp21 off mp2v mp2v off mp4 mp4 on mp4v mp4v off mpe mpe off mpeg mpeg on mpeg4 mpeg4 on mpf mpf off mpg mpg on mpg2 mpg2 off mpgindex mpgindex off mpl mpl off mpls mpls off mpsub mpsub off mpv mpv off mpv2 mpv2 off mqv mqv off msdvd msdvd off mse mse off msh msh off mswmm mswmm off mts mts off mtv mtv off mvb mvb off mvc mvc off mvd mvd off mve mve off mvex mvex off mvp mvp off mvp mvp off mvy mvy off mxf mxf off mys mys off ncor ncor off nsv nsv off nuv nuv off nvc nvc off ogm ogm off ogv ogv on ogx ogx off osp osp off pac pac off par par off pds pds off pgi pgi off photoshow photoshow off piv piv off playlist playlist off plproj plproj off pmf pmf off pmv pmv off pns pns off ppj ppj off prel prel off pro pro off prproj prproj off prtl prtl off psh psh off pssd pssd off pva pva off pvr pvr off pxv pxv off qt qt off qtch qtch off qtl qtl off qtm qtm off qtz qtz off r3d r3d off rcd rcd off rcproject rcproject off rdb rdb off rec rec off rm rm on rmd rmd off rmd rmd off rmp rmp off rms rms off rmv rmv off rmvb rmvb off roq roq off rp rp off rsx rsx off rts rts off rts rts off rum rum off rv rv off rvl rvl off sbk sbk off sbt sbt off scc scc off scm scm off scm scm off scn scn off screenflow screenflow off sec sec off seq seq off sfd sfd off sfvidcap sfvidcap off siv siv off smi smi off smi smi off smil smil off smk smk off sml sml off smv smv off spl spl off sqz sqz off srt srt off ssm ssm off stl stl off str str off stx stx off svi svi off swf swf on swi swi off swt swt off tda3mt tda3mt off tdx tdx off tivo tivo off tix tix off tod tod off tp tp off tp0 tp0 off tpd tpd off tpr tpr off trp trp off ts ts on tsp tsp off tvs tvs off usm usm off vc1 vc1 off vcpf vcpf off vcr vcr off vcv vcv off vdo vdo off vdr vdr off vdx vdx off veg veg off vem vem off vep vep off vf vf off vft vft off vfw vfw off vfz vfz off vgz vgz off vid vid off video video off viewlet viewlet off viv viv off vivo vivo off vlab vlab off vob vob off vp3 vp3 off vp6 vp6 off vp7 vp7 off vpj vpj off vro vro off vs4 vs4 off vse vse off vsp vsp off w32 w32 off wcp wcp off webm webm on wlmp wlmp off wm wm off wmd wmd off wmmp wmmp off wmv wmv on wmx wmx off wot wot off wp3 wp3 off wpl wpl off wtv wtv off wvx wvx off xej xej off xel xel off xesc xesc off xfl xfl off xlmv xlmv off xvid xvid off yuv yuv off zm1 zm1 off zm2 zm2 off zm3 zm3 off zmv zmv off | awk '{gsub(/\"/,""); print }'  )"
 		
-		defaultformat=$(kdialog --combobox $"Choose your prefered format" $commonaudioformats $commonvideoformats )
-		passivepopup=$(kdialog --combobox $"Do you want enable Popups to warm you about \"job done\"  or errors ?"  $"enabled" $"disabled" --default $"enabled" )
+		defaultformat="$(kdialog --combobox $"Choose your prefered format" $commonaudioformats $commonvideoformats )"
+		passivepopup="$(kdialog --combobox $"Do you want enable Popups to warm you about \"job done\"  or errors ?"  $"enabled" $"disabled" --default $"enabled" )"
 		
-		numberofpass=$(kdialog --combobox $"How many pass should ffmpeg make? 1 for Sigle pass (reccomended) 2 for double pass" 1 2 --default 1)
+		numberofpass="$(kdialog --combobox $"How many pass should ffmpeg make? 1 for Sigle pass (reccomended) 2 for double pass" 1 2 --default 1)"
+		screencastfunctionfastcpu="$(kdialog --textinputbox  $"Function to record your screen for FAST CPU ,If you don't know or you just like it leave it as it is " --  "$screencastfunctionfastcpu" )"
+		screencastfunctionfastcpu_detect="$(kdialog --textinputbox  $"Function to record your screen for FAST CPU ,If you don't know or you just like it leave it as it is " --  "$screencastfunctionfastcpu_detect" )"
+		
+		screencastfunctionslowcpu="$(kdialog --textinputbox  $"Function to record your screen for SLOW CPU ,If you don't know or you just like it leave it as it is " --  "$screencastfunctionslowcpu" )"
+		screencastfunctionslowcpu_detect="$(kdialog --textinputbox  $"Function to record your screen for SLOW CPU ,If you don't know or you just like it leave it as it is " --  "$screencastfunctionslowcpu_detect" )"
 fi
 	
 
@@ -299,10 +399,18 @@ echo "common video formats: $commonvideoformats"  >>$ffmpeg_service_menu_setting
 echo "" >>"$ffmpeg_service_menu_settings"
 echo "passive popup: $passivepopup"  >>$ffmpeg_service_menu_settings
 echo "" >>"$ffmpeg_service_menu_settings"
-echo "ffmpegpath or avconvpath : "$ffmpegpath"" >>"$ffmpeg_service_menu_settings"
+echo "ffmpegpath or avconvpath: "$ffmpegpath"" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
-echo "ffprobe or avprobe : "$probe"" >>"$ffmpeg_service_menu_settings"
-
+echo "ffprobe or avprobe: "$probe"" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
+echo "Screencast Fast Cpu: "$screencastfunctionfastcpu"" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
+echo "Screencast Fast Cpu Detect Window: "$screencastfunctionfastcpu_detect"" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
+echo "Screencast Slow Cpu: "$screencastfunctionslowcpu"" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
+echo "Screencast Slow Cpu Detect Window: "$screencastfunctionslowcpu_detect"" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
  
 function_load_settings
 }
@@ -374,7 +482,51 @@ esac
 function_menu_start
 }
 
+function_detect_window () {
+INFO="$(xwininfo -frame)"
+window_geometry="$(echo $INFO | grep -oEe 'geometry [0-9]+x[0-9]+' | grep -oEe '[0-9]+x[0-9]+')"
+window_xy="$(echo $INFO | grep -oEe 'Corners:\s+\+[0-9]+\+[0-9]+' | grep -oEe '[0-9]+\+[0-9]+' | sed -e 's/\+/,/' )"
 
+if [[ -z "$window_geometry" || -z "$window_xy" ]] ; then 
+function_message_error $"Unable to detect window geometry i did xwininfo -frame and the result was empty! fix this or mail me $Author "
+fi 
+}
+function_record_screen (){
+
+if [[ -z "$pidofx" ]]; then 
+
+case "$1" in 
+
+fullscreen_fast)
+echo "this is the function $ffmpegpath -f x11grab $screencastfunctionfastcpu"
+$ffmpegpath -f x11grab  $screencastfunctionfastcpu
+;;
+
+detectwindow_fast)
+function_detect_window
+ echo "this is the function $ffmpegpath -f x11grab  -s $window_geometry -i :0.0+$window_xy  $screencastfunctionfastcpu_detect"
+$ffmpegpath -f x11grab  -s $window_geometry -i :0.0+$window_xy    $screencastfunctionfastcpu_detect
+;;
+
+fullscreen_compress)
+echo "this is the function  $ffmpegpath -f x11grab $screencastfunctionslowcpu"
+$ffmpegpath -f x11grab $screencastfunctionslowcpu 
+;;
+
+detectwindow_compress)
+function_detect_window
+echo "$ffmpegpath -f x11grab  -s $window_geometry -i :0.0+$window_xy  $screencastfunctionslowcpu_detect"
+$ffmpegpath -f x11grab  -s $window_geometry -i :0.0+$window_xy  $screencastfunctionslowcpu_detect
+;;
+
+*)
+echo $"wrong :P"
+function_record_screen_menu
+;;
+esac
+fi 
+
+}
 
 function_test_ffmpeg () {
 
@@ -424,7 +576,7 @@ fi
 
 function_delete_settings () {
 
-rm "$ffmpeg_service_menu_settings"
+
 function_create_settings
 function_menu_start
 
@@ -766,6 +918,7 @@ errors[12]="could not find codec parameters"
 errors[13]="Could find no file with with path 'img%d.jpg'"
 errors[14]="Could not write header for output file"
 errors[15]="Invalid data found when processing input"
+errors[16]="Application provided invalid, non monotonically increasing dts to muxer in stream"
 
 askopen=0
 for err in "${errors[@]}"; do
@@ -1281,7 +1434,7 @@ function_ansmenu
 function_menu_advanced_second (){
 
  
-ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function" addsubtitle $"Add Subtitle" resize $"Resize Video" addfilter $"Add A Filter"  cf $"Compile FFmpeg (for debian\kubuntu)"  v "Version Author Copyright" back $"Back")
+ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function" addsubtitle $"Add Subtitle" resize $"Resize Video" addfilter $"Add A Filter"  cf $"Compile FFmpeg (for debian\kubuntu)" s $"Screencast" v "Version Author Copyright" back $"Back")
 function_ansmenu_advanced
 
 }
@@ -1295,7 +1448,7 @@ echo "http://code.google.com/p/kde-peace-settings/source/browse/ffmpeg-peace-ser
 
 tput cup 5 17 
 tput rev 
-echo $"Main Menu FFmpeg Dolphin Service Menu"
+echo $"Advanced Menu FFmpeg Dolphin Service Menu"
 tput sgr0
 
 
@@ -1307,8 +1460,9 @@ menutextadvanced[3]=$" Add Subtitle"
 menutextadvanced[4]=$" Resize Video"
 menutextadvanced[5]=$" Add A Filter"
 menutextadvanced[6]=$" Compile FFmpeg (for debian\kubuntu)"
-menutextadvanced[7]=$" Version Author Copyright"
-menutextadvanced[8]=$" Back to Main Menu"
+menutextadvanced[7]=$" ScreenCast"
+menutextadvanced[8]=$" Version Author Copyright"
+menutextadvanced[9]=$" Back to Main Menu"
  
 
  
@@ -1320,9 +1474,9 @@ menulabeladvanced[3]=$"addsubtitle"
 menulabeladvanced[4]=$"resize"
 menulabeladvanced[5]=$"addfilter"
 menulabeladvanced[6]=$"cf"
-menulabeladvanced[7]=$"v"
-menulabeladvanced[8]=$"back"
- 
+menulabeladvanced[7]=$"s"
+menulabeladvanced[8]=$"v"
+menulabeladvanced[9]=$"back" 
 
 a=0
 b=7
@@ -1354,6 +1508,68 @@ echo $ansadvanced
 function_ansmenu_advanced
 }
 
+function_record_screen_menu () {
+
+screencast=""
+tput cup 3 14
+tput setaf 2
+
+
+echo "http://code.google.com/p/kde-peace-settings/source/browse/ffmpeg-peace-service-menu/usr/bin/ffmpeg-peace-service-menu?name=master"
+
+tput cup 5 17 
+tput rev 
+echo $"Screencast Menu FFmpeg Dolphin Service Menu"
+tput sgr0
+
+
+
+menutextadvancedscreencast[0]=$" Fast Cpu Fullscreen"
+menutextadvancedscreencast[1]=$" Slow Cpu Fullscreen"
+menutextadvancedscreencast[2]=$" Fast Cpu Detect Window"
+menutextadvancedscreencast[3]=$" Slow Cpu Detect Window"
+menutextadvancedscreencast[4]=$" Back to Advanced Menu"
+  
+ 
+ 
+
+menulabeladvancedscreencast[0]=$"fullscreen_fast"
+menulabeladvancedscreencast[1]=$"fullscreen_compress"
+menulabeladvancedscreencast[2]=$"detectwindow_fast"
+menulabeladvancedscreencast[3]=$"detectwindow_compress"
+menulabeladvancedscreencast[4]=$"back" 
+
+a=0
+b=7
+echo 
+for menut in "${menutextadvancedscreencast[@]}" ; do 
+c=$(($b+$a))
+
+tput cup $c 16
+echo "$(($a+1)). ${menutextadvancedscreencast[$a]}"
+a=$(($a+1))
+ 
+done
+
+
+
+
+tput bold
+tput cup $(($c+2)) 16
+read -p $"Enter Your Choice (1-"$a")" choice
+
+
+tput sgr0 
+# if ! [[ "$choice" =~ ^[0-9]+$ ]] ;then 
+# function_menu_start
+# fi 
+screencast="${menulabeladvancedscreencast[$(($choice-1))]}"
+echo $screencast
+function_record_screen "$screencast"
+
+# function_ansmenu_advanced
+# echo $screencast  >/tmp/a
+}
 
 function_ansmenu_advanced(){
 
@@ -1389,6 +1605,10 @@ function_menu_start
  ;;
  cf)
  konsole --noclose -e ffmpeg-peace-service-menu -cf
+ ;;
+ s)
+ clear
+ function_record_screen_menu
  ;;
  help)
  function_help x
@@ -2404,8 +2624,13 @@ kdialog --title "$title" --yesno $"You have not choose an option do you want exi
 
 
 ####################START SCRIPT############################
-function_load_settings
 
+if [[ "$1" == "-wx" ]] ; then 
+function_set_antix
+function_load_settings
+else 
+function_load_settings
+fi 
 
 checkprogram
 
@@ -2479,7 +2704,7 @@ if  [[ $1 == -*  ]]; then
 	function_test_ffmpeg
 	;;
 	-wx)
-	fuction_set_antix
+	function_set_antix
 	function_menu_start
 	;;
 	-mx)
