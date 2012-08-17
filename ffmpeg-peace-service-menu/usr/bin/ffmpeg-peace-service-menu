@@ -1,5 +1,5 @@
-#!/bin/bash 
-#
+#!/bin/bash
+Version="0.2.2"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -109,13 +109,19 @@ esac
 
 if [[ -z "$threads"  ]];then
 	threadsdetected=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
-	if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
+	if [[ $threadsdetected  =~ [[:digit:]]  ]] ; then
 			threads=1
+		echo $"unable to detect cpu number ... bug?"
+	else 
+	threads="$threadsdetected"
 	fi
  
-echo $"unable to detect cpu number ... bug?"
+
 fi
 
+if [[ -z "$easy" ]] ; then 
+commonaudioformats="3gp aiff aac ac3 alac ape atrac  flac  m4a m4p midi mmf mp3 mp2 ogg oga ra rm ram tta wav wavpack wma"
+fi 
 
 if [[ -z "$commonaudioformats" ]] ; then 
 commonaudioformats="3gp aiff aac ac3 alac ape atrac  flac  m4a m4p midi mmf mp3 mp2 ogg oga ra rm ram tta wav wavpack wma"
@@ -156,35 +162,53 @@ if [[ -z "$pidofx" ]] ; then
 
 
 
-echo $"always overwrite files yes\no"
+echo $"always overwrite files (yes\no) press ENTER FOR yes"
 read   
-overwrite="$REPLY"
-echo $"How many cpu should FFmpeg use? 1 2 3 4 5 etc "
-read   
-threads="$REPLY"
-	if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
-		threads=1
+
+	if [[ -z "$REPLY" ]];then
+	   overwrite="yes"
+	else 
+		overwrite="$REPLY"
 	fi
+REPLY=""
+echo 
+
+echo $"How many cpu should FFmpeg use? 1 2 3 4 5 etc press ENTER for 1 "
+read   
+	if [[ -z "$REPLY" ]];then
+	   threads=1
+	else 
+		if [[ ! $threadsdetected  =~ [[:digit:]]  ]] ; then
+			threads=1
+		else
+			threads="$REPLY"
+		fi 
+		
+	fi
+REPLY=""
+echo 
+
+
 echo $"Write your easy profile that FFmpeg should use if you don't know type -sameq"
 read   
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 	   easyprofile="-sameq"
 	else 
 		easyprofile="$REPLY"
 	fi
 
-easyprofile="$REPLY"
 REPLY=""
-echo $"Where is ffmpeg or avconv path ? should be in $(type -p ffmpeg) leave empty if you know it's on /usr/bin/ffmpeg "
+echo
+echo $"Where is ffmpeg or avconv path ? Press ENTER for this path:   $(type -p ffmpeg) "
 read  -e 
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 	   ffmpegpath="$(type -p ffmpeg)"
 	else 
 		ffmpegpath="$REPLY"
 	fi
-echo $"Where is ffprobe or avprobe path ? should be in $(type -p ffprobe) leave empty if you know it's on /usr/bin/ffmpeg "
+echo $"Where is ffprobe or avprobe path ? Press ENTER for this path: $(type -p ffprobe) "
 read  -e 
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 	   probe="$(type -p ffprobe)"
 	else 
 		probe="$REPLY"
@@ -192,10 +216,10 @@ read  -e
 REPLY=""
 
 
-echo $"Choose your prefered format leave empty for mp3"
+echo $"Choose your prefered format Press ENTER for mp3"
 read  
-defaultformat="$REPLY"
-	if [[ -z $REPLY ]];then
+ 
+	if [[ -z "$REPLY" ]];then
 		defaultformat="mp3"
 	else 
 		defaultformat="$REPLY"
@@ -203,16 +227,17 @@ defaultformat="$REPLY"
 
 
 REPLY=""
-echo $"Audio Formats i should detect if i add a folder : now they are  $commonaudioformats \n do you want add one ? press enter or leave empty if you don't know"
+echo 
+echo $"Audio Formats i should detect if i add a folder : now they are  $commonaudioformats \n do you want add one ? Press ENTER or leave empty if you don't know"
 read   
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 		echo $commonaudioformats 
 	else 
 		commonaudioformats="$commonaudioformats $REPLY"
 	fi
 echo
 REPLY=""
-echo $"Video Formats i should detect if i add a folder : now they are  $commonvideoformats \n do you want add one ? press enter or leave empty if you don't know"
+echo $"Video Formats i should detect if i add a folder : now they are  $commonvideoformats \n do you want add one ? Press ENTER or leave empty if you don't know"
 read  
 	if [[ -z "$REPLY" ]];then
 		echo $commonvideoformats 
@@ -233,7 +258,7 @@ REPLY=""
 echo
 echo $"How many pass should ffmpeg make ? 1 for sigle pass ( reccomended) 2 for double pass this will take 2x time to encode... press enter or leave empty if you don't know"
 read 
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 		numberofpass="1" 
 	else 
 		numberofpass="$REPLY"
@@ -244,7 +269,7 @@ echo $"FFmpeg or Avconv Function to record video (VERSION SMALL SIZE FILE BUT MU
 echo 
 echo "this is the current version $screencastfunctionfastcpu  press ENTER if you don't know or you just like it"
 read  "$REPLY"
-	if [[ -z $REPLY ]];then
+	if [[ -z "$REPLY" ]];then
 		screencastfunctionfastcpu=$screencastfunctionfastcpu
 	else 
 		screencastfunctionfastcpu="$REPLY"
@@ -613,14 +638,28 @@ USE:
 -r                                 RESTORE you old conversion list
 -mx                                start the kdialog menu  
 -wx                                start the script for servers
+
+WARMING 
+
+THIS SCRIPT IS STUDIED FOR FFMPEG on ubuntu you can get 
+avconv or a fake ffmpeg you can recognize it because it says 
+
+*** THIS PROGRAM IS DEPRECATED ***
+so some profiles don't work.
+
 this script help you to convert files with dolphin and via shell:
 
-this script can use profiles file that is stored here $ffmpeg_profile_file
-it read the list of the file to convert from a file that is located here $listoffile
-you can set even your prefered easy profile editing or creating this file $easyprofile_file
-make sure you write it in this way just the options :
+ffmpeg-peace-service-menu can use profiles file that are stored here:
+audio  $ffmpeg_profile_file_audio
+device $ffmpeg_profile_file_device
+video  $ffmpeg_profile_file_video
 
-    easyprofile:  -ab 128k -b 1000k -sameq
+it read the list of your files to convert from a file that is located here:
+
+$listoffile
+
+in this file there are all the settings :  $ffmpeg_service_menu_settings
+
 
 
 Version : $Version Author: $Author License: $License
@@ -1422,7 +1461,7 @@ read -p $"Enter Your Choice (1-"$a")" choice
 
 
 tput sgr0 
-# if ! [[ "$choice" =~ ^[0-9]+$ ]] ;then 
+# if ! [[ "$choice" =~ [[:digit:]] ]] ;then 
 # function_menu_start
 # fi 
 ansadvanced="${menulabeladvanced[$(($choice-1))]}"
@@ -1483,7 +1522,7 @@ read -p $"Enter Your Choice (1-"$a")" choice
 
 
 tput sgr0 
-# if ! [[ "$choice" =~ ^[0-9]+$ ]] ;then 
+# if ! [[ "$choice" =~ [[:digit:]] ]] ;then 
 # function_menu_start
 # fi 
 screencast="${menulabeladvancedscreencast[$(($choice-1))]}"
@@ -2136,6 +2175,7 @@ function_ffmpeg_single_pass (){
 
 askopen=""
 a=1
+value=""
 
 if [[ ! -z "$pidofx"  ]] ; then  
 
@@ -2172,16 +2212,7 @@ if [[ ! -z "$pidofx"  ]] ; then
 			qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
 			a=$(($a+1))
 	done 3< "$listoffile"
-		if [[ "$value" == 100 ]];then
-		
-			function_check_for_errors
-		
-			if [[ "$passivepopup" == "enabled" ]];then
-				function_passivepopup_test $"FFmpeg service menu : Jobs done!"
-			fi
 
-			exit
-		fi
 else
 
 
@@ -2194,19 +2225,22 @@ echo $"FFmpeg Dolphin Service Menu Starting Conversion..."
 		value=$(($(($a*100))/$numberoffile))
 		echo " $a of $numberoffile $value%"
 		a=$(($a+1))
-		done 3< "$listoffile"
-		if [[ "$value" == 100 ]];then
-		
-			function_check_for_errors
-		
-			if [[ "$passivepopup" == "enabled" ]];then
-				function_passivepopup_test $"FFmpeg service menu : Jobs done!"
-			fi
+	done 3< "$listoffile"
 
-			exit
-		fi
 
 fi 
+
+
+	if [[ "$value" == 100 ]];then
+
+		function_check_for_errors
+
+		if [[ "$passivepopup" == "enabled" ]];then
+			function_passivepopup_test $"FFmpeg service menu : Jobs done!"
+		fi
+		
+		exit
+	fi
  
 
 }
@@ -2214,52 +2248,76 @@ fi
 function_ffmpeg_double_pass (){
 askopen=""
 a=1
-mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
-qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
-qdbus $mystufvariabletouseonmyscript  showCancelButton true
+
+if [[ ! -z "$pidofx"  ]] ; then  
+
+	mystufvariabletouseonmyscript=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+	qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+	qdbus $mystufvariabletouseonmyscript  showCancelButton true
  
 
-until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
+ 
 	
-	while  read <&3 line ; do
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
-		echo "Log File $line
+		while  read <&3 line ; do
+			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
+			echo "Log File $line
 		
-		">> "$templog"
-		echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
-		$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
-		" >> "$templog"
+			">> "$templog"
+			echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
+			$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
+			" >> "$templog"
 		
-		 $ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
 		 
-		while kill -0 $pid ; do #check if you can send message to ffmpeg 
-		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
-		kill $pid
-		function_check_for_errors
-		exit
-		fi
-		done
+			while kill -0 $pid ; do #check if you can send message to ffmpeg 
+			if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+			kill $pid
+			function_check_for_errors
+			exit
+			fi
+			done
 		 
-		qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
+			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
 		
-		$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
-		while kill -0 $pid ; do #check if you can send message to ffmpeg 
-		if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
-		kill $pid
-		function_check_for_errors
-		exit
-		fi
-		done
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			while kill -0 $pid ; do #check if you can send message to ffmpeg 
+			if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
+			kill $pid
+			function_check_for_errors
+			exit
+			fi
+			done
 
-		value=$(( $(($a*100))/$numberoffile ))
-		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
-		a=$(($a+1))
-		echo "
+			value=$(( $(($a*100))/$numberoffile ))
+			qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+			a=$(($a+1))
+			echo "
 		
-		" >> "$templog"
+			" >> "$templog"
 		done 3< "$listoffile"
 		
+else
+
+		while  read <&3 line ; do
+			echo $"FFmpeg Dolphin Service Menu Starting Conversion..."
+
+			echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
+			$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
+			" >> "$templog"
+			echo $"Starting Conversion...processing file $line pass1..."
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			echo $"pass1 done, doing pass 2 for file $line"
+		 	$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			value=$(( $(($a*100))/$numberoffile ))
+			qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+			a=$(($a+1))
+			echo "
 		
+			" >> "$templog"
+		done 3< "$listoffile"
+
+
+fi 
  
 
 
@@ -2270,9 +2328,9 @@ until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do
 		fi
 
 	function_check_for_errors
-		exit
+	exit
 	fi
-done
+ 
 
 }
 
@@ -2425,7 +2483,7 @@ read -p $"Enter Your Choice (1-"$a")" choice
 
 
 tput sgr0 
-# if ! [[ "$choice" =~ ^[0-9]+$ ]] ;then 
+# if ! [[ "$choice" =~ [[:digit:]] ]] ;then 
 # function_menu_start
 # fi 
 ans="${menulabel[$(($choice-1))]}"
@@ -2582,7 +2640,7 @@ lockdir=/tmp/ffmpeg_avconv_service_menu.lock
      exit 0
  fi
  
-Version="0.2.2"
+
 Author="nowardev@gmail.com"
 License="GLPv3"
 license="Copyright (C) 2012 nowardev nowardev@gmail.com
@@ -2604,7 +2662,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>."
 
 title=$"FFmpeg Dolphin Service Menu"
 listoffile="$HOME/ffmpeg-service-menu-qt.lst"
-easyprofile_file="$HOME/.FFmpeg_easy_profile"
+# easyprofile_file="$HOME/.FFmpeg_easy_profile"
 ffmpeg_profile_file_audio="$HOME/.FFmpeg_profiles-qt_audio.lst"
 ffmpeg_profile_file_device="$HOME/.FFmpeg_profiles-qt_device.lst"
 ffmpeg_profile_file_video="$HOME/.FFmpeg_profiles-qt_video.lst"
@@ -2617,21 +2675,11 @@ probe=$(type -p ffprobe)
 
 threads=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 numberoffile=$(wc -l <"$listoffile")
-easyprofile=$(awk -F':' '/easyprofile:/{print $2}' "$easyprofile_file")
+easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
 
 
 
-if [[ -z "$threads" || $threads == [[:digit:]]  ]];then
-threads="1"
-echo $"unable to detect cpu number ... bug?"
-fi
 
-
-if [[ -z "$easyprofile"  ]];then
-echo "no easy profile found autogenerating.."
-easyprofile="easyprofile: -sameq"
-echo $easyprofile >"$easyprofile_file"
-fi
 
 
 
@@ -2653,7 +2701,7 @@ echo "Version $Version
 Author $Author
 License $License
 List of Files location $listoffile
-easyprofile_file location $easyprofile_file
+# easyprofile_file location $easyprofile_file
 FFmpeg Audio profile location $ffmpeg_profile_file_audio
 FFmpeg Device profile location  $ffmpeg_profile_file_device
 FFmpeg Video profile location $ffmpeg_profile_file_video
