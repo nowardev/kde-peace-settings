@@ -16,82 +16,9 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+#
 
  
-lockdir=/tmp/ffmpeg_avconv_service_menu.lock
- if mkdir "$lockdir"
- then
-     echo >&2 "successfully acquired lock"
-
-     # Remove lockdir when the script finishes, or when it receives a signal
-     trap 'rm -rf "$lockdir"' 0    # remove directory when script finishes
-     trap "exit 2" 1 2 3 15        # terminate script when receiving signal
-
-     # Optionally create temporary files in this directory, because
-     # they will be removed automatically:
-     tmpfile=$lockdir/filelist
-
- else
-     echo >&2 "cannot acquire lock, giving up on $lockdir if you want run this script you need to do rm -R $lockdir"
-     exit 0
- fi
- 
-Version="0.2.1"
-Author="nowardev@gmail.com"
-License="GLPv3"
-license="Copyright (C) 2012 nowardev nowardev@gmail.com
- 
-This file is part of kde-peace-settings.
- 
-kde-peace-settings is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-This program is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>."
-
-title=$"FFmpeg Dolphin Service Menu"
-listoffile="$HOME/ffmpeg-service-menu-qt.lst"
-easyprofile_file="$HOME/.FFmpeg_easy_profile"
-ffmpeg_profile_file_audio="$HOME/.FFmpeg_profiles-qt_audio.lst"
-ffmpeg_profile_file_device="$HOME/.FFmpeg_profiles-qt_device.lst"
-ffmpeg_profile_file_video="$HOME/.FFmpeg_profiles-qt_video.lst"
-templog="/tmp/ffmpeg_peace_dolphin_service_menu.log"
-ffmpeg_service_menu_settings="$HOME/.FFmpeg_service_menu_settings"
-resetlistafterconversion="yes"
-passivepopup="enabled"
-pidofx="$(pidof X)"
-probe=$(type -p ffprobe)
-
-threads=$(cat /proc/cpuinfo | grep processor | wc -l)
-numberoffile=$(wc -l <"$listoffile")
-echo "wc -l <"$listoffile"  $numberoffile" >/tmp/stica
-
-easyprofile=$(awk -F':' '/easyprofile:/{print $2}' "$easyprofile_file")
-
-
-
-if [[ -z "$threads" || $threads == [[:digit:]]  ]];then
-threads="1"
-echo $"unable to detect cpu number ... bug?"
-fi
-
-
-if [[ -z "$easyprofile"  ]];then
-echo "no easy profile found autogenerating.."
-easyprofile="easyprofile: -sameq"
-echo $easyprofile >"$easyprofile_file"
-fi
-
-#DONE
-
 function_set_antix (){
 
 pidofx=""
@@ -163,10 +90,6 @@ screencastfunctionslowcpu="$( awk  '/Screencast Slow Cpu:/{for(i=4;i<=NF; i++) {
 screencastfunctionslowcpu_detect="$( awk  '/Screencast Slow Cpu Detect Window:/{for(i=6;i<=NF; i++) {printf( " %s " , $i)}}'  "$ffmpeg_service_menu_settings" |awk '{gsub(/hw 0\,0/,"hw\:0\,0"); print}')"
  
  
- echo "$screencastfunctionfastcpu" >/tmp/a
- echo "$screencastfunctionslowcpu" >>/tmp/a
- echo "$screencastfunctionfastcpu_detect" >>/tmp/a
- echo "$screencastfunctionslowcpu_detect" >>/tmp/a
  
 
 #awk  '/Screencast Slow Cpu Detect Window:/{for(i=6;i<=NF; i++) {printf( " %s " , $i)}}' |awk {gsub(/hw 0,0/,"hw:0,0"); print}
@@ -185,7 +108,7 @@ esac
 
 
 if [[ -z "$threads"  ]];then
-	threadsdetected=$(cat /proc/cpuinfo | grep processor | wc -l)
+	threadsdetected=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 	if [[ $threadsdetected  =~ ^[0-9]+$  ]] ; then
 			threads=1
 	fi
@@ -222,11 +145,11 @@ esac
 function_create_settings (){
 commonaudioformats="3gp aiff aac ac3 alac ape atrac  flac  m4a m4p midi mmf mp3 mp2 ogg oga ra rm ram tta wav wavpack wma"
 commonvideoformats="3gp 3gp2 3gpp asf avi dv flv m2ts mkv mov mpg  mpeg mpeg4 mp4 ogv rm swf ts vob vp8 xvid webm wmv"
-screencastfunctionfastcpu="-s $(xrandr | awk '/, current /{gsub(/\,/,""); print $8"x"$10}') -i :0.0   -r 15 -vcodec h264   -f alsa -ac 2  -i hw:0,0 -ar 48000  -acodec pcm_s16le  -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
-screencastfunctionfastcpu_detect=" -r 15 -vcodec h264   -f alsa -ac 2  -i hw:0,0 -ar 48000  -acodec pcm_s16le  -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
+screencastfunctionfastcpu="-s $(xrandr | awk '/, current /{gsub(/\,/,""); print $8"x"$10}') -i :0.0   -r 15 -vcodec h264   -f alsa -ac 2  -i hw:0,0 -ar 48000  -acodec pcm_s16le  -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y $HOME/Screencast.avi"
+screencastfunctionfastcpu_detect=" -r 15 -vcodec h264   -f alsa -ac 2  -i hw:0,0 -ar 48000  -acodec pcm_s16le  -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y $HOME/Screencast.avi"
 
-screencastfunctionslowcpu="-s $(xrandr | awk '/, current /{gsub(/\,/,""); print $8"x"$10}') -i :0.0   -f  alsa  -ac 2 -ar 48000  -i hw:0,0   -acodec pcm_s16le  -vcodec  ljpeg -r 15  -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
-screencastfunctionslowcpu_detect="-f  alsa  -i hw:0,0  -ac 2 -ar 48000 -acodec pcm_s16le -r 15 -vcodec  ljpeg -threads $(cat /proc/cpuinfo | grep processor | wc -l) -y $HOME/Screencast.avi"
+screencastfunctionslowcpu="-s $(xrandr | awk '/, current /{gsub(/\,/,""); print $8"x"$10}') -i :0.0   -f  alsa  -ac 2 -ar 48000  -i hw:0,0   -acodec pcm_s16le  -vcodec  ljpeg -r 15  -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y $HOME/Screencast.avi"
+screencastfunctionslowcpu_detect="-f  alsa  -i hw:0,0  -ac 2 -ar 48000 -acodec pcm_s16le -r 15 -vcodec  ljpeg -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y $HOME/Screencast.avi"
 
 
 if [[ -z "$pidofx" ]] ; then
@@ -251,7 +174,7 @@ read
 	fi
 
 easyprofile="$REPLY"
-$REPLY=""
+REPLY=""
 echo $"Where is ffmpeg or avconv path ? should be in $(type -p ffmpeg) leave empty if you know it's on /usr/bin/ffmpeg "
 read  -e 
 	if [[ -z $REPLY ]];then
@@ -1090,7 +1013,7 @@ _EOF
 i=$(($i+1))
 done < "$1"
 
-echo $i >/tmp/a
+ 
 a=0
 b=7
 
@@ -1568,7 +1491,7 @@ echo $screencast
 function_record_screen "$screencast"
 
 # function_ansmenu_advanced
-# echo $screencast  >/tmp/a
+ 
 }
 
 function_ansmenu_advanced(){
@@ -1733,7 +1656,7 @@ fi
 }
 
 function_compile_ffmpeg_fromgit(){
-threadsdetected=$(cat /proc/cpuinfo | grep processor | wc -l)
+threadsdetected=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 # program[0]=make
 program[1]=git
 program[2]=awk
@@ -1863,7 +1786,7 @@ while  read  line ; do
 
 done  < "$listoffile"
 
-  #ffmpeg -f image2 -i img%d.jpg /tmp/a.mpg
+ 
 function_compile_video
 
 }
@@ -2639,9 +2562,85 @@ kdialog --title "$title" --yesno $"You have not choose an option do you want exi
 
 ####################START SCRIPT############################
 
+
+
+lockdir=/tmp/ffmpeg_avconv_service_menu.lock
+ if mkdir "$lockdir"
+ then
+     echo >&2 "successfully acquired lock"
+
+     # Remove lockdir when the script finishes, or when it receives a signal
+     trap 'rm -rf "$lockdir"' 0    # remove directory when script finishes
+     trap "exit 2" 1 2 3 15        # terminate script when receiving signal
+
+     # Optionally create temporary files in this directory, because
+     # they will be removed automatically:
+     tmpfile=$lockdir/filelist
+
+ else
+     echo >&2 "cannot acquire lock, giving up on $lockdir if you want run this script you need to do rm -R $lockdir"
+     exit 0
+ fi
+ 
+Version="0.2.2"
+Author="nowardev@gmail.com"
+License="GLPv3"
+license="Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+This file is part of kde-peace-settings.
+ 
+kde-peace-settings is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>."
+
+title=$"FFmpeg Dolphin Service Menu"
+listoffile="$HOME/ffmpeg-service-menu-qt.lst"
+easyprofile_file="$HOME/.FFmpeg_easy_profile"
+ffmpeg_profile_file_audio="$HOME/.FFmpeg_profiles-qt_audio.lst"
+ffmpeg_profile_file_device="$HOME/.FFmpeg_profiles-qt_device.lst"
+ffmpeg_profile_file_video="$HOME/.FFmpeg_profiles-qt_video.lst"
+templog="/tmp/ffmpeg_peace_dolphin_service_menu.log"
+ffmpeg_service_menu_settings="$HOME/.FFmpeg_service_menu_settings"
+resetlistafterconversion="yes"
+passivepopup="enabled"
+pidofx="$(pidof X)"
+probe=$(type -p ffprobe)
+
+threads=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
+numberoffile=$(wc -l <"$listoffile")
+easyprofile=$(awk -F':' '/easyprofile:/{print $2}' "$easyprofile_file")
+
+
+
+if [[ -z "$threads" || $threads == [[:digit:]]  ]];then
+threads="1"
+echo $"unable to detect cpu number ... bug?"
+fi
+
+
+if [[ -z "$easyprofile"  ]];then
+echo "no easy profile found autogenerating.."
+easyprofile="easyprofile: -sameq"
+echo $easyprofile >"$easyprofile_file"
+fi
+
+
+
+###provide the correct loadsettings fucntion if wx is loaded
 if [[ "$1" == "-wx" ]] ; then 
 function_set_antix
 function_load_settings
+elif [[ "$1" == "-h" || "$1" == "-hx" ]]; then 
+echo
 else 
 function_load_settings
 fi 
@@ -2663,7 +2662,7 @@ FFmpeg service menu Settings Location $ffmpeg_service_menu_settings
 Reset list after conversion $resetlistafterconversion
 OverWrite files if they are present ? $overwrite
 Cpu used $threads
-Cpu detected $(cat /proc/cpuinfo | grep processor | wc -l)
+Cpu detected $(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 Number of files  $numberoffile
 Easy profile used $easyprofile" >>"$templog"
 
@@ -2738,15 +2737,6 @@ else
 function_help; exit 1
 fi
 
-# resolutionH=$(($(xrandr 2>&1| awk '/*+/{gsub(/  /,"");gsub(/x/," ") ;print $2}')/2))
-# resolutionL=$(($(xrandr 2>&1| awk '/*+/{gsub(/  /,"");gsub(/x/," ") ;print $1}')/5))
-# resolutionLbis=$(($(xrandr 2>&1| awk '/*+/{gsub(/  /,"");gsub(/x/," ") ;print $1}')/2))
-# 
-# if [[ -z "$resolutionH" && -z "$resolutionL" ]] ; then 
-# geometry="--geometry 500x300"
-# else 
-# geometry=""
-# fi 
-
+ 
 
  
