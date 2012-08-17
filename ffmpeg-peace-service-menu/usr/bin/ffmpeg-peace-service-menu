@@ -2310,11 +2310,12 @@ else
 			echo "$ffmpegpath -i   "$line" $profile  -pass 1 "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
 			
 			echo $"Starting Conversion...processing file $line pass 1..."
-			$ffmpegpath -i   "$line"  $profile $overwrite -pass 1 "${line%%.*}.$outformat"  #2>>"$templog"  
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass 1 "${line%%.*}.$outformat"   
 			echo "$ffmpegpath -i   "$line" $profile  -pass 2 "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
 			echo >> "$templog"
 			echo $"pass 1 done, doing pass 2 for file $line"
-		 	$ffmpegpath -i   "$line"  $profile $overwrite -pass 2 "${line%%.*}.$outformat"  #2>>"$templog"  
+		 	$ffmpegpath -i   "$line"  $profile $overwrite -pass 2 "${line%%.*}.$outformat"  2>>"$templog"
+		 	echo " $a of $numberoffile $value%"
 			value=$(( $(($a*100))/$numberoffile ))
 			
 			a=$(($a+1))
