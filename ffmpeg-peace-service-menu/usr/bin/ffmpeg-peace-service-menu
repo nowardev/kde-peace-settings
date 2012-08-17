@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.2.2"
+Version="0.2.3"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -268,7 +268,7 @@ REPLY=""
 echo $"FFmpeg or Avconv Function to record video (VERSION SMALL SIZE FILE BUT MUCH MORE WORK FOR CPU)"
 echo 
 echo "this is the current version $screencastfunctionfastcpu  press ENTER if you don't know or you just like it"
-read  "$REPLY"
+read  
 	if [[ -z "$REPLY" ]];then
 		screencastfunctionfastcpu=$screencastfunctionfastcpu
 	else 
@@ -279,7 +279,7 @@ echo
 echo $"FFmpeg or Avconv Function to record video VERSION DETECT WINDOW SMALL SIZE FILE BUT MUCH MORE WORK FOR CPU)"
 echo 
 echo "this is the current version $screencastfunctionfastcpu_detect  press ENTER if you don't know or you just like it"
-read  "$REPLY"
+read  
 	if [[ -z "$REPLY" ]];then
 		echo $"Default $screencastfunctionfastcpu_detect choosen"
 	else 
@@ -290,7 +290,7 @@ echo
 echo $"FFmpeg or Avconv Function to record video (VERSION FAST BUT BIG FILES)"
 echo 
 echo "this is the current version $screencastfunctionslowcpu  press ENTER if you don't know or you just like it"
-read  "$REPLY"
+read
 	if [[ -z "$REPLY" ]];then
 		echo $"Default $screencastfunctionslowcpu choosen"
 	else 
@@ -301,7 +301,7 @@ echo
 echo $"FFmpeg or Avconv Function to record video (DETECT WINDOW VERSION FAST BUT BIG FILES)"
 echo 
 echo "this is the current version $screencastfunctionslowcpu_detect  press ENTER if you don't know or you just like it"
-read  "$REPLY"
+read
 	if [[ -z "$REPLY" ]];then
 		echo $"Default $screencastfunctionslowcpu_detect choosen"
 	else 
@@ -543,7 +543,7 @@ if [[ -z "$ffmpegpath"  ]]; then #if is empty
 
 	if [[ -z "$pidofx" ]] ; then
 		echo $"ffmpeg is not system installed, please give me a ffmpeg's path"
-		read  "$REPLY"
+		read
 		ffmpegpath="$REPLY"
 			if [[ -z "$ffmpegpath"  ]]; then
 				echo $"ffmpegpath empty... exiting"
@@ -731,13 +731,12 @@ fi
 
 
 
-if [[ $1 == standard ]] ; then 
+if [[ -z $1 ]] ; then 
     function_menu_start
-elif [[ $1 == silent ]] ; then
+elif [[ "$1" == "silent" ]] ; then
 echo 
 fi 
-set +x
-function_menu_start
+ 
 }
 
 
@@ -833,8 +832,9 @@ function_open_log () {
 				function_menu_start
 			fi
 	else
-		read -p $"Do you want open the log ?  (y\n\m m for main menu )" choice
-			case $read in 
+		choice=""
+		read -p $"Do you want open the log ?  (y\n )" choice
+			case "$choice" in 
 			y|Y|yes|YES)
 			function_open_text_file "$templog"
 			function_delete silent
@@ -1045,7 +1045,7 @@ profileoutformat[i]="$(awk '{print $2}' << _EOF
 $line
 _EOF
 )"
-profilearray[i]="$(awk '{for(a=3;a<NF ; a++) {print $a}}' << _EOF
+profilearray[i]="$(awk '{for(a=3;a<=NF ; a++) {printf " %s ", $a}}' << _EOF
 $line
 _EOF
 )"
@@ -1082,22 +1082,23 @@ tput cup $(($c+2)) 16
 echo $"Enter Your Choice (1-$((${#profilename[@]}+1)))"
 read 
 ansprofile="${profilearray[$(($REPLY-1))]}"
+outformat="${profileoutformat[$(($REPLY-1))]}"
+case "$ansprofile" in 
+"Back To the Main Menu")
+function_menu_start
+;;
+*)
+	if [[ -z "$ansprofile" ]]; then
+		function_message_error  $"No profile given please select a profile"
+		function_menu_start
+	else
+	profile=""$ansprofile""
+	
+	fi 
+;;
+esac
+echo "profile "$profile" outformat: $outformat"
 
-# case "$ansprofile" in 
-# "Back To the Main Menu")
-# function_menu_start
-# ;;
-# *)
-# 	if [[ -z "$ansprofile" ]]; then
-# 		function_message_error  $"No profile given please select a profile"
-# 		function_menu_start
-# 	else
-# 	profile=""$ansprofile""
-# 	outformat="${profileoutformat[$(($REPLY-1))]}"
-# 	fi 
-# ;;
-# esac
-echo ""$ansprofile""
  
 }
 
@@ -1215,10 +1216,13 @@ function_generate_audio_preset(){
 echo "Ac3_HQ_Stereo ac3 -f ac3 -acodec ac3 -ab 384k -ar 48000 -ac 2
 Ac3_MQ_Stereo ac3 -f ac3 -acodec ac3 -ab 192k -ar 48000 -ac 2
 Ac3_LQ_Stereo ac3 -f ac3 -acodec ac3 -ab 64k -ar 48000 -ac 2
-OGG OGG -aq 60 -ac 2 
+OGG_quality_60 OGG -aq 60 -ac 2 
 OGG_HQ ogg -ab 384k -ac 2 -ar 44100
 OGG_MQ ogg  -ab 160k -ac 2 -ar 44100
 OGG_LQ ogg  -ab 64k -ac 2 -ar 44100
+OGG_HQ_compiled_ffmpeg  ogg -ab 384k -acodec libvorbis -ac 2 -ar 44100
+OGG_MQ_compiled_ffmpeg  ogg -ab 192k -acodec libvorbis -ac 2 -ar 44100
+OGG_LQ_compiled_ffmpeg  ogg -ab 64k -acodec libvorbis -ac 2 -ar 44100
 MP3_HQ mp3 -acodec libmp3lame -ab 384k -ac 2 -ar 44100
 MP3_MQ mp3 -acodec libmp3lame -ab 160k -ac 2 -ar 44100
 MP3_LQ mp3 -acodec libmp3lame -ab 64k -ac 2 -ar 44100
@@ -2259,15 +2263,15 @@ if [[ ! -z "$pidofx"  ]] ; then
  
 	
 		while  read <&3 line ; do
-			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass1"
+			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass 1"
 			echo "Log File $line
 		
 			">> "$templog"
-			echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
-			$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
+			echo "$ffmpegpath -i   "$line" $profile  -pass 1 $overwrite  "${line%%.*}.$outformat"
+			$ffmpegpath -i   "$line" $profile  -pass 2 "$overwrite" "${line%%.*}.$outformat"
 			" >> "$templog"
 		
-			$ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass 1 "${line%%.*}.$outformat"   2>>"$templog" & pid=$!
 		 
 			while kill -0 $pid ; do #check if you can send message to ffmpeg 
 			if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
@@ -2277,9 +2281,11 @@ if [[ ! -z "$pidofx"  ]] ; then
 			fi
 			done
 		 
-			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass2"
+			qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line pass 2"
+			echo "$ffmpegpath -i   "$line" $profile  -pass 2 "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
+			echo >> "$templog"
 		
-			$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass 2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
 			while kill -0 $pid ; do #check if you can send message to ffmpeg 
 			if [[ "$(qdbus  $mystufvariabletouseonmyscript wasCancelled)" == true ]]; then 
 			kill $pid
@@ -2301,15 +2307,16 @@ else
 		while  read <&3 line ; do
 			echo $"FFmpeg Dolphin Service Menu Starting Conversion..."
 
-			echo "$ffmpegpath -i   "$line" $profile  -pass1 "$overwrite" "${line%%.*}.$outformat"
-			$ffmpegpath -i   "$line" $profile  -pass2 "$overwrite" "${line%%.*}.$outformat"
-			" >> "$templog"
-			echo $"Starting Conversion...processing file $line pass1..."
-			$ffmpegpath -i   "$line"  $profile $overwrite -pass1 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
-			echo $"pass1 done, doing pass 2 for file $line"
-		 	$ffmpegpath -i   "$line"  $profile $overwrite -pass2 "${line%%.*}.$outformat"  2>>"$templog" & pid=$!
+			echo "$ffmpegpath -i   "$line" $profile  -pass 1 "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
+			
+			echo $"Starting Conversion...processing file $line pass 1..."
+			$ffmpegpath -i   "$line"  $profile $overwrite -pass 1 "${line%%.*}.$outformat"  #2>>"$templog"  
+			echo "$ffmpegpath -i   "$line" $profile  -pass 2 "$overwrite" "${line%%.*}.$outformat"" >> "$templog"
+			echo >> "$templog"
+			echo $"pass 1 done, doing pass 2 for file $line"
+		 	$ffmpegpath -i   "$line"  $profile $overwrite -pass 2 "${line%%.*}.$outformat"  #2>>"$templog"  
 			value=$(( $(($a*100))/$numberoffile ))
-			qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+			
 			a=$(($a+1))
 			echo "
 		
@@ -2675,7 +2682,7 @@ probe=$(type -p ffprobe)
 
 threads=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 numberoffile=$(wc -l <"$listoffile")
-easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
+# easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
 
 
 
