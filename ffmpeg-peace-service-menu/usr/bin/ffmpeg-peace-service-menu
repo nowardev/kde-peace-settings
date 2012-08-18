@@ -1220,16 +1220,16 @@ OGG_quality_60 OGG -aq 60 -ac 2
 OGG_HQ ogg -ab 384k -ac 2 -ar 44100
 OGG_MQ ogg  -ab 160k -ac 2 -ar 44100
 OGG_LQ ogg  -ab 64k -ac 2 -ar 44100
-OGG_HQ_compiled_ffmpeg  ogg -ab 384k -acodec libvorbis -ac 2 -ar 44100
-OGG_MQ_compiled_ffmpeg  ogg -ab 192k -acodec libvorbis -ac 2 -ar 44100
-OGG_LQ_compiled_ffmpeg  ogg -ab 64k -acodec libvorbis -ac 2 -ar 44100
+OGG_HQ_compiled_ffmpeg  ogg -vn -ab 384k -acodec libvorbis -ac 2 -ar 44100
+OGG_MQ_compiled_ffmpeg  ogg -vn -ab 192k -acodec libvorbis -ac 2 -ar 44100
+OGG_LQ_compiled_ffmpeg  ogg -vn -ab 64k -acodec libvorbis -ac 2 -ar 44100
 MP3_HQ mp3 -acodec libmp3lame -ab 384k -ac 2 -ar 44100
 MP3_MQ mp3 -acodec libmp3lame -ab 160k -ac 2 -ar 44100
 MP3_LQ mp3 -acodec libmp3lame -ab 64k -ac 2 -ar 44100
 MP3_(Mono) mp3 -acodec libmp3lame -ab 32k -ac 1 -ar 22050
 MPEG4_Audio m4a -vn -acodec libfaac -ab 112k -ac 2
 Wav_for_CD wav -vn -ar 44100
-WMA wma -acodec wmav2 -ab 160k" > "$ffmpeg_profile_file_audio"
+WMA wma -vn -acodec wmav2 -ab 160k" > "$ffmpeg_profile_file_audio"
 
 }
 
