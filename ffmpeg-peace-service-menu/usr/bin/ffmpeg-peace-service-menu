@@ -47,6 +47,118 @@ fi
 
 }
 
+function_message(){
+if [[ -z "$pidofx" ]] ; then
+
+echo "$1"
+
+else
+
+kdialog --msgbox "$1"
+fi
+
+
+}
+
+
+function_message_error(){
+
+if [[ -z "$pidofx" ]] ; then
+
+echo "ERROR! $1"
+
+else
+
+kdialog --error "$1"
+fi
+
+
+}
+
+
+
+function_passivepopup (){
+
+kdialog --passivepopup "$1" "$2"
+
+}
+
+function_passivepopup_test (){
+
+if [[ ! -z  "$pidofx" ]]; then 
+	if [[ "$passivepopup" == "enabled" ]] ; then
+
+		if [[ ! -z "$1" ]] ;then
+	
+			if [[ "$1" == "FFmpeg service menu : Jobs done!"  ]]; then 
+		
+			function_passivepopup "$1" 3
+		
+			else
+				if [[ -z "$2" ]];then
+		
+					function_passivepopup "$1"
+				else
+					function_passivepopup "$1" "$2"
+				fi
+			fi
+		else
+			function_message_error $"no text for popup given :S"
+		fi
+ 
+			
+			
+
+	
+	else
+	echo "$1"
+	fi
+else 
+tput setaf 5
+tput bold
+echo "$1"
+fi 
+}
+
+function_open_log () {
+ if (( askopen >= 1 )); then 
+	function_message_error $"FFmpeg failed! check the log!"
+	if [[ ! -z "$pidofx" ]]; then 
+		ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? Errors Found $askopen")
+			if [[ $? == 0 ]] ; then
+				function_open_text_file "$templog"
+				function_delete standard
+			else
+				function_menu_start
+			fi
+	else
+		choice=""
+		read -p $"Do you want open the log ?  (y\n )" choice
+			case "$choice" in 
+			y|Y|yes|YES)
+			function_open_text_file "$templog"
+			function_delete silent
+			;;
+			n|N|no|NO)
+			function_menu_start
+			;;
+			*)
+			echo $"Hey! i have said y or n you fucking idiot have choosen $choice .."
+			exit 1
+			;;
+			esac
+			
+
+	fi 
+elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
+
+function_delete standard
+
+elif [[ "$askopen" == 0 ]]; then
+function_delete silent
+fi
+
+}
 
 function_load_settings (){
 
@@ -592,33 +704,7 @@ fi
 
 }
 
-function_message(){
-if [[ -z "$pidofx" ]] ; then
 
-echo "$1"
-
-else
-
-kdialog --msgbox "$1"
-fi
-
-
-}
-
-
-function_message_error(){
-
-if [[ -z "$pidofx" ]] ; then
-
-echo "ERROR! $1"
-
-else
-
-kdialog --error "$1"
-fi
-
-
-}
 
 function_help (){
 
@@ -772,93 +858,7 @@ function_menu_start
 
 
 
-function_reload_function(){
-$1
-}
 
-
-function_passivepopup (){
-
-kdialog --passivepopup "$1" "$2"
-
-}
-
-function_passivepopup_test (){
-
-if [[ ! -z  "$pidofx" ]]; then 
-	if [[ "$passivepopup" == "enabled" ]] ; then
-
-		if [[ ! -z "$1" ]] ;then
-	
-			if [[ "$1" == "FFmpeg service menu : Jobs done!"  ]]; then 
-		
-			function_passivepopup "$1" 3
-		
-			else
-				if [[ -z "$2" ]];then
-		
-					function_passivepopup "$1"
-				else
-					function_passivepopup "$1" "$2"
-				fi
-			fi
-		else
-			function_message_error $"no text for popup given :S"
-		fi
- 
-			
-			
-
-	
-	else
-	echo "$1"
-	fi
-else 
-tput setaf 5
-tput bold
-echo "$1"
-fi 
-}
-
-function_open_log () {
- if (( askopen >= 1 )); then 
-	function_message_error $"FFmpeg failed! check the log!"
-	if [[ ! -z "$pidofx" ]]; then 
-		ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? Errors Found $askopen")
-			if [[ $? == 0 ]] ; then
-				function_open_text_file "$templog"
-				function_delete standard
-			else
-				function_menu_start
-			fi
-	else
-		choice=""
-		read -p $"Do you want open the log ?  (y\n )" choice
-			case "$choice" in 
-			y|Y|yes|YES)
-			function_open_text_file "$templog"
-			function_delete silent
-			;;
-			n|N|no|NO)
-			function_menu_start
-			;;
-			*)
-			echo $"Hey! i have said y or n you fucking idiot have choosen $choice .."
-			exit 1
-			;;
-			esac
-			
-
-	fi 
-elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
-
-function_delete standard
-
-elif [[ "$askopen" == 0 ]]; then
-function_delete silent
-fi
-
-}
 
 function_check_for_errors (){
 
