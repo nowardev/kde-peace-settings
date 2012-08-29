@@ -86,6 +86,9 @@ fi
 
 }
 
+function_dpkg_force_remove(){
+ dpkg --force-all -P "$1"
+}
  
 function_dpkgi(){
 
