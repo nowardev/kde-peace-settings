@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.2.3"
+Version="0.0.1"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
 
 #This file is part of kde-peace-settings.
@@ -17,6 +17,94 @@ Version="0.2.3"
 #You should have received a copy of the GNU General Public License
 #along with this program. If not, see <http://www.gnu.org/licenses/>.
 #
+
+
+function_help (){
+	
+	message=$"$scriptname is released with license $lincense 
+	
+USAGE  :
+	
+$scriptname -h print this help                 No X server
+$scriptname -hx print this help                With X server
+$scriptname -f <file1> <file2> ..              Add files to upload list
+$scriptname -fo <folder1> <folder2>...         Add Folders to upload list
+$scriptname -fox <folder1> <folder2>...        Add Folders to upload list  
+$scriptname -e                                 Edit upload list with nano
+$scriptname -ek                                Edit upload list with kate  
+$scriptname -d                                 DELETE convesion list
+$scriptname -r                                 RESTORE you old upload list
+$scriptname -mx                                start the kdialog menu  
+$scriptname -wx                                start the script for servers
+	
+	"
+}
+
+function_create_servicemenufolder () {
+	if [[ "$kdehome" == "$HOME/.local/" ]] ; then
+		
+		
+	else 
+				if [[ ! -d "$servicemenufolder" ]]; then 
+				mkdir "$servicemenufolder"
+				fi
+	fi 
+	
+}
+
+function_create_settings () {
+	
+	
+	
+	
+	function_load_settings
+}
+
+function_load_settings () {
+	
+}
+
+function_encrypt_password () {
+	openssl des3 -salt -in "$passwordfile" -out "$encryptedfile"
+}
+
+function_dencrypt_password () {
+	  
+	openssl des3 -d -salt -in "$encryptedfile" -out "$dencryptedfile"
+}
+
+
+function_check_program(){
+	
+	if [[ -z "$pidofx" ]] ; then
+
+	program[0]=openssl
+	program[1]=imgupload
+	program[2]=awk
+	for program in "${program[@]}";
+	do if ! type -p "$program" >/dev/null;
+	then echo "$program not found; PLEASE INSTALL IT" >&2
+	echo "error exiting..." >&2
+	exit 1;
+	fi; done
+
+	else
+
+	program[0]=openssl
+	program[1]=imgupload
+	program[2]=kdialog
+	program[3]=awk
+	for program in "${program[@]}";
+	do if ! type -p "$program" >/dev/null;
+	then kdialog --msgbox $"$program not found; PLEASE INSTALL IT" >&2
+	echo "error exiting..." >&2
+	exit 1;
+	fi; done
+	
+fi
+	
+}
+
 
 
 function_set_antix (){
@@ -90,13 +178,161 @@ done< <(find "$1" -type f)
 
 }
 
-function_upload_nologin () {
+function_get_servers_list () {
 
 
-imgupload 
+servers=$(imgupload --list 2>&1| awk ' !/Zenden Image Uploader console/{printf(" \"%s\" \n", $0)}')
 }
 
 
-imgupload --list 2>&1| awk ' !/Zenden Image Uploader console/{printf(" \"%s\" \n", $0)}')
+
+function_loop_nologin() {
+	while read line
+		do
+			imgupload --server "$server" "$line"
+		done<"$listoffile"
+	
+	
+}
 
 
+function_loop_login() {
+	while read line
+		do
+			imgupload --server "$server" --login "$login" --password "$password" "$line"
+		done<"$listoffile"
+	
+	
+}
+
+function_delete (){
+if [[ -e "$listoffile"    ]] ; then #&& -e "$templog"
+
+
+function_passivepopup "mv "$listoffile"  $HOME/.local/share/Trash/files/
+mv "$templog"  "$HOME"/.local/share/Trash/files/ "
+mv "$listoffile"  $HOME/.local/share/Trash/files/
+#mv "$templog"  "$HOME"/.local/share/Trash/files/
+# function_passivepopup_test $"Old list  $listoffile deleted and Old log $templog deleted"
+# 
+# elif [[ ! -e "$listoffile" ]] ; then
+# function_passivepopup_test $"i can't do it i can't find the file $listoffile"
+# elif [[ ! -e "$templog" ]] ; then
+# function_passivepopup_test $"i can't do it i can't find the file $templog"
+else
+function_passivepopup_test $"i can't do it i can't find the file  $listoffile   
+
+Please add some files to $listoffile? 
+
+run this :
+
+$scriptname -f file1 file2 file3
+
+or if you prefer add a folder 
+
+$scriptname -fo folder1 folder2 folder3
+"
+fi
+
+
+
+if [[ -z $1 ]] ; then 
+    function_menu_start
+elif [[ "$1" == "silent" ]] ; then
+echo 
+fi 
+ 
+}
+
+function_search_kdehome (){
+	if [[ -d "$HOME/.kde" ]]; then 
+		kdehome="$HOME/.kde/"
+	elif [[ -d "$HOME/.kde4" ]]; then 
+		kdehome="$HOME/.kde4/"
+	else
+		kdehome="$HOME/.local/"
+	fi
+}
+
+
+########START SCRIPT##############################
+function_search_kdehome
+lincense="GPLv3"
+pidofx="$(pidof X)"
+scriptname="imgupload-servicemenu"
+listoffile="$HOME/.imgupload-servicemenu-list.lst"
+servicemenufolder="$kdehome/share/apps/imgupload-servicemenu-qt"
+encryptedfile="$kdehome/imgupload-servicemenu-encrypt"
+dencryptedfile=""
+passwordfile=""
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+	-hx) function_help x; exit 0;;
+	  
+	-f) if (($# > 1)); then
+			shift ;for file in "$@"; do
+		echo "$file" >>$listoffile
+
+		done
+		  else
+			echo $"-f requires files" 1>&2
+			exit 1
+		  fi ;;
+		  
+	-fo) if (($# > 1)); then
+			shift ;for folder in "$@"; do
+		function_add_folder_shell "$folder"  
+		done
+		  else
+			echo $"-f requires a folder at least" 1>&2
+			exit 1
+		  fi ;;
+		 -fox)if (($# > 1)); then
+			shift ;for folder in "$@"; do
+		function_add_folder "$folder"  
+		done
+		  else
+			kdialog --error $"-f requires a folder at least" 1>&2
+			exit 1
+		  fi
+		 ;;
+	-a)
+	function_analyze "$2"
+# 	function_analyze n "$2"
+	;;
+	-e)  nano "$listoffile"
+	;;
+	-ek)  kate "$listoffile"
+	;;
+	-d) function_delete silent
+	;;
+	-decompile)
+	function_build
+	;;
+	-cf)
+	function_compile_ffmpeg_fromgit
+	;;
+	-tf)
+	function_test_ffmpeg
+	;;
+	-wx)
+	function_set_antix
+	function_menu_start
+	;;
+	-mx)
+	function_menu_start
+	;;
+	-r) 
+	function_restore
+	;;
+	setf)
+	function_set_ffmpegpath
+	;;
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+else
+function_help; exit 1
+fi
