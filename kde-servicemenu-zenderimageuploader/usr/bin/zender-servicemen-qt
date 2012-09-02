@@ -43,6 +43,10 @@ $scriptname -wx                                start the script for servers
 function_create_servicemenufolder () {
 	if [[ "$kdehome" == "$HOME/.local/" ]] ; then
 		
+				if [[ ! -d "$HOME/.local/share/apps" ]]; then 
+				mkdir "$HOME/.local/share/apps"
+				mkdir "$servicemenufolder"
+				fi
 		
 	else 
 				if [[ ! -d "$servicemenufolder" ]]; then 
@@ -52,11 +56,41 @@ function_create_servicemenufolder () {
 	
 }
 
+function_save_login_and_password () {
+	function_yesno $"Do you want set server login and passwords ?"
+	if [[ "$ans" == "yes" ]]; then 
+	
+	fi 
+	
+}
 function_create_settings () {
+
+	commonfomats="jpeg jpg png bmp gif tiff tif "
 	
+	if [[ -z "$pidofx" ]]; then 
+			read -p $"You can search for photos in a folder i will detect this formats $commonformats if you want only jpeg files you should set only jpeg because the loop will be faster ...PRESS ENTER IF YOU DON'T WANT BE BORED FROM THIS QUESTION"
+				if [[ -z "$REPLY" ]];then
+					commonfomats="jpeg jpg png bmp gif tiff tif "
+				else 
+					commonfomats="$REPLY"
+				fi
+			REPLY=""
+			read -p $"Choose your prefered server you can pick one of these : ${servers[@]}"
+				if [[ -z "$REPLY" ]];then
+					preferedserver="$defaultserver"
+				else 
+					commonfomats="$REPLY"
+				fi
+			REPLY=""
 	
+	else 
+		
+		commonformats="$(kdialog --title $"Kind of files you want detect " --checklist  $"Select the formats Image Uploader service menu should detected when you would like add a folder"bmp bmp on gif gif on jpeg jpeg on jpg jpg on pgm pgm off  png png on pnm pnm off svg svg off  tif tif on tiff tiff on)"
+		
+		preferedserver="$(kdialog --title $"$title"  $"Choose your prefered server you can pick one of these:" "${servers[@]}")"
 	
-	
+	fi 
+	function_save_login_and_password
 	function_load_settings
 }
 
@@ -66,14 +100,62 @@ function_load_settings () {
 
 function_encrypt_password () {
 	openssl des3 -salt -in "$passwordfile" -out "$encryptedfile"
+	rm "$passwordfile" 
 }
 
-function_dencrypt_password () {
+function_decrypt_password () {
 	  
-	openssl des3 -d -salt -in "$encryptedfile" -out "$dencryptedfile"
+	openssl des3 -d -salt -in "$encryptedfile" -out "$decryptedfile"
 }
 
+function_add_login_and_password () {
+	function_decrypt_password
+		if [[ -e "$passwordfile" ]];then 
+		rm "$passwordfile"
+		fi 
+	mv "$decryptedfile"  "$passwordfile"
+	function_ask_stuff_combo $"Choose a Server" $listservers
+	function_ask_stuff $"Insert the Login if the server doesn't need it leave it empty"
+	function_ask_stuff $"Insert the Password if the server doesn't need it leave it empty"
+	echo "$newserver/$newlogin/$newpassword" >>"$passwordfile"
+	function_encrypt_password
+	function_delete_password_and_temp_file
+	
+}
 
+function_ask_stuff () {
+	
+	if [[ -z "$pidofx" ]]; then
+	read  -p  "$1"
+
+	else
+		kdialog --title "$scriptname" --textinputbox "$1" 
+		
+	fi 
+}
+function_ask_stuff_combo () {
+	
+	if [[ -z "$pidofx" ]]; then
+	read  -p  "$1 aviable servers $2"
+
+	else
+		kdialog --title "$scriptname" --combobox "$1" $2
+		
+	fi 
+}
+
+function_delete_password_and_temp_file () {
+	if [[ -e "$passwordfile" ]];then 
+		rm "$passwordfile"
+	fi 
+	
+	if [[ -e "$decryptedfile" ]];then 
+		rm "$decryptedfile"
+	fi 
+	
+
+	
+}
 function_check_program(){
 	
 	if [[ -z "$pidofx" ]] ; then
@@ -127,12 +209,29 @@ function_info_message () {
 if [[ -z "$pidofx" ]]; then
 echo "$1"
 else
-kdialog --title $"FFprobe Dolphin Service Menu" --msgbox "$1"
+kdialog --title $"IMGuploader Dolphin Service Menu" --msgbox "$1"
 
 fi
 
 
 
+}
+
+
+function_yesno (){
+	
+	if [[ -z "$pidofx" ]]; then
+		read -p "$1" ans
+		
+# 		case "$REPLY" in
+# 		"$2")
+# 		;;
+# 		*)
+# 		ans="$3"
+# 		esac 
+	else 
+		ans=$(kdialog --title "$title" --yesno "$1")
+	fi
 }
 
 function_message(){
@@ -178,10 +277,24 @@ done< <(find "$1" -type f)
 
 }
 
+function_create_progressbar () {
+	mystufvariabletouseonmyscript=$(kdialog --title "$title"  --progressbar $"Starting uploading..." 100)
+
+	qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+
+	qdbus $mystufvariabletouseonmyscript  showCancelButton true
+}
+
 function_get_servers_list () {
+if [[ "$detectservers" == "true" ]]; then 
+a=1;while read z ; do servers[$a]="$z";a=$(($a+1));done< <(imgupload --list 2>&1| awk ' !/Zenden Image Uploader console/{printf("%s  \n" , $0)}')
+
+else 
+scriptservers="$listofserversinternal"
+fi 
 
 
-servers=$(imgupload --list 2>&1| awk ' !/Zenden Image Uploader console/{printf(" \"%s\" \n", $0)}')
+
 }
 
 
@@ -197,9 +310,10 @@ function_loop_nologin() {
 
 
 function_loop_login() {
+	echo >"$linkfile"
 	while read line
 		do
-			imgupload --server "$server" --login "$login" --password "$password" "$line"
+			imgupload --server "$server" --login "$login" --password "$password" "$line" >>
 		done<"$listoffile"
 	
 	
@@ -258,13 +372,18 @@ function_search_kdehome (){
 ########START SCRIPT##############################
 function_search_kdehome
 lincense="GPLv3"
+scriptname="imgupload-peace-servicemenu"
 pidofx="$(pidof X)"
-scriptname="imgupload-servicemenu"
-listoffile="$HOME/.imgupload-servicemenu-list.lst"
-servicemenufolder="$kdehome/share/apps/imgupload-servicemenu-qt"
-encryptedfile="$kdehome/imgupload-servicemenu-encrypt"
-dencryptedfile=""
-passwordfile=""
+defaultserver="rapidshare.com"
+detectservers="true" #you can set it false and ti will load like servers listofserversinternal
+listofserversinternal=(10pix.ru "FTP Server" ImageBan.ru Imageshack.us ImgFiles.Ru Immage.de "Picasa WebAlbums" Yandex.Fotki Yandex.Narod bayimg.com directupload.net epikz.net fastpic.ru funkyimg.com habreffect.ru iPicture.ru iceimg.com image2you.ru imagevenue.com imgur.com keep4u.ru multi-up.com p2p.dm photoload.ru pikucha.ru pinpic.ru pix.am radikal.ru rapidshare.com rghost.ru sendspace.com share.te.ua twitpic.com uploadbox.com vfl.ru youpic.su zalil.ru)
+numberoffile=$(wc -l <"$listoffile")
+listoffile="$HOME/.$scriptname-list.lst"
+servicemenufolder="$kdehome/share/apps/$scriptname-qt"
+linkfile="$kdehome/share/apps/$scriptname/links.lst"
+encryptedfile="$kdehome/$scriptname-encrypt"
+decryptedfile="$kdehome/$scriptname-tempfile"
+passwordfile="$kdehome/$scriptname-tempfile-p"
 
 if  [[ $1 == -*  ]]; then
 	case "$1" in
@@ -298,25 +417,13 @@ if  [[ $1 == -*  ]]; then
 			exit 1
 		  fi
 		 ;;
-	-a)
-	function_analyze "$2"
-# 	function_analyze n "$2"
-	;;
+ 
 	-e)  nano "$listoffile"
 	;;
 	-ek)  kate "$listoffile"
 	;;
-	-d) function_delete silent
-	;;
-	-decompile)
-	function_build
-	;;
-	-cf)
-	function_compile_ffmpeg_fromgit
-	;;
-	-tf)
-	function_test_ffmpeg
-	;;
+ 
+ 
 	-wx)
 	function_set_antix
 	function_menu_start
@@ -327,12 +434,13 @@ if  [[ $1 == -*  ]]; then
 	-r) 
 	function_restore
 	;;
-	setf)
-	function_set_ffmpegpath
-	;;
+ 
 	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	esac
 else
+
 function_help; exit 1
 fi
+
+ 
