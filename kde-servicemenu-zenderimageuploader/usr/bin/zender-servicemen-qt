@@ -55,17 +55,27 @@ function_create_servicemenufolder () {
 	fi 
 	
 }
+# 
+# function_save_login_and_password () {
+# # 	function_yesno $"Do you want set server login and passwords ?"
+# # 	if [[ "$ans" == "yes" ]]; then 
+# # 	
+# # 	fi 
+# 
+# function_ask_stuff $"Please "
+# 	
+# }
 
-function_save_login_and_password () {
-	function_yesno $"Do you want set server login and passwords ?"
-	if [[ "$ans" == "yes" ]]; then 
-	
+function_check_settings() {
+	if [[ -z  "$commonformats" || -z "$preferedserver" ]]; then 
+		function_create_settings
 	fi 
-	
 }
-function_create_settings () {
 
-	commonfomats="jpeg jpg png bmp gif tiff tif "
+function_create_settings () {
+	function_create_servicemenufolder 
+
+	commonformats="jpeg jpg png bmp gif tiff tif "
 	
 	if [[ -z "$pidofx" ]]; then 
 			read -p $"You can search for photos in a folder i will detect this formats $commonformats if you want only jpeg files you should set only jpeg because the loop will be faster ...PRESS ENTER IF YOU DON'T WANT BE BORED FROM THIS QUESTION"
@@ -75,26 +85,43 @@ function_create_settings () {
 					commonfomats="$REPLY"
 				fi
 			REPLY=""
-			read -p $"Choose your prefered server you can pick one of these : ${servers[@]}"
+			echo 
+			echo  $"Aviable Servers : 
+			
+			"$scriptservers""
+			echo
+			read -p $"Choose your prefered server you can pick one of previous :"
 				if [[ -z "$REPLY" ]];then
 					preferedserver="$defaultserver"
 				else 
-					commonfomats="$REPLY"
+					preferedserver="$REPLY"
 				fi
 			REPLY=""
 	
 	else 
 		
-		commonformats="$(kdialog --title $"Kind of files you want detect " --checklist  $"Select the formats Image Uploader service menu should detected when you would like add a folder"bmp bmp on gif gif on jpeg jpeg on jpg jpg on pgm pgm off  png png on pnm pnm off svg svg off  tif tif on tiff tiff on)"
+		commonformats="$(kdialog --title $"Kind of files you want detect "   --textinputbox   $"Select the formats Image Uploader service menu should detected when you would like add a folder" "bmp gif jpeg jpg pgm png pnm svg tif tiff")"
 		
-		preferedserver="$(kdialog --title $"$title"  $"Choose your prefered server you can pick one of these:" "${servers[@]}")"
+		preferedserver="$(kdialog --title $"$title"  --combobox $"Choose your prefered server you can pick one of these:" "${servers[@]}")"
 	
 	fi 
-	function_save_login_and_password
+	function_add_login_and_password
 	function_load_settings
+	
+	echo "Common Formats:$commonformats" >"$settingsfile"
+	echo "Default Server:$preferedserver" >>"$settingsfile"
 }
 
 function_load_settings () {
+	
+	if [[ ! -e "$settingsfile" ]]; then 
+		function_create_settings
+	fi 
+	commonformats="$(awk -F':' '/Common Formats:/{print $2}' $settingsfile)"
+ 	preferedserver="$(awk -F':' '/Default Server:/{print $2}' $settingsfile)"
+	aserver=(); alogin=();apas=();	i=0; while IFS=/ read -a line ; do aserver[$i]="${line[0]}";alogin[$i]="${line[1]}" ;apass[$i]="${line[2]}"; i=$(($i+1)) ; done<"$decryptedfile"
+	
+	 
 	
 }
 
@@ -188,7 +215,6 @@ fi
 }
 
 
-
 function_set_antix (){
 
 pidofx=""
@@ -269,7 +295,7 @@ for extension in $commonformats ; do
 
 if [[ "$line" == *.$extension ]] ; then
 echo $"adding $line"
-echo "$line" >>"$listoffile"
+echo "$line" >>"$listoffiles"
 fi
 done
 
@@ -288,55 +314,71 @@ function_create_progressbar () {
 function_get_servers_list () {
 if [[ "$detectservers" == "true" ]]; then 
 a=1;while read z ; do servers[$a]="$z";a=$(($a+1));done< <(imgupload --list 2>&1| awk ' !/Zenden Image Uploader console/{printf("%s  \n" , $0)}')
-
+scriptservers="${servers[@]}"
 else 
 scriptservers="$listofserversinternal"
 fi 
-
+echo $scriptservers
 
 
 }
 
 
+
+function_standard_upload(){
+	echo >"$linkfile"
+	echo -n $(date) >> "$linkfile"
+	echo -n $1 >> "$linkfile"
+	imgupload --server "$server" "$1" >> "$linkfile"
+	
+}
 
 function_loop_nologin() {
+	echo >"$linkfile"
 	while read line
 		do
-			imgupload --server "$server" "$line"
-		done<"$listoffile"
+			echo -n $1 >> "$linkfile"	
+			imgupload --server "$server" "$line" >> "$linkfile"
+			echo   >> "$linkfile"
+		done<"$listoffiles"
 	
 	
 }
+
+
 
 
 function_loop_login() {
 	echo >"$linkfile"
+	echo -n $(date) >> "$linkfile"
 	while read line
 		do
-			imgupload --server "$server" --login "$login" --password "$password" "$line" >>
-		done<"$listoffile"
+			echo -n $1 >> "$linkfile"	
+			imgupload --server "$server" --login "$login" --password "$password" "$line" >> "$linkfile"
+			echo   >> "$linkfile"
+		done<"$listoffiles"
 	
 	
 }
 
 function_delete (){
-if [[ -e "$listoffile"    ]] ; then #&& -e "$templog"
+if [[ -e "$listoffiles"    ]] ; then #&& -e "$templog"
 
 
-function_passivepopup "mv "$listoffile"  $HOME/.local/share/Trash/files/
+function_passivepopup "mv "$listoffiles"  $HOME/.local/share/Trash/files/
 mv "$templog"  "$HOME"/.local/share/Trash/files/ "
-mv "$listoffile"  $HOME/.local/share/Trash/files/
+mv "$listoffiles"  $HOME/.local/share/Trash/files/
 #mv "$templog"  "$HOME"/.local/share/Trash/files/
-# function_passivepopup_test $"Old list  $listoffile deleted and Old log $templog deleted"
+# function_passivepopup_test $"Old list  $listoffiles deleted and Old log $templog deleted"
 # 
-# elif [[ ! -e "$listoffile" ]] ; then
-# function_passivepopup_test $"i can't do it i can't find the file $listoffile"
+# elif [[ ! -e "$listoffiles" ]] ; then
+# function_passivepopup_test $"i can't do it i can't find the file $listoffiles"
 # elif [[ ! -e "$templog" ]] ; then
 # function_passivepopup_test $"i can't do it i can't find the file $templog"
 else
-function_passivepopup_test $"i can't do it i can't find the file  $listoffile   
+function_passivepopup_test $"i can't do it i can't find the file  $listoffiles   
 
-Please add some files to $listoffile? 
+Please add some files to $listoffiles? 
 
 run this :
 
@@ -360,30 +402,115 @@ fi
 
 function_search_kdehome (){
 	if [[ -d "$HOME/.kde" ]]; then 
-		kdehome="$HOME/.kde/"
+		kdehome="$HOME/.kde"
 	elif [[ -d "$HOME/.kde4" ]]; then 
-		kdehome="$HOME/.kde4/"
+		kdehome="$HOME/.kde4"
 	else
-		kdehome="$HOME/.local/"
+		kdehome="$HOME/.local"
 	fi
+echo "Kde home is $kdehome"
 }
 
 
+function_menu_start_standard (){
+	ansmainmenu=$(kdialog --title "$title" --menu $"Choose An Option"   ud $"Start Upload in the default server" ul $"Start Upload With Login" uwl $"Start Upload Without Login" ol $"Open List" olf $"Open Links File" alp $"Add a Logins and passwords to your encrypted file" e $"Edit Settings" h $"Help" q $"Exit")
+	
+}
+
+function_menu_start_antix () {
+	clear
+	tput cup 3 14
+	tput setaf 2
+
+
+echo "Img Uploader Dolphin service menu cli"
+
+tput cup 5 17 
+tput rev 
+echo $"Img Uploader Dolphin Service Menu"
+tput sgr0
+
+
+menutext=( $" Add Files" $" Add Folders" $" Start Upload in the default server"  $" Start Upload With Login" $" Start Upload Without Login" $" Open List File" $" Open Links File" $" Add a Logins and passwords to your encrypted file" $" Edit Settings"  $" Help" $" Exit" ) 
+ 
+ 
+ menulabel=(af afo ud ul uwl ol olf alp e h q)
+
+ 
+
+
+a=0
+b=7
+echo 
+for menut in "${menutext[@]}" ; do 
+c=$(($b+$a))
+
+tput cup $c 16
+echo "$(($a+1)). ${menutext[$a]}"
+a=$(($a+1))
+ 
+done
+
+
+
+
+tput bold
+tput cup $(($c+2)) 16
+read -p $"Enter Your Choice (1-"$a")" choice
+
+
+tput sgr0 
+# if ! [[ "$choice" =~ [[:digit:]] ]] ;then 
+# function_menu_start
+# fi 
+ansmainmenu="${menulabel[$(($choice-1))]}"
+echo $message
+echo $ansmainmenu
+	
+}
+
+function_menu_start(){
+	
+	if [[ -z "$pidofx" ]]; then
+	function_menu_start_antix
+	else
+	function_menu_start_standard		
+	fi 
+	
+}
+# 
+# function_ansmainmenu () {
+# 	case "$ansmainmenu" in 
+# 	addf
+# 	addfolder
+# 	
+# 	;;
+# }
+
 ########START SCRIPT##############################
 function_search_kdehome
+ 
 lincense="GPLv3"
 scriptname="imgupload-peace-servicemenu"
 pidofx="$(pidof X)"
 defaultserver="rapidshare.com"
 detectservers="true" #you can set it false and ti will load like servers listofserversinternal
 listofserversinternal=(10pix.ru "FTP Server" ImageBan.ru Imageshack.us ImgFiles.Ru Immage.de "Picasa WebAlbums" Yandex.Fotki Yandex.Narod bayimg.com directupload.net epikz.net fastpic.ru funkyimg.com habreffect.ru iPicture.ru iceimg.com image2you.ru imagevenue.com imgur.com keep4u.ru multi-up.com p2p.dm photoload.ru pikucha.ru pinpic.ru pix.am radikal.ru rapidshare.com rghost.ru sendspace.com share.te.ua twitpic.com uploadbox.com vfl.ru youpic.su zalil.ru)
-numberoffile=$(wc -l <"$listoffile")
+function_get_servers_list
 listoffile="$HOME/.$scriptname-list.lst"
 servicemenufolder="$kdehome/share/apps/$scriptname-qt"
 linkfile="$kdehome/share/apps/$scriptname/links.lst"
+settingsfile="$kdehome/share/apps/$scriptname/settings.lst"
 encryptedfile="$kdehome/$scriptname-encrypt"
 decryptedfile="$kdehome/$scriptname-tempfile"
 passwordfile="$kdehome/$scriptname-tempfile-p"
+if [[ -e "$listoffiles" ]]; then 
+numberoffiles=$(wc -l <"$listoffiles")
+else
+	numberoffiles=0
+fi
+
+echo "$kdehome/share/apps/$scriptname/links.lst"
 
 if  [[ $1 == -*  ]]; then
 	case "$1" in
@@ -392,7 +519,7 @@ if  [[ $1 == -*  ]]; then
 	  
 	-f) if (($# > 1)); then
 			shift ;for file in "$@"; do
-		echo "$file" >>$listoffile
+		echo "$file" >>"$listoffiles"
 
 		done
 		  else
@@ -418,17 +545,25 @@ if  [[ $1 == -*  ]]; then
 		  fi
 		 ;;
  
-	-e)  nano "$listoffile"
+	-e)  nano "$listoffiles"
 	;;
-	-ek)  kate "$listoffile"
+	-ek)  kate "$listoffiles"
 	;;
  
  
 	-wx)
+ 
 	function_set_antix
+	function_check_program
+	function_load_settings
+	function_check_settings
 	function_menu_start
 	;;
 	-mx)
+
+	function_check_program
+	function_load_settings
+	function_check_settings
 	function_menu_start
 	;;
 	-r) 
