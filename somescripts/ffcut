@@ -1,3 +1,36 @@
 function_ffplay(){
-seconds=$(ffplay  stuff  2>&1 | awk '{x = $1} END {print x}' )
+seconds=$(ffplay  "$1"  2>&1 | awk '{x = $1} END {print x}' )
+minute=$(($seconds/60))
+hours=$(($minutes/60))
 }
+
+function_startcut() {
+function_passive_popup_test $"Stop FFplay where you need to start cut"
+function_ffplay "$1"
+}
+
+function_stopcut() {
+function_passive_popup_test $"Stop FFplay where you need to stop cutting"
+function_ffplay "$1"
+}
+
+ 
+case $anscutmenu in 
+
+mode1)
+function_stopcut "$1"
+;;
+mode2)
+function_startcut "$1"
+;;
+mode3)
+;;
+function_startcut "$1"
+function_stopcut "$1"
+;;
+*)
+message=$"Menu FFcut has not received a proper answer and you suck"
+function_menustart
+;;
+
+esac
