@@ -1,12 +1,39 @@
 function_ffplay(){
 seconds=$(ffplay  "$1"  2>&1 | awk '{x = $1} END {print x}' )
-minute=$(($seconds/60))
+minutes=$(($seconds/60))
 hours=$(($minutes/60))
+a=$(($hours*3600))
+b=$(($minutes*60))
+c=$(($a+$b))
+seconds=$(($seconds-$c))
+if [[  $hours < 9 ]]; then
+hours="0$hours"
+echo $hours 
+else
+echo $hours
+fi
+
+if [[  $minutes < 9 ]]; then
+minutes="0$minutes"
+echo $minutes
+else
+echo $minutes
+fi 
+
+if [[  $seconds < 9 ]]; then
+seconds="0$seconds"
+echo $seconds
+else 
+echo $seconds
+fi 
+
+
 }
 
 function_startcut() {
 function_passive_popup_test $"Stop FFplay where you need to start cut"
 function_ffplay "$1"
+
 }
 
 function_stopcut() {
@@ -14,19 +41,39 @@ function_passive_popup_test $"Stop FFplay where you need to stop cutting"
 function_ffplay "$1"
 }
 
- 
+function_ffcut_mode1 () {
+ffmpeg -sameq -ss $2:$3:$4 -i "$1" ${1%%}
+}
+
+function_ffcut_mode2 () {
+ffmpeg -t $2:$3:$4 -i "$1" ${1%%}
+   
+}
+
+function_ffcut_mode3 () {
+
+ffmpeg -sameq -ss $2:$3:$4 -t $5:$6:$7 -i "$1" ${1%%}
+
+}
+
+function_passivepopup_test $"St"
 case $anscutmenu in 
 
+
 mode1)
-function_stopcut "$1"
+function_startcut "$1"
+echo "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut 
 ;;
 mode2)
-function_startcut "$1"
+function_stopcut "$1"
+echo "$1/stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
 ;;
 mode3)
 ;;
 function_startcut "$1"
+echo -n "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
 function_stopcut "$1"
+echo "stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
 ;;
 *)
 message=$"Menu FFcut has not received a proper answer and you suck"
