@@ -1,83 +1,220 @@
+#!/bin/bash
+Version="0.2.3"
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
 function_ffplay(){
-seconds=$(ffplay  "$1"  2>&1 | awk '{x = $1} END {print x}' )
-minutes=$(($seconds/60))
-hours=$(($minutes/60))
-a=$(($hours*3600))
-b=$(($minutes*60))
-c=$(($a+$b))
-seconds=$(($seconds-$c))
-if [[  $hours < 9 ]]; then
-hours="0$hours"
-echo $hours 
-else
-echo $hours
-fi
+	seconds=$(ffplay  "$1"  2>&1 | awk '{x = $1} END {print x}' )
+ 
+	minutes=$(($seconds/60))
+	hours=$(($minutes/60))
+	
+	
+	a=$(($hours*60))
+	minutes=$(($minutes-$a))
+	
+	a=$(($hours*3600))
+	b=$(($minutes*60))
+	c=$(($a+$b))
+	
+	seconds=$(($seconds-$c))
+	
+	if [[ $hours > 0 ]]; then
+		if [[  $hours < 9  ]]; then
+			hours="0$hours"
+			echo $hours
+		else
+			echo $hours
+		fi
+	else
+		hours="00"
+	fi
+	
+	if [[$minutes > 0 ]]; then
+		if [[  $minutes < 9  ]]; then
+			minutes="0$minutes"
+			echo $minutes
+		else
+			echo $minutes
+		fi
+	else
+		minutes="00"
+	fi
+									
+	if [[ $seconds > 0 ]]; then
+		if [[  $seconds < 9 ]]; then
+			seconds="0$seconds"
+			echo $seconds
+		else
+			echo $seconds
+		fi
+	else
+		seconds="00"
+	fi
 
-if [[  $minutes < 9 ]]; then
-minutes="0$minutes"
-echo $minutes
-else
-echo $minutes
-fi 
+}
 
-if [[  $seconds < 9 ]]; then
-seconds="0$seconds"
-echo $seconds
-else 
-echo $seconds
-fi 
-
-
+function_delete_file (){
+	rm "$1"
+	
 }
 
 function_startcut() {
-function_passive_popup_test $"Stop FFplay where you need to start cut"
-function_ffplay "$1"
-
+		function_passive_popup_test $"Stop FFplay where you need to start cut"
+		function_ffplay "$1"
+		
 }
 
 function_stopcut() {
-function_passive_popup_test $"Stop FFplay where you need to stop cutting"
-function_ffplay "$1"
+		function_passive_popup_test $"Stop FFplay where you need to stop cutting"
+		function_ffplay "$1"
 }
 
+
+
+		
 function_ffcut_mode1 () {
-ffmpeg -sameq -ss $2:$3:$4 -i "$1" ${1%%}
+
+servicenumber=1
+	while  read  line ; do
+				extension="${line##*.}"
+		if [[ -z "$extension" ]] ; then
+			function_message_error $"unable to get the extension of your files error\bug?"
+					
+		fi
+		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $2}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		 
+			if [[ "$k" != "$line" ]]; 
+			function_passive_popup_test $"mmm there is mess on /tmp/FFmpeg_servicemenu_temp_ffcut"
+			exit 2
+			else 
+				echo "ffmpeg  -ss $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension""
+				ffmpeg  -ss $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension"
+				
+			fi 
+		servicenumber=$(($servicenumber+1))
+			
+			done  < "$listoffile"
+			
+				}
+	
+	function_ffcut_mode2 () {
+	
+	servicenumber=1
+	while  read  line ; do
+				extension="${line##*.}"
+		if [[ -z "$extension" ]] ; then
+			function_message_error $"unable to get the extension of your files error\bug?"
+					
+		fi
+		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $2}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		 
+			if [[ "$k" != "$line" ]]; 
+			function_passive_popup_test $"mmm there is mess on /tmp/FFmpeg_servicemenu_temp_ffcut"
+			exit 2
+			else 
+				echo "ffmpeg  -t $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension""
+				ffmpeg  -t $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension"
+				
+			fi 
+		servicenumber=$(($servicenumber+1))
+			
+			done  < "$listoffile"
+			
+			
 }
-
-function_ffcut_mode2 () {
-ffmpeg -t $2:$3:$4 -i "$1" ${1%%}
-   
+		 
+		
+		
+		
+		function_ffcut_mode3 () {
+	servicenumber=1
+	while  read  line ; do
+				extension="${line##*.}"
+		if [[ -z "$extension" ]] ; then
+			function_message_error $"unable to get the extension of your files error\bug?"
+					
+		fi
+		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $5}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		hh1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $7}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		mm1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $8}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		ss1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $9}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		 
+			if [[ "$k" != "$line" ]]; 
+			function_passive_popup_test $"mmm there is mess on /tmp/FFmpeg_servicemenu_temp_ffcut"
+			exit 2
+			else 
+				echo "ffmpeg  -ss $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension""
+				ffmpeg  -ss $hh:$mm:$ss -t -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension"
+				
+			fi 
+		servicenumber=$(($servicenumber+1))
+			
+			done  < "$listoffile"
+			
+			
 }
-
-function_ffcut_mode3 () {
-
-ffmpeg -sameq -ss $2:$3:$4 -t $5:$6:$7 -i "$1" ${1%%}
-
-}
-
-function_passivepopup_test $"St"
-case $anscutmenu in 
-
-
-mode1)
-function_startcut "$1"
-echo "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut 
-;;
-mode2)
-function_stopcut "$1"
-echo "$1/stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
-;;
-mode3)
-;;
-function_startcut "$1"
-echo -n "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
-function_stopcut "$1"
-echo "stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
-;;
-*)
-message=$"Menu FFcut has not received a proper answer and you suck"
-function_menustart
-;;
-
-esac
+			
+			#ffmpeg -sameq -ss $2:$3:$4 -t $5:$6:$7 -i "$1" ${1%%}
+			
+			
+			
+      function_loop_mode1 () {
+      while  read  line ; do
+      		extension=${line##*.}
+            if [[ -z "$extension" ]] ; then
+            function_message_error $"unable to get the extension of your files error\bug?"
+		
+            fi
+            
+      done  < "$listoffile"
+      
+      }
+			function_passivepopup_test $"St"
+			case $anscutmenu in
+			
+			
+			mode1)
+			function_startcut "$1"
+			echo "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			;;
+			mode2)
+			function_stopcut "$1"
+			echo "$1/stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			;;
+			mode3)
+			;;
+			function_startcut "$1"
+			echo -n "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			function_stopcut "$1"
+			echo "stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			;;
+			*)
+			message=$"Menu FFcut has not received a proper answer and you suck"
+			function_menustart
+			;;
+			
+			esac
