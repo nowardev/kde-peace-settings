@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.2.3"
+Version="0.2.4"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -47,118 +47,6 @@ fi
 
 }
 
-function_message(){
-if [[ -z "$pidofx" ]] ; then
-
-echo "$1"
-
-else
-
-kdialog --msgbox "$1"
-fi
-
-
-}
-
-
-function_message_error(){
-
-if [[ -z "$pidofx" ]] ; then
-
-echo "ERROR! $1"
-
-else
-
-kdialog --error "$1"
-fi
-
-
-}
-
-
-
-function_passivepopup (){
-
-kdialog --passivepopup "$1" "$2"
-
-}
-
-function_passivepopup_test (){
-
-if [[ ! -z  "$pidofx" ]]; then 
-	if [[ "$passivepopup" == "enabled" ]] ; then
-
-		if [[ ! -z "$1" ]] ;then
-	
-			if [[ "$1" == "FFmpeg service menu : Jobs done!"  ]]; then 
-		
-			function_passivepopup "$1" 3
-		
-			else
-				if [[ -z "$2" ]];then
-		
-					function_passivepopup "$1"
-				else
-					function_passivepopup "$1" "$2"
-				fi
-			fi
-		else
-			function_message_error $"no text for popup given :S"
-		fi
- 
-			
-			
-
-	
-	else
-	echo "$1"
-	fi
-else 
-tput setaf 5
-tput bold
-echo "$1"
-fi 
-}
-
-function_open_log () {
- if (( askopen >= 1 )); then 
-	function_message_error $"FFmpeg failed! check the log!"
-	if [[ ! -z "$pidofx" ]]; then 
-		ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? Errors Found $askopen")
-			if [[ $? == 0 ]] ; then
-				function_open_text_file "$templog"
-				function_delete standard
-			else
-				function_menu_start
-			fi
-	else
-		choice=""
-		read -p $"Do you want open the log ?  (y\n )" choice
-			case "$choice" in 
-			y|Y|yes|YES)
-			function_open_text_file "$templog"
-			function_delete silent
-			;;
-			n|N|no|NO)
-			function_menu_start
-			;;
-			*)
-			echo $"Hey! i have said y or n you fucking idiot have choosen $choice .."
-			exit 1
-			;;
-			esac
-			
-
-	fi 
-elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
-
-function_delete standard
-
-elif [[ "$askopen" == 0 ]]; then
-function_delete silent
-fi
-
-}
 
 function_load_settings (){
 
@@ -704,7 +592,34 @@ fi
 
 }
 
+function_message(){
+if [[ -z "$pidofx" ]] ; then
 
+message=""$1""
+
+else
+
+kdialog --msgbox "$1"
+fi
+
+
+}
+
+
+function_message_error (){
+
+if [[ -z "$pidofx" ]] ; then
+
+	
+message="ERROR $1"
+
+else
+
+kdialog --error "$1"
+fi
+
+
+}
 
 function_help (){
 
@@ -858,7 +773,94 @@ function_menu_start
 
 
 
+function_reload_function(){
+$1
+}
 
+
+function_passivepopup (){
+
+kdialog --passivepopup "$1" "$2"
+
+}
+
+function_passivepopup_test (){
+
+if [[ ! -z  "$pidofx" ]]; then 
+	if [[ "$passivepopup" == "enabled" ]] ; then
+
+		if [[ ! -z "$1" ]] ;then
+	
+			if [[ "$1" == "FFmpeg service menu : Jobs done!"  ]]; then 
+		
+			function_passivepopup "$1" 3
+		
+			else
+				if [[ -z "$2" ]];then
+		
+					function_passivepopup "$1"
+				else
+					function_passivepopup "$1" "$2"
+				fi
+			fi
+		else
+			function_message_error $"no text for popup given :S"
+		fi
+ 
+			
+			
+
+	
+	else
+	echo "$1"
+	fi
+else 
+tput setaf 4
+tput bold
+message="$1"
+tput setaf 7
+fi 
+}
+
+function_open_log () {
+ if (( askopen >= 1 )); then 
+	function_message_error $"FFmpeg failed! check the log!"
+	if [[ ! -z "$pidofx" ]]; then 
+		ans=$(kdialog --yesno $"Do you want open the log.. I have found some error on the log? Errors Found $askopen")
+			if [[ $? == 0 ]] ; then
+				function_open_text_file "$templog"
+				function_delete standard
+			else
+				function_menu_start
+			fi
+	else
+		choice=""
+		read -p $"Do you want open the log ?  (y\n )" choice
+			case "$choice" in 
+			y|Y|yes|YES)
+			function_open_text_file "$templog"
+			function_delete silent
+			;;
+			n|N|no|NO)
+			function_menu_start
+			;;
+			*)
+			echo $"Hey! i have said y or n you fucking idiot have choosen $choice .."
+			exit 1
+			;;
+			esac
+			
+
+	fi 
+elif [[ "$askopen" == 1 && "$resetlistafterconversion" == "yes" ]]; then
+
+function_delete standard
+
+elif [[ "$askopen" == 0 ]]; then
+function_delete silent
+fi
+
+}
 
 function_check_for_errors (){
 
@@ -1400,9 +1402,10 @@ function_ansmenu
 function_menu_advanced_second (){
 
  
-ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function" addsubtitle $"Add Subtitle" resize $"Resize Video" addfilter $"Add A Filter"  cf $"Compile FFmpeg (for debian\kubuntu)" s $"Screencast" v "Version Author Copyright" back $"Back")
+ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function"    cf $"Compile FFmpeg (for debian\kubuntu)" s $"Screencast" v "Version Author Copyright" back $"Back")
 function_ansmenu_advanced
-
+#addsubtitle $"Add Subtitle"
+#resize $"Resize Video" addfilter $"Add A Filter"
 }
 
 function_menu_advanced_second_antix (){
@@ -1463,7 +1466,8 @@ tput bold
 tput cup $(($c+2)) 16
 read -p $"Enter Your Choice (1-"$a")" choice
 
-
+echo $message
+message=""
 tput sgr0 
 # if ! [[ "$choice" =~ [[:digit:]] ]] ;then 
 # function_menu_start
@@ -1663,7 +1667,7 @@ done
 
 }
 
-function_compile_ffmpeg_1204(){
+function_compile_ffmpeg_precise (){
 
 sudo apt-get -y build-dep ffmpeg ; sudo apt-get -y install build-essential libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev 
  
@@ -1681,7 +1685,7 @@ fi
  ./configure --enable-gpl --enable-version3 --enable-nonfree --enable-postproc  --enable-x11grab --enable-gray --enable-small --enable-runtime-cpudetect --enable-hardcoded-tables --enable-memalign-hack   --enable-bzlib --enable-frei0r --enable-libopencore-amrnb --enable-libopencore-amrwb  --enable-libdc1394 --enable-libdirac --enable-libfaac --enable-libgsm  --enable-libopenjpeg  --enable-libschroedinger --enable-libspeex --enable-libtheora --enable-libvorbis --enable-libvpx --enable-libx264  --enable-libxvid  --enable-zlib  --enable-pic --enable-sram --enable-libmp3lame	--enable-extra-warnings; make -j$(($threadsdetected+1))
 }
 
-function_compile_ffmpeg_1210(){
+function_compile_ffmpeg_quantal (){
 
 sudo apt-get -y build-dep ffmpeg ; sudo apt-get -y install build-essential libopencore-amrnb-dev libopencore-amrwb-dev libopenjpeg-dev libx264-dev libxvidcore-dev libx264-dev  libopenjpeg-dev   libasound2-dev   libdc1394-22-dev   libgsm1-dev  libimlib2-dev libraw1394-dev libsdl1.2-dev libschroedinger-dev libspeex-dev  libtheora-dev  libvorbis-dev libx11-dev libxext-dev libxvmc-dev quilt texi2html zlib1g-dev libfaad-dev libdirac-dev libfaac-dev libmp3lame-dev frei0r-plugins-dev libdirac-dev  libfaac-dev ;sudo apt-get install libass-dev libbluray-dev libfontconfig1-dev libcelt-dev libmodplug-dev libopencv-dev librtmp-dev libv4l-dev libvo-aacenc-dev libvo-amrwbenc-dev libssl-dev 
 
@@ -1703,12 +1707,11 @@ threadsdetected=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 # program[0]=make
 program[1]=git
 program[2]=awk
+program[3]=lsb_release
 	
-release=$(lsb_release -a 2>&1| awk '/Release:/{gsub(/\./,"");print $2}')
 
-if [[ -z "$release" ]];then
-function_message_error $"unable to detect your distro release note this function is tested only on kubuntu 12.10"
-fi
+
+
 
 
 for program in "${program[@]}";do 
@@ -1726,8 +1729,16 @@ for program in "${program[@]}";do
 	fi
 done
 
-releases[1]="1204"
-releases[2]="1210"
+release=$(lsb_release -c | awk '{print $2}')
+if [[ -z "$release" ]];then
+function_message_error $"Unable to detect your distro release note this function is tested only on kubuntu 12.10"
+fi
+
+releases[1]="precise"
+releases[2]="quantal"
+releases[3]="sid"
+releases[4]="testing"
+releases[5]="stable"
 
 for r in "${releases[@]}" ; do 
 
@@ -2397,7 +2408,7 @@ fi
  # a $"Convert Advanced User" pd $"Convert Using a  Profile Dual Pass X2 slower"
 if [[ -z "$pidofx" ]] ; then 
 clear
-function_menu_first_antix
+function_menu_first_antix "$message"
 else 
 function_menu_first
 fi 
@@ -2482,12 +2493,16 @@ a=$(($a+1))
  
 done
 
-
-
-
+tput setf 4
+echo
+echo $message
+message=""
+echo 
+tput setaf 7
 tput bold
 tput cup $(($c+2)) 16
 read -p $"Enter Your Choice (1-"$a")" choice
+
 
 
 tput sgr0 
