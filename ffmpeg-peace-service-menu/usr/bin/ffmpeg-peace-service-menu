@@ -27,9 +27,9 @@ pidofx=""
 function_open_text_file () {
 
 if [[ -z "$pidofx" ]]; then 
-nano "$1"
+"$texteditor "$1""
 else 
-kde-open "$1"
+"$xtexteditor "$1""
 
 fi 
 }
@@ -55,7 +55,8 @@ function_load_settings (){
 if  [[ ! -e  "$ffmpeg_service_menu_settings" ]] ; then
 function_create_settings
 fi
-
+xtexteditor="$(awk -F':' '/xtexteditor:/{print $2}' "$ffmpeg_service_menu_settings")"
+texteditor="$(awk -F':' '/texteditor:/{print $2}' "$ffmpeg_service_menu_settings")"
 overwrite="$(awk -F':' '/overwrite:/{gsub(/ /,""); print $2}' "$ffmpeg_service_menu_settings")"
 threads="$(awk  -F':' '/cpu:/{print $2}' "$ffmpeg_service_menu_settings")"
 easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
@@ -144,6 +145,13 @@ passivepopup=""
 ;;
 esac
 
+if [[ -z "$xtexteditor" ]]; then 
+	xtexteditor="kde-open"
+fi
+
+if [[ -z "$texteditor" ]]; then 
+	texteditor="nano"
+fi
 
 # numberofpass=$(awk  -F':' '/number of pass:/{gsub(/ /,"");print $2}' "$ffmpeg_service_menu_settings")
 }
@@ -160,13 +168,37 @@ screencastfunctionslowcpu_detect="-f  alsa  -i hw:0,0  -ac 2 -ar 48000 -acodec p
 
 if [[ -z "$pidofx" ]] ; then
 
+	
+echo $"Text Editor to use with X server : kate kwrite etc press ENTER For kate or write what you like"
+read   
+
+	if [[ -z "$REPLY" ]];then
+		xtexteditor="kate"
+	else
+		xtexteditor="$REPLY"
+	fi
+REPLY=""
+echo
+
+
+
+echo $"Text Editor to use in konsole mode : nano vim vi  etc press ENTER For nano or write what you like"
+read   
+
+	if [[ -z "$REPLY" ]];then
+		texteditor="nano"
+	else
+		texteditor="$REPLY"
+	fi
+REPLY=""
+echo
 
 
 echo $"always overwrite files (yes\no) press ENTER FOR yes"
 read   
 
 	if [[ -z "$REPLY" ]];then
-	   overwrite="yes"
+		overwrite="yes"
 	else 
 		overwrite="$REPLY"
 	fi
@@ -176,7 +208,7 @@ echo
 echo $"How many cpu should FFmpeg use? 1 2 3 4 5 etc press ENTER for 1 "
 read   
 	if [[ -z "$REPLY" ]];then
-	   threads=1
+		threads=1
 	else 
 		if [[ ! $threadsdetected  =~ [[:digit:]]  ]] ; then
 			threads=1
@@ -192,7 +224,7 @@ echo
 echo $"Write your easy profile that FFmpeg should use if you don't know type -sameq"
 read   
 	if [[ -z "$REPLY" ]];then
-	   easyprofile="-sameq"
+		easyprofile="-sameq"
 	else 
 		easyprofile="$REPLY"
 	fi
@@ -309,7 +341,9 @@ read
 	fi 	
  
 	
-else	
+else
+		xtexteditor="$(kdialog --textinputbox  $"Text Editor to use with X server : kate kwrite etc press ENTER For kde-open or write what you like" --  kde-open )"
+		texteditor="$(kdialog --textinputbox  $"Text Editor to use in konsole mode : nano vi vim etcc press ENTER For nano or write what you like" --  "nano" )"
 		overwrite="$(kdialog --combobox $"always overwrite files " yes no --default no )"
 		threads="$(kdialog --combobox $"How many core should FFmpeg use" 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 --default 1)"
 		easyprofile="$(kdialog --textinputbox  $"write here your easy profile" --  -sameq )"
@@ -329,9 +363,11 @@ else
 		screencastfunctionslowcpu_detect="$(kdialog --textinputbox  $"Function to record your screen for SLOW CPU ,If you don't know or you just like it leave it as it is " --  "$screencastfunctionslowcpu_detect" )"
 fi
 	
-
-
-echo "overwrite: $overwrite" >"$ffmpeg_service_menu_settings"
+echo "xtexteditor: $xtexteditor" >"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
+echo "texteditor: $texteditor" >>"$ffmpeg_service_menu_settings"
+echo "" >>"$ffmpeg_service_menu_settings"
+echo "overwrite: $overwrite" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
 echo "number of pass: $numberofpass" >>$ffmpeg_service_menu_settings
 echo "" >>"$ffmpeg_service_menu_settings"
@@ -1891,7 +1927,7 @@ function_open_log
 
 # kdialog --title $"FFmpeg service menu error" --yesnocancel $"FFmpeg has failed to create the file $name_compiledvideo.$outformat do you want to check the log $templog ?"
 # 	if [[ $? == 0 ]] ;then 
-# 	kde-open "$templog"
+# 	$xtexteditor "$templog"
 # 	fi 
 # fi 
 fi
@@ -2506,11 +2542,18 @@ read -p $"Enter Your Choice (1-"$a")" choice
 
 
 tput sgr0 
-# if ! [[ "$choice" =~ [[:digit:]] ]] ;then 
+if  [[ "$choice"  == [[:digit:]] ]] ;then 
+	
+	ans="${menulabel[$(($choice-1))]}"
+	echo $ansmainmenu
+else 
+	
+function_message_error $"You have to choose a number (1-"$a") it seems you did not ...you have written $choice"
+function_menu_start
+
 # function_menu_start
-# fi 
-ans="${menulabel[$(($choice-1))]}"
-echo $ansmainmenu
+fi 
+
 
  }
  
@@ -2558,9 +2601,9 @@ function_ffmpeg_profile audio
  ;;
  edit)
  	if [[ ! -z "$pidofx" ]]; then 
-		kde-open "$listoffile" 
+		$xtexteditor "$listoffile" 
 	else
-		nano "$listoffile" 
+		$xtexteditor "$listoffile" 
 	fi 
  
  
@@ -2573,9 +2616,9 @@ function_ffmpeg_profile audio
  ;;
  es)
   	if [[ ! -z "$pidofx" ]]; then 
-		 kde-open "$ffmpeg_service_menu_settings" 
+		 $xtexteditor "$ffmpeg_service_menu_settings" 
 	else
-		nano "$ffmpeg_service_menu_settings" 
+		$texteditor "$ffmpeg_service_menu_settings" 
 	fi 
 function_load_settings
 function_menu_start
@@ -2697,7 +2740,10 @@ pidofx="$(pidof X)"
 probe=$(type -p ffprobe)
 
 threads=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
+if [[ -e "$listoffile" ]]; then 
 numberoffile=$(wc -l <"$listoffile")
+fi 
+
 # easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
 
 
@@ -2773,7 +2819,7 @@ if  [[ $1 == -*  ]]; then
 	function_analyze "$2"
 # 	function_analyze n "$2"
 	;;
-	-e)  nano "$listoffile"
+	-e)  $texteditor "$listoffile"
 	;;
 	-ek)  kate "$listoffile"
 	;;
