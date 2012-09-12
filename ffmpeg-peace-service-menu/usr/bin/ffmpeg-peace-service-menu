@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.2.4"
+Version="0.2.5"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -1462,7 +1462,7 @@ function_ansmenu
 function_menu_advanced_second (){
 
  
-ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function"    cf $"Compile FFmpeg (for debian\kubuntu)" s $"Screencast" v "Version Author Copyright" back $"Back")
+ansadvanced=$(kdialog --title $"Advanced Menu FFmpeg Dolphin Service Menu" --menu  $"Choose an option" decompile $"Decompile Video" compile $"Compile a Video" build $"Build Your Own Function"    cf $"Compile FFmpeg (for kubuntu)" s $"Screencast" v "Version Author Copyright" back $"Back")
 function_ansmenu_advanced
 #addsubtitle $"Add Subtitle"
 #resize $"Resize Video" addfilter $"Add A Filter"
@@ -1482,31 +1482,13 @@ tput sgr0
 
 
 
-menutextadvanced[0]=$" Decompile"
-menutextadvanced[1]=$" Compile"
-menutextadvanced[2]=$" Build Your Own Function"
-menutextadvanced[3]=$" Add Subtitle"
-menutextadvanced[4]=$" Resize Video"
-menutextadvanced[5]=$" Add A Filter"
-menutextadvanced[6]=$" Compile FFmpeg (for debian\kubuntu)"
-menutextadvanced[7]=$" ScreenCast"
-menutextadvanced[8]=$" Version Author Copyright"
-menutextadvanced[9]=$" Back to Main Menu"
+menutextadvanced=($" Decompile"$" Compile" $" Build Your Own Function"  $" Compile FFmpeg (for kubuntu)" $" ScreenCast" $" Version Author Copyright" $" Back to Main Menu")
+ 
+# $" Add Subtitle" $" Resize Video" $" Add A Filter"
  
 
- 
-
-menulabeladvanced[0]=$"decompile"
-menulabeladvanced[1]=$"compile"
-menulabeladvanced[2]=$"build"
-menulabeladvanced[3]=$"addsubtitle"
-menulabeladvanced[4]=$"resize"
-menulabeladvanced[5]=$"addfilter"
-menulabeladvanced[6]=$"cf"
-menulabeladvanced[7]=$"s"
-menulabeladvanced[8]=$"v"
-menulabeladvanced[9]=$"back" 
-
+menulabeladvanced=($"decompile" $"compile" $"build"  $"cf" $"s" $"v" $"back" )
+# $"addsubtitle" $"resize" $"addfilter"
 a=0
 b=7
 echo 
@@ -1522,20 +1504,37 @@ done
 
 
 
-tput bold
-tput cup $(($c+2)) 16
-read -p $"Enter Your Choice (1-"$a")" choice
-
+tput setf 4
+echo
 echo $message
 message=""
-tput sgr0 
-# if ! [[ "$choice" != *[!0-9]* ]] ;then 
-# function_menu_start
-# fi 
-ansadvanced="${menulabeladvanced[$(($choice-1))]}"
-echo $ansadvanced
+echo 
+tput setaf 7
 
-function_ansmenu_advanced
+tput bold
+tput cup $(($c+4)) 16
+read -p $"Enter Your Choice (1-"$a")" choice
+ 
+
+tput sgr0 
+ 
+if  [[ "$choice" != *[!0-9]*  ]] ;then 
+	
+	ansadvanced="${menulabeladvanced[$(($choice-1))]}"
+	echo $ansadvanced
+	function_ansmenu_advanced
+elif [[ -z "$choice" ]]; then 
+	function_message_error $"Empty answer"	
+	function_menu_advanced
+else
+	function_message_error $"You have to choose a number (1-"$a") it seems you did not ...you have written "\" $choice \"" "
+	function_menu_advanced
+
+# function_menu_start
+fi 
+ 
+ 
+
 }
 
 function_record_screen_menu () {
@@ -1601,7 +1600,7 @@ function_record_screen "$screencast"
  
 }
 
-function_ansmenu_advanced(){
+function_ansmenu_advanced (){
 
 case "$ansadvanced" in
  
@@ -1652,12 +1651,7 @@ function_menu_start
  function_menu_start
  ;;
  *)
-kdialog --title "$title" --yesno $"You have not choose an option do you want exit?"
-	if [[ $? == 1 ]] ; then
-		function_menu_start
-	else
-		exit
-	fi
+function_ask_exit
  ;;
  esac
  
@@ -2878,4 +2872,3 @@ fi
  
 
  
-
