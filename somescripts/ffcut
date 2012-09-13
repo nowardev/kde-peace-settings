@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 Version="0.2.3"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -17,8 +17,24 @@ Version="0.2.3"
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
+
+title=$"FFmpeg Dolphin Service Menu"
+listoffile="$HOME/ffmpeg-service-menu-qt.lst"
+# easyprofile_file="$HOME/.FFmpeg_easy_profile"
+ffmpeg_profile_file_audio="$HOME/.FFmpeg_profiles-qt_audio.lst"
+ffmpeg_profile_file_device="$HOME/.FFmpeg_profiles-qt_device.lst"
+ffmpeg_profile_file_video="$HOME/.FFmpeg_profiles-qt_video.lst"
+templog="/tmp/ffmpeg_peace_dolphin_service_menu.log"
+ffmpeg_service_menu_settings="$HOME/.FFmpeg_service_menu_settings"
+ffcut_temp_file="$HOME/.FFcut_service_menu_timefile"
+resetlistafterconversion="yes"
+passivepopup="enabled"
+pidofx="$(pidof X)"
+probe=$(type -p ffprobe)
+
+threads=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 function_ffplay(){
-	totalseconds="$(ffplay  "$1"  2>&1 | awk '{x = $1} END {print x}' )"
+	totalseconds="$(ffplay  "$1"  2>&1 |awk 'BEGIN { RS = "\r" }; { if ($1 != "") x = $1 }; END { print x }' )"
 
 
 }
@@ -30,58 +46,66 @@ function_delete_file (){
 
 
 function_calculate () {
-# 	store="$totalseconds"
+	totalseconds="1002.2"
+	totalseconds="$(printf '%05.3f\n' "$totalseconds")"
+	
+	realseconds="$(awk -F'.' '{print $1}' << _EOF
+$totalseconds
+_EOF
+)"
+
+	thousandths=$(awk -F'.' '{print $2}' << _EOF 
+$totalseconds
+_EOF
+)
+	thousandths="$(printf '%03.0f\n' "$thousandths")"
 # 	duration=$(($store-$totalseconds))
 # 	if [[ "$duration" > 0 ]]; then
 # 		
 # 	fi 
-	minutes=$(($totalseconds/60))
-	hours=$(($minutes/60))
+	if [[  $(echo "scale=3; $realseconds - 59"|bc) != -*  ]]; then
+	minutes=$(echo "scale=0 ; $realseconds / 60" | bc)
+	else 
+		minutes="0"
+		hours="0"
+	fi 
+	
+	if [[  $(echo "scale=3; $minutes - 59"| bc ) != -*   ]]; then 
+		hours=$(echo "scale=0 ;  $minutes / 60" | bc)  
+	else
+		hours="0"
+	fi 
 	
 	
-	a=$(($hours*60))
-	minutes=$(($minutes-$a))
+	a=$(echo "scale=3 ;  $hours * 60" | bc )
+	minutes=$(echo "scale=3 ;  $minutes-$a" | bc )
 	
-	a=$(($hours*3600))
-	b=$(($minutes*60))
-	c=$(($a+$b))
+	a=$(echo "scale=3 ; $hours * 3600"| bc )
+	b=$(echo "scale=3 ; $minutes  * 60"| bc )
+	c=$(echo "scale=3 ; $a + $b"| bc )
 	
-	seconds=$(($totalseconds-$c))
+	seconds=$(echo "$realseconds-$c"| bc )
 	
 	if [[ $hours > 0 ]]; then
-		if [[  $hours < 9  ]]; then
-			hours="0$hours"
-			echo $hours
-		else
-			echo $hours
-		fi
+		hours="$(printf '%02.0f\n' "$hours")"
 	else
 		hours="00"
 	fi
 	
-	if [[$minutes > 0 ]]; then
-		if [[  $minutes < 9  ]]; then
-			minutes="0$minutes"
-			echo $minutes
-		else
-			echo $minutes
-		fi
+	if [[ $minutes > 0 ]]; then
+		minutes="$(printf '%02.0f\n' "$minutes")"
 	else
 		minutes="00"
 	fi
 									
 	if [[ $seconds > 0 ]]; then
-		if [[  $seconds < 9 ]]; then
-			seconds="0$seconds"
-			echo $seconds
-		else
-			echo $seconds
-		fi
+		seconds="$(printf '%02.0f\n' "$seconds")"
+		seconds="$seconds.$thousandths"
 	else
 		seconds="00"
 	fi
 	
-	
+	echo "results  $hours/$minutes/$seconds/"
 	
 }
 function_startcut() {
@@ -96,13 +120,13 @@ function_startcut() {
 function_stopcut() {
 		function_passive_popup_test $"Stop FFplay where you need to stop cutting"
 		function_ffplay "$1"
-		totalseconds=$(($storeseconds-$totalseconds))
+		totalseconds=$(echo "$storeseconds-$totalseconds"| bc )
 		function_calculate
 		
 }
 
 function_ask_ffcut_param () {
-	
+paramffcut="-acodec copy -vcodec copy"	
 	if [[ -z "$pidofx" ]]; then 
 		echo 
 		echo $"This \"$paramffcut\" is the string i will use to cut with ffmpeg or avconv so... do you want keep it ? PRESS ENTER to keep this string or type what you need "
@@ -113,7 +137,7 @@ function_ask_ffcut_param () {
 				paramffcut="$REPLY"
 			fi 
 	else 
-		ansffcutparam=$(kdialog --title "$title" --textinputbox $"Please Edit now the string if you want use another one this is the fastest you can get : $paramffcut")
+		ansffcutparam=$(kdialog --title "$title" --textinputbox $"Please Edit now the string if you want use another one this is the fastest you can get : $paramffcut" --  "$paramffcut" )
 			if [[ ! -z "$ansffcutparam" ]]; then
 				paramffcut="$ansffcutparam"
 			fi 	
@@ -127,19 +151,19 @@ function_ffcut_mode1 () {
 	servicenumber=1
 	paramffcut="-acodec copy -vcodec copy"
 	function_ask_ffcut_param
-	while  read  line ; do
+	while  read <&3  line ; do
 				extension="${line##*.}"
 		if [[ -z "$extension" ]] ; then
 			function_message_error $"unable to get the extension of your files error\bug?"
 					
 		fi
-		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $2}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' "$ffcut_temp_file")"
+		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $2}' "$ffcut_temp_file")"
+		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' "$ffcut_temp_file")"
+		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' "$ffcut_temp_file")"
 		 
 			if [[ "$k" != "$line" ]]; then
-			function_passive_popup_test $"mmm there is mess on /tmp/FFmpeg_servicemenu_temp_ffcut"
+			function_passive_popup_test $"mmm there is mess on "$ffcut_temp_file""
 			exit 2
 			else 
 				echo "ffmpeg  -ss $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension""
@@ -148,28 +172,28 @@ function_ffcut_mode1 () {
 			fi 
 		servicenumber=$(($servicenumber+1))
 			
-			done  < "$listoffile"
+			done 3< "$listoffile"
 			
 				}
 	
-	function_ffcut_mode2 () {
+function_ffcut_mode2 () {
 	
 	servicenumber=1
 	paramffcut="-acodec copy -vcodec copy"
 	function_ask_ffcut_param
-	while  read  line ; do
+	while  read <&3 ; do
 				extension="${line##*.}"
 		if [[ -z "$extension" ]] ; then
 			function_message_error $"unable to get the extension of your files error\bug?"
 					
 		fi
-		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $2}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' "$ffcut_temp_file")"
+		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $2}' "$ffcut_temp_file")"
+		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' "$ffcut_temp_file")"
+		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' "$ffcut_temp_file")"
 		 
 			if [[ "$k" != "$line" ]]; then
-			function_passive_popup_test $"mmm there is mess on /tmp/FFmpeg_servicemenu_temp_ffcut"
+			function_passive_popup_test $"mmm there is mess on "$ffcut_temp_file""
 			exit 2
 			else 
 				echo "ffmpeg  -t $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension""
@@ -178,7 +202,7 @@ function_ffcut_mode1 () {
 			fi 
 		servicenumber=$(($servicenumber+1))
 			
-			done  < "$listoffile"
+			done 3< "$listoffile"
 			
 			
 }
@@ -186,26 +210,26 @@ function_ffcut_mode1 () {
 		
 		
 		
-		function_ffcut_mode3 () {
+function_ffcut_mode3 () {
 	servicenumber=1
 	paramffcut="-acodec copy -vcodec copy"
 	function_ask_ffcut_param
-	while  read  line ; do
+	while  read <&3 ; do
 				extension="${line##*.}"
 		if [[ -z "$extension" ]] ; then
 			function_message_error $"unable to get the extension of your files error\bug?"
 					
 		fi
-		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $5}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		hh1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $7}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		mm1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $8}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
-		ss1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $9}' /tmp/FFmpeg_servicemenu_temp_ffcut)"
+		k="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $1}' "$ffcut_temp_file")"
+		hh="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $3}' "$ffcut_temp_file")"
+		mm="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $4}' "$ffcut_temp_file")"
+		ss="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $5}' "$ffcut_temp_file")"
+		hh1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $7}' "$ffcut_temp_file")"
+		mm1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $8}' "$ffcut_temp_file")"
+		ss1="$(awk -v a=$servicenumber -F'/' 'FNR == $a {print $9}' "$ffcut_temp_file")"
 		 
 			if [[ "$k" != "$line" ]]; then
-			function_passive_popup_test $"mmm there is mess on /tmp/FFmpeg_servicemenu_temp_ffcut"
+			function_passive_popup_test $"mmm there is mess on "$ffcut_temp_file""
 			exit 2
 			else 
 				echo "ffmpeg  -ss $hh:$mm:$ss -i "$line" -acodec copy -vcodec copy "${line%%.*}_$hh:$mm:$ss.$extension""
@@ -214,18 +238,20 @@ function_ffcut_mode1 () {
 			fi 
 		servicenumber=$(($servicenumber+1))
 			
-			done  < "$listoffile"
+			done 3< "$listoffile"
 			
 			
 }
 
 
 function_menu_cut () {
-	ans=$(kdialog  --title $"FFcut Menu" --menu  $"Choose a mode"  mode1 $"START==>A" mode3 $"A==>B" mode2 $"B==>END" help $"Help" back $"Back"  --default $"START==>A")
+	anscutmenu=$(kdialog  --title $"FFcut Menu" --menu  $"Choose a mode"  mode1 $"Cut From START==>to A" mode3 $"Cut From A==> To B"  mode2 $"Cut From B==>To END"  help $"Help" back $"Back"  --default $"START==>A")
+	echo $anscutmenu
 }
 
 
 function_menu_cut_antix () {
+	clear
 	tput cup 3 14
 	tput setaf 2
 	
@@ -239,8 +265,8 @@ function_menu_cut_antix () {
 	
 	
 	
-	menutextffcut=($"START==>A" $"A==>B" $"B==>END" $"Help" $"Back" )
-	menulabelffcut=(mode1 mode2 mode3 help Back) 
+	menutextffcut=($"Cut From START==>to A" $"Cut From A==> To B" $"Cut From B==>To END" $"Help" $"Back" )
+	menulabelffcut=(mode1 mode3  mode2 help Back) 
 	
 	
 	
@@ -281,33 +307,49 @@ function_menu_cut_start () {
 	fi
 	
 }
+
 function_anscutmenu() {
+	
+			set -x
 			case $anscutmenu in
 			
-			
 			mode1)
-			function_startcut "$1"
-			echo "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			
+			while read line ; do 
+				function_startcut "$line"
+				echo "$1/startcut/$hours/$minutes/$seconds/" >>"$ffcut_temp_file"
+			done< "$listoffile"
 			;;
 			mode2)
+			while read line ; do
 			function_stopcut "$1"
-			echo "$1/stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			echo "$1/stopcut/$hours/$minutes/$seconds/" >>"$ffcut_temp_file"
+			done< "$listoffile"
 			;;
 			mode3)
+			while read line ; do
 			function_startcut "$1"
 			storeseconds="$totalseconds"
-			echo -n "$1/startcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			echo -n "$1/startcut/$hours/$minutes/$seconds/" >>"$ffcut_temp_file"
 			
 			function_stopcut "$1"
-			echo "stopcut/$hours/$minutes/$seconds/" >>/tmp/FFmpeg_servicemenu_temp_ffcut
+			echo "stopcut/$hours/$minutes/$seconds/" >>"$ffcut_temp_file"
+			done< "$listoffile"
 			;;
 			*)
-			message=$"Menu FFcut has not received a proper answer and you suck"
-			function_menustart
+			function_message_error $"Menu FFcut has not received a proper answer and you suck"
+			function_menu_cut
 			;;
 			
 			esac
 
 }
 
-function_menu_cut_antix
+function_message_error () {
+	message=$1
+}
+
+# function_menu_cut
+# function_ask_ffcut_param
+# function_anscutmenu
+function_calculate
