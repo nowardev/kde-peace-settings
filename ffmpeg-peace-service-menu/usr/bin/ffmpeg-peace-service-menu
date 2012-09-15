@@ -24,6 +24,9 @@ function_set_antix (){
 pidofx=""
 }
 
+function_calculate_numberoffile () {
+    numberoffile=$(wc -l <"$listoffile")
+}
 function_open_text_file () {
 
 if [[ -z "$pidofx" ]]; then 
@@ -80,7 +83,7 @@ if  [[ ! -e  "$ffmpeg_service_menu_settings" ]] ; then
 function_create_settings
 fi
 xtexteditor="$(awk -F':' '/xtexteditor:/{print $2}' "$ffmpeg_service_menu_settings")"
-texteditor="$(awk -F':' '/texteditor:/{print $2}' "$ffmpeg_service_menu_settings")"
+texteditor="$(awk -F':' '/shelleditor:/{print $2}' "$ffmpeg_service_menu_settings")"
 overwrite="$(awk -F':' '/overwrite:/{gsub(/ /,""); print $2}' "$ffmpeg_service_menu_settings")"
 threads="$(awk  -F':' '/cpu:/{print $2}' "$ffmpeg_service_menu_settings")"
 easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
@@ -389,7 +392,7 @@ fi
     
 echo "xtexteditor: $xtexteditor" >"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
-echo "texteditor: $texteditor" >>"$ffmpeg_service_menu_settings"
+echo "shelleditor: $texteditor" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
 echo "overwrite: $overwrite" >>"$ffmpeg_service_menu_settings"
 echo "" >>"$ffmpeg_service_menu_settings"
@@ -823,7 +826,7 @@ function_message_error $"i can't do it i can't find List of file and templog in 
 fi
 
  
- 
+function_calculate_numberoffile
 function_menu_start
 }
 
@@ -987,7 +990,7 @@ else
     function_message_error $"Hey you fucking idiot you have not give me the file!"
     fi 
 fi
-
+function_calculate_numberoffile
 
 }
 
@@ -1025,7 +1028,7 @@ else
     done< <(find "$1" -type f)
 fi
 function_passivepopup_test $"adding folder...done"
-
+function_calculate_numberoffile
 }
 
 
@@ -2285,8 +2288,11 @@ function_startcut() {
 }
 
 function_stopcut() {
-         
+         if [[ -z "$storeseconds" ]]; then
+             storeseconds=0
+         fi
         function_ffplay "$1"
+        echo "echo scale=3; $totalseconds-$storeseconds| bc"
         totalseconds=$(echo "scale=3; $totalseconds-$storeseconds"| bc )
         function_calculate
         
@@ -2313,9 +2319,109 @@ paramffcut="-acodec copy -vcodec copy"
 
 
         
-function_ffcut_mode1 () {
 
-    servicenumber=1
+    
+function_ffcut_mode1 () {
+    
+    a=1
+    value=0
+    paramffcut="-acodec copy -vcodec copy"
+    function_ask_ffcut_param
+    while  read <&3 line ; do
+                extension="${line##*.}"
+        if [[ -z "$extension" ]] ; then
+            function_message_error $"unable to get the extension of your files error\bug?"
+                    
+        fi
+        k="$(awk -v a="$a" -F'|' 'FNR == a {print $1}' "$ffcut_temp_file")"
+        time="$(awk -v a="$a" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
+#         k="$(awk -v a="$a"   'FNR == a {print $1}' "$ffcut_temp_file")"
+#         hh="$(awk -v a="$a"   'FNR == a {print $2}' "$ffcut_temp_file")"
+#         mm="$(awk -v a="$a"   'FNR == a {print $3}' "$ffcut_temp_file")"
+#         ss="$(awk -v a="$a"  'FNR == a {print $4}' "$ffcut_temp_file")"
+         
+            if [[ "$k" != "$line" ]]; then
+            function_passivepopup_test $"mmm there is mess on "$ffcut_temp_file""
+            exit 2
+            else 
+                echo "$ffmpegpath  -t $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_start_to_$time.$extension""
+                $ffmpegpath -i "$line" -t $time  $paramffcut "${line%%.*}_start_to_$time.$extension" 2>>"$templog"
+                
+            fi 
+            value=$(($(($a*100))/$numberoffile))
+            echo " $a of $numberoffile $value%"
+            a=$(($a+1))
+ 
+            
+            done 3< "$listoffile"
+        if [[ "$value" == 100 ]];then
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepopup_test $"Conversions done!"
+        fi
+
+    function_check_for_errors
+    exit
+    fi
+            
+}
+         
+        
+        
+        
+function_ffcut_mode2 () {
+    a=1
+    value=0
+    paramffcut="-acodec copy -vcodec copy"
+    function_ask_ffcut_param
+    while  read <&3 line ; do
+            extension="${line##*.}"
+        if [[ -z "$extension" ]] ; then
+            function_message_error $"unable to get the extension of your files error\bug?"
+                    
+        fi
+        k="$(awk -v a="$a" -F'|' 'FNR == a {print $1}' "$ffcut_temp_file")"
+        time="$(awk -v a="$a" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
+        time1="$(awk -v a="$a" -F'|' 'FNR == a {print $5}' "$ffcut_temp_file")"
+#         k="$(awk -v a="$a" -F'/' 'FNR == a {print $1}' "$ffcut_temp_file")"
+#         hh="$(awk -v a="$a" -F'/' 'FNR == a {print $3}' "$ffcut_temp_file")"
+#         mm="$(awk -v a="$a" -F'/' 'FNR == a {print $4}' "$ffcut_temp_file")"
+#         ss="$(awk -v a="$a" -F'/' 'FNR == a {print $5}' "$ffcut_temp_file")"
+#         hh1="$(awk -v a="$a" -F'/' 'FNR == a {print $7}' "$ffcut_temp_file")"
+#         mm1="$(awk -v a="$a" -F'/' 'FNR == a {print $8}' "$ffcut_temp_file")"
+#         ss1="$(awk -v a="$a" -F'/' 'FNR == a {print $9}' "$ffcut_temp_file")"
+         
+            if [[ "$k" != "$line" ]]; then
+            function_passivepopup_test $"mmm there is mess on "$ffcut_temp_file""
+            exit 2
+            else 
+                echo "$ffmpegpath  -ss $time -t $time1 $paramffcut "${line%%.*}_"$time"_"$time1".$extension""
+                $ffmpegpath -i "$line"  -ss $time -t $time1 $paramffcut "${line%%.*}_"$time"_$time1.$extension" 2>>"$templog"
+                
+            fi 
+            value=$(($(($a*100))/$numberoffile))
+            echo " $a of $numberoffile $value%"
+            a=$(($a+1))
+            
+            done 3< "$listoffile"
+            
+        if [[ "$value" == 100 ]];then
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepopup_test $"Conversions done!"
+        fi
+
+    function_check_for_errors
+    exit
+    fi
+            
+            
+}
+
+function_ffcut_mode3 () {
+
+    a=1
+    value=0
     paramffcut="-acodec copy -vcodec copy"
     function_ask_ffcut_param
     echo $"starting to cut with $paramffcut  "
@@ -2325,99 +2431,36 @@ function_ffcut_mode1 () {
             function_message_error $"unable to get the extension of your files error\bug?"
                     
         fi
-        k="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $1}' "$ffcut_temp_file")"
-        time="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
-#         hh="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
-#         mm="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $4}' "$ffcut_temp_file")"
-#         ss="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $4}' "$ffcut_temp_file")"
+        k="$(awk -v a="$a" -F'|' 'FNR == a {print $1}' "$ffcut_temp_file")"
+        time="$(awk -v a="$a" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
+#         hh="$(awk -v a="$a" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
+#         mm="$(awk -v a="$a" -F'|' 'FNR == a {print $4}' "$ffcut_temp_file")"
+#         ss="$(awk -v a="$a" -F'|' 'FNR == a {print $4}' "$ffcut_temp_file")"
          
             if [[ "$k" != "$line" ]]; then
             function_passivepopup_test $"mmm there is mess on "$ffcut_temp_file""
             exit 2
             else 
-                echo "$ffmpegpath -ss $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_$time.$extension""
-                $ffmpegpath  -ss $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_$time.$extension" 2>>"$templog"
+                echo "$ffmpegpath -ss $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_from_$time"_to end".$extension""
+                $ffmpegpath  -ss $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_from_"$time"_to end.$extension" 2>>"$templog"
                 
             fi 
-        servicenumber=$(($servicenumber+1))
+            value=$(($(($a*100))/ $numberoffile))
+            echo " $a of $numberoffile $value%"
+            a=$(($a+1))
             
             done 3< "$listoffile"
-            function_check_for_errors
+    if [[ "$value" == 100 ]];then
+    
+        if [[ "$passivepopup" == "enabled" ]];then
+             function_passivepopup_test $"Conversions done!"
+        fi
+
+    function_check_for_errors
+    exit
+    fi
             
                 }
-    
-function_ffcut_mode2 () {
-    
-    servicenumber=1
-    paramffcut="-acodec copy -vcodec copy"
-    function_ask_ffcut_param
-    while  read <&3 line ; do
-                extension="${line##*.}"
-        if [[ -z "$extension" ]] ; then
-            function_message_error $"unable to get the extension of your files error\bug?"
-                    
-        fi
-        k="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $1}' "$ffcut_temp_file")"
-        time="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
-#         k="$(awk -v a="$servicenumber"   'FNR == a {print $1}' "$ffcut_temp_file")"
-#         hh="$(awk -v a="$servicenumber"   'FNR == a {print $2}' "$ffcut_temp_file")"
-#         mm="$(awk -v a="$servicenumber"   'FNR == a {print $3}' "$ffcut_temp_file")"
-#         ss="$(awk -v a="$servicenumber"  'FNR == a {print $4}' "$ffcut_temp_file")"
-         
-            if [[ "$k" != "$line" ]]; then
-            function_passivepopup_test $"mmm there is mess on "$ffcut_temp_file""
-            exit 2
-            else 
-                echo "$ffmpegpath  -t $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_$time.$extension""
-                $ffmpegpath -i "$line" -t $time  $paramffcut "${line%%.*}_$time.$extension" 2>>"$templog"
-                
-            fi 
-        servicenumber=$(($servicenumber+1))
-            
-            done 3< "$listoffile"
-            
-            
-}
-         
-        
-        
-        
-function_ffcut_mode3 () {
-    servicenumber=1
-    paramffcut="-acodec copy -vcodec copy"
-    function_ask_ffcut_param
-    while  read <&3 line ; do
-                extension="${line##*.}"
-        if [[ -z "$extension" ]] ; then
-            function_message_error $"unable to get the extension of your files error\bug?"
-                    
-        fi
-        k="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $1}' "$ffcut_temp_file")"
-        time="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $3}' "$ffcut_temp_file")"
-        time1="$(awk -v a="$servicenumber" -F'|' 'FNR == a {print $5}' "$ffcut_temp_file")"
-#         k="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $1}' "$ffcut_temp_file")"
-#         hh="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $3}' "$ffcut_temp_file")"
-#         mm="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $4}' "$ffcut_temp_file")"
-#         ss="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $5}' "$ffcut_temp_file")"
-#         hh1="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $7}' "$ffcut_temp_file")"
-#         mm1="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $8}' "$ffcut_temp_file")"
-#         ss1="$(awk -v a="$servicenumber" -F'/' 'FNR == a {print $9}' "$ffcut_temp_file")"
-         
-            if [[ "$k" != "$line" ]]; then
-            function_passivepopup_test $"mmm there is mess on "$ffcut_temp_file""
-            exit 2
-            else 
-                echo "$ffmpegpath  -ss $time -i "$line" -acodec copy -vcodec copy "${line%%.*}_"$time"_"$time1".$extension""
-                $ffmpegpath -i "$line"  -ss $time -t $time1 $paramffcut "${line%%.*}_$time_$time1.$extension" 2>>"$templog"
-                
-            fi 
-        servicenumber=$(($servicenumber+1))
-            
-            done 3< "$listoffile"
-            
-            
-}
-
 
 function_menu_cut () {
     anscutmenu=$(kdialog  --title $"FFcut Menu" --menu  $"Choose a mode"  mode1 $"Cut From START==>to A" mode3 $"Cut From A==> To B"  mode2 $"Cut From B==>To END"  help $"Help" back $"Back"  --default $"START==>A")
@@ -2441,7 +2484,7 @@ function_menu_cut_antix () {
     
     
     menutext=($"Cut From START==>to A" $"Cut From A==> To B" $"Cut From B==>To END" $"Help" $"Back" )
-    menulabel=(mode1 mode3  mode2 help Back) 
+    menulabel=(mode1 mode2  mode3 help Back) 
     
     
     
@@ -2507,23 +2550,15 @@ function_anscutmenu() {
             case $ansffcut in
             
             mode1)
-            function_passivepopup_test $"Stop FFplay where you need to start cut"
-            while  read <&3 line ; do 
-                function_startcut "$line"
-                echo "$line|startcut|$hours:$minutes:$seconds" >>"$ffcut_temp_file"
-            done 3< "$listoffile"
-            function_ffcut_mode1
-            ;;
-            mode2)
             function_passivepopup_test $"Stop FFplay where you need to stop cut"
             while  read <&3 line ; do
             function_stopcut "$line"
             echo "$line|stopcut|$hours:$minutes:$seconds" >>"$ffcut_temp_file"
             done 3< "$listoffile"
-            function_ffcut_mode2
+            function_ffcut_mode1
             ;;
             
-            mode3)
+            mode2)
             function_passivepopup_test $"Stop FFplay where you need to start cut"
             while  read <&3 line ; do
             function_startcut "$line"
@@ -2532,6 +2567,14 @@ function_anscutmenu() {
             
             function_stopcut "$line"
             echo "|stopcut|$hours:$minutes:$seconds " >>"$ffcut_temp_file"
+            done 3< "$listoffile"
+            function_ffcut_mode2
+            ;;
+            mode3)
+            function_passivepopup_test $"Stop FFplay where you need to start cut"
+            while  read <&3 line ; do 
+                function_startcut "$line"
+                echo "$line|startcut|$hours:$minutes:$seconds" >>"$ffcut_temp_file"
             done 3< "$listoffile"
             function_ffcut_mode3
             ;;
@@ -2937,25 +2980,25 @@ menutext[17]=$"Help"
 menutext[18]=$"Exit"
 
  
-menulabel[0]=$"add"
-menulabel[1]=$"addf"
-menulabel[2]=$"edit"
-menulabel[3]=$"d"
-menulabel[4]=$"r"
-menulabel[5]=$"e"
-menulabel[6]=$"pa"
-menulabel[7]=$"pd"
-menulabel[8]=$"pv"
-menulabel[9]=$"ep"
-menulabel[10]=$"extra"
-menulabel[11]=$"setf"
-menulabel[12]=$"tf"
-menulabel[13]=$"ds"
-menulabel[14]=$"dp"
-menulabel[15]=$"es"
-menulabel[16]=$"v"
-menulabel[17]=$"help"
-menulabel[18]=$"ex"
+menulabel[0]=add
+menulabel[1]=addf
+menulabel[2]=edit
+menulabel[3]=d
+menulabel[4]=r
+menulabel[5]=e
+menulabel[6]=pa
+menulabel[7]=pd
+menulabel[8]=pv
+menulabel[9]=ep
+menulabel[10]=extra
+menulabel[11]=setf
+menulabel[12]=tf
+menulabel[13]=ds
+menulabel[14]=dp
+menulabel[15]=es
+menulabel[16]=v
+menulabel[17]=help
+menulabel[18]=ex
 
 a=0
 b=7
@@ -3018,6 +3061,7 @@ function_menu_advanced
 
  d)
  function_delete silent
+ function_menu_start
  ;;
  ds)
  function_delete_settings
@@ -3042,12 +3086,13 @@ function_ffmpeg_profile audio
  function_ffmpeg_profile
  ;;
  edit)
-     if [[ ! -z "$pidofx" ]]; then 
-        $xtexteditor "$listoffile" 
+ 
+ 
+     if [[  -z "$pidofx" ]]; then 
+        $texteditor "$listoffile" 
     else
         $xtexteditor "$listoffile" 
     fi 
- 
  
  function_menu_start
  ;;
@@ -3057,10 +3102,10 @@ function_ffmpeg_profile audio
  function_menu_start
  ;;
  es)
-      if [[ ! -z "$pidofx" ]]; then 
-         $xtexteditor "$ffmpeg_service_menu_settings" 
+      if [[  -z "$pidofx" ]]; then 
+         $texteditor "$ffmpeg_service_menu_settings" 
     else
-        $texteditor "$ffmpeg_service_menu_settings" 
+        $xtexteditor "$ffmpeg_service_menu_settings" 
     fi 
 function_load_settings
 function_menu_start
@@ -3179,7 +3224,7 @@ probe=$(type -p ffprobe)
 
 threads=$(awk '/processor/{print}' /proc/cpuinfo | wc -l)
 if [[ -e "$listoffile" ]]; then 
-numberoffile=$(wc -l <"$listoffile")
+function_calculate_numberoffile
 fi 
 
 # easyprofile="$(awk  -F':' '/easyprofile:/{print $2}' "$ffmpeg_service_menu_settings")"
@@ -3208,7 +3253,8 @@ echo "Version $Version
 Author $Author
 License $License
 List of Files location $listoffile
-# easyprofile_file location $easyprofile_file
+xtexteditor $xtexteditor
+texteditor $texteditor
 FFmpeg Audio profile location $ffmpeg_profile_file_audio
 FFmpeg Device profile location  $ffmpeg_profile_file_device
 FFmpeg Video profile location $ffmpeg_profile_file_video
@@ -3255,22 +3301,28 @@ if  [[ $1 == -*  ]]; then
          ;;
     -a)
     function_analyze "$2"
+    function_menu_start
 #     function_analyze n "$2"
     ;;
     -e)  $texteditor "$listoffile"
+    
     ;;
     -ek)  kate "$listoffile"
+    function_menu_start
     ;;
     -d) function_delete silent
+    function_menu_start
     ;;
     -decompile)
     function_build
+    function_menu_start
     ;;
     -cf)
     function_compile_ffmpeg_fromgit
     ;;
     -tf)
     function_test_ffmpeg
+    function_menu_start
     ;;
     -wx)
     function_set_antix
