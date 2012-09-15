@@ -2463,7 +2463,7 @@ function_ffcut_mode3 () {
                 }
 
 function_menu_cut () {
-    anscutmenu=$(kdialog  --title $"FFcut Menu" --menu  $"Choose a mode"  mode1 $"Cut From START==>to A" mode3 $"Cut From A==> To B"  mode2 $"Cut From B==>To END"  help $"Help" back $"Back"  --default $"START==>A")
+    anscutmenu=$(kdialog  --title $"FFcut Menu" --menu  $"Choose a mode"  mode1 $"Cut From START==>to A" mode2 $"Cut From A==> To B"  mode3 $"Cut From B==>To END"  help $"Help" back $"Back"  --default $"START==>A")
     echo $anscutmenu
 }
 
