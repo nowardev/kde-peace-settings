@@ -117,18 +117,17 @@ panel.addWidget("pastebin");
 
 var systemtray = panel.addWidget("systemtray");
 
-var clock = panel.addWidget("digital-clock");
-clock.writeConfig("showDate", "true");
-clock.writeConfig("showDay", "true");
-clock.writeConfig("showSeconds", "true");
-clock.writeConfig("showYear", "true");
-clock.writeConfig("showShadow", "false");
-clock.writeConfig("showYear", "true");
-//clock.writeConfig("showTimezone", "true");
-clock.writeConfig("plainClockFont", "Ubuntu,12,-1,5,75,0,0,0,0,0");
-clock.writeConfig("useCustomColor", "true");
-clock.writeConfig("plainClockColor", "255,255,255");
-clock.writeConfig("plainClockDrawShadow", "false");
+var clock = panel.addWidget("digital-clock")
+clock.writeConfig("showDate", "false")
+clock.writeConfig("showDay", "false")
+clock.writeConfig("showSeconds", "false")
+clock.writeConfig("showYear", "false")
+clock.writeConfig("showShadow", "false")
+//clock.writeConfig("showTimezone", "true")
+clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
+clock.writeConfig("useCustomColor", "true")
+clock.writeConfig("plainClockColor", "255,255,255")
+clock.writeConfig("plainClockDrawShadow", "false")
 
 
 var lockout = panel.addWidget("lockout");

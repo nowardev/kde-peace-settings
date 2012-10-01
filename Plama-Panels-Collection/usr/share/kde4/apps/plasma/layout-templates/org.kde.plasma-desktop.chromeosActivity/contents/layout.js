@@ -5,8 +5,9 @@ function chromeos(){
 
  
  
-var activity = new Activity("folderview")
+var activity = new Activity("sal")
 activity.name = i18n("ChromeOs Activity")
+activity.writeConfig("EnabledEntries","plasma-sal-bookmarks.desktop,plasma-sal-contacts.desktop,plasma-sal-multimedia.desktop,plasma-sal-internet.desktop,plasma-sal-graphics.desktop,plasma-sal-games.desktop,plasma-sal-office.desktop")
 
 
 
@@ -15,3 +16,4 @@ activity.name = i18n("ChromeOs Activity")
 chromeos()
 
 //loadTemplate("org.kde.plasma-desktop.gnome2Panel")
+ 
