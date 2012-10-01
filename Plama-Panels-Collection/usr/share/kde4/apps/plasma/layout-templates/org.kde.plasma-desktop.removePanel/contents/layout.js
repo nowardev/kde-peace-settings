@@ -45,4 +45,4 @@ function RemoveOldPanels()
 }
 
 RemoveOldPanels() //load the function 
- 
+RemoveOldPanels() //reload the function to avoid some crashes with plasma
