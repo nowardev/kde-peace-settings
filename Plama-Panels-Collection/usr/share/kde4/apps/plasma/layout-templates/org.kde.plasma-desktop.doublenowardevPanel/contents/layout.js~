@@ -207,7 +207,7 @@ function nowardevdouble(){
 nowardevdouble()
 	
 
-// var systemtray = panel.addWidget("systemtray")
+var systemtray = panel.addWidget("systemtray")
 // systemtray.writeConfig("DefaultAppletsAdded","false")
 // systemtray.writeConfig("ShowHardware","true")
 // systemtray.writeConfig("ShowCommunications","true")

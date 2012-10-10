@@ -1,0 +1,88 @@
+#!/bin/bash -x
+ 
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+version="0.0.1"
+license="GPLv3"
+developer="nowardev@gmail.com"
+config="$HOME/.ffwebcam"
+
+if [[  "$1" ==  d ]] ; then  rm "$config" ; fi 
+if [[  "$1" ==  h ]] ; then echo "
+$version $license $developer
+
+
+Usage: ffwebkam <option>
+
+example :
+
+ffwebkam d                         remove your config file located here $config
+
+ffwebkam h                         print this help 
+
+"
+exit
+fi 
+
+if [[ -z "$(type -p ffplay)" ]] ; then 
+	if [[ -z "$(type -p avplay)" ]] ; then  kdialog --passivepopup $"FFplay or AVplay is not present in your system please install it "; else binary="$(type -p avplay)" ; fi  
+		else 
+			binary="$(type -p ffplay)"
+		fi 
+
+a=0 ; while read line ; do  webcams[$a]="$line" ;  echo $"Detected Webcams: /dev/$line" ; a=$(($a+1)); done< <(ls /dev/ | grep video)
+	
+if [[ ! -e "$config" ]]; then 
+	device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
+	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
+	echo "device: $device
+resolution: $resolution	" >"$config"
+
+	else
+	device="$(awk -F':' '/device:/{gsub(/ /,"") ; print $2}'  "$config" )"
+	resolution="$(awk -F':' '/resolution:/{gsub(/ /,"") ; print $2}' "$config")"
+	fi 
+	
+if [[ -z "$device" || -z "$resolution" ]]; then echo  $"File $config is not written well ..."  ;exit 1 ;  fi 
+
+if [[ !  -z   "$(ls /dev/ | grep video)" ]]; then 
+
+
+
+
+if [[ -z "$device" || -z "$resolution" ]]; then kdialog --passivepopup $"Exiting ... device or resolution is empty"; exit 1 ;  fi 
+
+echo "
+$version $license $developer
+
+detected webcams ${webcams[@]}
+resolution $resolution
+binary $binary 
+
+Usage: ffwebkam <option>
+
+example :
+
+ffwebkam d                         remove your config file located here $config
+
+ffwebkam h                         print this help 
+
+"
+$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution"
+
+fi 
+

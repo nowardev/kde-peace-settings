@@ -1,0 +1,41 @@
+======DOWNLOADING PANELS DAILY
+
+copy and paste this code on the konsole (you need of subversion wget and zip)
+
+btw THIS CODE REMOVE THE OLD INSTALLATIONS...SO IF YOU DID YOUR OWN PANEL SAVE IT! OR YOU WILL LOST IT
+
+ cd /tmp; for file in ~/.kde/share/kde4/services/plasma-layout-*.desktop; do rm "$file" ;done ; for f in ~/.kde/share/apps/plasma/layout-templates/org.kde* ; do rm -R "$f"; done ; for f in ~/.kde/share/apps/plasma/layout-templates/nowardev.* ; do rm -R "$f"; done ; svn export --force https://plasma-panels-script.googlecode.com/svn/trunk/usr/share/kde-peace-settings/kde4/apps/plasma/layout-templates/ ; cd layout-templates/ ;for folder in */ ; do zip -r ${folder%/}.zip "$folder" -x "*.git*" -x "*.svn*" -x "*~" ; done ; for file in *.zip ; do plasmapkg -t layout-template -i "$file"; done 
+
+download only svn export https://plasma-panels-script.googlecode.com/svn/trunk/usr/share/kde4/apps/plasma/layout-templates/
+
+INSTALLATION
+
+BACK UPS YOUR PANELs
+
+mv ~/.kde/share/config/plasma-desktop-appletsrc ~/.kde/share/config/plasma-desktop-appletsrc_OLD ; mv ~/.kde/share/config/plasma-desktoprc ~/.kde/share/config/plasma-desktoprc_OLD
+
+this should be enough
+
+INSTALLATION OF PLASMA PANELS PACK
+
+PACKAGES YOU NEED:
+
+for debian user that doen't want waste time for 150mb of widget :D
+
+sudo apt-get install plasma-widget-
+
+MAKE SURE YOU HAVE ICONTASK!
+
+ wget http://plasma-panels-script.googlecode.com/files/Plasma_Panels_Collection_1.3.zip && mkdir plasmatemp && unzip Plasma_Panels_Collection_1.3.zip -d "$PWD"/plasmatemp ; cd "$PWD"/plasmatemp; for file in *.zip; do   $(plasmapkg -t layout-template -i "$file"); done
+
+REMOVING
+
+The file is installed locally so you have to remove folder that you can find here
+
+~/.kde/share/apps/plasma/layout-templates/
+
+USE
+
+right button on the desktop add panel add MAC panel for example
+
+MAKE SURE YOU HAVE KDE 4.7.4 or higher IF YOU HAVE NOT YOU COULD HAVE PLASMA CRASH, IT DOESN'T MATTER BECAUSE YOU CAN RE-ADD YOU PANELS BUT IT NOT SO NICE SEE AN APPLICATION CRASH====== 

@@ -1,0 +1,9 @@
+[Desktop Entry]
+Categories=Qt;KDE;System;
+Comment=Display your Webcam
+Exec=ffwebkam
+GenericName=FFwebkam
+Icon=camera-web
+Name=FFwebkam
+Name[it]=FFwebkam
+Type=Application
