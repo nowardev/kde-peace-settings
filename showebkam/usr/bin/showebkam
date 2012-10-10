@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
  
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -82,7 +82,8 @@ showebkam d                         remove your config file located here $config
 showebkam h                         print this help 
 
 "
-$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution"
+$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> /tmp/showebkam.log
 
+if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log" ; fi 
 fi 
 
