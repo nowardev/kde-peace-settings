@@ -1,9 +1,10 @@
 [Desktop Entry]
-Categories=Qt;KDE;System;
+Categories=Qt;KDE;AudioVideo;Video;
 Comment=Display your Webcam
-Exec=ffwebkam
-GenericName=FFwebkam
+Comment[it]=Mostra Webcam
+Exec=showebkam
+GenericName=ShoWebKam
 Icon=camera-web
-Name=FFwebkam
-Name[it]=FFwebkam
+Name=ShoWebKam
+Name[it]=ShoWebKam
 Type=Application

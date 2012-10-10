@@ -19,7 +19,7 @@
 version="0.0.1"
 license="GPLv3"
 developer="nowardev@gmail.com"
-config="$HOME/.ffwebcam"
+config="$HOME/.showebkam"
 
 if [[  "$1" ==  d ]] ; then  rm "$config" ; fi 
 if [[  "$1" ==  h ]] ; then echo "
