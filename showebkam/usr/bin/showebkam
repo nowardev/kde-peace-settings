@@ -51,7 +51,7 @@ if [[ ! -e "$config" ]]; then
 	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
 	echo "device: $device
 resolution: $resolution	" >"$config"
-
+	kdialog --passivepopup $"Configs saved in $config"
 	else
 	device="$(awk -F':' '/device:/{gsub(/ /,"") ; print $2}'  "$config" )"
 	resolution="$(awk -F':' '/resolution:/{gsub(/ /,"") ; print $2}' "$config")"
@@ -84,6 +84,11 @@ showebkam h                         print this help
 "
 $binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> /tmp/showebkam.log
 
-if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log" ; fi 
+if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log you can try to remove $config running in terminal showebkam d "
+kdialog --yesno $"you get an error...  would you try to reset your configs   ?"
+	if [[ "$?" == 0 ]] ; then 
+		showebkam d
+		fi 
+fi 
 fi 
 
