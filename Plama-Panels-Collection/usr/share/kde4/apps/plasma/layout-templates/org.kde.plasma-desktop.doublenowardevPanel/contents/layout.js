@@ -190,6 +190,11 @@ function nowardevdouble(){
 		
 	}
 	
+	
+	var spacer = panel.addWidget("panelspacer_internal")
+	
+	
+	
 	var widget = "kwinbutton"
 	/*check if the widget is installed and add if it is to your panel*/
 	if (knownWidgetTypes.indexOf(widget) > -1) {
