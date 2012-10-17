@@ -14,7 +14,8 @@
 //
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
-////////function remove in case of error of first remove :S
+//MAC PANELS 
+
 function remove()
 {
   for (i in panelIds) {
