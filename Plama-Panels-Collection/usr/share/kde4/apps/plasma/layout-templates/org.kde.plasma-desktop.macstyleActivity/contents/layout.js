@@ -1,7 +1,7 @@
 //Copyright (C) 2012 nowardev nowardev@gmail.com
- 
+
 //This file is part of kde-peace-settings.
- 
+
 //kde-peace-settings is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
 //the Free Software Foundation, either version 3 of the License, or
@@ -19,12 +19,12 @@
 
 function remove()
 {
-  for (i in panelIds) {
-        
-
-	panelById(panelIds[i]).remove()
-    }
-  
+	for (i in panelIds) {
+		
+		
+		panelById(panelIds[i]).remove()
+	}
+	
 }
 //////////////////////////////////////////////////////////
 
@@ -32,75 +32,86 @@ function remove()
 /////function remove standard///////////////////////////////
 function RemoveOldPanels()
 {
-    for (i in panelIds) {
-       // panelById(panelIds[i]).remove()
-       p = panelById(panelIds[i]);
-       if (typeof p === "undefined") {
-       print("E: Couldn't find first panel");
-       remove() //load the remove function in case of problems
-       }
-        else 	{
-	  panelById(panelIds[i]).remove()
-	  	} 
-                                    }
+	for (i in panelIds) {
+		// panelById(panelIds[i]).remove()
+		p = panelById(panelIds[i])
+		if (typeof p === "undefined") {
+			print("E: Couldn't find first panel")
+			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		} 
+	}
 }
 //RemoveOldPanels() //load the function 
- //////////////////////////////////////////////////////////
-var screenrect = screenGeometry(0);  
+//////////////////////////////////////////////////////////
+var screenrect = screenGeometry(0)  
 function activitymac(){
-  
- 
- var activity   = new Activity("desktop")
-activity.name = i18n("Mac Activity");
+	
+	
+	var activity   = new Activity("desktop")
+	activity.name = i18n("Mac Activity")
+	
+	var widget = "plasma_applet_daisy"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		
+		var widget = panel.addWidget(widget)
+		
+		widget.currentConfigGroup = new Array('Configuration')
+		widget.writeConfig("middleclickaction","run")
+		widget.writeConfig("icospacing","0.25")
+		widget.writeConfig("icodimension","52")
+		widget.writeConfig("floating","false")
+		widget.writeConfig("drawersize","30")
+		widget.writeConfig("drawerrotation","1.6")
+		widget.writeConfig("click_effects","true")
+		widget.writeConfig("background_opacity","0.6")
+		widget.writeConfig("acceptdrops","true")
+		widget.writeConfig("player","Amarok 2.x")
+		widget.writeConfig("plugin","plasma_applet_daisy")
+		widget.writeConfig("position","buttom_center")
+		widget.writeConfig("reservespace","true")
+		widget.writeConfig("showclosetask","true")
+		widget.writeConfig("showindicons","true")
+		widget.writeConfig("showmirror","true")
+		widget.writeConfig("showondesk","true")
+		widget.writeConfig("showtaskoflauncher","false")
+		widget.writeConfig("showtooltips","true")
+		widget.writeConfig("showtooltips_inactive","true")
+		widget.writeConfig("showtooltips_launchers","true")
+		widget.writeConfig("taskpreviews","true")
+		widget.writeConfig("theme","default")
+		widget.writeConfig("theme_t","alternative")
+		widget.writeConfig("tip_type","thumbnail")
+		widget.writeConfig("total_launchers","9")
+		widget.writeConfig("type","standard_dock")
+		widget.writeConfig("wallpaperplugin","image")
+		widget.writeConfig("wallpaperpluginmode","SingleImage")
+		widget.writeConfig("zoomtype","simple")
+		widget.writeConfig("zvalue","25")
 
-
-var daisy = activity.addWidget("plasma_applet_daisy")
-
-daisy.writeConfig("middleclickaction","run");
-daisy.writeConfig("icospacing","0.25");
-daisy.writeConfig("icodimension","52");
-daisy.writeConfig("floating","false");
-daisy.writeConfig("drawersize","30");
-daisy.writeConfig("drawerrotation","1.6");
-daisy.writeConfig("click_effects","true");
-daisy.writeConfig("background_opacity","0.6");
-daisy.writeConfig("acceptdrops","true");
-daisy.writeConfig("player","Amarok 2.x")
-daisy.writeConfig("plugin","plasma_applet_daisy")
-daisy.writeConfig("position","buttom_center")
-daisy.writeConfig("reservespace","true")
-daisy.writeConfig("showclosetask","true")
-daisy.writeConfig("showindicons","true")
-daisy.writeConfig("showmirror","true")
-daisy.writeConfig("showondesk","true")
-daisy.writeConfig("showtaskoflauncher","false")
-daisy.writeConfig("showtooltips","true")
-daisy.writeConfig("showtooltips_inactive","true")
-daisy.writeConfig("showtooltips_launchers","true")
-daisy.writeConfig("taskpreviews","true")
-daisy.writeConfig("theme","default")
-daisy.writeConfig("theme_t","alternative")
-daisy.writeConfig("tip_type","thumbnail")
-daisy.writeConfig("total_launchers","9")
-daisy.writeConfig("type","standard_dock")
-daisy.writeConfig("wallpaperplugin","image")
-daisy.writeConfig("wallpaperpluginmode","SingleImage")
-daisy.writeConfig("zoomtype","simple")
-daisy.writeConfig("zvalue","25")
-
- 
-var nowplaying = activity.addWidget("nowplaying")
-var mediaplayer = activity.addWidget("mediaplayer")
-
-
+		
+		
+	} 
+	else {
+		print("your system doesn't provide "+widget )
+		
+	}
+	
+	
+	
+	var nowplaying = activity.addWidget("nowplaying")
+	var mediaplayer = activity.addWidget("mediaplayer")
+	
+	
 }
 activitymac()
-
+//loadTemplate("org.kde.plasma-desktop.macPanel")
  
 
 
 
 
 
-
-//loadTemplate("org.kde.plasma-desktop.macPanel")

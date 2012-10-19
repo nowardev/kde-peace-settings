@@ -33,9 +33,9 @@ function RemoveOldPanels()
 {
     for (i in panelIds) {
        // panelById(panelIds[i]).remove()
-       p = panelById(panelIds[i]);
+       p = panelById(panelIds[i])
        if (typeof p === "undefined") {
-       print("E: Couldn't find first panel");
+       print("E: Couldn't find first panel")
        remove() //load the remove function in case of problems
        }
         else 	{
@@ -47,7 +47,7 @@ function RemoveOldPanels()
 //RemoveOldPanels() //load the function 
  //////////////////////////////////////////////////////////
 
-var screenrect = screenGeometry(0);
+var screenrect = screenGeometry(0)
 function unkool7(){
 
   
@@ -66,63 +66,63 @@ panel.height = screenrect.height/20;
 
 
 
-var launcher = panel.addWidget("lancelot_launcher");
-panel.addWidget("showdesktop"); 
-//var quick = panel.addWidget("quickaccess"); 
-//var pager = panel.addWidget("pager");
-//pager.writeGlobalConfig("rows", "2");
+var launcher = panel.addWidget("lancelot_launcher")
+panel.addWidget("showdesktop") 
+//var quick = panel.addWidget("quickaccess") 
+//var pager = panel.addWidget("pager")
+//pager.writeGlobalConfig("rows", "2")
 
-var icontasks = panel.addWidget("icontasks");
-icontasks.writeConfig("groupClick","1");
-icontasks.writeConfig("iconScale","49");
-icontasks.writeConfig("launcherIcons","false");
-icontasks.writeConfig("maxRows","1");
-icontasks.writeConfig("mediaButtons","true");
-icontasks.writeConfig("middleClick","0");
-icontasks.writeConfig("previewSize","200");
-icontasks.writeConfig("rotate","false");
-icontasks.writeConfig("showOnlyCurrentActivity","false");
-icontasks.writeConfig("showOnlyCurrentDesktop","false");
-icontasks.writeConfig("showOnlyCurrentScreen","false");
-icontasks.writeConfig("showProgress","true");
-icontasks.writeConfig("showSeparator","0");
-icontasks.writeConfig("sortingStrategy","2");
-icontasks.writeConfig("spacing","0");
-icontasks.writeConfig("style","1");
-icontasks.writeConfig("toolTips","1");
-icontasks.writeConfig("unity","true");
+var icontasks = panel.addWidget("icontasks")
+icontasks.writeConfig("groupClick","1")
+icontasks.writeConfig("iconScale","49")
+icontasks.writeConfig("launcherIcons","false")
+icontasks.writeConfig("maxRows","1")
+icontasks.writeConfig("mediaButtons","true")
+icontasks.writeConfig("middleClick","0")
+icontasks.writeConfig("previewSize","200")
+icontasks.writeConfig("rotate","false")
+icontasks.writeConfig("showOnlyCurrentActivity","false")
+icontasks.writeConfig("showOnlyCurrentDesktop","false")
+icontasks.writeConfig("showOnlyCurrentScreen","false")
+icontasks.writeConfig("showProgress","true")
+icontasks.writeConfig("showSeparator","0")
+icontasks.writeConfig("sortingStrategy","2")
+icontasks.writeConfig("spacing","0")
+icontasks.writeConfig("style","1")
+icontasks.writeConfig("toolTips","1")
+icontasks.writeConfig("unity","true")
 //icontasks.writeConfig("Enabled","true")
 icontasks.currentConfigGroup = new Array('Launchers') //CONFIGURE THE LAUNCHERS 
-icontasks.writeConfig("Items","file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings");
+icontasks.writeConfig("Items","file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")
 
 
  
- // var notification = panel.addWidget ("notifications");
+ // var notification = panel.addWidget ("notifications")
 
 
  
- var systemtray = panel.addWidget("systemtray");
-systemtray.writeConfig("DefaultAppletsAdded","false");
-systemtray.writeConfig("ShowHardware","true");
-systemtray.writeConfig("ShowCommunications","true");
-systemtray.writeConfig("ShowApplicationStatus","true");
-systemtray.writeConfig("ShowSystemServices","true");
-systemtray.writeConfig("ShowUnknown","false");
-systemtray.writeConfig("alwaysShown","battery,notifier,KMix,org.kde.networkmanagement");
+ var systemtray = panel.addWidget("systemtray")
+systemtray.writeConfig("DefaultAppletsAdded","false")
+systemtray.writeConfig("ShowHardware","true")
+systemtray.writeConfig("ShowCommunications","true")
+systemtray.writeConfig("ShowApplicationStatus","true")
+systemtray.writeConfig("ShowSystemServices","true")
+systemtray.writeConfig("ShowUnknown","false")
+systemtray.writeConfig("alwaysShown","battery,notifier,KMix,org.kde.networkmanagement")
 
  
-var clock = panel.addWidget("digital-clock");
-    clock.writeConfig("showDate", "false");
-    clock.writeConfig("showDay", "false");
-    clock.writeConfig("showSeconds", "false");
-    clock.writeConfig("showYear", "false");
-    clock.writeConfig("showShadow", "false");
-    clock.writeConfig("showYear", "false");
-    //clock.writeConfig("showTimezone", "true");
-    clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0");
-    clock.writeConfig("useCustomColor", "true");
-    clock.writeConfig("plainClockColor", "255,255,255");
-    clock.writeConfig("plainClockDrawShadow", "false");
+var clock = panel.addWidget("digital-clock")
+    clock.writeConfig("showDate", "false")
+    clock.writeConfig("showDay", "false")
+    clock.writeConfig("showSeconds", "false")
+    clock.writeConfig("showYear", "false")
+    clock.writeConfig("showShadow", "false")
+    clock.writeConfig("showYear", "false")
+    //clock.writeConfig("showTimezone", "true")
+    clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
+    clock.writeConfig("useCustomColor", "true")
+    clock.writeConfig("plainClockColor", "255,255,255")
+    clock.writeConfig("plainClockDrawShadow", "false")
 
 
 }

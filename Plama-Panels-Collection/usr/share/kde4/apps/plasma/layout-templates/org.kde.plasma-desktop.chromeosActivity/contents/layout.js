@@ -16,7 +16,7 @@
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ///CHROMEOS ACTIVITY 
-var screenrect = screenGeometry(0); // get information about your screen h w 
+var screenrect = screenGeometry(0) // get information about your screen h w 
 
 function chromeos(){
 

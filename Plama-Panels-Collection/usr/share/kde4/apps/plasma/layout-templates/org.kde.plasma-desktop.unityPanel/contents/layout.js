@@ -37,11 +37,11 @@ function RemoveOldPanels()
 		if (typeof p === "undefined") {
 			print("E: Couldn't find first panel");
 			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		} 
 	}
-	else 	{
-		panelById(panelIds[i]).remove()
-	} 
-}
 }
 
 // RemoveOldPanels() //load the function 
@@ -64,7 +64,8 @@ function unity(){
 		
 		panel.location = 'top'
 		//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
-		panel.height = screenrect.height/30;
+		panel.height = screenrect.height/30
+		
 	}
 	
 	var widget = "kwinbutton"
@@ -172,15 +173,40 @@ function unity(){
 	
 	panel.height = screenrect.height/18
 	
-	var launcher = panel.addWidget("homerunlauncher")
 	
-	// var launcher = panel.addWidget("lancelot_part")
-	// launcher.writeConfig("iconLocation", "start-here-kde")
-	// launcher.writeConfig("iconClickActivation", "true")
-	// launcher.writeConfig("contentsExtenderPosition", "1")
-	// launcher.writeConfig("searchHistory", "firefox")
-	// launcher.writeConfig("showSearchBox", "true")
-	// launcher.writeConfig("partData", "model=FavoriteApplications&type=list&version=1.0\nmodel=Folder%20applications%3A%2FOffice%2F&type=list&version=1.0\nmodel=Folder%20applications%3A%2FMultimedia%2F&type=list&version=1.0\nmodel=Folder%20applications%3A%2FInternet%2F&type=list&version=1.0\nmodel=System&type=list&version=1.0\n") 
+	// check if homerunlauncher is installed , if not check if shelf is  installed if not add the standard launcher
+	var widget = "homerunlauncher"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		var widget = panel.addWidget(widget)
+		
+	} 
+	else {
+			var widget = "lancelot_part"
+		/*check if the widget is installed and add if it is to your panel*/
+		if (knownWidgetTypes.indexOf(widget) > -1) {
+			
+			var widget = panel.addWidget(widget)
+			
+			widget.writeConfig("iconLocation", "start-here-kde")
+			widget.writeConfig("iconClickActivation", "true")
+			widget.writeConfig("contentsExtenderPosition", "1")
+			widget.writeConfig("searchHistory", "firefox")
+			widget.writeConfig("showSearchBox", "true")
+			widget.writeConfig("partData", "model=FavoriteApplications&type=list&version=1.0\nmodel=Folder%20applications%3A%2FOffice%2F&type=list&version=1.0\nmodel=Folder%20applications%3A%2FMultimedia%2F&type=list&version=1.0\nmodel=Folder%20applications%3A%2FInternet%2F&type=list&version=1.0\nmodel=System&type=list&version=1.0\n") 
+		
+		} 
+		else {
+			var launcher = panel.addWidget("launcher")
+			launcher.currentConfigGroup = new Array('Shortcuts')
+// 			launcher.globalShortcut = "F13"
+			
+			
+		}
+		
+	}
+ 
+	
 	
 	
 	var launcher = panel.addWidget("lancelot_part")

@@ -46,14 +46,14 @@ function RemoveOldPanels()
 //RemoveOldPanels() //load the function 
  //////////////////////////////////////////////////////////
 var screenrect = screenGeometry(0);  
-function activitygranpa(){
+function activityunkool(){
 
 
  var screenrect = screenGeometry(0); // get information about your screen h w 
 var activity = new Activity ;
-activity.name = i18n("GranPa Activity");
+activity.name = i18n("unKool Activity");
 
-
+/*
 var yawp = activity.addWidget("yaWP");
 
 yawp.writeConfig("animation.daysnames","8");
@@ -90,7 +90,7 @@ yawp.currentConfigGroup = new Array('locations')
 yawp.writeConfig("city01","accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome");
 yawp.writeConfig("selected","0");
  
-yawp.geometry = new QRectF(0,0,screenrect.width/4,screenrect.height/3)
+yawp.geometry = new QRectF(0,0,screenrect.width/4,screenrect.height/3)*/
 
  
  
@@ -98,18 +98,18 @@ yawp.geometry = new QRectF(0,0,screenrect.width/4,screenrect.height/3)
 var pictures = userDataPath("pictures")
 var folderview = activity.addWidget("folderview")
 folderview.writeConfig("url", pictures)
-folderview.geometry = new QRectF(screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
+folderview.geometry = new QRectF(0,30,screenrect.width/4,(screenrect.height-30)/3)
 
 
 var music =  userDataPath('music')
 var folderview = activity.addWidget("folderview")
 folderview.writeConfig("url", music)
-folderview.geometry = new QRectF(2*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
-
+folderview.geometry = new QRectF(1*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
+/*
 var video = userDataPath('video')
 var folderview = activity.addWidget("folderview")
 folderview.writeConfig("url", video )
-folderview.geometry = new QRectF(3*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
+folderview.geometry = new QRectF(2*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
 
 
 var downloads =userDataPath('downloads')
@@ -120,11 +120,11 @@ folderview.geometry = new QRectF(0,screenrect.height,screenrect.width/4,screenre
 var shared= "/home/shared"
 var folderview = activity.addWidget("folderview")
 folderview.writeConfig("url", shared )
-folderview.geometry = new QRectF(screenrect.width/4,screenrect.height,screenrect.width/4,screenrect.height/3)
+folderview.geometry = new QRectF(screenrect.width/4,screenrect.height,screenrect.width/4,screenrect.height/3)*/
 
 
 }
-activitygranpa()
+activityunkool()
 
 
 

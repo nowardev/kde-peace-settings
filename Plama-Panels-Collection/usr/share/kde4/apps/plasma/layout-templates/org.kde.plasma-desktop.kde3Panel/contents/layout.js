@@ -60,7 +60,7 @@ function kde3(){
 	}
 	
 	
-	panel.height = screenrect.height/20;
+	panel.height = screenrect.height/20
 	
 	
 	//panel.addWidget("launcher")
@@ -89,17 +89,7 @@ function kde3(){
 	quicklaunch.writeConfig("launcherNamesVisible" ,"false")
 	
 	panel.addWidget("pastebin")
-	
-	
-	//panel.addWidget("smooth-tasks")
-	
-	
-	//panel.addWidget("panelspacer_internal")
-	
-	//panel.addWidget("sm_cpu")
-	//panel.addWidget("sm_ram")
-	//panel.addWidget("sm_temperature")
-	//panel.addWidget("systemtray")
+
 	var  pager = panel.addWidget("pager")
 	pager.writeGlobalConfig("rows", "2")
 	pager.writeConfig("displayedText","0")
@@ -109,8 +99,8 @@ function kde3(){
 	
 	
 	
-	var task = panel.addWidget("tasks")
-	task.writeConfig("showTooltip","false")
+	var tasks = panel.addWidget("tasks")
+	tasks.writeConfig("showTooltip","false")
 	
 	var systemtray = panel.addWidget("systemtray")
 	systemtray.writeConfig("DefaultAppletsAdded","false")
@@ -127,24 +117,11 @@ function kde3(){
 	clock.writeConfig("showSeconds", "true")
 	clock.writeConfig("showShadow", "false")
 	clock.writeConfig("showYear", "true")
-	//clock.writeConfig("showTimezone", "true")
 	clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
 	clock.writeConfig("useCustomColor", "true")
 	clock.writeConfig("plainClockColor", "255,255,255")
 	clock.writeConfig("plainClockDrawShadow", "false")
-	
-	
-	// var  lockout = panel.addWidget("lockout")
-	//lockout.writeConfig("showHibernateButton","true")
-	//lockout.writeConfig("showLogoutButton","true")
-	//lockout.writeConfig("showLockButton","false")
-	//lockout.writeConfig("showSleepButton","false")
-	//lockout.writeConfig("showSwitchUserButton","true")
-	
-	
-	
-	
-	
+
 }
 
 kde3()

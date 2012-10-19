@@ -1,7 +1,7 @@
 //Copyright (C) 2012 nowardev nowardev@gmail.com
- 
+
 //This file is part of kde-peace-settings.
- 
+
 //kde-peace-settings is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
 //the Free Software Foundation, either version 3 of the License, or
@@ -18,12 +18,12 @@
 ///NOWARDEV ACTIVITY 
 function remove()
 {
-  for (i in panelIds) {
-        
-
-	panelById(panelIds[i]).remove()
-    }
-  
+	for (i in panelIds) {
+		
+		
+		panelById(panelIds[i]).remove()
+	}
+	
 }
 //////////////////////////////////////////////////////////
 
@@ -31,46 +31,46 @@ function remove()
 /////function remove standard///////////////////////////////
 function RemoveOldPanels()
 {
-    for (i in panelIds) {
-       // panelById(panelIds[i]).remove()
-       p = panelById(panelIds[i]);
-       if (typeof p === "undefined") {
-       print("E: Couldn't find first panel");
-       remove() //load the remove function in case of problems
-       }
-        else 	{
-	  panelById(panelIds[i]).remove()
-	  	} 
-                                    }
+	for (i in panelIds) {
+		// panelById(panelIds[i]).remove()
+		p = panelById(panelIds[i]);
+		if (typeof p === "undefined") {
+			print("E: Couldn't find first panel");
+			remove() //load the remove function in case of problems
+	}
+	else 	{
+		panelById(panelIds[i]).remove()
+	} 
+}
 }
 //RemoveOldPanels() //load the function 
- //////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 var screenrect = screenGeometry(0)
 function activitynowardev(){
-
-var activity = new Activity("folderview")
-activity.name = i18n("Nowardev Activity")
-activity.writeConfig("alignToGrid","true")
-activity.writeConfig("blankLabel","false")
-activity.writeConfig("clickForFolderPreviews","true")
-activity.writeConfig("customIconSize","48")
-// activity.writeConfig("customLabel","")
-activity.writeConfig("drawShadows","true")
-activity.writeConfig("filter","0")
-activity.writeConfig("filterFiles","*")
-activity.writeConfig("flow","1")
-activity.writeConfig("formfactor","0")
-activity.writeConfig("iconsLocked","false")
-// activity.writeConfig("mimeFilter","")
-activity.writeConfig("numTextLines","2")
-activity.writeConfig("url","desktop:/")
-activity.writeConfig("wallpaperplugin","clock") //   "clock" "virus" "org.kde.potd" "mandelbrot" "weather" "pattern" "marble" //activity.writeConfig("wallpaperpluginmode", "Slideshow" )
-activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
-
-  
- 
-  
-
+	
+	var activity = new Activity("folderview")
+			activity.name = i18n("Nowardev Activity")
+			activity.writeConfig("alignToGrid","true")
+			activity.writeConfig("blankLabel","false")
+			activity.writeConfig("clickForFolderPreviews","true")
+			activity.writeConfig("customIconSize","48")
+			// activity.writeConfig("customLabel","")
+			activity.writeConfig("drawShadows","true")
+			activity.writeConfig("filter","0")
+			activity.writeConfig("filterFiles","*")
+			activity.writeConfig("flow","1")
+			activity.writeConfig("formfactor","0")
+			activity.writeConfig("iconsLocked","false")
+			// activity.writeConfig("mimeFilter","")
+			activity.writeConfig("numTextLines","2")
+			activity.writeConfig("url","desktop:/")
+			activity.writeConfig("wallpaperplugin","clock") //   "clock" "virus" "org.kde.potd" "mandelbrot" "weather" "pattern" "marble" //activity.writeConfig("wallpaperpluginmode", "Slideshow" )
+			activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
+			
+			
+			
+			
+			
 }
 activitynowardev()
 
@@ -80,7 +80,7 @@ activitynowardev()
 
 
 
- 
 
- 
+
+
 //loadTemplate("org.kde.plasma-desktop.nowardevPanel")

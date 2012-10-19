@@ -49,7 +49,7 @@ var screenrect = screenGeometry(0);
 function activityunity(){
 
 
-   var activity  = new Activity("folderview");
+   var activity  = new Activity("folderview")
 
 
  

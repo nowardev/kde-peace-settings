@@ -49,7 +49,7 @@ function RemoveOldPanels()
 //////////////////////////////////////////////////////////
 
 
-var screenrect = screenGeometry(0); // get information about your screen h w 
+var screenrect = screenGeometry(0) // get information about your screen h w 
 
 //start another function to create panels layout
 function chromeos(){
@@ -73,7 +73,7 @@ function chromeos(){
 	var notification = panel.addWidget ("notifications")
 	var battery = panel.addWidget("battery")
 	
-	panel.addWidget("showdesktop") ;
+	panel.addWidget("showdesktop") 
 	var icontasks = panel.addWidget("icontasks")
 	icontasks.writeConfig("showOnlyCurrentActivity","false")
 	icontasks.writeConfig("showOnlyCurrentDesktop","false")
@@ -93,7 +93,7 @@ function chromeos(){
 	// launcher.writeConfig("showMenuTitles", "true")
 	// launcher.writeConfig("views", "Applications,Favorites,Computer,Settings,RunCommand,Leave")
 	//launcher.writeConfig("icon", "start-here")
-// 	var launcher = panel.addWidget("launcher")
+	// 	var launcher = panel.addWidget("launcher")
 }
 
 chromeos()
