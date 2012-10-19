@@ -91,7 +91,7 @@ function activitymac(){
 		widget.writeConfig("wallpaperpluginmode","SingleImage")
 		widget.writeConfig("zoomtype","simple")
 		widget.writeConfig("zvalue","25")
-
+		
 		
 		
 	} 
@@ -109,7 +109,7 @@ function activitymac(){
 }
 activitymac()
 //loadTemplate("org.kde.plasma-desktop.macPanel")
- 
+
 
 
 

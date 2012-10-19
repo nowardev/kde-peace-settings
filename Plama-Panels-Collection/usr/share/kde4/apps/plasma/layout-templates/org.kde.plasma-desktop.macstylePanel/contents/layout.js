@@ -37,11 +37,11 @@ function RemoveOldPanels()
 		if (typeof p === "undefined") {
 			print("E: Couldn't find first panel")
 			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		} 
 	}
-	else 	{
-		panelById(panelIds[i]).remove()
-	} 
-}
 }
 
 //RemoveOldPanels() //load the function 
@@ -63,69 +63,69 @@ function macstyle(){
 	
 	
 	var launcher = panel.addWidget("simplelauncher")
-			launcher.writeConfig("format", "Description")
-			launcher.writeConfig("showMenuTitles", "true")
-			launcher.writeConfig("views", "Applications,Favorites,Computer,Settings,RunCommand,Leave")
-			
-			
-			
-			var menubar = panel.addWidget("menubar")
-			//menubar.writeConfig("useButtonFormFactor", "false")
-			
-			
-			panel.addWidget("panelspacer_internal")
-			
-			panel.addWidget("pastebin")
-			
-			var quick = panel.addWidget("quickaccess") 
-			
-			var firefox = panel.addWidget("quicklaunch")
-			firefox.writeConfig("iconUrls","file:///usr/share/applications/firefox.desktop")
-			
-			
-			var systemsettings = panel.addWidget("quicklaunch")
-			systemsettings.writeConfig("iconUrls","file:////usr/share/applications/kde4/systemsettings.desktop")
-			
-			
-			panel.addWidget("trash")
-			
-			panel.addWidget("panelspacer_internal")
-			
-			var weather = panel.addWidget("weather")
-			weather.writeConfig("Share","false")
-			weather.writeConfig("pressureUnit","5008")
-			weather.writeConfig("source","wettercom|weather|Verona, Veneto, IT|IT0VE0284;Verona")
-			weather.writeConfig("speedUnit","9001")
-			weather.writeConfig("temperatureUnit","6001")
-			weather.writeConfig("updateInterval","30")
-			weather.writeConfig("visibilityUnit","2007")
-			
-			var systemtray = panel.addWidget("systemtray")
-			
-			var pager = panel.addWidget("pager")
-			pager.writeGlobalConfig("rows", "2")
-			
-			
-			var clock = panel.addWidget("digital-clock")
-			clock.writeConfig("showDate", "true")
-			clock.writeConfig("showDay", "false")
-			clock.writeConfig("showSeconds", "true")
-			clock.writeConfig("showYear", "false")
-			clock.writeConfig("showShadow", "false")
-			//clock.writeConfig("showTimezone", "true")
-			clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
-			clock.writeConfig("useCustomColor", "true")
-			clock.writeConfig("plainClockColor", "255,255,255")
-			clock.writeConfig("plainClockDrawShadow", "false")
-			
-			var lockout = panel.addWidget("lockout")
-			//lockout.writeConfig("showHibernateButton","true")
-			lockout.writeConfig("showLogoutButton","true")
-			lockout.writeConfig("showLockButton","false")
-			lockout.writeConfig("showSleepButton","false")
-			lockout.writeConfig("showSwitchUserButton","false")
-			
-			
+	launcher.writeConfig("format", "Description")
+	launcher.writeConfig("showMenuTitles", "true")
+	launcher.writeConfig("views", "Applications,Favorites,Computer,Settings,RunCommand,Leave")
+	
+	
+	
+	var menubar = panel.addWidget("menubar")
+	//menubar.writeConfig("useButtonFormFactor", "false")
+	
+	
+	panel.addWidget("panelspacer_internal")
+	
+	panel.addWidget("pastebin")
+	
+	var quick = panel.addWidget("quickaccess") 
+	
+	var firefox = panel.addWidget("quicklaunch")
+	firefox.writeConfig("iconUrls","file:///usr/share/applications/firefox.desktop")
+	
+	
+	var systemsettings = panel.addWidget("quicklaunch")
+	systemsettings.writeConfig("iconUrls","file:////usr/share/applications/kde4/systemsettings.desktop")
+	
+	
+	panel.addWidget("trash")
+	
+	panel.addWidget("panelspacer_internal")
+	
+	var weather = panel.addWidget("weather")
+	weather.writeConfig("Share","false")
+	weather.writeConfig("pressureUnit","5008")
+	weather.writeConfig("source","wettercom|weather|Verona, Veneto, IT|IT0VE0284;Verona")
+	weather.writeConfig("speedUnit","9001")
+	weather.writeConfig("temperatureUnit","6001")
+	weather.writeConfig("updateInterval","30")
+	weather.writeConfig("visibilityUnit","2007")
+	
+	var systemtray = panel.addWidget("systemtray")
+	
+	var pager = panel.addWidget("pager")
+	pager.writeGlobalConfig("rows", "2")
+	
+	
+	var clock = panel.addWidget("digital-clock")
+	clock.writeConfig("showDate", "true")
+	clock.writeConfig("showDay", "false")
+	clock.writeConfig("showSeconds", "true")
+	clock.writeConfig("showYear", "false")
+	clock.writeConfig("showShadow", "false")
+	//clock.writeConfig("showTimezone", "true")
+	clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
+	clock.writeConfig("useCustomColor", "true")
+	clock.writeConfig("plainClockColor", "255,255,255")
+	clock.writeConfig("plainClockDrawShadow", "false")
+	
+	var lockout = panel.addWidget("lockout")
+	//lockout.writeConfig("showHibernateButton","true")
+	lockout.writeConfig("showLogoutButton","true")
+	lockout.writeConfig("showLockButton","false")
+	lockout.writeConfig("showSleepButton","false")
+	lockout.writeConfig("showSwitchUserButton","false")
+	
+	
 }
 
 macstyle()

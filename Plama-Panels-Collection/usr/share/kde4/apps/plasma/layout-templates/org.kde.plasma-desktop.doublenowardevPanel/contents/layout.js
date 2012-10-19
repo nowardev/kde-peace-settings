@@ -1,7 +1,7 @@
 //Copyright (C) 2012 nowardev nowardev@gmail.com
- 
+
 //This file is part of kde-peace-settings.
- 
+
 //kde-peace-settings is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
 //the Free Software Foundation, either version 3 of the License, or
@@ -73,7 +73,7 @@ function nowardevdouble(){
 	launcher.currentConfigGroup = new Array('Shortcuts')
 	launcher.globalShortcut = "F13"
 	
-// 	var launcher = panel.addWidget("launcher")
+	// 	var launcher = panel.addWidget("launcher")
 	//launcher.writeConfig("icon", "start-here")
 	
 	
@@ -126,7 +126,7 @@ function nowardevdouble(){
 	
 	var pastebin = panel.addWidget("pastebin")
 	
-
+	
 	var icontasks = panel.addWidget("icontasks")
 	icontasks.writeConfig("groupClick","1")
 	icontasks.writeConfig("iconScale","49")
@@ -151,7 +151,7 @@ function nowardevdouble(){
 	icontasks.currentConfigGroup = new Array('Launchers')
 	icontasks.writeConfig("Items","file:///usr/share/applications/kde4/konqbrowser.desktop?wmClass=Konqueror,file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/vlc.desktop?wmClass=Vlc,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")
 	
-
+	
 	
 	
 	
@@ -208,10 +208,10 @@ function nowardevdouble(){
 		print("your system doesn't provide "+widget )
 		
 	}  
-	}
-	
+}
+
 nowardevdouble()
-	
+
 
 // var systemtray = panel.addWidget("systemtray")
 // systemtray.writeConfig("DefaultAppletsAdded","false")
@@ -221,4 +221,3 @@ nowardevdouble()
 // systemtray.writeConfig("ShowSystemServices","true")
 // systemtray.writeConfig("ShowUnknown","false")
 //systemtray.writeConfig("alwaysShown","battery,notifier,KMix,org.kde.networkmanagement")
-	

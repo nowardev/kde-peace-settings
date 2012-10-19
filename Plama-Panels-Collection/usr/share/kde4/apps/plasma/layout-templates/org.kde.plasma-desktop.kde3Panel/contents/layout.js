@@ -37,11 +37,11 @@ function RemoveOldPanels()
 		if (typeof p === "undefined") {
 			print("E: Couldn't find first panel")
 			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		} 
 	}
-	else 	{
-		panelById(panelIds[i]).remove()
-	} 
-}
 }
 
 //RemoveOldPanels() //load the function 
@@ -89,7 +89,7 @@ function kde3(){
 	quicklaunch.writeConfig("launcherNamesVisible" ,"false")
 	
 	panel.addWidget("pastebin")
-
+	
 	var  pager = panel.addWidget("pager")
 	pager.writeGlobalConfig("rows", "2")
 	pager.writeConfig("displayedText","0")
@@ -121,7 +121,7 @@ function kde3(){
 	clock.writeConfig("useCustomColor", "true")
 	clock.writeConfig("plainClockColor", "255,255,255")
 	clock.writeConfig("plainClockDrawShadow", "false")
-
+	
 }
 
 kde3()
