@@ -85,17 +85,20 @@ function gnome3(){
 	panel.addWidget("panelspacer_internal")
 	var clock = panel.addWidget("digital-clock")
 	clock.writeConfig("showDate", "true")
-	clock.writeConfig("showDay", "true")
-	clock.writeConfig("showSeconds", "true")
-	clock.writeConfig("showYear", "true")
+	clock.writeConfig("showDay", "false")
+	clock.writeConfig("showSeconds", "false")
+	clock.writeConfig("showYear", "false")
 	clock.writeConfig("showShadow", "false")
 	//clock.writeConfig("showTimezone", "true")
 	clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
-	//clock.writeConfig("dateStyle","3")
+	clock.writeConfig("dateStyle","3")
 	
 	clock.writeConfig("useCustomColor", "true")
 	clock.writeConfig("plainClockColor", "255,255,255")
 	clock.writeConfig("plainClockDrawShadow", "false")
+	
+	panel.reloadConfig()
+	
 	
 	var panel = new Panel
 	if (panelIds.length == 3) {
@@ -245,17 +248,7 @@ function gnome3(){
 	//icontasks.writeConfig("Enabled","true")
 	icontasks.currentConfigGroup = new Array('Launchers') //CONFIGURE THE LAUNCHERS 
 	icontasks.writeConfig("Items","file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+
 	
 	
 }

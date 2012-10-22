@@ -67,6 +67,7 @@ function unkool7(){
 	
 	
 	var launcher = panel.addWidget("lancelot_launcher")
+	
 	panel.addWidget("showdesktop") 
 	//var quick = panel.addWidget("quickaccess") 
 	//var pager = panel.addWidget("pager")

@@ -71,10 +71,7 @@ function unity(){
 	var widget = "kwinbutton"
 	/*check if the widget is installed and add if it is to your panel*/
 	if (knownWidgetTypes.indexOf(widget) > -1) {
-		var widget = panel.addWidget(widget)
-		widget.writeConfig("ActionType", "1")
-		widget.writeConfig("Maximized", "1")
-		
+		var widget = panel.addWidget(widget)		
 	} 
 	else {
 		print("your system doesn't provide "+widget )

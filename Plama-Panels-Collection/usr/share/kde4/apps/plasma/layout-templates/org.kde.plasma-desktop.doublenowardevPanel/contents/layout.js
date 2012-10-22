@@ -63,7 +63,7 @@ function nowardevdouble(){
 		//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
 		
 		panel.length = (screenrect.width/2)-(screenrect.width/16);
-		panel.height = screenrect.height/30;
+		panel.height = screenrect.height/25;
 		
 		panel.alignment = "left"
 		
@@ -117,7 +117,7 @@ function nowardevdouble(){
 		//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
 		
 		panel.length = (screenrect.width/2)+(screenrect.width/16)
-		panel.height = screenrect.height/30
+		panel.height = screenrect.height/25
 		
 		panel.alignment = "right"
 		
