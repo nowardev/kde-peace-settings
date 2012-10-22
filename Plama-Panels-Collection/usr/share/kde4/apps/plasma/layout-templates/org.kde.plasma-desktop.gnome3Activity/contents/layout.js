@@ -55,17 +55,22 @@ function activitygnome3(){
 			var activitymanager  = activity.addWidget("activitymanager)
 			
 			
-			activitymanager.writeConfig("desktop","-1")
-			activitymanager.writeConfig("formfactor","2")
-			activitymanager.writeConfig("geometry","0,-41,screenrect.width/4,screenrect.height/3")
-			activitymanager.writeConfig("immutability","1")
-			activitymanager.writeConfig("lastDesktop","-1")
-			activitymanager.writeConfig("lastScreen","0")
-			activitymanager.writeConfig("location","3")
-			activitymanager.writeConfig("plugin","panel")
-			activitymanager.writeConfig("screen","0")
-			activitymanager.writeConfig("zvalue","0")
-
+// 			activitymanager.writeConfig("desktop","-1")
+// 			activitymanager.writeConfig("formfactor","2")
+// 			activitymanager.writeConfig("geometry","0,-41,screenrect.width/4,screenrect.height/3")
+// 			activitymanager.writeConfig("immutability","1")
+// 			activitymanager.writeConfig("lastDesktop","-1")
+// 			activitymanager.writeConfig("lastScreen","0")
+// 			activitymanager.writeConfig("location","3")
+// 			activitymanager.writeConfig("plugin","panel")
+// 			activitymanager.writeConfig("screen","0")
+// 			activitymanager.writeConfig("zvalue","0")
+	activity.wallpaperPlugin = "image"
+	activity.wallpaperMode = "SingleImage"
+	activity.currentConfigGroup = Array("Wallpaper", "image")
+	activity.writeConfig("wallpaper", "nowardev-gnome3")
+	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
+	activity.reloadConfig()
 }
 
 

@@ -64,15 +64,13 @@ function activitygnome2(){
 	activity.writeConfig("mimeFilter","")
 	activity.writeConfig("numTextLines","2")
 	activity.writeConfig("url","desktop:/")
-	activity.writeConfig("wallpaperplugin","image")
-	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer")
-	
-	
-	
-	//activity.wallpaperPlugin = "image"
-	//activity.wallpaperMode = "SingleImage"
-	//activity.currentConfigGroup = Array("Wallpaper", "image")
-	//activity.writeConfig("wallpaper", "name image or location")
+	activity.wallpaperPlugin = "image"
+	activity.wallpaperMode = "SingleImage"
+	activity.currentConfigGroup = Array("Wallpaper", "image")
+	activity.writeConfig("wallpaper", "nowardev-gnome2")
+	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
+	activity.reloadConfig()
+ 
 	
 	
 	var dolphin = activity.addWidget("icon")

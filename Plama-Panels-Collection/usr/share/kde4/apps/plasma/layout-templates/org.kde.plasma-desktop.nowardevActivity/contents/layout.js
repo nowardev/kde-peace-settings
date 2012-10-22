@@ -64,15 +64,21 @@ function activitynowardev(){
 	// activity.writeConfig("mimeFilter","")
 	activity.writeConfig("numTextLines","2")
 	activity.writeConfig("url","desktop:/")
-	activity.writeConfig("wallpaperplugin","clock") //   "clock" "virus" "org.kde.potd" "mandelbrot" "weather" "pattern" "marble" //activity.writeConfig("wallpaperpluginmode", "Slideshow" )
+	activity.wallpaperPlugin = "image"
+	activity.wallpaperMode = "SingleImage"
+	activity.currentConfigGroup = Array("Wallpaper", "image")
+	activity.writeConfig("wallpaper", "nowardev-graphite")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
-	
-	
-	
-	
+	activity.reloadConfig()
+// 	activity.writeConfig("wallpaperplugin","clock") //   "clock" "virus" "org.kde.potd" "mandelbrot" "weather" "pattern" "marble" //activity.writeConfig("wallpaperpluginmode", "Slideshow" )
+ 
 	
 }
 activitynowardev()
+
+
+ 
+ 
 
 
 

@@ -52,12 +52,20 @@ function activitymac(){
 	
 	var activity   = new Activity("desktop")
 	activity.name = i18n("Mac Activity")
+	activity.wallpaperPlugin = "image"
+	activity.wallpaperMode = "SingleImage"
+	activity.currentConfigGroup = Array("Wallpaper", "image")
+	activity.writeConfig("wallpaper", "nowardev-mac")
+	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
 	
-	var widget = "plasma_applet_daisy"
+	
+	
+	
+	var widget ="plasma_applet_daisy"
 	/*check if the widget is installed and add if it is to your panel*/
 	if (knownWidgetTypes.indexOf(widget) > -1) {
 		
-		var widget = panel.addWidget(widget)
+		var widget = activity.addWidget(widget)
 		
 		widget.currentConfigGroup = new Array('Configuration')
 		widget.writeConfig("middleclickaction","run")
@@ -87,8 +95,6 @@ function activitymac(){
 		widget.writeConfig("tip_type","thumbnail")
 		widget.writeConfig("total_launchers","9")
 		widget.writeConfig("type","standard_dock")
-		widget.writeConfig("wallpaperplugin","image")
-		widget.writeConfig("wallpaperpluginmode","SingleImage")
 		widget.writeConfig("zoomtype","simple")
 		widget.writeConfig("zvalue","25")
 		
@@ -105,7 +111,7 @@ function activitymac(){
 	var nowplaying = activity.addWidget("nowplaying")
 	var mediaplayer = activity.addWidget("mediaplayer")
 	
-	
+	activity.reloadConfig()
 }
 activitymac()
 //loadTemplate("org.kde.plasma-desktop.macPanel")

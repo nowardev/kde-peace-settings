@@ -25,7 +25,12 @@ function chromeos(){
 	var activity = new Activity("sal")
 	activity.name = i18n("ChromeOs Activity")
 	activity.writeConfig("EnabledEntries","plasma-sal-bookmarks.desktop,plasma-sal-contacts.desktop,plasma-sal-multimedia.desktop,plasma-sal-internet.desktop,plasma-sal-graphics.desktop,plasma-sal-games.desktop,plasma-sal-office.desktop")
-	
+	activity.wallpaperPlugin = "image"
+	activity.wallpaperMode = "SingleImage"
+	activity.currentConfigGroup = Array("Wallpaper", "image")
+	activity.writeConfig("wallpaper", "nowardev-chromeos")
+	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
+	activity.reloadConfig()
 	
 	
 }

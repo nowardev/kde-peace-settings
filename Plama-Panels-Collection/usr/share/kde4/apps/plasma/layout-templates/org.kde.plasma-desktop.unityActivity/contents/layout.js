@@ -1,7 +1,7 @@
 //Copyright (C) 2012 nowardev nowardev@gmail.com
- 
+
 //This file is part of kde-peace-settings.
- 
+
 //kde-peace-settings is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
 //the Free Software Foundation, either version 3 of the License, or
@@ -18,12 +18,12 @@
 ///UNITY desktop
 function remove()
 {
-  for (i in panelIds) {
-        
-
-	panelById(panelIds[i]).remove()
-    }
-  
+	for (i in panelIds) {
+		
+		
+		panelById(panelIds[i]).remove()
+	}
+	
 }
 //////////////////////////////////////////////////////////
 
@@ -31,36 +31,39 @@ function remove()
 /////function remove standard///////////////////////////////
 function RemoveOldPanels()
 {
-    for (i in panelIds) {
-       // panelById(panelIds[i]).remove()
-       p = panelById(panelIds[i]);
-       if (typeof p === "undefined") {
-       print("E: Couldn't find first panel");
-       remove() //load the remove function in case of problems
-       }
-        else 	{
-	  panelById(panelIds[i]).remove()
-	  	} 
-                                    }
+	for (i in panelIds) {
+		// panelById(panelIds[i]).remove()
+		p = panelById(panelIds[i]);
+		if (typeof p === "undefined") {
+			print("E: Couldn't find first panel");
+			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		} 
+	}
 }
 //RemoveOldPanels() //load the function 
- //////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 var screenrect = screenGeometry(0);  
 function activityunity(){
-
-
-   var activity  = new Activity("folderview")
-
-
- 
-
-//activity.wallpaperPlugin = "image"
-//activity.wallpaperMode = "SingleImage"
-//activity.currentConfigGroup = Array("Wallpaper", "image")
-//activity.writeConfig("wallpaper", "warty-final-ubuntu")
-
+	
+	
+	var activity  = new Activity("folderview")
+	
+	activity.wallpaperPlugin = "image"
+	activity.wallpaperMode = "SingleImage"
+	activity.currentConfigGroup = Array("Wallpaper", "image")
+	activity.writeConfig("wallpaper", "nowardev-unity")
+	
+	
+	//activity.wallpaperPlugin = "image"
+	//activity.wallpaperMode = "SingleImage"
+	//activity.currentConfigGroup = Array("Wallpaper", "image")
+	//activity.writeConfig("wallpaper", "warty-final-ubuntu")
+	
 }
 
- activityunity()
+activityunity()
 
 //loadTemplate("org.kde.plasma-desktop.unityPanel")
