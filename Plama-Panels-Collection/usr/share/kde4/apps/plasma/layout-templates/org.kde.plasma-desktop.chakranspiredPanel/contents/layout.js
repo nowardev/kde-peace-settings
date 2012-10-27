@@ -8,15 +8,15 @@
 //(at your option) any later version.
 //
 //This program is distributed in the hope that it will be useful,
-//but WITHOUT ANY WARRANTY without even the implied warranty of
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
 //MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 //GNU General Public License for more details.
 //
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
-///CHRAKRA LIKE PANELS
-
+////////function remove in case of error of first remove :S
+///UNITY LIKE PANELS
+//panel.length = 5*screenrect.width/48;  panel.alignment = "center" panel.height = screenrect.height/30;
 
 function remove()
 {
@@ -61,7 +61,7 @@ function chakra(){
 		
 		panel.location = 'top'
 		//panel.hiding= 'autohide' //"windowscover" or "windowsbelow" 
-		panel.height = screenrect.height/30
+		panel.height = screenrect.height/30;
 	}
 	var launcher = panel.addWidget("simplelauncher")
 	launcher.writeConfig("format", "Description")
@@ -69,7 +69,6 @@ function chakra(){
 	var menubar = panel.addWidget("menubar")
 	
 	panel.addWidget("pastebin")
-	
 	var launcher = panel.addWidget("lancelot_part")
 	launcher.writeConfig("iconLocation", "drive-harddisk")
 	launcher.writeConfig("iconClickActivation", "true")
@@ -122,10 +121,10 @@ function chakra(){
 	
 	panel.length = screenrect.width-screenrect.width/7
 	panel.alignment = "center"
-	//  panel.height = screenrect.height/30
+	//  panel.height = screenrect.height/30;
 	
 	
-	panel.height = screenrect.height/15
+	panel.height = screenrect.height/15;
 	
 	// var launcher = panel.addWidget("lancelot_part")
 	// launcher.writeConfig("iconLocation", "start-here-kde")
