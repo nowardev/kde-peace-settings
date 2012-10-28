@@ -191,8 +191,19 @@ function nowardevdouble(){
 		
 	}
 	
+
+	var widget = "kwinbutton"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		var spacer = panel.addWidget("panelspacer_internal")
+		
+	} 
+	else {
+		print("skypping spacer")
+		
+	}
 	
-	var spacer = panel.addWidget("panelspacer_internal")
+
 	
 	
 	
