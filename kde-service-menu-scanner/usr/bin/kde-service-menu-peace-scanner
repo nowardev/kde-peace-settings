@@ -1,0 +1,251 @@
+#!/bin/bash -x
+#Copyright (C) 2013 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+configfile="$HOME/.config/scannerdolphinqt.cfg"
+tempfile="/tmp/scannerdolphinqt.ppm"
+lprparameters="-o fitplot"
+
+
+
+
+function_help(){
+	echo "
+This Service menu  let you to acquire a picture from your scanner directly in Dolphin, kde file manager. 
+it should be able to detect your scanner settings if not just read  he manual of scanimage 
+
+useful commands
+scanimage -A 
+scanimange -L 
+
+USE :
+
+Scanner Dolphin qt from command line 
+
+scannerdolphinqt -s /home/test/filename  Create a file
+scannerdolphinqt -sp   Print an image from scanner
+
+CONFIG FILE 
+
+Location : $HOME/.config/scannerdolphinqt.cfg
+
+device: hpaio:/usb/Officejet_4500_G510g-m?serial=CN113F81FP05CQ
+resolution: 150
+size X: 215 
+size Y: 297 
+mode: Color
+format: jpeg
+"
+}
+
+function_check_programs(){
+	program[1]=convert
+	program[2]=awk
+	program[3]=scanimage
+	
+	for program in "${program[@]}";do 
+		
+		if [[ -z $(type -p "$program") ]];then 
+	 
+				kdialog --error $"$program not found; PLEASE INSTALL IT" >&2
+				echo "error exiting..." >&2
+				exit 1;
+ 
+		fi
+	done
+}
+
+
+function_check_file(){
+	if [[ -e "$1" ]]; then 
+		echo $1
+		echo $"File exist! change name"
+		kdialog --msgbox  $"File exit , change name "
+		exit 
+	fi 
+}
+
+
+
+function_change_name() {
+	if [[ -e "$1" ]]; then 
+		echo $1
+		echo $"File exist! change name"
+		kdialog --textinputbox $"File Name # will be replace by number if file exist" $"New name #"
+		
+	fi 
+	
+	
+	
+}
+
+
+function_detect_scanner(){
+	d_device=$(echo "$detection1" | awk '{print $2}')
+}
+
+function_detect_mode(){
+	d_mode=($(echo "$detection2"| awk '/--mode/{split($2,a,/\|/); for (i in a) print a[i]}'))
+	if [[ ! -z "${d_mode[1]}" ]]; then  defaultmode=""${d_mode[1]}""; else defaultmode="" ; fi 
+}
+
+function_detect_resolution(){
+	
+	d_resolution=($(echo "$detection2" | awk '/--resolution/{gsub(/dpi/,""); split($2,a,/\|/); for (i in a) print a[i]}'))
+	if [[ ! -z "${d_resolution[1]}" ]]; then  defaultresolution="--default "${d_resolution[1]}" "; else defaultresolution="150" ; fi 
+	s_resolutions=(50 100 150 200 250 300 350 400 550 600 1200 3600 )
+}
+
+
+function_check_file_settings(){
+	
+	if [[ -e "$configfile" ]]; then 
+		
+		device="$( awk  -F':' '/device: /{print $2}' "$configfile"   )" 
+		
+		mode="$( awk     -F':' '/mode: /{print $2}' "$configfile"  )" 
+		resolution="$( awk     -F':' '/resolution: /{gsub(/ /,""); print $2}' "$configfile"  )" 
+		format="$( awk     -F':' '/format: /{gsub(/ /,""); print $2}' "$configfile"  )" 
+		xsize="$( awk     -F':' '/size X: /{gsub(/ /,""); print $2}' "$configfile"  )" 
+		ysize="$( awk     -F':' '/size Y: /{gsub(/ /,""); print $2}' "$configfile"  )"
+	else 
+		kdialog --passivepopup $"Detecting Settings .. wait"
+		detection1="$(scanimage -L)"
+		detection2="$(scanimage -A)"
+		function_detect_scanner
+		function_detect_mode
+		function_detect_resolution
+		
+		device="$d_device"
+		kdialog --passivepopup $"Found Device :) $device"
+		resolution="$(kdialog --combobox $"Choose resolution  
+		
+AVIABLE FOR YOUR SCANNER  ${d_resolution[*]}" "${s_resolutions[@]}" $defaultresolution -- )"
+		mode="$(kdialog --textinputbox  $"Choose Mode 
+AVIABLE FOR YOUR SCANNER ${d_mode[*]}" "$defaultmode" -- )"
+		format="$(kdialog --combobox $"Choose Format" png jpeg jpg bmp tiff  --default jpeg )"
+		xsize="$(kdialog --textinputbox  $"Choose X size 215 = A4" 215)"
+		ysize="$(kdialog --textinputbox  $"Choose Y size 297 = A4" 297)"
+		
+		function_check_settings
+		
+		echo "device: "$device"" > "$configfile"
+		echo "resolution: "$resolution"" >> "$configfile"
+		echo "size X: $xsize " >> "$configfile"
+		echo "size Y: $ysize " >> "$configfile"
+		echo "mode: "$mode"" >> "$configfile"
+		echo "format: "$format"" >> "$configfile"
+	
+	fi 
+	
+	if [[ ! -z $xsize && ! -z $ysize  ]] ; then scanimageparameters="-x $xsize -y $ysize" ; else scanimageparameters= "" ; fi 
+}
+
+function_check_settings(){
+	
+	if [[ -z "$device"  ]]; then
+	kdialog --error  $"ERROR NO DEVICE DETECTED PLEASE FIX THIS TRY TO RUN on your terminal 
+	scanimage -L 
+	
+	no device ... exiting "
+	
+	exit 
+	
+	elif [[ -z "$mode"  ]]; then
+	kdialog --error  $"ERROR NO MODE DETECTABLE try to fix this typing 
+	scanimage -A 
+	
+	no mode ... exiting "
+	
+	exit 
+	
+	elif  [[ -z "$resolution"  ]]; then
+	kdialog --error  $"ERROR NO RESOLUTION DETECTABLE
+	scanimage -A"
+	fi 
+
+
+}
+
+function_print(){
+	if [[ -z "$(lpstat -d )" ]]; then 
+		kdialog --error $"You have not set a Default printer please set it up"
+	else
+		scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
+		if [[ -e  "$tempfile"  ]]; then 
+			kdialog --passivepopup  $"running this command: sscanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile"  &&	lpr $lprparameters  "$tempfile"
+			
+			"
+			
+			lpr $lprparameters  "$tempfile" 
+		else
+			kdialog --error $"$tempfile doesn't exist. this is the command
+			
+			scanimage   --resolution $resolution --mode $mode  > "$tempfile"
+			
+			and it generates empty file ?"
+		fi 
+	fi 
+	
+	
+}
+function_start(){
+	kdialog --passivepopup  " scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
+	convert "$tempfile" "${1%%.*}.$format""
+	scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
+	convert "$tempfile" "${1%%.*}.$format"
+	
+}
+
+
+
+
+function_check_programs
+function_check_file_settings
+
+
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+	
+	  
+	-s) if (($# > 1)); then
+			shift ;for file in "$@"; do
+			function_check_file "$file"
+			function_start "$file"
+
+		done
+		  else
+			echo $"-s requires files" 1>&2
+			exit 1
+		  fi ;;
+		  
+	-sp)  
+		function_print 
+	;;
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+else
+function_help; exit 1
+fi
+
+ 
+ 
+ 

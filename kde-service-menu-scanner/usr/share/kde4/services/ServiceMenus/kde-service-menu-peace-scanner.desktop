@@ -1,0 +1,56 @@
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#
+#
+#INSTALLATION
+#
+#copy this service menu on $HOME/.kde/share/kde4/services if you are not root
+#
+#if you are root copy this service menu  $(kde4-config --prefix)/share/kde4/services/ServiceMenus/
+#
+#VERSION 0.6
+[Desktop Entry]
+Actions=scanner;scanprint;changesettings;deletesettings
+Icon=document-properties-key
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory
+Type=Service
+# X-KDE-Priority=TopLevel
+X-KDE-Submenu=Acquire With Scanner
+X-KDE-Submenu[it]=Acquisisci Da scanner
+
+[Desktop Action scanner]
+Exec=scannerqt.sh -s  %u/$(kdialog --textinputbox $"Insert name ex : NewScannerDocument" NewScannerDocument ).ppm 
+Icon=scanner
+Name=New Document From Scanner 
+Name[it]=Nuovo Documento Da Scanner 
+[Desktop Action scanprint]
+Exec=scannerqt.sh -sp   && echo %u > /dev/null 
+Icon=printer
+Name=Print From Scanner
+Name[it]=Stampa Da Scanner
+[Desktop Action changesettings]
+Exec=kate "$HOME/.config/scannerdolphinqt.cfg" && echo %u > /dev/null 
+Icon=story-editor
+Name=Setting for Scanner Dolphin Qt
+Name[it]=Impostazioni per Scanner Dolphin Qt
+[Desktop Action deletesettings]
+Exec=rm "$HOME/.config/scannerdolphinqt.cfg" && echo %u > /dev/null 
+Icon=edit-delete
+Name=Delete Settings
+Name[it]=Cancella Impostazioni
+
