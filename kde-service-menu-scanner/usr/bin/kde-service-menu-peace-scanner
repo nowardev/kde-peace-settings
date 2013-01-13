@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 #Copyright (C) 2013 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -20,7 +20,7 @@
 configfile="$HOME/.config/scannerdolphinqt.cfg"
 tempfile="/tmp/scannerdolphinqt.ppm"
 lprparameters="-o fitplot"
-
+version="0.5"
 
 
 
@@ -50,6 +50,8 @@ size X: 215
 size Y: 297 
 mode: Color
 format: jpeg
+	
+version: $version
 "
 }
 
@@ -258,6 +260,7 @@ if  [[ $1 == -*  ]]; then
 			kdialog --passivepopup $"$configfile do not exist "
 		fi 
 	;;
+	
 	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	esac
