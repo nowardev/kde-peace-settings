@@ -34,12 +34,12 @@ X-KDE-Submenu=Acquire With Scanner
 X-KDE-Submenu[it]=Acquisisci Da scanner
 
 [Desktop Action scanner]
-Exec=scannerqt.sh -s  %u/$(kdialog --textinputbox $"Insert name ex : NewScannerDocument" NewScannerDocument ).ppm 
+Exec=kde-service-menu-peace-scanner -s  %u/$(kdialog --textinputbox $"Insert name ex : NewScannerDocument" NewScannerDocument ).ppm 
 Icon=scanner
 Name=New Document From Scanner 
 Name[it]=Nuovo Documento Da Scanner 
 [Desktop Action scanprint]
-Exec=scannerqt.sh -sp   && echo %u > /dev/null 
+Exec=kde-service-menu-peace-scanner -sp   && echo %u > /dev/null 
 Icon=printer
 Name=Print From Scanner
 Name[it]=Stampa Da Scanner
