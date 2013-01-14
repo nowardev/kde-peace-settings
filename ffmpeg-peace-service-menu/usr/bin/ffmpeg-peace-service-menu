@@ -1,5 +1,5 @@
 #!/bin/bash
-Version="0.2.6"
+Version="0.2.7"
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -582,6 +582,7 @@ if you get errors you need to upgrade profiles if you used those to convert your
 else
 function_message_error $"you can't encode in $encoderfail please install the packages you need or compile ffmpeg properly "
 fi 
+function_menu_start
 
 }
 
@@ -655,7 +656,7 @@ fi
 
 }
 
-function_message(){
+function_message (){
 if [[ -z "$pidofx" ]] ; then
 
 message=""$1""
@@ -3442,7 +3443,8 @@ if  [[ $1 == -*  ]]; then
 
 		done
 		  else
-			echo $"-f requires files" 1>&2
+			echo $"ERROR:
+-f requires files" 1>&2
 			exit 1
 		  fi ;;
 		  
@@ -3451,7 +3453,9 @@ if  [[ $1 == -*  ]]; then
 		function_add_folder_shell "$folder"  
 		done
 		  else
-			echo $"-f requires a folder at least" 1>&2
+			echo $"ERROR:
+
+-f requires a folder at least" 1>&2
 			exit 1
 		  fi ;;
 		 -fox)if (($# > 1)); then
@@ -3459,7 +3463,9 @@ if  [[ $1 == -*  ]]; then
 		function_add_folder "$folder"  
 		done
 		  else
-			kdialog --error $"-f requires a folder at least" 1>&2
+			function_message_error $"ERROR :
+
+-f requires a folder at least" 1>&2
 			exit 1
 		  fi
 		 ;;
@@ -3475,7 +3481,7 @@ if  [[ $1 == -*  ]]; then
 	function_menu_start
 	;;
 	-d) function_delete silent
-	function_menu_start
+# 	function_menu_start
 	;;
 	-decompile)
 	function_build
@@ -3486,7 +3492,8 @@ if  [[ $1 == -*  ]]; then
 	;;
 	-tf)
 	function_test_ffmpeg
-	function_menu_start
+
+	
 	;;
 	-wx)
 	function_set_antix
