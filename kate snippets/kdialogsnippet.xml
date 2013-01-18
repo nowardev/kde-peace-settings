@@ -225,7 +225,7 @@ qdbus $dbusprogressb  showCancelButton true
 
 until test "true" = `qdbus  $dbusprogressb wasCancelled` ; do
 	outformat=$(kdialog --combobox $"Convert to..keeping the same quality" $commonaudioformats $commonvideoformats --default $defaultformat)
-	while  read <&3 line ; do
+	while  read &lt;&amp;3 line ; do
 		qdbus $dbusprogressb org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
 
 		$ffmpegpath -i   "$line" -newsubtitle ${line%%.*}.srt  $subtitleprofile   $overwrite "${line%%.*}.$outformat"  2>>"$templog"
@@ -234,7 +234,7 @@ until test "true" = `qdbus  $dbusprogressb wasCancelled` ; do
 		value=$(( $(($a*100))/$numberoffile ))
 		qdbus  $dbusprogressb Set org.kde.kdialog.ProgressDialog value $value
 		a=$(($a+1))
-		done 3< "$listoffile"
+		done 3&lt; "$listoffile"
 	if [[ "$value" == 100 ]];then
 	
 		if [[ "$passivepopup" == "enabled" ]];then
