@@ -1,0 +1,42 @@
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#
+#
+#INSTALLATION
+#
+#copy this service menu on $HOME/.kde/share/kde4/services if you are not root
+#
+#if you are root copy this service menu  $(kde4-config --prefix)/share/kde4/services/ServiceMenus/
+#
+#VERSION 0.6
+[Desktop Entry]
+Actions=scanner 
+Icon=preferences-desktop-printer
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory
+Type=Service
+X-KDE-Priority=TopLevel
+# X-KDE-Submenu=General info file
+# X-KDE-Submenu[it]=Informazione file
+
+[Desktop Action scanner]
+Exec=scannerqt.sh "%u/$(kdialog --textinputbox $"Insert name " NewScannerDocument ).jpeg"  
+Icon=scanner
+Name=Create New Document From Scanner 
+Name[it]=Crea Nuovo Documento Da Scanner 
+
+ 

@@ -1,0 +1,17 @@
+#!/bin/bash -x
+
+if (($# ==  2)); then
+		
+ awk -v test1="$1" -v test2="$2" ' /test1 /, /test2/' 	
+ else
+			echo  $"
+
+			
+USAGE :
+			
+/			print_between test1 test2 
+			"
+fi 
+			
+
+

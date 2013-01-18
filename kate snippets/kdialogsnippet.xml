@@ -1,0 +1,345 @@
+<snippets namespace="" license="GPLv3" filetypes="Bash" authors="Nowardev Peace" name="kdialog Snipetts">
+ <script></script>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_yesno</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --yesno  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_yesnocancel</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --yesnocancel  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_warningyesno</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --warningyesno  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_warningcontinuecancel</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --warningcontinuecancel  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_warningyesnocancel</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --warningyesnocancel  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_yes-label</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --yes-label  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_no-label</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --no-label  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_cancel-label</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --cancel-label  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_continue-label</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --continue-label  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_sorry</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --sorry  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_error</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --error  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_msgbox</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --msgbox  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_inputbox</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --inputbox  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_password</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --password  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_textbox</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --textbox  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_textinputbox</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --textinputbox  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_combobox</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --combobox  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_menu</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --menu  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_checklist</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --checklist  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_radiolist</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --radiolist  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_passivepopup</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --passivepopup  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_getopenfilename</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --getopenfilename  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_getsavefilename</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --getsavefilename  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_getexistingdirectory</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --getexistingdirectory  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_getopenurl</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --getopenurl  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_getsaveurl</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --getsaveurl  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_geticon</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --geticon  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_progressbar</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --progressbar  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_getcolor</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --getcolor  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_title</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --title  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_default</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --default  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_multiple</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --multiple  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_separate-output</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --separate-output  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_print-winid</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --print-winid  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_dontagain</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --dontagain  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_slider</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --slider  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_calendar</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --calendar  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>kdialog_attach</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ kdialog --title $"My App Title"  --attach  $"${cursor} Your Words"
+  </fillin> 
+  </item>
+</snippets>

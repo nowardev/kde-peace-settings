@@ -1,0 +1,17 @@
+#!/bin/bash
+
+if (($# > 1)); then
+		
+echo  "$@"  | awk '{gsub(/ /,""); print }' 	
+ else
+			echo  $"
+NO input please inserat at least two strings
+			
+USAGE :
+			
+			remove_space test test2 test3 test4
+			"
+fi 
+			
+
+
