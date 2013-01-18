@@ -33,7 +33,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --warningcontinuecancel  $"${cursor} Your Words"
+ kdialog --title $"My App Title" --continue-label $"continue label"  --cancel-label $"my cancel label"  --warningcontinuecancel  $"${cursor} Your Words"
   </fillin> 
   </item>
   <item>
@@ -42,43 +42,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --warningyesnocancel  $"${cursor} Your Words"
-  </fillin> 
-  </item>
-  <item>
-  <displayprefix></displayprefix>
-  <match>kdialog_yes-label</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>
- kdialog --title $"My App Title"  --yes-label  $"${cursor} Your Words"
-  </fillin> 
-  </item>
-  <item>
-  <displayprefix></displayprefix>
-  <match>kdialog_no-label</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>
- kdialog --title $"My App Title"  --no-label  $"${cursor} Your Words"
-  </fillin> 
-  </item>
-  <item>
-  <displayprefix></displayprefix>
-  <match>kdialog_cancel-label</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>
- kdialog --title $"My App Title"  --cancel-label  $"${cursor} Your Words"
-  </fillin> 
-  </item>
-  <item>
-  <displayprefix></displayprefix>
-  <match>kdialog_continue-label</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>
- kdialog --title $"My App Title"  --continue-label  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --yes-label $"my yes label"  --no-label $"my no label" --cancel-label $"my cancel label"  --warningyesnocancel   $"${cursor} Your Words" 
   </fillin> 
   </item>
   <item>
@@ -132,7 +96,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --textbox  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --textbox  $"${cursor}fileinput"
   </fillin> 
   </item>
   <item>
@@ -141,7 +105,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --textinputbox  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --textinputbox  $"${cursor} Your Words"  $"My default text"
   </fillin> 
   </item>
   <item>
@@ -150,7 +114,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --combobox  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --combobox  $"${cursor} your words " $"value1" $"value2" --default  $"value1" 
   </fillin> 
   </item>
   <item>
@@ -159,7 +123,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --menu  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --menu  $"${cursor}Menu Title"  value1 $"label1" value2 $"label2"
   </fillin> 
   </item>
   <item>
@@ -168,7 +132,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --checklist  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --checklist  $"${cursor} CheckList Title"  value1 $"label1" off  value2 $"label2" on
   </fillin> 
   </item>
   <item>
@@ -177,7 +141,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --radiolist  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --radiolist  $"${cursor} Your Words" $"${cursor} CheckList Title"   $"label1" value1  off   $"label2" value2 on
   </fillin> 
   </item>
   <item>
@@ -186,7 +150,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --passivepopup  $"${cursor} Your Words"
+kdialog --title $"My App Title"  --passivepopup  $"${cursor} Your Words" 3
   </fillin> 
   </item>
   <item>
@@ -195,8 +159,8 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --getopenfilename  $"${cursor} Your Words"
-  </fillin> 
+ kdialog --title $"My App Title" --multiple   --getopenfilename  $"${cursor} My file" "$HOME" filter
+ </fillin> 
   </item>
   <item>
   <displayprefix></displayprefix>
@@ -204,7 +168,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --getsavefilename  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --getsavefilename  $"${cursor} Name file to save" "$PWD" filter
   </fillin> 
   </item>
   <item>
@@ -213,7 +177,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --getexistingdirectory  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --getexistingdirectory  $"${cursor} Your Words""$PWD" 
   </fillin> 
   </item>
   <item>
@@ -222,7 +186,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --getopenurl  $"${cursor} Your Words"
+ kdialog --title $"My App Title" --multiple  --getopenurl  $"${cursor} Your Words" 
   </fillin> 
   </item>
   <item>
@@ -240,7 +204,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --geticon  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --geticon  ${cursor}Actions
   </fillin> 
   </item>
   <item>
@@ -249,7 +213,39 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --progressbar  $"${cursor} Your Words"
+step=10
+totalvalue=100
+a=1
+#start progressbar
+dbusprogressb=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+#set autoclose for progressbar
+qdbus $dbusprogressb org.kde.kdialog.ProgressDialog.autoClose true
+#show cancel button
+qdbus $dbusprogressb  showCancelButton true
+
+until test "true" = `qdbus  $dbusprogressb wasCancelled` ; do
+	outformat=$(kdialog --combobox $"Convert to..keeping the same quality" $commonaudioformats $commonvideoformats --default $defaultformat)
+	while  read <&3 line ; do
+		qdbus $dbusprogressb org.kde.kdialog.ProgressDialog.setLabelText $"Starting Conversion...processing file $line"
+
+		$ffmpegpath -i   "$line" -newsubtitle ${line%%.*}.srt  $subtitleprofile   $overwrite "${line%%.*}.$outformat"  2>>"$templog"
+
+
+		value=$(( $(($a*100))/$numberoffile ))
+		qdbus  $dbusprogressb Set org.kde.kdialog.ProgressDialog value $value
+		a=$(($a+1))
+		done 3< "$listoffile"
+	if [[ "$value" == 100 ]];then
+	
+		if [[ "$passivepopup" == "enabled" ]];then
+			 function_passivepopup_test $"Conversions done!"
+		fi
+
+	function_check_for_errors
+		exit
+	fi
+done
+
   </fillin> 
   </item>
   <item>
@@ -267,34 +263,34 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --title  $"${cursor} Your Words"
+ kdialog --title $"${cursor}My App Title"
   </fillin> 
   </item>
   <item>
   <displayprefix></displayprefix>
-  <match>kdialog_default</match>
+  <match>default</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --default  $"${cursor} Your Words"
+--default  $"${cursor} Value"
   </fillin> 
   </item>
   <item>
   <displayprefix></displayprefix>
-  <match>kdialog_multiple</match>
+  <match>multiple</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --multiple  $"${cursor} Your Words"
+--multiple ${cursor} 
   </fillin> 
   </item>
   <item>
   <displayprefix></displayprefix>
-  <match>kdialog_separate-output</match>
+  <match>separate-output</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --separate-output  $"${cursor} Your Words"
+--separate-output ${cursor} 
   </fillin> 
   </item>
   <item>
@@ -303,16 +299,16 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --print-winid  $"${cursor} Your Words"
+ kdialog --title $"My App Title"  --print-winid  ${cursor} 
   </fillin> 
   </item>
   <item>
   <displayprefix></displayprefix>
-  <match>kdialog_dontagain</match>
+  <match>dontagain</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --dontagain  $"${cursor} Your Words"
+--dontagain ${cursor} 
   </fillin> 
   </item>
   <item>
@@ -321,7 +317,10 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --slider  $"${cursor} Your Words"
+minvalue=0 {Cursor}
+maxvalue=100
+step=10
+ kdialog --title $"My App Title"  --slider  $"Your Words" "$minvalue" "$maxvalue" "$step"
   </fillin> 
   </item>
   <item>
@@ -339,7 +338,7 @@
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>
- kdialog --title $"My App Title"  --attach  $"${cursor} Your Words"
+ kdialog  --attach  $"${cursor} value winid"
   </fillin> 
   </item>
 </snippets>
