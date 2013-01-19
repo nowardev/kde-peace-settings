@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
  
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -291,7 +291,7 @@ fi
 function_hold(){
 
 
-ans="$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(apt-cache pkgnames "$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )"))"
+ans="$(kdialog --title "Block a Package's Version" --combobox "Please select a package" $(dpkg -l  |awk -v test="$(kdialog --title "Apt search" --textinputbox "Please insert a keyword" $"packagestuff or type exit and click ok" )" '$0 ~ test{ print $2}'))"
 
 if [[ -z $ans || "$ans" == "packagestuff or type exit and click ok" ]] ; then
 kdialog --passivepopup $"no package found!"
