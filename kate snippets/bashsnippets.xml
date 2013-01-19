@@ -1,0 +1,550 @@
+<snippets namespace="" license="GPLv3" filetypes="*" authors="Nowardev Peace" name="bash-peace">
+ <script></script>
+ <item>
+  <displayprefix></displayprefix>
+  <match>check_exist_dir</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>directory="${cursor}$yourvariable"
+ if [[  -d "$directory"  ]] ; then
+elif [[  ]] ; then  
+else
+exit 1
+fi </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>check_if_empty</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>testvariable="$${cursor}yourvariable"
+
+if [[  -z  "$testvariable"    ]] ; then
+echo "$testvariable is empty"
+else
+echo "$testvariable"
+fi </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>else</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>if [[   ${cursor}  ]] ; then
+ 
+else
+
+exit 1
+
+fi </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>case</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+variable="$${cursor}yourvariable" 
+
+case "$variable" in
+
+1)
+
+;;
+2)
+;;
+*)
+echo $"invalid option sorry... exiting"
+exit 2
+;;
+esac</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>echo</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>echo  $" ${cursor} My echo string that can be translated"</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>menu</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+if  [[ $1 == -*  ]]; then
+    case "$1" in
+    -h|--help|-\?) function_help; exit 0;;
+    
+    -f) if (($# > 1)); then
+            shift ;for file in "$@"; do
+        echo "$file" >>$listoffile
+
+        done
+          else
+            echo $"-f requires files" 1>&amp;2
+            exit 1
+          fi ;;
+          
+    
+
+    --) shift; echo "invalid option: $1" 1>&amp;2; function_help; exit 1;;
+    -*) echo "invalid option: $1" 1>&amp;2; function_help; exit 1;;
+    esac
+else
+function_help; exit 1
+fi</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>check_exist_file</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>a="$${cursor}file"  
+if [[  -e "$a"  ]] ; then
+elif [[  ]] ; then  
+else
+exit 1
+fi </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>menu_without_x</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>function_ansmenu() {
+    
+    
+    
+    case "$ansmenu" in
+    
+    
+    ans1)
+    echo "function_for_ans1"
+    ;;
+    ans2)
+    echo "function_for_ans2"
+    ;;
+    ans3)
+    echo "function_for_ans3"
+    ;;
+    v)
+    echo "function version etc "
+    ;;
+    b)
+    echo "function_back"
+    ;;
+    quit)
+    echo "function_quit"
+    ;;
+    *)
+    echo "function_err"
+    ;;
+    esac
+    
+
+}
+ 
+function_menu_antix() {
+    clear
+    menulink=$"Link My Project"
+    menutitle=$"My menu title"
+    menulabel=()
+    menutext=()
+    
+    tput cup 3 14
+    tput setaf 2
+    
+    
+    echo "$menulink"
+    
+    tput cup 5 17
+    tput rev
+    echo "$menutitle"
+    tput sgr0
+    
+    
+    
+    menutext=($" Option1" $" Option2" $" Option3"  $" Version Author Copyright" $" Back to Main Menu" $" Exit")
+    
+    
+    
+    
+    menulabel=(ans1 ans2 ans3 v b quit )
+    
+    a=0
+    b=7
+    echo
+    for menut in "\${menutext[@]}" ; do
+        c=$(($b+$a))
+        
+        tput cup $c 16
+        echo "$(($a+1)). \${menutext[$a]}"
+        a=$(($a+1))
+        
+        done
+        
+        
+        
+        
+        tput setf 4
+        echo
+        echo $message
+        message=""
+        echo
+        tput setaf 7
+        
+        tput bold
+        tput cup $(($c+4)) 16
+        read -p $"Enter Your Choice (1-"$a")" choice
+        
+        
+        tput sgr0
+        
+        if  [[ "$choice" != *[!0-9]*  ]] ;then
+            
+            ansmenu="\${menulabel[$(($choice-1))]}"
+            echo $ansmenu
+            function_ansmenu
+        elif [[ -z "$choice" ]]; then
+            function_message_error $"Empty answer"    
+            exit
+        else
+                function_message_error $"You have to choose a number (1-"$a") it seems you did not ...you have written "\" $choice \"" "
+                exit
+                
+        fi
+}
+function_menu_antix</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>case_yes_no</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>testvariable="$yourvariable" ${cursor}
+case "$testvariable" in
+
+ [y/Y]|[-y/-Y]|[y/Y][e/E][s/S])
+echo $"oh yea"
+
+;;
+
+[n/N]|[n/N][o/O])
+echo $"Nooooo"
+ 
+;;
+esac</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>check_if_is_number</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>testvariable="$${cursor}yourvariable"
+
+
+if [[ -z "$testvariable" ]]; then
+    echo $"your variable is empty"
+    exit 1
+
+elif  [[ "$testvariable" != *[!0-9]*  ]] ;then
+    
+    echo $"$testvariable is a number"
+    
+    exit 0
+else
+    echo  $"your variable is not a number ...you have written "\" $testvariable \"" "
+    exit 2
+    
+fi </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>read</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>echo $"${cursor}Title for your read function select a texteditor PRESS ENTER for nano"
+read   
+
+    if [[ -z "$REPLY" ]];then
+        texteditor="nano"
+    else
+        texteditor="$REPLY"
+    fi
+REPLY=""
+echo</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>while_file</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>file="/home/user/stuff ${cursor}"
+while read line ;do
+
+done&lt; "$file"</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>while_command</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>while read line ;do
+
+done&lt; &lt;(ls "${cursor}$HOME")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>while_ffmpeg</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>while  read &lt;&amp;3 line ; do
+    ffmpeg -i "$line" hello.ogg
+done 3&lt; "$listoffile"</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>for</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>for i  in ${cursor} 1 2 3 4 5; do
+    statements1      #Executed for all values of 'iI'',before a tornado
+    statements2
+
+    if [[  $checkvariable  ==  somevalue  ]];  then
+        break              #Abandon the loop.
+    fi
+     statements3          #While weather is good and, and there is not tornado
+done</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>for_array</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>a=0
+for r in "\${array[@]}" ; do
+    echo "array has this value in the cell $a "
+
+
+done</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>calculate</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>a=3${cursor}  ; b=4 ; echo "scale=3 ; $a / $b" | bc</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>file_extract_folder</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>line="/home/user/file.xt.lst${cursor} "
+outfolder="\$line%%.*}"
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>file_extract_extension</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>line="${cursor}/home/user/file.xt.lst"
+extension="\${line##*.}"</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>file_extract_name</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>line="${cursor}/home/user/file.xt.lst"
+name="\${line##*}"         # remove the folders  
+name="${name%%.*}"     # remove extensions like .ogg .ogv .txt</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>kmenu</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>ans=$(kdialog  --title $"${cursor} Title for my menu" --menu  $"Choose an option"  1 a 2 b  3 c  --default a -- )</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>kmsg</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>ans=$(kdialog --title "$title" --msgbox  $"${cursor}  my message" --)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>kerror</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>ans=$(kdialog --error "${cursor} My Error" --)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>kpassive</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+ans=$(kdialog --passivepopup "${cursor} my message"  "3" --)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>number_of_file</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>numberoffile=$(wc -l &lt;"$listoffile")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_lenght</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>newarray=(hi man this is an array)
+
+echo lenght  \${#newarray[@]}
+
+echo lenght of cell1 \${#newarray[1]}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_extract</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>newarray=(hi man this is an array)
+
+echo   print from 3 element  2 elments  \${#newarray[@]:3:2}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_extrac_and_cut</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>newarray=(hi man this is an array)
+
+echo     \${#newarray[6]:0:2}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_replace</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>newarray=(hi man this is an array)
+
+echo \${newarray[@]/man/girl}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_add_element</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>newarray=(hi man this is an array)
+
+newarray=\${newarray[@]}" "element1" "2element" )</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_remove_element</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>newarray=(${cursor} hi man this is an array)
+
+unset newarray[2]</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_add_from_command</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>filecontent=($(${cursor} ls $HOME))</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>array_print_alternating</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> a=(${cursor} 1 2 3) ; b=(a b c ) ;  for ((i = 0; i &lt;=\${#a[@]} ; i++ )) ; do printf "%s %s " "${a[i]}" "${b[i]}" ; done</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>replace_value</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>  a="hi girl"  ; echo ${a/girl/man}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>simulate_keystroke</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> xdotool key ${cursor} alt+F2</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>field_separator</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>IIFS=- read -r y m d &lt;&lt;&lt; "${cursor} 2003-12-24"; echo "$d.$m.$y"</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>saving_nasty_code</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>cat  &lt;&lt;EOF'>> /tmp/file 
+${cursor} bla bla
+bla even more bla 
+
+EOF </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>snippet_help</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>#these are the key you can use 
+array_add_element
+array_add_from_command
+array_extrac_and_cut
+array_extract
+array_lenght
+array_print_alternating
+array_remove_element
+array_replace
+calculate
+case
+case_yes_no
+check_exist_dir
+check_exist_file
+check_if_empty
+check_if_is_number
+echo
+else
+field_separator
+file_extract_extension
+file_extract_folder
+file_extract_name
+for
+for_array
+kerror
+kmenu
+kmsg
+kpassive
+menu
+menu_without_x
+number_of_file
+read
+replace_value
+saving_nasty_code
+simulate_keystroke
+snippet_help
+while_command
+while_ffmpeg
+while_file
+ </fillin>
+ </item>
+</snippets>
