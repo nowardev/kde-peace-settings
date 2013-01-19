@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
 ##license gpl 
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -168,7 +168,7 @@ fi
 	kbuildsycoca4
 
 	kdialog --passivepopup $"$PWD Service Menu Installed.. bye" 2
-	kdialog --msgbox $"if you can't launche the program Please login and logout , this should load the new bash_profile"
+	kdialog --msgbox $"if you can't launch the program Please login and logout , this should load the new bash_profile"
 }
 
 
