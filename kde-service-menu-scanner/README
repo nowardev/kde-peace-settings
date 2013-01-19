@@ -21,5 +21,15 @@
 
 INSTALLATION
 
+dependences 
 
-sudo ./install 
+awk imagemagick scanimage 
+
+debian\kubuntu 
+
+sudo apt-get install gawk imagemagick sane-utils
+
+
+the untar and run the script :
+
+./install 
