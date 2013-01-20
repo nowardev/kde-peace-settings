@@ -18,19 +18,19 @@ Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory
 Type=Service
 X-KDE-Priority=TopLevel
-X-KDE-Submenu=open folder with Kate
-X-KDE-Submenu[it]=apri cartella con Kate
+X-KDE-Submenu=Open folder with Kate
+X-KDE-Submenu[it]=Apri cartella con Kate
 
 
 [Desktop Action folderappend]
-Exec=ktexeditor-open-folder n "%u"
+Exec=ktexeditor-open-folder -n "%u"
 Icon=text-editor
 Name=Open folder with kate with backup
-Name[it]=apri cartella con kate con backup
+Name[it]=Apri cartella con kate con backup
 
 [Desktop Action folderappendb]
-Exec=ktexeditor-open-folder b "%u"
+Exec=ktexeditor-open-folder -b "%u"
 Icon=text-editor
 Name=Open folder with kate 
-Name[it]=apri cartella con kate
+Name[it]=Apri cartella con kate
 
