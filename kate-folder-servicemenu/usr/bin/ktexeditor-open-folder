@@ -21,7 +21,9 @@ functionstartkate()
 {
 kateisrunning=$(pgrep kate)
 if [[ $? == 1 ]]; then
-kate   & kdialog --passivepopup "kate is starting..  " 1
+kdialog --passivepopup "kate is starting..  " 1
+kate &
+wait  #wait untill kate is started properly
 else
 echo katec is running..
 fi
