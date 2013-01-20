@@ -1,60 +1,70 @@
 function_alias_apt(){
 	kdialog --title $"My App Title"  --yesno   $"do you want install the alias for apt? 
-	
-	alias u='sudo apt-get update'
-	alias g='sudo apt-get upgrade'
-	alias i='sudo apt-get install '
-	alias r='sudo apt-get remove '
-	alias p='sudo apt-get --purge remove '
-	alias s='sudo apt-cache search '
-	alias a='sudo apt-get autoremove'
-	
-	y\n
-	"
-	read
+
+alias u='sudo apt-get update'
+alias g='sudo apt-get upgrade'
+alias i='sudo apt-get install '
+alias r='sudo apt-get remove '
+alias p='sudo apt-get --purge remove '
+alias s='sudo apt-cache search '
+alias a='sudo apt-get autoremove'
+
+"
+
 	case "$?" in
 	0) 
 	
-	
+		if [[  -z $(cat "$HOME/.bashrc" | grep 'alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias i="sudo apt-get install "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="sudo apt-cache search "
+alias a="sudo apt-get autoremove"') ]]; then
+
 	echo '
-	alias u="sudo apt-get update"
-	alias g="sudo apt-get upgrade"
-	alias i="sudo apt-get install "
-	alias r="sudo apt-get remove "
-	alias p="sudo apt-get --purge remove "
-	alias s="sudo apt-cache search "
-	alias a="sudo apt-get autoremove"
+alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias i="sudo apt-get install "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="sudo apt-cache search "
+alias a="sudo apt-get autoremove"
+
+
+
+peacei()
+{
+cur=`_get_cword`
+COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+return 0
+
+} &&
+complete -F peacei $filenames i
+
+
+peacep()
+{
+cur=`_get_cword`
+COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+return 0
+
+} &&
+complete -F peacep $filenames p
+
+
+peacer()
+{
+cur=`_get_cword`
+COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+return 0
+
+} &&
+complete -F peacer $filenames r' >>~/.bashrc
+		else 
 	
-	
-	
-	peacei()
-	{
-		cur=`_get_cword`
-		COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
-		return 0
-		
-	} &&
-	complete -F peacei $filenames i
-	
-	
-	peacep()
-	{
-		cur=`_get_cword`
-		COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
-		return 0
-		
-	} &&
-	complete -F peacep $filenames p
-	
-	
-	peacer()
-	{
-		cur=`_get_cword`
-		COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
-		return 0
-		
-	} &&
-	complete -F peacer $filenames r' >>~/.bashrc
+			kdialog --title $"My App Title"  --passivepopup  $"I will not add apt-get shortcuts because you have already on your ~/.bashrc file " 3
+		fi 
 	;;
 	*)
 	exit 
