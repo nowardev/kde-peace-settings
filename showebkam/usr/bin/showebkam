@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
  
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -46,6 +46,8 @@ if [[ -z "$(type -p ffplay)" ]] ; then
 
 a=0 ; while read line ; do  webcams[$a]="$line" ;  echo $"Detected Webcams: /dev/$line" ; a=$(($a+1)); done< <(ls /dev/ | grep video)
 	
+ 
+
 if [[ ! -e "$config" ]]; then 
 	device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
 	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
@@ -55,18 +57,25 @@ resolution: $resolution	" >"$config"
 	else
 	device="$(awk -F':' '/device:/{gsub(/ /,"") ; print $2}'  "$config" )"
 	resolution="$(awk -F':' '/resolution:/{gsub(/ /,"") ; print $2}' "$config")"
-	fi 
+fi 
+
+	
+	
 	
 if [[ -z "$device" || -z "$resolution" ]]; then echo  $"File $config is not written well ..."  ;exit 1 ;  fi 
-
+	
+	
+	
+	
+	
 if [[ !  -z   "$(ls /dev/ | grep video)" ]]; then 
 
 
 
 
-if [[ -z "$device" || -z "$resolution" ]]; then kdialog --passivepopup $"Exiting ... device or resolution is empty"; exit 1 ;  fi 
+	if [[ -z "$device" || -z "$resolution" ]]; then kdialog --passivepopup $"Exiting ... device or resolution is empty"; exit 1 ;  fi 
 
-echo "
+	echo "
 $version $license $developer
 
 detected webcams ${webcams[@]}
@@ -82,14 +91,25 @@ showebkam d                         remove your config file located here $config
 showebkam h                         print this help 
 
 "
-rm /tmp/showebkam.log
-$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> /tmp/showebkam.log
 
-if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log you can try to remove $config running in terminal showebkam d "
-kdialog --yesno $"you get an error...  would you try to reset your configs   ?"
-	if [[ "$?" == 0 ]] ; then 
-		showebkam d
+	rm /tmp/showebkam.log
+	$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> /tmp/showebkam.log
+
+	if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log you can try to remove $config running in terminal showebkam d "
+	kdialog --yesno $"you get an error...  would you try to reset your configs   ?"
+	
+		if [[ "$?" == 0 ]] ; then 
+			showebkam d
 		fi 
-fi 
+	fi
+
+else
+	kdialog --title $"My App Title"  --sorry  $"ls /dev/ | grep video
+
+has given no output. Plug in your webcam?
+	
+if you already did it  and you got this message it means your webcam can't be handle from your kernel or you have not installed a proper driver"
+	exit 
+	
 fi 
 
