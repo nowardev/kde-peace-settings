@@ -1,0 +1,63 @@
+function_alias_apt(){
+	kdialog --title $"My App Title"  --yesno   $"do you want install the alias for apt? 
+	
+	alias u='sudo apt-get update'
+	alias g='sudo apt-get upgrade'
+	alias i='sudo apt-get install '
+	alias r='sudo apt-get remove '
+	alias p='sudo apt-get --purge remove '
+	alias s='sudo apt-cache search '
+	alias a='sudo apt-get autoremove'
+	
+	y\n
+	"
+	read
+	case "$?" in
+	0) 
+	
+	
+	echo '
+	alias u="sudo apt-get update"
+	alias g="sudo apt-get upgrade"
+	alias i="sudo apt-get install "
+	alias r="sudo apt-get remove "
+	alias p="sudo apt-get --purge remove "
+	alias s="sudo apt-cache search "
+	alias a="sudo apt-get autoremove"
+	
+	
+	
+	peacei()
+	{
+		cur=`_get_cword`
+		COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+		return 0
+		
+	} &&
+	complete -F peacei $filenames i
+	
+	
+	peacep()
+	{
+		cur=`_get_cword`
+		COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+		return 0
+		
+	} &&
+	complete -F peacep $filenames p
+	
+	
+	peacer()
+	{
+		cur=`_get_cword`
+		COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+		return 0
+		
+	} &&
+	complete -F peacer $filenames r' >>~/.bashrc
+	;;
+	*)
+	exit 
+	;;
+	esac
+}

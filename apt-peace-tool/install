@@ -16,7 +16,7 @@
 #NowardevTeam nowardev@gmail.com
 
  
-
+. $PWD/alias_apt #inport function from alias_apt file 
 bin="/usr/local/bin/"
 folder_local_bash_scripts="$HOME/bin"
 prefix="$(kde4-config --prefix)"
@@ -322,9 +322,11 @@ exit 0
 esac
 }
 
+	
 
-echo "
-PARAMETERS:
+
+
+echo "PARAMETERS:
 
 system folder for script $bin
 local folder for script $folder_local_bash_scripts
@@ -334,3 +336,4 @@ local prefix: $localprefix
 "
 
 function_main
+function_alias_apt
