@@ -95,7 +95,7 @@ fi
 # echo  "running .....kbuildsycoca4  update service menus... wait.."
 echo 
 echo 
- kbuildsycoca4  # echo "$pas" | sudo -S -u $SUDO_USER #GET  kbuildsycoca4 running like normal user ..to avoid error message
+ kbuildsycoca4 2>/tmp/servicemenubashinstaller.log  # echo "$pas" | sudo -S -u $SUDO_USER #GET  kbuildsycoca4 running like normal user ..to avoid error message
 echo
 echo "END! EVERYTHING DONE!"
 
@@ -165,7 +165,7 @@ fi
 		done
 	fi 
 
-	kbuildsycoca4
+	kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 
 	kdialog --passivepopup $"$PWD Service Menu Installed.. bye" 2
 	kdialog --msgbox $"if you can't launch the program Please login and logout , this should load the new bash_profile"
@@ -220,7 +220,7 @@ if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then
 fi 
  
 ####################################################################
-kbuildsycoca4
+kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2
 
 
@@ -284,7 +284,7 @@ if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then
 			
 fi 
 			
-  kbuildsycoca4
+kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved"
   
 
