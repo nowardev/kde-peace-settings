@@ -65,7 +65,32 @@ function_upgrade(){
  sudo apt-get upgrade 
 
 }
+
+function_apt_info(){
  
+ans="$(kdialog --title $"Apt Info" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Info" --textinputbox $"Insert a key " "package name")"))"
+
+
+if [[ -z $ans || $ans == "package name" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
+exit 
+else 
+ans2=$(apt-cache show  "$ans")
+
+	if [[ -z "$ans2" ]];then 
+
+		  kdialog  --passivepopup  $"Info not found :S exiting" ; exit  
+	else
+		  kdialog --title "Packages" --msgbox  "$ans2"
+	 fi
+
+fi 	
+	
+	
+}
+
+ 
+
+
 
 function_removeblock(){
 ans=$(kdialog --warningcontinuecancel  $" Are you sure?  
@@ -123,6 +148,8 @@ function_dpkginfo(){
 kdialog --msgbox "$(dpkg -I "$1")"
 
 }
+
+
 
 function_dpkginfoinstalled(){
 
@@ -347,7 +374,7 @@ kdialog --passivepopup   $" PPA Removed   $a" 2
 
 function_menu(){
 
-ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option" update $"Update"    upgrade $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option"  aptinfo  $"Apt Info" update $"Update"    upgrade  $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
 if [[ -z $ans ]] ; then
 exit 
 else 
@@ -415,7 +442,9 @@ function_aptr
 purge)
 function_purge
 ;;
-
+aptinfo)
+function_apt_info
+;;
 
 hold)
 

@@ -336,5 +336,4 @@ local prefix: $localprefix
 "
 
 function_main
-set -x 
 function_alias_apt

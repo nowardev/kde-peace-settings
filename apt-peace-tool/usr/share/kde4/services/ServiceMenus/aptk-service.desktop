@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
-Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;searchandinstall;install;purge;remove;blockpackage;_SEPARATOR_;installpackage;removepackage;infopackage;_SEPARATOR_;autoremove;clear;dpgkrecover;removeblock;installf;_SEPARATOR_;edit-sourcelist;ppa;
+Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;searchandinstall;install;purge;remove;blockpackage;_SEPARATOR_;installpackage;removepackage;infopackageapt;infopackage;_SEPARATOR_;autoremove;clear;dpgkrecover;removeblock;installf;_SEPARATOR_;edit-sourcelist;ppa;
 Icon=applications-other
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
@@ -154,9 +154,16 @@ Icon=run-build-configure
 Name=dpkg reconfigure all
 Name[it]=dpkg riconfigura tutto
 
+infopackageapt
+[Desktop Action infopackageapt]
+Exec=peace-debian-installer aptinfo  && echo %u >/dev/null
+Icon=dialog-information
+Name=apt serch info package
+Name[it]=apt cerca infomazioni pacchetto
+
 [Desktop Action infopackage]
 Exec=konsole --noclose -e  peace-debian-installer dpkginfo "%u" && echo %u >/dev/null
-Icon=info
+Icon=dialog-information
 Name=dpkg infopackage
 Name[it]=dpkg infomazioni pacchetto
 
