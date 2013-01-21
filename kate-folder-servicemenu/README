@@ -20,28 +20,8 @@ hi this service menu  select every file in a folder and opens  TEXT files with k
 from dolphin
 
 INSTALLATION 
+ 
+just install it via dolphin and get hot new stuff or ... run ./install script that can even uninstall 
 
-for debian like :
-
-sudo ./install 
-then type i for install 
-
-
-like root , in a terminal do 
-
-./install 
-
-UNISTALLING 
-
-for debian like :
-
-sudo ./install 
-
-then type "u" To  uninstall 
-
-
-like root , in a terminal do 
-
-./install 
-
-then type "u" To  uninstall 
+note you need of perl if you want install via dolphin 
+and of kdialog of course 

@@ -334,4 +334,4 @@ local folder for script $folder_local_bash_scripts
 prefix: $prefix
 local prefix: $localprefix
 
-""
+"
