@@ -66,6 +66,22 @@ echo -e "$COL_YELLOW yellow color for your bash script $COL_RESET"
 }
 </fillin>
  </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>standard_error_capture</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>2&gt;/tmp/file.log
+</fillin>
+ </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>standard_error_standard_input_capture</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>2&gt;&amp;1/tmp/file.log
+</fillin>
+ </item>
  <item>
   <displayprefix></displayprefix>
   <match>case</match>
