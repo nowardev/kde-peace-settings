@@ -338,3 +338,4 @@ local prefix: $localprefix
 "
 function_main
 function_alias_apt
+exit
