@@ -1,0 +1,137 @@
+#!/bin/bash 
+##license gpl 
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+ 
+version="0.4.0"
+author="Nowardev Peace nowardev@gmail.com"
+
+
+function_help(){
+	echo $"
+USAGE:
+
+ktexeditor mode folder 
+
+MODE :
+-n 	normal without backup files
+-b	even backup file will be opened 
+
+EXAMPLE
+
+normal files 
+
+ktexeditor-open-folder -n $HOME 
+
+open even backup file ~
+
+ktexeditor-open-folder -b $HOME 
+"
+	
+}
+
+
+
+functionstartkate()
+{
+kateisrunning=$(pgrep kate)
+if [[ $? == 1 ]]; then
+kdialog --passivepopup "kate is starting..  " 1
+kate & kpid="$!"
+ 
+else
+kpid=$(pidof kate)
+echo kate is running..
+fi
+}
+
+
+
+function_open_files(){
+#check if kate is started well 
+	while !  $(qdbus org.kde.kate-$kpid /MainWindow org.freedesktop.DBus.Peer.Ping ) ; do echo $"kate is not ready" && sleep 1 ; done 
+	
+ 	
+#check if directory exit and if exist do the loop without svn git hide file and ~file
+		
+	directory="$2"
+	if [[  -d "$directory"  ]] ; then
+		while read line ;do  
+				
+			if  [[ "$line"  =~ ".svn" || "$line"  =~ ".git" ]] ;then
+						echo $line is not to open
+			else
+
+				if  [[ ! -z $(file "$line" | grep text )  ]];then 
+					
+					if  [[ "$1" == "b" ]];then #load script 
+						if  [[ "$line"  != *~  ]] ;then
+							kate "$line"
+						fi 
+							
+							
+					elif [[ "$1" == "n" ]];then
+						kate "$line"
+							
+					fi
+			fi
+		fi
+	done< <(find "$2" -type f)
+
+	else
+		echo $"directory $2 doesn't exit"
+	exit 1
+	fi 
+				
+				
+
+
+}
+
+ 
+
+ 
+ 
+ if  [[ $1 == -*  ]]; then
+	 case "$1" in
+	 -h|--help|-\?) function_help; exit 0;;
+	 -v|--version) echo $version $author; exit 0;;
+ 
+	-b) 	if (($# > 1)); then #note that using shift $2 become $1
+		shift ;functionstartkate; echo $1 ; function_open_files  b "$1"
+ 
+		else
+			echo $"-b requires files" 1>&2
+			exit 1
+		fi ;;
+	-n) 	if (($# > 1)); then
+		shift ;functionstartkate; echo $1 ; function_open_files  n "$1"
+ 
+		else
+			echo $"-b requires files" 1>&2
+			exit 1
+		fi ;;
+ 
+ 
+ 
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+ else
+	 function_help; exit 1
+fi  
+
+ 
+# " ${f#"$1: "} remove filename: " at the start In case the file is  "./blah/foo/text/somebinaryfile"
+#find "$1" \( -name .git -o -name .svn -o -name *~ \) -prune -o -type f -exec bash -c 'f=$(file -i "$1"); [[ ${f#"$1: "} = *text* ]]' _ {} \; -exec kate {} +

@@ -1,0 +1,263 @@
+#!/bin/bash 
+#This file is part of kde-peace-settings.
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+scriptversion="0.1"
+listoffiles="$HOME/.local/share/googlecl/google-servicemenuqtlist.lst"
+numberoffile=$(wc -l <$listoffile)
+
+ 
+#  IOError: [Errno 2] No such file or directory: '/home/sem/.local/share/googlecl/yt_devkey'  mkdir -p ~/.local/share/googlecl
+
+
+
+function_list(){
+
+a=0
+while read line
+do 
+youtubelinks[$a]="$line"
+done < $(google youtube list | awk -F ',' '{print $2}')
+
+a=0
+while read line
+do 
+youtubevideotitle[$a]="$line"
+done < <(google youtube list | awk -F ',' '{print $1}')
+
+
+
+ARGS="--menu \"Choose your Video\" --"
+while read PROFILE OPTS; do
+    ARGS="${ARGS} \"${OPTS}\" \"${PROFILE}\""
+done < <(google youtube list | awk -F ',' '{gsub(/ /,"_" ); print $1 " "  $2}')
+ansprofile=$(echo $ARGS | xargs kdialog)
+
+
+
+whichdownload=$(kdialog --title $"Choose which video you want download " --menu)
+
+
+}
+
+
+functionuploadyotube(){
+
+category=$(kdialog --title $"GoogleCl service menuf or kde" --menu   $"Please specify category"  Autos  "Autos & Vehicles "  Comedy "Comedy "   Education "Education "  Entertainment "Entertainment "  Film "Film & Animation "  Games "Gaming "  Howto "Howto & Style "  Music "Music "  News "News & Politics "  Nonprofit "Nonprofits & Activism "  People "People & Blogs "  Animals "Pets & Animals "  Tech "Science & Technology "  Sports "Sports "  Travel "Travel & Events "  )
+
+
+
+a=1
+mystufvariabletouseonmyscript=$(kdialog --progressbar $"Starting Uploading..." 100)
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $mystufvariabletouseonmyscript  showCancelButton true 
+
+until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
+
+	while read line ;do 
+		
+		google youtube post --category "$category" "$line"
+		
+		
+		value=$(( $(($a*100))/$numberoffile ))
+		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+		a=$(($a+1))
+	done<$listoffiles
+done
+
+}
+
+function_upload_yotube_fast(){
+
+category=$(kdialog --title $"GoogleCl service menuf or kde" --menu   $"Please specify category"  Autos  "Autos & Vehicles "  Comedy "Comedy "   Education "Education "  Entertainment "Entertainment "  Film "Film & Animation "  Games "Gaming "  Howto "Howto & Style "  Music "Music "  News "News & Politics "  Nonprofit "Nonprofits & Activism "  People "People & Blogs "  Animals "Pets & Animals "  Tech "Science & Technology "  Sports "Sports "  Travel "Travel & Events "  )
+ 
+google youtube post --category "$category" "$line"
+ 
+function_notify $"Done file $1 uploaded!"
+}
+
+ 
+functionuploaddocs(){
+ 
+
+folderupload=$(kdialog --textinputbox $"Do you want upload your doc \ picture in a specific folder?leave empty if you are not interested" )
+
+a=1
+mystufvariabletouseonmyscript=$(kdialog --progressbar $"Starting Conversion..." 100)
+qdbus $mystufvariabletouseonmyscript org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $mystufvariabletouseonmyscript  showCancelButton true 
+
+until test "true" = `qdbus  $mystufvariabletouseonmyscript wasCancelled` ; do 
+
+	while read line ;do 
+		
+		google docs upload   "$line" "$folderupload"
+		
+		
+		value=$(( $(($a*100))/$numberoffile ))
+		qdbus  $mystufvariabletouseonmyscript Set org.kde.kdialog.ProgressDialog value $value
+		a=$(($a+1))
+	done<$listoffiles
+done
+
+
+}
+
+function_upload_docs_fast(){
+ 
+
+folderupload=$(kdialog --textinputbox $"Do you want upload your doc \ picture in a specific folder?leave empty if you are not interested" )
+
+google docs upload  "$1"
+
+}
+
+ function_notify(){
+ 
+if [[ -z "$(pidof X)" ]] ; then
+	echo  "$1"
+else	
+	kdialog --passivepopup "$1" 3
+
+fi
+ 
+ }
+
+
+ function_checkprogram(){
+ 
+ echo 
+ 
+ }
+ 
+ function_helpuser_toinstall(){
+ 
+
+ }
+ 
+ 
+ 
+ function_detect_system_for_installation(){
+ 
+ system=$( lsb_release -a 2>&1| awk  '/Description:/{print $2}')
+ 
+ if [[ "$system" == Ubuntu ]]; then
+ 
+ 
+ function_notify $"You need to install some programs, run this on terminal : sudo apt-get install googlecl awk dolphin "
+ kdialog --yesno $"Do you want install googlecl awk dolphin? if you don't this program will not work.."
+	if [[ $? == 1  ]]; then 
+		exit
+	else 
+		 konsole --noclose  -e sudo apt-get install googlecl awk dolphin
+	fi 
+ 
+ fi 
+ 
+ elif [[ -z "$system" ]];then 
+ 
+ function_notify $"I can't detect your system ? bug? try to run this lsb_release -a 2>&1| awk  '/Description:/{print $2}' on terminal "
+ 
+ else
+ 
+ function_notify $"Your system is : $system , please install googlecl dolphin and awk "
+ fi 
+ 
+ }
+ 
+ 
+
+if  [[ $1 == -*  ]]; then
+    case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+	-hx) function_help x; exit 0;;
+      
+	-f) if (($# > 1)); then
+            shift ;for file in "$@"; do
+		echo "$file" >>$listoffile
+
+		done
+          else
+            echo $"-f requires files" 1>&2
+            exit 1
+          fi ;;
+          
+	-fo) if (($# > 1)); then
+            shift ;for folder in "$@"; do
+		function_add_folder_shell "$folder"  
+		done
+          else
+            echo $"-f requires a folder at least" 1>&2
+            exit 1
+          fi ;;
+         -fox)if (($# > 1)); then
+            shift ;for folder in "$@"; do
+		function_add_folder "$folder"  
+		done
+          else
+            kdialog --error $"-f requires a folder at least" 1>&2
+            exit 1
+          fi
+         ;;
+	-mx) function_menu_start 
+	;;
+	-e)  nano "$listoffile" 
+	;;
+	-ek)  kate "$listoffile" 
+	;;
+	-d) function_delete
+	;;
+	-r)  function_restore
+	;;
+	-decompile)
+	function_build
+	;;
+	setf)
+	function_set_ffmpegpath
+	;;
+	--) shift; break;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+    esac
+else
+function_help; exit 1
+fi
+ 
+
+
+
+function_help()
+{
+
+
+
+    echo "license GPL"
+    echo    "This program is free software: you can redistribute it and/or modify"
+    echo    "it under the terms of the GNU General Public License as published by"
+    echo    "the Free Software Foundation, either version 3 of the License, or"
+    echo    "any later version."
+    echo ""
+    echo    "This program is distributed in the hope that it will be useful,"
+    echo    "but WITHOUT ANY WARRANTY; without even the implied warranty of"
+    echo    "MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the"
+    echo    "GNU General Public License for more details."
+    echo ""
+    echo    "You should have received a copy of the GNU General Public License"
+    echo    "along with this program.  If not, see <http://www.gnu.org/licenses/>"
+    echo ""
+ 
+
+}
+
+
+ 

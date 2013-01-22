@@ -1,0 +1,14 @@
+Source: kde-service-menu-aptk
+Section: kde
+Priority: extra
+Maintainer:  Nowardev Peace  <nowardev@gmail.com> 
+Build-Depends: debhelper (>= 8.0.0)
+Standards-Version: 3.9.2
+Homepage: http://code.google.com/p/kde-peace-settings/source/browse/#git%2Fapt-peace-tool
+
+
+Package: kde-service-menu-aptk
+Architecture: all
+Depends: dolphin, kate, kde-baseapps-bin 
+Description: apt dpkg service menu for dolphin
+ Aptk is a service menu for dolphin to manage your system via apt or dpkg 

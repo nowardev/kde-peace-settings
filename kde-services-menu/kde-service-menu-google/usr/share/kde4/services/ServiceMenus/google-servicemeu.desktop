@@ -1,0 +1,59 @@
+[Desktop Entry]
+Actions=append;appendplay;rotate90;rotate180;rotate270;rotate360;rotate;version;
+Icon=vlc
+ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Vlc Append
+X-KDE-Submenu[it]=Aggiungi alla playlist di vlc
+
+[Desktop Action append]
+Exec=vservice 2 "%u"
+Icon=list-add
+Name=append to vlc
+Name[it]=aggiungi a vlc
+
+[Desktop Action appendplay]
+Exec=vservice 3 "%u"
+Icon=media-playback-start
+Name=add and play
+Name[it]=aggiungi e riproduci
+
+  
+
+[Desktop Action rotate]
+Exec=vlc --video-filter "rotate{angle=$(kdialog --title "Angle" --textinputbox "Angle" 90 )}" %u
+Icon=transform-rotate
+Name=Custom Rotation
+Name[it]=Rotazione personalizzata
+
+[Desktop Action rotate180]
+Exec=vlc --video-filter "rotate{angle=180}" %u
+Icon=transform-rotate
+Name=Rotate 180
+Name[it]=Ruota 180
+
+[Desktop Action rotate270]
+Exec=vlc --video-filter "rotate{angle=270}" %u
+Icon=transform-rotate
+Name=Rotate 270
+Name[it]=Ruota 270
+
+[Desktop Action rotate360]
+Exec=vlc --video-filter "rotate{angle=360}" %u
+Icon=transform-rotate
+Name=Rotate 360
+Name[it]=Ruota 360
+
+[Desktop Action rotate90]
+Exec=vlc --video-filter "rotate{angle=90}" %u
+Icon=transform-rotate
+Name=Rotate 90
+Name[it]=Ruota 90
+
+[Desktop Action version]
+Exec=kdialog --msgbox "Version: $(awk -F'=' '/scriptversion=/{print $2}' /usr/bin/vservice) Author : me"
+Icon=dialog-information
+Name=Version
+Name[it]=Versione
+

@@ -1,0 +1,89 @@
+
+function_alias_apt(){
+	
+	if [[   -z $(cat "$HOME/.bashrc" | grep 'lias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias gf="sudo apt-get upgrade -f"
+alias gf="sudo apt-get dist-upgrade -f"
+alias i="sudo apt-get install "
+alias ai="apt-cache show  "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="apt-cache search "
+alias a="sudo apt-get autoremove"') ]]; then
+		
+		
+		kdialog --title $"My App Title"  --yesno   $"do you want install the alias for apt? 
+		
+alias u='sudo apt-get update'
+alias g='sudo apt-get upgrade'
+alias gf='sudo apt-get upgrade -f'
+alias gf='sudo apt-get dist-upgrade -f'
+alias i='sudo apt-get install '
+alias ai='apt-cache show  '
+alias r='sudo apt-get remove '
+alias p='sudo apt-get --purge remove '
+alias s='apt-cache search '
+alias a='sudo apt-get autoremove'
+
+		
+		" 2>/dev/null
+		
+		case "$?" in
+		0) 
+		
+		echo '
+alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias gf="sudo apt-get upgrade -f"
+alias gf="sudo apt-get dist-upgrade -f"
+alias i="sudo apt-get install "
+alias ai="apt-cache show  "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="apt-cache search "
+alias a="sudo apt-get autoremove"
+
+		
+		
+		
+peacei()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peacei $filenames i
+
+
+peacep()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peacep $filenames p
+
+
+peacer()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peacer $filenames r' >>~/.bashrc
+		
+		;;
+		*)
+		exit 
+		;;
+		esac
+		exit
+		# 		else 
+		# 	
+		# 			kdialog --title $"My App Title"  --passivepopup  $"I will not add apt-get shortcuts because you have already on your ~/.bashrc file " 3 2>/dev/null
+		fi 
+}

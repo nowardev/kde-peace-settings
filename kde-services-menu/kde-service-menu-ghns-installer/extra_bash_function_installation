@@ -1,0 +1,13 @@
+
+function_extra_install_global(){
+	my global commands when i install 
+}
+
+
+function_extra_install_wide(){
+	my  when i install system wide
+}
+
+function_extra_install_local(){
+	my  when i install system local
+}

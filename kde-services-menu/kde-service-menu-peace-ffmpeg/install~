@@ -1,0 +1,117 @@
+#!/bin/bash -x
+ ##license gpl 
+#   This program is free software: you can redistribute it and/or modify
+    #it under the terms of the GNU General Public License as published by
+    #the Free Software Foundation, either version 3 of the License, or
+    #any later version.
+
+    #This program is distributed in the hope that it will be useful,
+    #but WITHOUT ANY WARRANTY; without even the implied warranty of
+    #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+    #GNU General Public License for more details.
+
+    #You should have received a copy of the GNU General Public License
+    #along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+#NowardevTeam
+
+# function_old_stuf(){
+# destinationfolder[0]=/usr/bin 
+# destinationfolder[1]=$(kde4-config --prefix)/share/kde4/services/ServiceMenus
+
+# yourname[0]="vservice"
+# yourname[1]="vservice.desktop"
+# yourname[2]="vservicefolder.desktop"
+
+# yourscript[0]="$PWD/usr/bin/${yourname[0]}"
+# yourscript[1]="$PWD/usr/share/kde4/services/ServiceMenus/${yourname[1]}"
+# yourscript[2]="$PWD/usr/share/kde4/services/ServiceMenus/${yourname[2]}"
+# 
+# 
+# permission[0]=774
+# permission[1]=+x
+# }
+
+
+function_install(){
+
+for file in "$PWD"/usr/bin/* ; do
+install -m 755 -D $file /usr/bin/
+done
+
+for file in "$PWD"/usr/share/kde4/services/ServiceMenus/*.desktop ; do
+install -m 644 "$file" /share/kde4/services/ServiceMenus
+done
+}
+
+function_unistall(){
+
+rm /usr/share/kde4/services/ServiceMenus/ffmpeg-peace-service-menu-file.desktop
+rm /usr/share/kde4/services/ServiceMenus/ffmpeg-peace-service-menu-folder.desktop
+rm /usr/bin/ffmpeg-service-menu
+
+}
+
+
+if [ "$(id -u)" = 0 ]; then 
+	echo "you have the power lol" 
+	echo "installing..."
+else 
+	echo "YOU ARE NOT ROOT TO INSTALL  YOU MUST BE ROOT. "
+	echo "have you typed wrong password?"
+	exit 0
+fi
+
+echo "Do you want install or unistall  (i\u)"
+read
+case $REPLY in
+[i/I][n/N][s/S][t/T][a/A][l/L][l/L]|[i/I])
+ 
+function_install 
+
+ 
+echo 
+sudo -u $SUDO_USER kbuildsycoca4 #GET  kbuildsycoca4 running like normal user ..to avoid error message
+ 
+ 
+echo
+echo "END! EVERYTHING DONE!"
+;;
+ 
+[u/U][n/N][s/S][t/T][a/A][l/L][l/L]|[u/U])
+
+echo "rm /usr/share/kde4/services/ServiceMenus/ffmpeg-peace-service-menu-file.desktop
+rm /usr/share/kde4/services/ServiceMenus/ffmpeg-peace-service-menu-folder.desktop
+rm /usr/bin/ffmpeg-service-menu"
+ 
+
+echo "are you really sure ? (y\n)"
+read
+	case $REPLY in
+
+	[y/Y]|[y/Y][e/E][s/S])
+		function_unistall
+		echo  "running .....kbuildsycoca4  update service menus... wait.."
+		echo 
+		echo 
+		sudo -u $SUDO_USER kbuildsycoca4 #GET  kbuildsycoca4 running like normal user ..to avoid error message
+		echo
+		echo "END! EVERYTHING DONE!"
+		exit 1
+		;;
+ 	[n/N]|[n/N][o/O])
+		echo "user has asked to exit...exiting"
+		exit
+	esac
+;;
+
+*)
+echo "usage type u or i to Unstall or to Install"
+echo
+echo "user had given a bad input :P exiting"
+exit
+ esac
+
+
+
+
