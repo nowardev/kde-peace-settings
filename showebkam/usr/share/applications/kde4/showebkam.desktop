@@ -1,10 +1,12 @@
 [Desktop Entry]
+Name=ShoWebKam
+Exec=showebkam
+Icon=camera-web
+Type=Application
 Categories=Qt;KDE;AudioVideo;Video;
+GenericName=ShoWebKam
 Comment=Display your Webcam
 Comment[it]=Mostra Webcam
-Exec=showebkam
-GenericName=ShoWebKam
-Icon=camera-web
-Name=ShoWebKam
-Name[it]=ShoWebKam
-Type=Application
+GenericName[it]=Mostra Webcam
+Terminal=false
+InitialPreference=10

@@ -1,11 +1,10 @@
 [Desktop Entry]
-Name=Dolphin
+Name=Aptk
 Exec=peace-debian-installer menu
 Icon=run-build-configure
 Type=Application
-X-DocPath=dolphin/index.html
 Categories=Qt;KDE;System;
-GenericName=File Manager
+GenericName=Apt tool
 Comment=Software Installer
 GenericName[it]=Apt Menu
 Terminal=false
