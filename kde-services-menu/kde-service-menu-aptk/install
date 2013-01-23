@@ -35,13 +35,13 @@ function_check_folder_and_create_it_if_doesnt_exist () {
 function_checksudo(){
 
 if [[ $sudoerror == true ]] ; then
-function_systemwide
+function_system
 wrongpas=$"before you typed a WRONG PASS"
 fi
 
 }
 
-function_systemwide() {
+function_system() {
 
 	sudoerror=false
 	pas=$(kdialog --password $"Insert Root Password $wrongpas" 2>/dev/null )
@@ -116,11 +116,15 @@ pas=""
 
 if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
 	if [[ $(declare -F function_extra_install_global ) ]]; then 
-		echo $"Wide Function Extra Install Global"
+		echo $"Function Extra Install Global"
 		function_extra_install_global	
-	elif [[ $(declare -F function_extra_install_wide )  ]]; then 
-		echo "Wide Install Extra function Detected executing.."
-		function_extra_install_wide
+	else 
+		echo $"No Extra global Install functions"
+	fi 
+	
+	if [[ $(declare -F function_extra_install_system )  ]]; then 
+		echo "Function Extra Install System executing.."
+		function_extra_install_system
 	else 
 		echo $"No Extra wide Install functions"
 	fi 
@@ -196,13 +200,17 @@ fi
 	
 	if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
 		if [[  $(declare -F function_extra_install_global )  ]]; then
-			echo "Global extra function Detected Executing.."
+			echo "Global Extra function Detected Executing.."
 			function_extra_install_global
-		elif [[ $(declare -F function_extra_install_local ) ]]; then 
-			echo "Local Install Extra function Detected executing.."
+		else 
+			echo $"No Extra global Install functions"
+		fi
+			
+		if [[ $(declare -F function_extra_install_local ) ]]; then 
+			echo "Function Extra Install Local executing.."
 			function_extra_install_local
 		else 
-			echo $"No Extra local Install functions"
+			echo $"No Extra Local Install functions"
 		fi 
 
 	fi 
@@ -210,7 +218,7 @@ fi
 }
 
 
-function_remove(){
+function_remove_local(){
 
 ##remove local 
 messageremoved=""
@@ -264,13 +272,17 @@ kdialog --passivepopup $"Removed these files  $messageremoved" 2 2>/dev/null
 if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
 	
 	if [[ $(declare -F function_extra_deinstall_global )  ]]; then 
-		echo $"Function extra deinstall global detected executing"
+		echo $"Function Extra Deinstall Global Local detected executing .."
 		function_extra_deinstall_global
-	elif [[ $(declare -F function_extra_deinstall_local )   ]]; then 
-		echo $"Function extra deinstall local detected executing"
+	else
+		echo  $"No Function Extra Global Local Deinstall Detected"
+	fi 
+	
+	if [[ $(declare -F function_extra_deinstall_local )   ]]; then 
+		echo "Function Extra Deinstall Local executing.."
 		function_extra_deinstall_local
 	else 
-		echo $"No Function extra deinstall detected"
+		echo $"No Function Extra Local Deinstall Detected"
 	fi 
 
 fi 
@@ -328,7 +340,7 @@ if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then
 		file="${file##*/}"
 		if [[ -e "$prefix/share/applications/kde4/$file"  ]]; then 
 			echo "rm  "$prefix/share/applications/kde4/$file""
-			echo "$pas" | sudo -S rm  ""$prefix"share/applications/kde4/$file"
+			echo "$pas" | sudo -S rm  ""$prefix"/share/applications/kde4/$file"
 			messageremoved="$messageremoved  "$prefix"share/applications/kde4/$file"
 		fi 
 	done
@@ -343,11 +355,15 @@ if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then
 	if [[ $(declare -F function_extra_deinstall_global )  ]]; then 
 		echo $"Function extra deinstall global detected executing"
 		function_extra_deinstall_global
-	elif [[ $(declare -F function_extra_deinstall_wide ) ]]; then 
-		echo $"Function extra deinstall wide detected executing"
-		function_extra_deinstall_wide
 	else
-		echo $"No Function extra deinstall wide detected"
+		echo  $"No Function Extra Global System Deinstall Detected"
+	fi 
+	
+	if [[ $(declare -F function_extra_deinstall_system ) ]]; then 
+		echo $"Function Extra Deinstall System  detected executing"
+		function_extra_deinstall_system
+	else
+		echo $"No Function Extra Deinstall System detected"
 	fi 
 
 fi 
@@ -355,7 +371,7 @@ fi
 
 function_main(){
  
-answer=$(kdialog  --title $"Service menu installation menu " --menu  $"Installation Menu: choose an installation option"  l  $"Local Installation"  sw $"System Wide Installation" neutral "*******************" r $"Remove Local" rs $"Remove System wide" --default "Local Installation" 2>/dev/null)
+answer=$(kdialog  --title $"Service menu installation menu " --menu  $"Installation Menu: choose an installation option"  l  $"Local Installation"  sw $"System  Installation" neutral "**********************************************" r $"Remove Service Menu Locally" rs $"Remove Service Menu from the System" --default "Local Installation" 2>/dev/null)
 echo "menu entry $answer"
 case $answer in 
 
@@ -365,12 +381,12 @@ function_local
 ;;
 
 sw)
-function_systemwide
+function_system
 
 ;;
 
 r)
-function_remove
+function_remove_local
 ;;
 rs)
 function_remove_system
@@ -397,7 +413,9 @@ if [[ -e "$PWD/extra_bash_function_installation" ]]; then
 . $PWD/extra_bash_function_installation"
 
 . "$PWD/extra_bash_function_installation"  
-elif [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
+fi 
+
+if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
 	echo $"Extra deinstallation file detected loading functions
 . $PWD/extra_bash_function_deinstallation"
 

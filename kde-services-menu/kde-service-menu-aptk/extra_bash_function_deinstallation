@@ -1,5 +1,5 @@
 
-function_extra_install_global(){
+function_extra_deinstall_global(){
 	
 	if [[   -z $(cat "$HOME/.bashrc" | grep 'alias u="sudo apt-get update"
 alias g="sudo apt-get upgrade"
@@ -90,11 +90,19 @@ complete -F peacer $filenames r' >>~/.bashrc
 		# 			kdialog --title $"My App Title"  --passivepopup  $"I will not add apt-get shortcuts because you have already on your ~/.bashrc file " 3 2>/dev/null
 		fi 
 }
-
-function_extra_install_system(){
-	echo testing good
-}
-
-function_extra_install_local(){
-	echo testing good local
-}
+# 
+# function_extra_deinstall_system(){
+# 	echo testing system extra function 1
+# }
+# 
+# function_extra_deinstall_local(){
+# 	echo testing local extra function 2
+# }
+# 
+# function_extra_install_system(){
+# 	echo testing system extra function 3
+# }
+# 
+# function_extra_install_local(){
+# 	echo testing local extra function 4
+# }

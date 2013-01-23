@@ -21,9 +21,9 @@ It's a script that can help you to install service menu on kde and it's compatib
 there are 4 mode 
 
 1 installation local 
-2 installation system wide
+2 installation system 
 3 deinstallation local 
-4 deinstallation system wide
+4 deinstallation system
 
 
 the functions will run if folders exist, deinstall modes are based on the files that are presents in the main folder , if there are /mainfolder/usr/bin/scripts it will remove /usr/bin/scripts etc.
@@ -83,8 +83,8 @@ function_extra_deinstall_global
 function_extra_install_local
 function_extra_deinstall_local
 
-function_extra_install_wide
-function_extra_deinstall_wide
+function_extra_install_system
+function_extra_deinstall_system
 
 
 the global function will be run on the deinstall or install process doesn't matter if you want install locally o system wide , then it will be loaded the local or wide functions 
