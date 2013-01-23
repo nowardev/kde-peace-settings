@@ -200,7 +200,7 @@ function_print(){
 	else
 		scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
 		if [[ -e  "$tempfile"  ]]; then 
-			kdialog --passivepopup  $"running this command: sscanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile"  &&	lpr $lprparameters  "$tempfile"
+			kdialog --passivepopup  $"running this command: sscanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" &&lpr $lprparameters  "$tempfile"
 			
 			"
 			
@@ -208,17 +208,16 @@ function_print(){
 		else
 			kdialog --error $"$tempfile doesn't exist. this is the command
 			
-			scanimage   --resolution $resolution --mode $mode  > "$tempfile"
-			
-			and it generates empty file ?"
+scanimage   --resolution $resolution --mode $mode  > "$tempfile"
+
+and it generates empty file ?"
 		fi 
 	fi 
 	
 	
 }
 function_start(){
-	kdialog --passivepopup  " scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
-	convert "$tempfile" "${1%%.*}.$format""
+	kdialog --passivepopup  " scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" && convert "$tempfile" "${1%%.*}.$format""
 	scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
 	convert "$tempfile" "${1%%.*}.$format"
 	

@@ -355,7 +355,7 @@ fi
 
 function_main(){
  
-answer=$(kdialog  --title $"Service menu installation menu " --menu  $"Installation Menu: choose an installation option"  l  $"Local Installation"  sw $"System Wide Installation" neutral "*******************" r $"Remove Local" rs $"Remove System wide" --default "Local Installation" 2>/dev/null)
+answer=$(kdialog  --title $"Service menu installation menu " --menu  $"Installation Menu: choose an installation option"  l  $"Local Installation"  sw $"System  Installation" neutral "*******************" r $"Remove Local" rs $"Remove System wide" --default "Local Installation" 2>/dev/null)
 echo "menu entry $answer"
 case $answer in 
 
