@@ -150,7 +150,7 @@ in this script $(type -p  kde-service-menu-peace-scanner) ";exit ;   fi
 AVIABLE FOR YOUR SCANNER  ${d_resolution[*]}" "${s_resolutions[@]}" $defaultresolution -- )"
 		mode="$(kdialog --textinputbox  $"Choose Mode 
 AVIABLE FOR YOUR SCANNER ${d_mode[*]}" "$defaultmode" -- )"
-		format="$(kdialog --combobox $"Choose Format" png jpeg jpg bmp tiff  --default jpeg )"
+		format="$(kdialog --combobox $"Choose Format" png jpeg jpg bmp tiff pdf  --default jpeg )"
 		xsize="$(kdialog --textinputbox  $"Choose X size 215 = A4" 215)"
 		ysize="$(kdialog --textinputbox  $"Choose Y size 297 = A4" 297)"
 		
