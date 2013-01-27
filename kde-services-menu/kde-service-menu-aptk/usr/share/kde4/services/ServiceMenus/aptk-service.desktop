@@ -15,7 +15,7 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 [Desktop Entry]
-Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;searchandinstall;install;purge;remove;blockpackage;_SEPARATOR_;installpackage;removepackage;infopackageapt;infopackage;_SEPARATOR_;autoremove;clear;dpgkrecover;removeblock;installf;_SEPARATOR_;edit-sourcelist;ppa;
+Actions=update;upgrade;dist-upgrade;fupug;fupdug;_SEPARATOR_;search;searchex;infopackageapt;infopackage;aptfilelist;_SEPARATOR_;searchandinstall;install;purge;remove;blockpackage;_SEPARATOR_;installpackage;removepackage;_SEPARATOR_;autoremove;clear;dpgkrecover;removeblock;installf;_SEPARATOR_;edit-sourcelist;ppa;
 Icon=applications-other
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
@@ -77,7 +77,11 @@ Icon=system-search
 Name=Apt-Search and install
 Name[it]=Apt-Cerca e installa
 
-
+[Desktop Action aptfilelist]
+Exec=peace-debian-installer aptfilelist && echo %u >/dev/null
+Icon=dialog-information
+Name=Apt-file list  installed files
+Name[it]=Apt-file lista file installati
 
 [Desktop Action install]
 Exec=konsole --noclose -e  peace-debian-installer install && echo %u >/dev/null

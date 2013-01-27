@@ -111,6 +111,25 @@ fi
 
 }
 
+function_apt_file_list(){
+	ans="$(kdialog --title $"Apt Info" --combobox $"Please select a package" $(apt-cache pkgnames "$(kdialog --title $"Apt Info" --textinputbox $"Insert a key " "package name")"))"
+
+
+if [[ -z $ans || $ans == "package name" ||  $ans == "exit" ||  $ans == "Exit" ]] ; then
+exit 
+else 
+ans2=$(apt-file list  "$ans" | awk '{print $2}')
+
+	if [[ -z "$ans2" ]];then 
+
+		  kdialog  --passivepopup  $"Apt-file list  not found :S exiting" ; exit  
+	else
+		  kdialog --title "List of Files that would be installed " --msgbox  "$ans2"
+	 fi
+
+fi 	
+}
+
 function_dpkg_force_remove(){
  dpkg --force-all -P "$1"
 }
@@ -250,7 +269,13 @@ fi
 
 }
 
+function_get_dependences(){
 
+	function_scriptsearch
+
+	kdialog --title $"Dependences" --msgbox  "$(apt-cache show "$searchresult" | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,"");gsub(/dragonplayer/,"vlc vlc-data vlc-nox vlc-plugin-fluidsynth vlc-plugin-jack vlc-plugin-notify vlc-plugin-pulse vlc-plugin-sdl vlc-plugin-svg vlc-plugin-zvbi");gsub(/rekonq/,"firefox"); print} ' | awk '{ printf "%s", $0 }' | sort)"
+	
+}
 
 
 function_aptr(){
@@ -374,7 +399,7 @@ kdialog --passivepopup   $" PPA Removed   $a" 2
 
 function_menu(){
 
-ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option"  aptinfo  $"Apt Info" update $"Update"    upgrade  $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall  $"Search and install" remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option"  aptinfo  $"Apt Info" aptfilelist $"List of files will be installed"  update $"Update"    upgrade  $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall   $"Search and install" getdependences $"Show Dependences"  remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
 if [[ -z $ans ]] ; then
 exit 
 else 
@@ -404,7 +429,9 @@ forceupdatedistupgrade)
 function_updatedistupgradeforce
 ;;
 
-
+aptfilelist)
+function_apt_file_list
+;;
 
 forceupdateupgrade)
 function_updateupgradeforce
@@ -450,7 +477,9 @@ hold)
 
 function_hold
 ;;
-
+getdependences)
+function_get_dependences
+;;
 autoremove)
 function_autoremove
 ;;
