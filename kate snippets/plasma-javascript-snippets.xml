@@ -655,12 +655,13 @@ battery
 bookmarks
 calculator
 character-selector
+check-exist-application
 check-widget-installed
 clock
 current
 currentappcontrol
 daisy
-devicenotifier
+device-notifier
 global-shortcut
 instant-message-presence
 irc
@@ -711,7 +712,7 @@ write-config
 
  
 
-awk '/match/{gsub(/match/,"");gsub(/&lt;>/,"");gsub(/&lt;\/>/,"");print $1}'  ~/.kde/share/apps/ktexteditor_snippets/data/*plasma*.xml | sort >/tmp/snippets-help ; kate /tmp/snippets-help 
+awk '/match/{gsub(/match/,"");gsub(/&lt;>/,"");gsub(/&lt;\/>/,"");print $1}'  ~/.kde/share/apps/ktexteditor_snippets/data/*plasma*.xml | sort -u  >/tmp/snippets-help ; kate /tmp/snippets-help 
 
 
 </fillin>
