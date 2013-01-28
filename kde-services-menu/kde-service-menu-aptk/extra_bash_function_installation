@@ -43,7 +43,7 @@ alias r="sudo apt-get remove "
 alias p="sudo apt-get --purge remove "
 alias s="apt-cache search "
 alias a="sudo apt-get autoremove"
-alias h="echo '
+alias h="echo \"
 u==>sudo apt-get update
 g==>sudo apt-get upgrade
 gf==>sudo apt-get upgrade -f
@@ -53,7 +53,7 @@ ai==>apt-cache show
 r==>sudo apt-get remove 
 p==>sudo apt-get --purge remove 
 s==>apt-cache search 
-a==>sudo apt-get autoremove'
+a==>sudo apt-get autoremove\"
 "
 		
 		
