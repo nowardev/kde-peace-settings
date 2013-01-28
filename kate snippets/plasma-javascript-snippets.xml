@@ -1,0 +1,1056 @@
+<snippets namespace="" license="GPLv3" filetypes="JavaScript" snippetlicense="public domain" authors="Nowardev Peace-" name="plasma panels collections">
+ <item>
+  <displayprefix></displayprefix>
+  <match>clock</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var clock = panel.addWidget("digital-clock")
+clock.writeConfig("showDate", "true")
+clock.writeConfig("showDay", "true")
+clock.writeConfig("showSeconds", "true")
+clock.writeConfig("showShadow", "false")
+clock.writeConfig("showYear", "true")
+//clock.writeConfig("showTimezone", "true")
+clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
+clock.writeConfig("useCustomColor", "true")
+clock.writeConfig("plainClockColor", "255,255,255")
+clock.writeConfig("plainClockDrawShadow", "false")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>panel_netbook</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var panel = new Panel("netpanel")
+if (panelIds.length == 1) {
+   panel.location = 'top'
+	//panel.hiding= 'autohide' //"windowscover" or "windowsbelow"
+	//panel.length = (screenrect.width/2)-(screenrect.width/16);
+	//panel.height = screenrect.height/30;
+	//panel.alignment = "left" "right" "center"
+	//panel.locked = false true
+} </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>currentappcontrol</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var currentappcontrol =  panel.addWidget("currentappcontrol")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>menubar</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var menubar = panel.addWidget("menubar")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>taskmanagerk-icon-only</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var userhome =  userDataPath()
+var icontasks = panel.addWidget("icontasks")
+icontasks.writeConfig("groupClick","1")
+icontasks.writeConfig("iconScale","49")
+icontasks.writeConfig("launcherIcons","false")
+icontasks.writeConfig("maxRows","1")
+icontasks.writeConfig("mediaButtons","true")
+icontasks.writeConfig("middleClick","0")
+icontasks.writeConfig("previewSize","200")
+icontasks.writeConfig("rotate","false")
+icontasks.writeConfig("showOnlyCurrentActivity","false")
+icontasks.writeConfig("showOnlyCurrentDesktop","false")
+icontasks.writeConfig("showOnlyCurrentScreen","false")
+icontasks.writeConfig("showProgress","true")
+icontasks.writeConfig("showSeparator","0")
+icontasks.writeConfig("sortingStrategy","1")
+icontasks.writeConfig("spacing","0")
+icontasks.writeConfig("style","2")
+icontasks.writeConfig("toolTips","0")
+icontasks.writeConfig("unity","true")
+//icontasks.writeConfig("Enabled","true")
+
+icontasks.currentConfigGroup = new Array('DockManager') // CONFIGURE DOCKERS HELPERS
+icontasks.writeConfig("Enabled","true")	
+icontasks.writeConfig("EnabledHelpers",userhome+"/.local/share/dockmanager/scripts/kate.py,"+userhome+"/.local/share/dockmanager/scripts/konqueror.py,"+userhome+"/.local/share/dockmanager/scripts/krdc_menus.py,"+userhome+"/.local/share/dockmanager/scripts/rekonq.py,"+userhome+"/.local/share/dockmanager/scripts/akonadi.py,"+userhome+"/.local/share/dockmanager/scripts/firefox.py,"+userhome+"/.local/share/dockmanager/scripts/konsole.py,"+userhome+"/.local/share/dockmanager/scripts/dolphin.py,"+userhome+"/.local/share/dockmanager/scripts/kopete.py,"+userhome+"/.local/share/dockmanager/scripts/amarok.py")
+
+icontasks.currentConfigGroup = new Array('Launchers') // CONFIGURE LAUNCHERS
+icontasks.writeConfig("Items","file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/vlc.desktop?wmClass=Vlc,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")
+//icontasks.writeConfig("browser", "preferred://browser, , , ") // add to icontask the prefered browser automatically this is good but it put where it wants the launcher so it sucks 
+//icontasks.writeConfig("filemanager", "preferred://filemanager, , , ")
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>pastebin</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>panel.addWidget("pastebin")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>menu-logout-exit</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var logout = panel.addWidget("simplelauncher")
+logout.writeConfig("format", "Description")
+logout.writeConfig("showMenuTitles", "true")
+logout.writeConfig("views", "Settings,SwitchUser,SaveSession,LockScreen,Logout,Standby,SuspendDisk,SuspendRAM,Restart,Shutdown")
+logout.writeConfig("icon", "system-shutdown")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>pager</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var  pager = panel.addWidget("pager")
+pager.writeGlobalConfig("rows", "2")
+pager.writeConfig("displayedText","0")
+pager.writeConfig("showWindowIcons","true")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>menu-log-out-exit-standard</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>varlockout=panel.addWidget("lockout")
+lockout.writeConfig("showHibernateButton","true")
+lockout.writeConfig("showLogoutButton","true")
+lockout.writeConfig("showLockButton","false")
+lockout.writeConfig("showSleepButton","false")
+lockout.writeConfig("showSwitchUserButton","true")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>quicklauncher</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var quicklaunch = panel.addWidget("quicklaunch")
+quicklaunch.writeConfig("sectionCount" ,"2")
+quicklaunch.writeConfig("launchers" ,"file:///usr/share/applications/kde4/dolphin.desktop,file:///usr/share/applications/firefox.desktop,file:///usr/share/applications/kde4/systemsettings.desktop,file:///usr/share/applications/kde4/konsole.desktop")
+quicklaunch.currentConfigGroup = new Array('Configuration')
+quicklaunch.writeConfig("launcherNamesVisible" ,"false")
+quicklaunch.writeConfig("launchers","file:///usr/share/applications/kde4/konsole.desktop")
+quicklaunch.writeConfig("launcherNamesVisible" ,"false")
+quicklaunch.writeConfig("launcherNamesVisible" ,"false")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>systemtray</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var systemtray = panel.addWidget("systemtray")
+systemtray.writeConfig("DefaultAppletsAdded","false")
+systemtray.writeConfig("ShowHardware","true")
+systemtray.writeConfig("ShowCommunications","true")
+systemtray.writeConfig("ShowApplicationStatus","true")
+systemtray.writeConfig("ShowSystemServices","true")
+systemtray.writeConfig("ShowUnknown","false")
+//systemtray.writeConfig("alwaysShown","battery,notifier,KMix,org.kde.networkmanagement")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>panel-bottom</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0); // get information about your screen h w
+ 
+var panel = new Panel
+if (panelIds.length == 1) {
+    panel.location = 'bottom'
+    //panel.location = 'top'
+    //panel.hiding= 'autohide' //"windowscover" or "windowsbelow"
+    //panel.length = (screenrect.width/2)-(screenrect.width/16);
+    //panel.height = screenrect.height/30;
+    //panel.alignment = "left" "right" "center"
+ 	//panel.locked = false true
+ 
+}
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>panel-top</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0); // get information about your screen h w
+ 
+var panel = new Panel
+if (panelIds.length == 1) {
+    //panel.location = 'bottom'
+    panel.location = 'top'
+    //panel.hiding= 'autohide' //"windowscover" or "windowsbelow"
+    //panel.length = (screenrect.width/2)-(screenrect.width/16);
+    //panel.height = screenrect.height/30;
+    //panel.alignment = "left" "right" "center"
+    //panel.locked = false true
+ 
+}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>launcher-classic</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var launcher = panel.addWidget("simplelauncher")
+launcher.writeConfig("format", "Description")
+launcher.writeConfig("showMenuTitles", "true")
+launcher.writeConfig("views", "Applications,Favorites,Computer,Settings,RunCommand,Leave")
+launcher.currentConfigGroup = new Array('Shortcuts')
+launcher.globalShortcut = "F13"</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>taskmanager</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var task = panel.addWidget("tasks")
+task.writeConfig("showTooltip","false")
+tasks.currentConfigGroup = new Array("Launchers")
+tasks.writeConfig("browser", "preferred://browser, , , ")
+tasks.writeConfig("filemanager", "preferred://filemanager, , , ")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>weather-yawp</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var yawp = panel.addWidget("yaWP")
+
+yawp.writeConfig("animation.daysnames","8")
+yawp.writeConfig("animation.details","1")
+yawp.writeConfig("animation.duration","500")
+yawp.writeConfig("animation.icon","3")
+yawp.writeConfig("animation.page","8")
+yawp.writeConfig("custom.fontcolor.lowtemp","30,28,27")
+yawp.writeConfig("custom.fontcolor.normal","20,19,18")
+yawp.writeConfig("custom.fontcolor.shadows","255,255,255,100")
+yawp.writeConfig("custom.fontcolor.usage","false")
+yawp.writeConfig("custom.theme.background.enabled","false")
+yawp.writeConfig("custom.theme.enabled","false")
+yawp.writeConfig("custom.theme.file","")
+yawp.writeConfig("panel.forecast.days","1")
+yawp.writeConfig("panel.forecast.format","3")
+yawp.writeConfig("panel.layout.compact","false")
+yawp.writeConfig("panel.today.format","3")
+yawp.writeConfig("panel.tooltip.extended.enabled","true")
+yawp.writeConfig("panel.tooltip.extended.format","5")
+yawp.writeConfig("start delay","0")
+yawp.writeConfig("system.distance","2007")
+yawp.writeConfig("system.pressure","5007")
+yawp.writeConfig("system.speed","9001")
+yawp.writeConfig("system.temperature","6001")
+yawp.writeConfig("text.shadows","false")
+yawp.writeConfig("theme","default")
+yawp.writeConfig("traverse locations","false")
+yawp.writeConfig("traverse locations timeout","30")
+yawp.writeConfig("update interval","45")
+ 
+yawp.currentConfigGroup = new Array('locations')
+
+yawp.writeConfig("city01",'accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome')
+yawp.writeConfig("selected","0")
+ 
+//yawp.geometry = new QRectF(0,0,screenrect.width/4,screenrect.height/3)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>shelf-hardisk</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var launcher = panel.addWidget("lancelot_part")
+launcher.writeConfig("iconLocation", "drive-harddisk")
+launcher.writeConfig("iconClickActivation", "true")
+launcher.writeConfig("contentsExtenderPosition", "1")
+launcher.writeConfig("searchHistory", "firefox")
+launcher.writeConfig("showSearchBox", "true")
+launcher.writeConfig("partData","model=Devices%2FRemovable&amp;type=list&amp;version=1.0\nmodel=Places&amp;type=list&amp;version=1.0\nmodel=Devices%2FFixed&amp;type=list&amp;version=1.0\n") </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>launcher-shelf</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var launcher = panel.addWidget("lancelot_part")
+launcher.writeConfig("iconLocation", "start-here-kde")
+launcher.writeConfig("iconClickActivation", "true")
+launcher.writeConfig("contentsExtenderPosition", "1")
+launcher.writeConfig("searchHistory", "firefox")
+launcher.writeConfig("showSearchBox", "true")
+launcher.writeConfig("partData", "model=FavoriteApplications&amp;type=list&amp;version=1.0\nmodel=Folder%20applications%3A%2FOffice%2F&amp;type=list&amp;version=1.0\nmodel=Folder%20applications%3A%2FMultimedia%2F&amp;type=list&amp;version=1.0\nmodel=Folder%20applications%3A%2FInternet%2F&amp;type=list&amp;version=1.0\nmodel=System&amp;type=list&amp;version=1.0\n")
+launcher.currentConfigGroup = new Array('Shortcuts')
+launcher.globalShortcut = "F13" 
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>removepanel</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>function remove()
+{
+  for (i in panelIds) {
+        
+
+	panelById(panelIds[i]).remove()
+    }
+  
+}
+//////////////////////////////////////////////////////////
+
+
+/////function remove standard///////////////////////////////
+function RemoveOldPanels()
+{
+    for (i in panelIds) {
+       // panelById(panelIds[i]).remove()
+       p = panelById(panelIds[i]);
+       if (typeof p === "undefined") {
+       print("E: Couldn't find first panel");
+       remove() //load the remove function in case of problems
+       }
+        else 	{
+	  panelById(panelIds[i]).remove()
+	  	}
+                                    }
+}
+
+RemoveOldPanels() //load the function
+ </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activitymanager</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var activitymanager= panel.addWidget( "activitymanager")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>launcher-takeoff</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var launcher = panel.addWidget("takeoff")
+launcher.writeConfig("iconLocation", "start-here-kde")
+launcher.currentConfigGroup = new Array('Shortcuts')  
+launcher.globalShortcut = "F13"
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>veromix</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var mixer = panel.addWidget("veromix-plasmoid")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>trash</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var trash = panel.addWidget("trash")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>screengeometry</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-search-and-launch</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var activity = new Activity("sal")
+activity.name = i18n("Search and Launch")
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-load-new-config</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> activity.reloadConfig()
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-widget-at</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var news =  activity.addWidgetAt("news", 0, 0)
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-widget</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var news = activity.addWidget("news")
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-newspaper</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var activity = new Activity("newspaper")
+activity.name = i18n("News Paper")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-folderview</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+
+var activity = new Activity("folderview")
+activity.name = i18n("Name Activity")
+activity.writeConfig("alignToGrid","true")
+activity.writeConfig("blankLabel","false")
+activity.writeConfig("clickForFolderPreviews","true")
+activity.writeConfig("customIconSize","48")
+activity.writeConfig("customLabel","")
+activity.writeConfig("drawShadows","true")
+activity.writeConfig("filter","0")
+activity.writeConfig("filterFiles","*")
+activity.writeConfig("flow","1")
+activity.writeConfig("formfactor","0")
+activity.writeConfig("iconsLocked","false")
+activity.writeConfig("mimeFilter","")
+activity.writeConfig("numTextLines","2")
+activity.writeConfig("url","desktop:/")
+activity.writeConfig("wallpaperplugin","image") //   "clock" "virus" "org.kde.potd" "mandelbrot" "weather" "pattern" "marble" //activity.writeConfig("wallpaperpluginmode", "Slideshow" )
+activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
+  
+
+ 
+//activity.wallpaperPlugin = "image"
+//activity.wallpaperMode = "SingleImage"
+//activity.currentConfigGroup = Array("Wallpaper", "image")
+//activity.writeConfig("wallpaper", "name image or location")
+
+
+var dolphin = activity.addWidget("icon")
+dolphin.writeConfig("Url", "dolphin.desktop")
+dolphin.geometry = new QRectF(0, screenrect.height/7, screenrect.width/10, screenrect.height/10)
+
+ var a = screenrect.height/9
+ var b = screenrect.height/5
+
+var trash = activity.addWidget("trash")
+trash.geometry = new QRectF(0, a + b , screenrect.width/12, screenrect.height/12)
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-desktop</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var activity   = new Activity("desktop")
+activity.name = i18n("Name Activity")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>daisy</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var daisy = activity.addWidget("plasma_applet_daisy")
+
+daisy.writeConfig("middleclickaction","run")
+daisy.writeConfig("icospacing","0.25")
+daisy.writeConfig("icodimension","52")
+daisy.writeConfig("floating","false")
+daisy.writeConfig("drawersize","30")
+daisy.writeConfig("drawerrotation","1.6")
+daisy.writeConfig("click_effects","true")
+daisy.writeConfig("background_opacity","0.6")
+daisy.writeConfig("acceptdrops","true")
+daisy.writeConfig("player","Amarok 2.x")
+daisy.writeConfig("plugin","plasma_applet_daisy")
+daisy.writeConfig("position","buttom_center")
+daisy.writeConfig("reservespace","true")
+daisy.writeConfig("showclosetask","true")
+daisy.writeConfig("showindicons","true")
+daisy.writeConfig("showmirror","true")
+daisy.writeConfig("showondesk","true")
+daisy.writeConfig("showtaskoflauncher","false")
+daisy.writeConfig("showtooltips","true")
+daisy.writeConfig("showtooltips_inactive","true")
+daisy.writeConfig("showtooltips_launchers","true")
+daisy.writeConfig("taskpreviews","true")
+daisy.writeConfig("theme","default")
+daisy.writeConfig("theme_t","alternative")
+daisy.writeConfig("tip_type","thumbnail")
+daisy.writeConfig("total_launchers","9")
+daisy.writeConfig("type","standard_dock")
+daisy.writeConfig("wallpaperplugin","image")
+daisy.writeConfig("wallpaperpluginmode","SingleImage")
+daisy.writeConfig("zoomtype","simple")
+daisy.writeConfig("zvalue","25")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-folderview-pictures</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+var pictures = userDataPath("pictures")
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", pictures)
+folderview.geometry = new QRectF(screenrect.width/4,0,screenrect.width/4,screenrect.height/3)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-folderview-music</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+var music =  userDataPath('music')
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", music)
+folderview.geometry = new QRectF(2*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-folderview-video</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+var video = userDataPath('video')
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", video )
+folderview.geometry = new QRectF(3*screenrect.width/4,0,screenrect.width/4,screenrect.height/3)
+
+ </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-folderview-download</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+var downloads =userDataPath('downloads')
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", downloads)
+folderview.geometry = new QRectF(0,screenrect.height,screenrect.width/4,screenrect.height/3)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-add-folderview-general</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var screenrect = screenGeometry(0)
+var shared= "${cursor}/tmp"
+var folderview = activity.addWidget("folderview")
+folderview.writeConfig("url", shared )
+folderview.geometry = new QRectF(screenrect.width/4,screenrect.height,screenrect.width/4,screenrect.height/3)</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>quicklaunchercollection</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var internet = panel.addWidget("quicklaunch")
+internet.writeConfig("launchers", "file:///usr/share/applications/firefox.desktop,file:///usr/share/applications/chromium-browser.desktop,file:////usr/share/applications/kde4/akregator.desktop,file:////usr/share/applications/kde4/bluedevil-monolithic.desktop,file:////usr/share/applications/kde4/kget.desktop,file:////usr/share/applications/kde4/KMail2.desktop,file:////usr/share/applications/kde4/konqbrowser.desktop,file:////usr/share/applications/kde4/konversation.desktop,file:////usr/share/applications/kde4/kopete.desktop,file:////usr/share/applications/kde4/Kppp.desktop,file:////usr/share/applications/kde4/ktorrent.desktop,file:////usr/share/applications/kde4/rekonq.desktop,file:////usr/share/applications/kde4/telepathy-kde-contactlist.desktop")
+    
+
+ panel.addWidget("panelspacer_internal")
+var graphics = panel.addWidget("quicklaunch")
+graphics.writeConfig("launchers", "file:////usr/share/applications/blender.desktop,file:////usr/share/applications/kde4/digikam.desktop,file:////usr/share/applications/kde4/dngconverter.desktop,file:////usr/share/applications/kde4/expoblending.desktop,file:////usr/share/applications/kde4/gwenview.desktop,file:////usr/share/applications/kde4/kamoso.desktop,file:////usr/share/applications/kde4/krita.desktop,file:////usr/share/applications/kde4/ksnapshot.desktop,file:////usr/share/applications/libreoffice-draw.desktop,file:////usr/share/applications/kde4/okular.desktop,file:////usr/share/applications/kde4/panoramagui.desktop,file:////usr/share/applications/pencil.desktop,file:////usr/share/applications/kde4/photolayoutseditor.desktop,file:////usr/share/applications/kde4/scangui.desktop")
+
+
+
+panel.addWidget("panelspacer_internal")
+var video = panel.addWidget("quicklaunch")
+video.writeConfig("launchers", " file:////usr/share/applications/kde4/amarok.desktop,file:////usr/share/applications/FF-Multi-Converter.desktop,file:////usr/share/applications/kde4/k3b.desktop,file:////usr/share/applications/kde4/k9copy_assistant.desktop,file:////usr/share/applications/kde4/k9copy.desktop,file:////usr/share/applications/kde4/kdenlive.desktop,file:////usr/share/applications/kde4/kmix.desktop,file:////usr/share/applications/kde4/kmplayer.desktop,file:////usr/share/applications/kde4/recorditnow.desktop,file:////usr/share/applications/kde4/subtitlecomposer.desktop,file:////usr/share/applications/vlc.desktop")
+
+
+
+
+
+panel.addWidget("panelspacer_internal")
+var tools = panel.addWidget("quicklaunch")
+tools.writeConfig("launchers", "file:////usr/share/applications/kde4/kaddressbook.desktop,file:////usr/share/applications/kde4/kexi.desktop,file:////usr/share/applications/kde4/Kontact.desktop,file:////usr/share/applications/kde4/korganizer.desktop,file:////usr/share/applications/kde4/krita.desktop,file:////usr/share/applications/kde4/kspread.desktop,file:////usr/share/applications/kde4/ktimetracker.desktop,file:////usr/share/applications/libreoffice-calc.desktop,file:////usr/share/applications/libreoffice-draw.desktop,file:////usr/share/applications/libreoffice-impress.desktop,file:////usr/share/applications/libreoffice-math.desktop,file:////usr/share/applications/libreoffice-startcenter.desktop,file:////usr/share/applications/libreoffice-writer.desktop,file:////usr/share/applications/kde4/okular.desktop")
+
+
+
+
+panel.addWidget("panelspacer_internal")
+var settings = panel.addWidget("quicklaunch")
+settings.writeConfig("launchers", "file:////usr/share/applications/obconf.desktop,file:////usr/share/applications/openjdk-7-policytool.desktop,file:////usr/share/applications/kde4/systemsettings.desktop")
+
+
+panel.addWidget("panelspacer_internal")
+var sys = panel.addWidget("quicklaunch")
+sys.writeConfig("launchers", "file:////usr/share/applications/kde4/dolphin.desktop,file:////usr/share/applications/jockey-kde.desktop,file:////usr/share/applications/kde4/k3b.desktop,file:////usr/share/applications/kde4/kinfocenter.desktop,file:////usr/share/applications/kde4/konsole.desktop,file:////usr/share/applications/kde4/krandrtray.desktop,file:////usr/share/applications/kde4/ksysguard.desktop,file:////usr/share/applications/kde4/ksystemlog.desktop,file:////usr/share/applications/kde4/kwalletmanager.desktop,file:////usr/share/applications/kde4/muon.desktop,file:////usr/share/applications/kde4/muon-installer.desktop,file:////usr/share/applications/kde4/muon-updater.desktop,file:////usr/share/applications/kde4/nepomukbackup.desktop,file:////usr/share/applications/kde4/nepomukcontroller.desktop,file:////usr/share/applications/kde4/partitionmanager.desktop,file:////usr/share/applications/usb-creator-kde.desktop")
+
+
+panel.addWidget("panelspacer_internal")
+var utili = panel.addWidget("quicklaunch")
+utili.writeConfig("launchers", "file:////usr/share/applications/kde4/akonaditray.desktop,file:////usr/share/applications/kde4/ark.desktop,file:////usr/share/applications/kde4/groupwarewizard.desktop,file:////usr/share/applications/kde4/kate.desktop,file:////usr/share/applications/kde4/kcalc.desktop,file:////usr/share/applications/kde4/klipper.desktop,file:////usr/share/applications/kde4/kmag.desktop,file:////usr/share/applications/kde4/kmousetool.desktop,file:////usr/share/applications/kde4/knotes.desktop,file:////usr/share/applications/kde4/ktimetracker.desktop,file:////usr/share/applications/kde4/kvkbd.desktop,file:////usr/share/applications/kde4/superkaramba.desktop,file:////usr/share/applications/kde4/synaptiks.desktop")
+
+
+
+panel.addWidget("panelspacer_internal")
+var dev = panel.addWidget("quicklaunch")
+dev.writeConfig("launchers", "file:////usr/share/applications/kde4/kdesvn.desktop,file:////usr/share/applications/kde4/kompare.desktop")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>launcher-homerun</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var launcher = panel.addWidget("homerunlauncher")
+launcher.currentConfigGroup = new Array('Shortcuts') 
+launcher.globalShortcut = "${cursor}F13"
+ </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>launcher-standard</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var launcher = panel.addWidget("launcher")
+launcher.currentConfigGroup = new Array('Shortcuts')
+launcher.globalShortcut = "F13"
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>snippet-help</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>${cursor} type one of this keyword and press ENTER kate will add yo your code some handy stuff
+activity-add-folderview-download
+activity-add-folderview-general
+activity-add-folderview-music
+activity-add-folderview-pictures
+activity-add-folderview-video
+activity-add-widget
+activity-add-widget-at
+activity-desktop
+activity-folderview
+activity-load-new-config
+activitymanager
+activity-newspaper
+activity-search-and-launch
+activity-writeconfig
+add-all-widget-system-installed
+add-widget-to-panel
+allarm-clock
+awk
+battery
+bookmarks
+calculator
+character-selector
+check-widget-installed
+clock
+current
+currentappcontrol
+daisy
+devicenotifier
+global-shortcut
+instant-message-presence
+irc
+keyboard
+kwin-buttons
+launcher-classic
+launcher-homerun
+launcher-shelf
+launcher-standard
+launcher-takeoff
+load-template
+menubar
+menu-logout-exit
+menu-log-out-exit-standard
+msg
+networkmanager
+notifications
+pager
+panel-bottom
+panel-load-new-config
+panel_netbook
+panel-top
+pastebin
+printer
+qalculate
+quicklauncher
+quicklaunchercollection
+removepanel
+screengeometry
+sensor-cpu
+sensor-ram
+sensor-temperature
+shelf-hardisk
+shortcut
+showdesktop
+snippet-help
+social-news
+spacer
+systemtray
+taskmanager
+taskmanagerk-icon-only
+trash
+veromix
+weather-weather
+weather-yawp
+write-config
+
+
+ 
+
+awk '/match/{gsub(/match/,"");gsub(/&lt;>/,"");gsub(/&lt;\/>/,"");print $1}'  ~/.kde/share/apps/ktexteditor_snippets/data/*plasma*.xml | sort >/tmp/snippets-help ; kate /tmp/snippets-help 
+
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>printer</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var printer = panel.addWidget("printmanager")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>device-notifier</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>  var devicenotifier = panel.addWidget ("notifier")
+//devicenotifier.writeConfig("allDevices","true")
+//devicenotifier.writeConfig("removableDevices","false")
+ </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>networkmanager</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var network = panel.addWidget("org.kde.networkmanagement")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>battery</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var batte = panel.addWidget("battery")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>msg</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var msg = panel.addWidget("incomingmsg")
+
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>notifications</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var notification = panel.addWidget ("notifications")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>spacer</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var spacer = panel.addWidget("panelspacer_internal")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>weather-weather</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var weather = panel.addWidget("weather")
+weather.writeConfig("Share","false")
+weather.writeConfig("pressureUnit","5008")
+weather.writeConfig("source","${cursor}wettercom|weather|Verona, Veneto, IT|IT0VE0284;Verona")
+weather.writeConfig("speedUnit","9001")
+weather.writeConfig("temperatureUnit","6001")
+weather.writeConfig("updateInterval","30")
+weather.writeConfig("visibilityUnit","2007")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>sensor-cpu</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>panel.addWidget("sm_cpu");
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>sensor-ram</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>panel.addWidget("sm_ram")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>sensor-temperature</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>panel.addWidget("sm_temperature")
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>showdesktop</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>panel.addWidget("showdesktop")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>kwin-buttons</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var kwinbutton = panel.addWidget ("kwinbutton")
+//kwinbutton.currentConfigGroup = new Array('Configuration')
+kwinbutton.writeConfig("ActionType", "${cursor}1")
+kwinbutton.writeConfig("Maximized", "0")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>instant-message-presence</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var ktp_presence = panel.addWidget ("ktp_presence")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>irc</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var irc = panel.addWidget ("IRCPlasmoid")
+//irc.currentConfigGroup = new Array('')
+irc.writeConfig("address", "irc.freenode.org")
+irc.writeConfig("autojoin", "#kubuntu #kde")
+irc.writeConfig("friendly","IRC")
+irc.writeConfig("nickname","Username")
+irc.writeConfig("port","6667")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>calculator</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var calculator = panel.addWidget ("calculator")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>character-selector</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var charselect = panel.addWidget ("charselect")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>allarm-clock</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var allarm = panel.addWidget ("kde-plasma-alarm-clock")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>keyboard</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var keyboard = panel.addWidget ("plasmaboard")
+keyboard.writeConfig("layout","plasmaboard/extended.xml") //full.xml tablet.xml
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>bookmarks</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var bookmarks = panel.addWidget ("bookmarks")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>qalculate</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var qalculate = panel.addWidget ("qalculate")
+ ${cursor}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>social-news</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>	
+var socialnews = panel.addWidget("opendesktop_activities")
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>shortcut</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+var widget = panel.addWidget("${cursor}launcher")
+widget.currentConfigGroup = new Array('Shortcuts')
+widget.globalShortcut = "Ctrl+F13"
+  </fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>check-widget-installed</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>/* to get widget names
+in your system run in desktop console this code :
+
+for( i = 0;  i &lt; knownWidgetTypes.length; ++i ) { print (knownWidgetTypes[i])} 
+				
+*/
+
+var widget = "${cursor}your-widget-name" 
+				
+ if (knownWidgetTypes.indexOf(widget) > -1) { 
+print("your system has this widget:    "+widget+"    installed!!")
+/*
+var widget = panel.addWidget(widget)
+//widget.writeConfig("somestuff", "somevalue")
+//widget.writeConfig("somestuff", "somevalue")
+//widget.writeConfig("somestuff", "somevalue")
+*/
+ }
+ else {
+print("your system doesn't provide "+widget )
+}	</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>add-all-widget-system-installed</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> //copy and paste the code in desktop console 
+ 
+ for( i = 0;  i &lt; knownWidgetTypes.length; ++i ) { 
+   
+   print 
+   print ("var widget = "+knownWidgetTypes[i] )
+   print ("var widget = panel.addWidget(widget)" )
+   print ("//widget.writeConfig(\"somestring\", \"somevalue\")")
+   print ("//widget.writeConfig(\"somestring\", \"somevalue\")")
+   print (" ")
+ 
+} </fillin>
+ </item>
+  <item>
+  <displayprefix></displayprefix>
+  <match>check-exist-application</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin> var desktopfile = "firefox.desktop"
+var binary="firefox"
+if (applicationExists(binary)){  
+print (binary+" exist"+" with this path:         "+applicationPath(binary))
+print (binary+".desktop file located here :     "+applicationPath(desktopfile))
+// print (userDataPath("services" ,"firefox"))
+}
+else{
+  print (binary+" do not exist ")
+}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>global-shortcut</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>globalShortcut = "${cursor}F13"
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>current</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>currentConfigGroup = new Array('${cursor}Shortcuts')</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>global-shortcut</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>globalShortcut = "${cursor}F13"
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>write-config</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>writeConfig("${cursor} somestring","somevalue")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>add-widget-to-panel</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>var widget = "${cursor}your_widgetname"
+
+var widget = panel.addWidget(widget)
+//widget.writeConfig("somestring", "somevalue")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>panel-load-new-config</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>panel.reloadConfig()
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>activity-writeconfig</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>activity.writeConfig("${cursor}somstring", "somevalue")</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>load-template</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>loadTemplate("org.kde.plasma-desktop.${cursor}nowardevPanel")</fillin>
+ </item>
+</snippets>
