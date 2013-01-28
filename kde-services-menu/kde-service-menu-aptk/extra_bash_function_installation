@@ -25,7 +25,7 @@ alias r='sudo apt-get remove '
 alias p='sudo apt-get --purge remove '
 alias s='apt-cache search '
 alias a='sudo apt-get autoremove'
-
+alias h = help of these alias 
 		
 		" 2>/dev/null
 		
@@ -43,9 +43,28 @@ alias r="sudo apt-get remove "
 alias p="sudo apt-get --purge remove "
 alias s="apt-cache search "
 alias a="sudo apt-get autoremove"
-
+alias h="echo '
+u==>sudo apt-get update
+g==>sudo apt-get upgrade
+gf==>sudo apt-get upgrade -f
+gf==>sudo apt-get dist-upgrade -f
+i==>sudo apt-get install 
+ai==>apt-cache show  
+r==>sudo apt-get remove 
+p==>sudo apt-get --purge remove 
+s==>apt-cache search 
+a==>sudo apt-get autoremove'
+"
 		
 		
+peaceshow()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peaceshow $filenames ai
 		
 peacei()
 {

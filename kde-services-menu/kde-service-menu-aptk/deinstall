@@ -16,11 +16,6 @@
 #NowardevTeam nowardev@gmail.com
 
  
-. $PWD/alias_apt #inport function from alias_apt file 
-bin="/usr/local/bin/"
-folder_local_bash_scripts="$HOME/bin"
-prefix="$(kde4-config --prefix)"
-localprefix="$(kde4-config --localprefix)"
 
 
 function_check_folder_and_create_it_if_doesnt_exist () {
@@ -40,69 +35,102 @@ function_check_folder_and_create_it_if_doesnt_exist () {
 function_checksudo(){
 
 if [[ $sudoerror == true ]] ; then
-function_systemwide
+function_system
 wrongpas=$"before you typed a WRONG PASS"
 fi
 
 }
 
-function_systemwide() {
+function_system() {
 
-sudoerror=false
-pas=$(kdialog --password $"Insert Root Password $wrongpas" 2>/dev/null )
-
-
-if [[ -z "$pas" ]];then
-kdialog --error $"No password given exiting..." 2>/dev/null 
-exit  
-fi
-
- 
-#install every script with the correct permission
- for file in $PWD/usr/bin/* ; do
-	 echo "installing..... sudo -S  install -m 755 -D "$file"  "/usr/local/bin""
-	echo "$pas" | sudo -S  install -m 755 -D "$file"  "/usr/local/bin" 2>/dev/null 
-
- #wtf need to fix this shit very ugly xD
-	if [[ $? ==  1 ]]; then
-	sudoerror=true
-	else 
 	sudoerror=false
+	pas=$(kdialog --password $"Insert Root Password $wrongpas" 2>/dev/null )
+	
+	
+	if [[ -z "$pas" ]];then
+		kdialog --error $"No password given exiting..." 2>/dev/null 
+		exit  
 	fi
-  done
-
-  function_checksudo
+		
+		
+		#install every script with the correct permission
+		directory="$PWD/usr/bin/"
+		if [[  -d "$directory"  ]] ; then
+			for file in $PWD/usr/bin/* ; do
+				echo "installing..... sudo -S  install -m 755 -D "$file"  "/usr/local/bin""
+				echo "$pas" | sudo -S  install -m 755 -D "$file"  "/usr/local/bin" 2>/dev/null 
+				
+				#wtf need to fix this shit very ugly xD
+				if [[ $? ==  1 ]]; then
+					sudoerror=true
+				else 
+					sudoerror=false
+				fi
+			done
+		else
+			echo "directory $directory  doens't exit  skipping"
+		fi 
+							
+							
+							
+	function_checksudo
 
 
 #install the service menu 
-  
-   for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop;  do
-	   echo "installing..... sudo -S install -m 644 -D "$file"  ""$prefix"/share/kde4/services/ServiceMenus""
-	   echo "$pas" | sudo -S install -m 644 -D "$file"  ""$prefix"/share/kde4/services/ServiceMenus" 
-  done
+	directory="$PWD/usr/share/kde4/services/ServiceMenus/"
+	if [[  -d "$directory"  ]] ; then 
+		for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop;  do
+			echo "installing..... sudo -S install -m 644 -D "$file"  ""$prefix"/share/kde4/services/ServiceMenus""
+			echo "$pas" | sudo -S install -m 644 -D "$file"  ""$prefix"/share/kde4/services/ServiceMenus" 
+		done
+	else
+		echo "directory $directory doesn't exit skipping "
+	fi
+#install menu entry 
 
-  #install menu entry 
-if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-	echo "$PWD/usr/share/applications/kde4/  detected "
- 
-  for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
-	  echo "installing..... sudo -S install -m 755 -D "$file"  ""$prefix"/share/applications/kde4/""
-	  echo "$pas" | sudo -S install -m 755 -D "$file"  ""$prefix"/share/applications/kde4/" 
-done 
-
-fi 
+	directory="$PWD/usr/share/kde4/services/ServiceMenus/"
+	if [[  -d "$directory"  ]] ; then 
+		if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
+			echo "$PWD/usr/share/applications/kde4/  detected "
+			
+			for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
+				echo "installing..... sudo -S install -m 755 -D "$file"  ""$prefix"/share/applications/kde4/""
+				echo "$pas" | sudo -S install -m 755 -D "$file"  ""$prefix"/share/applications/kde4/" 
+			done 
+				
+		fi 
+	else
+		echo "directory $directory doesn't exit skipping "
+	fi 
 
 # echo  "running .....kbuildsycoca4  update service menus... wait.."
 echo 
 echo 
  kbuildsycoca4 2>/tmp/servicemenubashinstaller.log  # echo "$pas" | sudo -S -u $SUDO_USER #GET  kbuildsycoca4 running like normal user ..to avoid error message
 echo
-echo "END! EVERYTHING DONE!"
+echo $"END! EVERYTHING DONE!"
 kdialog --passivepopup $"$PWD Service Menu Installed.. bye" 2 2>/dev/null
  
 #reset password 
 pas=""
- }
+
+if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
+	if [[ $(declare -F function_extra_install_global ) ]]; then 
+		echo $"Function Extra Install Global"
+		function_extra_install_global	
+	else 
+		echo $"No Extra global Install functions"
+	fi 
+	
+	if [[ $(declare -F function_extra_install_system )  ]]; then 
+		echo "Function Extra Install System executing.."
+		function_extra_install_system
+	else 
+		echo $"No Extra wide Install functions"
+	fi 
+
+fi 
+}
 
 function_local(){
 
@@ -169,10 +197,28 @@ fi
 
 	kdialog --passivepopup $"$PWD Service Menu Installed.. bye" 2 2>/dev/null
 	kdialog --msgbox $"if you can't launch the program Please login and logout , this should load the new bash_profile" 2>/dev/null
+	
+	if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
+		if [[  $(declare -F function_extra_install_global )  ]]; then
+			echo "Global Extra function Detected Executing.."
+			function_extra_install_global
+		else 
+			echo $"No Extra global Install functions"
+		fi
+			
+		if [[ $(declare -F function_extra_install_local ) ]]; then 
+			echo "Function Extra Install Local executing.."
+			function_extra_install_local
+		else 
+			echo $"No Extra Local Install functions"
+		fi 
+
+	fi 
+ 
 }
 
 
-function_remove(){
+function_remove_local(){
 
 ##remove local 
 messageremoved=""
@@ -223,6 +269,23 @@ fi
 kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2 2>/dev/null
 
+if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
+	
+	if [[ $(declare -F function_extra_deinstall_global )  ]]; then 
+		echo $"Function Extra Deinstall Global Local detected executing .."
+		function_extra_deinstall_global
+	else
+		echo  $"No Function Extra Global Local Deinstall Detected"
+	fi 
+	
+	if [[ $(declare -F function_extra_deinstall_local )   ]]; then 
+		echo "Function Extra Deinstall Local executing.."
+		function_extra_deinstall_local
+	else 
+		echo $"No Function Extra Local Deinstall Detected"
+	fi 
+
+fi 
 
 
 }
@@ -277,7 +340,7 @@ if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then
 		file="${file##*/}"
 		if [[ -e "$prefix/share/applications/kde4/$file"  ]]; then 
 			echo "rm  "$prefix/share/applications/kde4/$file""
-			echo "$pas" | sudo -S rm  ""$prefix"share/applications/kde4/$file"
+			echo "$pas" | sudo -S rm  ""$prefix"/share/applications/kde4/$file"
 			messageremoved="$messageremoved  "$prefix"share/applications/kde4/$file"
 		fi 
 	done
@@ -287,12 +350,28 @@ fi
 kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2>/dev/null
   
+if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
+	
+	if [[ $(declare -F function_extra_deinstall_global )  ]]; then 
+		echo $"Function extra deinstall global detected executing"
+		function_extra_deinstall_global
+	else
+		echo  $"No Function Extra Global System Deinstall Detected"
+	fi 
+	
+	if [[ $(declare -F function_extra_deinstall_system ) ]]; then 
+		echo $"Function Extra Deinstall System  detected executing"
+		function_extra_deinstall_system
+	else
+		echo $"No Function Extra Deinstall System detected"
+	fi 
 
+fi 
 }
 
 function_main(){
  
-answer=$(kdialog  --title $"Service menu installation menu " --menu  $"Installation Menu: choose an installation option"  l  $"Local Installation"  sw $"System Wide Installation" neutral "*******************" r $"Remove Local" rs $"Remove System wide" --default "Local Installation" 2>/dev/null)
+answer=$(kdialog  --title $"Service menu installation menu " --menu  $"Installation Menu: choose an installation option"  l  $"Local Installation"  sw $"System  Installation" neutral "**********************************************" r $"Remove Service Menu Locally" rs $"Remove Service Menu from the System" --default "Local Installation" 2>/dev/null)
 echo "menu entry $answer"
 case $answer in 
 
@@ -302,12 +381,12 @@ function_local
 ;;
 
 sw)
-function_systemwide
+function_system
 
 ;;
 
 r)
-function_remove
+function_remove_local
 ;;
 rs)
 function_remove_system
@@ -323,6 +402,25 @@ esac
 }
 
 
+bin="/usr/local/bin/"
+folder_local_bash_scripts="$HOME/bin"
+prefix="$(kde4-config --prefix)"
+localprefix="$(kde4-config --localprefix)"
+
+#import extra function from other files if they exit 
+if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
+	echo $"Extra installation file detected loading functions
+. $PWD/extra_bash_function_installation"
+
+. "$PWD/extra_bash_function_installation"  
+fi 
+
+if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
+	echo $"Extra deinstallation file detected loading functions
+. $PWD/extra_bash_function_deinstallation"
+
+. "$PWD/extra_bash_function_deinstallation" 
+fi 
 
 
 
@@ -337,5 +435,3 @@ local prefix: $localprefix
 
 "
 function_main
-function_alias_apt
-exit
