@@ -1054,4 +1054,67 @@ var widget = panel.addWidget(widget)
   <displayarguments></displayarguments>
   <fillin>loadTemplate("org.kde.plasma-desktop.${cursor}nowardevPanel")</fillin>
  </item>
+  <item>
+ <match>default_texeditor</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("text/plain").split(" "))</fillin>
+ </item>
+  <item>
+<match>default_videoplayer</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("video/quicktime").split(","))</fillin>
+ </item>
+  <item>
+<match>default_browser</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("browser"))</fillin>
+ </item>
+  <item>
+<match>default_filemanager</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("filemanager"))</fillin>
+ </item>
+  <item>
+<match>default_mail_client</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("mailer"))</fillin>
+ </item>
+  <item>
+<match>default_terminal</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("terminal"))</fillin>
+ </item>
+  <item>
+<match>default_istant_messanger </match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>print (defaultApplication("imClient"))</fillin>
+ </item>
+ <item>
+<match>check_which_browser_installed </match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>
+var array = ["firefox.desktop","chromium-browser.desktop","chrome.desktop","konqbrowser.desktop","midori.desktop","qupzilla.desktop","opera-browser.desktop"] 
+//loop over the array checking if exist the file if it exist print stuff 
+ for(var i=0; i&lt;array.length; i++){ 
+ 
+
+ if (applicationExists(array[i])){  
+ 
+		print ( "file://"+applicationPath(array[i]))
+		// print (userDataPath("services" ,"firefox"))
+	}
+	else{
+		print (array[i]+" do not exist in your system ")
+	}
+   
+ } </fillin>
+ </item>
 </snippets>
