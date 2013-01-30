@@ -149,14 +149,90 @@ function nowardevdouble(){
 	//icontasks.writeConfig("Enabled","true")
 	
 	icontasks.currentConfigGroup = new Array('Launchers')
-	icontasks.writeConfig("Items","file:///usr/share/applications/kde4/konqbrowser.desktop?wmClass=Konqueror,file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/vlc.desktop?wmClass=Vlc,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")
+	
+	var array = ["konqbrowser.desktop","qupzilla.desktop","midori.desktop","rekonq.desktop","chromium-browser.desktop","firefox.desktop","chrome.desktop","opera-browser.desktop", "konversation.desktop","dolphin.desktop","kate.desktop","konsole.desktop","ksnapshot.desktop","kdenlive.desktop","vlc.desktop","systemsettings.desktop"] 
+	//loop over the array checking if exist the file if it exist print stuff 
+	var taskmanager=[]
+	for(var i=0; i<array.length; i++){ 
+		
+		
+		if (applicationExists(array[i])){  
+			if(array[i]=="konqbrowser.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Konqueror")
+ 
+			}
+			else  if (array[i]=="firefox.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Firefox")
+ 
+				
+			}
+			else if(array[i]=="opera-browser.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Opera")
+ 
+			}
+			else if(array[i]=="chromium-browser.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Chromium-browser")
+ 
+			}
+			else if(array[i]=="midori.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Midori")
+ 
+			}
+			
+			else if(array[i]=="qupzilla.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Qupzilla")
+ 
+			}
+			else if(array[i]=="konversation.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Konversation")
+ 
+			}
+			else if(array[i]=="dolphin.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Dolphin")
+
+			}
+			else if(array[i]=="kate.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Kate")
+ 
+			}
+			else if(array[i]=="konsole.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Konsole")
+ 
+			}
+			else if(array[i]=="ksnapshot.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Ksnapshot")
+			 
+			}
+			else if(array[i]=="vlc.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Vlc")
+				 
+			}
+			else if(array[i]=="kdenlive.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Kdenlive")
+				 
+			}
+			else if(array[i]=="systemsettings.desktop"){
+				taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Systemsettings")
+				 
+			}
+			
+		}
+		else{
+			print (array[i]+" do not exist ")
+		}
+		
+	}
+	
+	print(taskmanager)
+	taskmanager.toString()
+	icontasks.writeConfig("Items", taskmanager)
 	
 	
 	
 	
 	
 	var systemtray = panel.addWidget("systemtray")
-	
+	systemtray.writeConfig("hidden","battery,Desktop Sharing,notifier,KGpg,org.kde.networkmanagement,org.kde.notifications,Resize and Rotate,KMix")
 	
 	var launcher = panel.addWidget("simplelauncher")
 	launcher.writeConfig("format", "Description")
@@ -222,13 +298,3 @@ function nowardevdouble(){
 }
 
 nowardevdouble()
-
-
-// var systemtray = panel.addWidget("systemtray")
-// systemtray.writeConfig("DefaultAppletsAdded","false")
-// systemtray.writeConfig("ShowHardware","true")
-// systemtray.writeConfig("ShowCommunications","true")
-// systemtray.writeConfig("ShowApplicationStatus","true")
-// systemtray.writeConfig("ShowSystemServices","true")
-// systemtray.writeConfig("ShowUnknown","false")
-//systemtray.writeConfig("alwaysShown","battery,notifier,KMix,org.kde.networkmanagement")
