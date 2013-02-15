@@ -1,0 +1,131 @@
+#!/bin/bash
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+function_detect_flash_path(){
+	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 
+	
+	filesarray=($(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
+	
+if  [[ "${#filesarray[@]}" == 1  ]] ; then 
+	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
+elif [[ "${#filesarray[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found " 
+elif [[ "${#filesarray[@]}" > 1  ]]; then
+	a=0
+	for val in ${filesarray[@]} ; do 
+			array[a]="/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$val"
+			a=$(($a+1))
+		done
+	
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+	
+	
+# 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
+	
+}
+function_help(){
+	echo $"Usage : 
+	
+	service-menu-ffplay  <option>
+	
+	Options :
+	-p   : play Flash video with ffplay
+	-s  :  saves Flash Video , files will be copied in /tmp folder 
+	-h : print this help 
+	
+	function detect flash based on:
+	
+	array=(\"/proc/\$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/\$(ls -l  \"/proc/\$(lsof -n | awk ' /Flash/{print \$2 ; exit}')/fd\" | awk '/Flash/{print \$9}')\") 
+ 	
+	"
+	exit 
+}
+
+function_play_flash(){
+if  [[ "${#array[@]}" == 1  ]] ; then 
+	ffplay "${array[0]}" 
+elif [[ "${#array[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found " 
+elif [[ "${#array[@]}" > 1  ]]; then
+	ans="$(kdialog --combobox $"Choose  the path for your flash video " "${array[@]}")" 
+	ffplay "$ans"
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+}
+
+
+
+function_save_flash(){
+
+
+
+if  [[ "${#array[@]}" == 1  ]] ; then 
+	a="/tmp/Flash.flv"  
+	if [[  -e "$a"  ]] ; then
+		if kdialog --title $"Service Menu FFplay"  --warningyesno  $" File $a already exists do you want overwrite ? "; then 
+			cp "${array[0]}"  /tmp/Flash.flv
+			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 3
+		else 
+			echo "exiting .."
+			exit
+		fi 
+ 
+		else
+			cp "${array[0]}"  /tmp/Flash.flv
+			fi 
+			
+
+elif [[ "${#array[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found, this could be a bug on the function to detect flash video path  " 
+elif [[ "${#array[@]}" > 1  ]]; then
+	a=1 
+	for file in ${array[@]}  ; do 
+		cp "$file" /tmp/Flash_$a.flv
+		a=$(($a+1))
+		done
+		kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 3
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+}
+
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+
+	-p)
+	#execute the function to play  get the array with flash paths 
+	function_detect_flash_path
+	#run function play flash 
+	function_play_flash 
+	;;
+	#save function 
+	-s)function_detect_flash_path
+	 function_save_flash
+	 ;;
+
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+else
+	function_help; exit 1
+fi

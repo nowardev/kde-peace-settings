@@ -16,7 +16,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [Desktop Entry]
-Actions=play;playsync;
+Actions=play;playsync;flash;help; 
 Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service
@@ -28,12 +28,30 @@ X-KDE-Submenu[it]=FFplay
 [Desktop Action play]
 Exec=ffplay "%u"
 Icon=play
-Name=play with FFplay
+Name=Play with FFplay
 Name[it]=Riproduci con FFplay
+
+[Desktop Action flash]
+Exec=service-menu-ffplay -p ;  echo  "%u"> /dev/null
+Icon=play
+Name=Flash Video  FFplay
+Name[it]=Flash Video  FFplay
+
+[Desktop Action saveflash]
+Exec=service-menu-ffplay -s ;  echo  "%u"> /dev/null
+Icon=play
+Name=Flash Video  FFplay
+Name[it]=Flash Video  FFplay
 
 [Desktop Action playsync]
 Exec=ffplay -sync video "%u" 
 Icon=play
 Name=Play with syncronization function
 Name[it]=Riproduci con FFplay funzione syncronizazzione attivata
+
+[Desktop Action help]
+Exec=kdialog --msgbox $"This service menu  allow you to play video and audios with ffplay , the flash functions will try to play the flash video that is buffering in konqueror , you can even save your flash files after buffering they will be saved on /tmp folder ..   "    ; echo  "%u"> /dev/null
+Icon=play
+Name=Help 
+Name[it]=Aiuto 
  
