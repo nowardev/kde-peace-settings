@@ -13,8 +13,8 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-scriptversion="0.7"
- 
+scriptversion="0.8"
+ echo $scriptversion
 
 lockdir=/tmp/vservice-append.lock
  if mkdir "$lockdir"
@@ -42,7 +42,7 @@ elif [[ "$vversion" == 1.*.* ]];then
 dbusversion="1"
 fi
 
-dbustest=$(awk '/control=dbus/{print}' "$HOME/.config/vlc/vlcrc")
+dbustest=$(qdbus  | grep vlc)
 
 if [[  -z "$dbustest" ]] ; then 
 
@@ -57,7 +57,13 @@ Dbus Enabled : No
 
 Vlc hasn't dbus option activated, The service menu can't work in this situation, please enable it.
 
-To enable it just do this:
+by default this service menu launch vlc with dbus activated .. but it seems you have launched vlc before and it has not dbus enabled ...
+
+you can edit the menu entry or launching vlc in this way :
+
+vlc --control dbus 
+
+from the interface you can do this : 
 
 Vlc-> tools -> Preferences -> Show all -> Interface -> Control Interface ->Enable DBus...Exiting"
 
@@ -77,16 +83,18 @@ fi
 
 }
  
-functionstartvlc()
-{
-vlcisrunning=$(pgrep vlc)
-if [[ $? == 1 ]]; then
-vlc   & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 
-sleep 2
-else
-echo vlc is running..
-fi
-}
+# functionstartvlc()
+# {
+# 	echo $"Echo function start vlc "
+# vlcisrunning=$(pgrep vlc)
+# if [[ $? == 1 ]]; then
+# 	echo $"Starting Vlc vlc --controll dbus "
+# a=$(vlc --control dbus)  & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 
+# sleep 2
+# else
+# echo vlc is running..
+# fi
+# }
 
 
 
@@ -230,7 +238,7 @@ done< <(find "$1" -type f)
 
 
 
-if ! pgrep vlc >/dev/null; then vlc  & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 ;fi
+if ! pgrep vlc >/dev/null; then vlc --control dbus  & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 ;fi
  
 function_checkversion
 
