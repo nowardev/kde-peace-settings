@@ -1,4 +1,4 @@
-#!/bin/bash 
+#!/bin/bash -x
 #This file is part of kde-peace-settings.
 #kde-peace-settings is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -237,8 +237,13 @@ done< <(find "$1" -type f)
 
 
 
+#start vlc if it's not started with dbus control 
+if ! pgrep vlc >/dev/null; then vlc --control dbus  & kdialog --passivepopup "Vlc is starting , ..please wait  " 1; fi 
 
-if ! pgrep vlc >/dev/null; then vlc --control dbus  & kdialog --passivepopup "Vlc is starting , ..please wait  " 1 ;fi
+#check if vlc is ready to get  files with dbus 
+while [[  -z "$(qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Identity )" ]] ; do echo $"vlc is not ready" && sleep 1 ; done 
+	
+ 
  
 function_checkversion
 
