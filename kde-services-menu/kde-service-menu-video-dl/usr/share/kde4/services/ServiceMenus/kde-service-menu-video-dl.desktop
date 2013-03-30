@@ -29,14 +29,14 @@ X-KDE-Submenu[it]=Video-dl
 [Desktop Action flash]
 Exec=kde-service-menu-video-dl -p ;  echo  "%u"> /dev/null
 Icon=media-playback-start
-Name=Play Flash Video  
-Name[it]=Riproduci Flash Video  
+Name=Play Flash Video  Method lsof
+Name[it]=Riproduci Flash Video  Metodo lsof
 
 [Desktop Action saveflash]
 Exec=kde-service-menu-video-dl -s ;  echo  "%u"> /dev/null
 Icon=media-record
-Name=Save Flash Video in /tmp folder
-Name[it]=Salva Flash Video nella cartella /tmp 
+Name=Save Flash Video in /tmp  Method lsof 
+Name[it]=Salva Flash Video in  /tmp Metodo lsof 
 
 [Desktop Action youtubedownload]
 Exec=kde-service-menu-video-dl -y ;  echo  "%u"> /dev/null
