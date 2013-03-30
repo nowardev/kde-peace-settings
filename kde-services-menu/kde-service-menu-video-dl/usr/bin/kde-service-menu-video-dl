@@ -1,0 +1,286 @@
+#!/bin/bash
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+function_detect_flash_path(){
+	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 
+	
+	filesarray=($(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
+	
+if  [[ "${#filesarray[@]}" == 1  ]] ; then 
+	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
+elif [[ "${#filesarray[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found " 
+elif [[ "${#filesarray[@]}" > 1  ]]; then
+	a=0
+	for val in ${filesarray[@]} ; do 
+			array[a]="/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$val"
+			echo "path of flash files ${array[a]}"
+			a=$(($a+1))
+		done
+	
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+	
+	
+# 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
+	
+}
+
+function_help(){
+	echo $"Usage : 
+	
+	kde-service-menu-video-dl   <option>
+	
+	Options :
+	-p   : play Flash video with ffplay
+	-s  :  saves Flash Video , files will be copied in /tmp folder 
+	-y : download the video from youtube with youtube-dl 
+	-mp3: download the video from youtube and convert it on mp3
+	-e: download the video from youtube and extract audio track 
+	-h : print this help 
+	
+	function detect flash based on:
+	
+	array=(\"/proc/\$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/\$(ls -l  \"/proc/\$(lsof -n | awk ' /Flash/{print \$2 ; exit}')/fd\" | awk '/Flash/{print \$9}')\") 
+ 	
+	"
+	exit 
+}
+
+function_play_flash(){
+	
+	videoplayer="$(kdialog --title $"Video Player"  --combobox  $"Choose your player  " ffplay mplayer vlc smplayer kaffeine  xine xbmc --default  ffplay )"	
+	testvariable="$videoplayer"
+	
+	if [[  -z  "$testvariable"    ]] ; then
+		echo "video player  is empty"
+		videoplayer="ffplay"
+		
+	else
+		echo "video player $testvariable"
+	fi 
+	
+
+if  [[ "${#array[@]}" == 1  ]] ; then 
+	$videoplayer  "${array[0]}" 
+elif [[ "${#array[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found " 
+elif [[ "${#array[@]}" > 1  ]]; then
+	ans="$(kdialog --combobox $"Choose  the path for your flash video " "${array[@]}")" 
+	$videoplayer  "$ans"
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+}
+
+
+function_save_flash(){
+
+
+
+if  [[ "${#array[@]}" == 1  ]] ; then 
+	a="/tmp/Flash.flv"  
+	if [[  -e "$a"  ]] ; then
+		if kdialog --title $"Service Menu FFplay"  --warningyesno  $" File $a already exists do you want overwrite ? "; then 
+			 echo "cp "${array[0]}"  /tmp/Flash.flv"
+			cp "${array[0]}"  /tmp/Flash.flv
+			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 3
+		else 
+			echo "exiting .."
+			exit
+		fi 
+ 
+		else
+			echo "copying file cp "${array[0]}"  /tmp/Flash.flv"
+			cp "${array[0]}"  /tmp/Flash.flv
+			fi 
+			
+
+elif [[ "${#array[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found, this could be a bug on the function to detect flash video path  " 
+elif [[ "${#array[@]}" > 1  ]]; then
+	a=1 
+	for file in ${array[@]}  ; do 
+		echo "cp "$file" /tmp/Flash_$a.flv" 
+		cp "$file" /tmp/Flash_$a.flv
+		a=$(($a+1))
+		echo "copied!"
+		done
+		kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 3
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+}
+
+
+function_download_flash_youtube_start(){
+	
+		program[1]=youtube-dl
+		program[2]=mawk
+		program[3]=ffmpeg
+		program[4]=ffprobe
+
+	
+	for program in "${program[@]}";do 
+		
+		if [[ -z $(type -p "$program") ]];then 
+	 
+				kdialog --error $"$program not found; PLEASE INSTALL IT" >&2
+				echo "error exiting..." >&2
+				exit 1;
+ 
+		fi
+	done
+	
+	#get the dbus number 
+	konquerordbus=$(qdbus | grep konqueror)
+	testvariable="$konquerordbus"
+	
+	if [[  -z  "$testvariable"    ]] ; then
+		echo "$testvariable is empty"
+		kdialog --passivepopup "exiting ... no konqueror aviable :P "
+		exit 2
+	else
+		echo "$testvariable"
+	fi 
+	
+	
+	
+	#get the active window 
+	for i in $konquerordbus; do
+		
+    if [[ $(qdbus $i /konqueror/MainWindow_1 org.qtproject.Qt.QWidget.isActiveWindow) = "true" ]]; then
+	#get the title 
+	youtubetitle="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle)"
+	#blank about:blank
+	#get the title without -youtube weird word 
+	title="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle |awk '{gsub(/- YouTube/,""); print }')"
+	url="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL)"
+	cleanurl="$(qdbus $i /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL  | awk -F '&' '{print $1}')"
+	echo   $"Downloading .. $url clearurl  $cleanurl"  
+	
+	break;
+    fi
+done
+
+
+	testvariable="$cleanurl"
+
+	if [[  -z  "$testvariable"    ]] ; then
+		echo "$testvariable is empty"
+		kdialog --title $"My App Title"  --passivepopup  $"Sorry the script was not able to get url from konqueror so... or it's a bug or you are doing weird stuff :P" 3
+		exit 
+	
+	else
+			echo "detected url ... $testvariable"
+			
+ 
+			outfolder="$(kdialog --title $"Konqueror Download Service Menu"  --getexistingdirectory  $"OutputFolder" "$HOME" )"
+			
+			testvariable="$outfolder"
+			if [[  -z  "$testvariable"    ]] ; then
+				echo "$testvariable is empty"
+				outfolder="/tmp"
+			else
+					echo "outfolder .... $testvariable"
+			fi 
+			
+			echo  "doing ... cd "$outfolder" ; youtube-dl -t  $cleanurl " >/tmp/kde-service-menu-youtube-dl 
+		 
+			
+			a=$(kdialog --progressbar "Downloading ... $title" 100) 
+			
+			
+			
+		
+	fi 
+ 
+}
+
+function_video(){
+	
+	while read  line ; do 
+				
+				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+				
+			done < <(cd "$outfolder";youtube-dl -t --extract-audio  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			
+			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+	
+}
+function_mp3(){
+	while read  line ; do 
+				
+				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+				
+			done < <(cd "$outfolder";youtube-dl  -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			
+			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+}
+
+function_extract(){
+	while read  line ; do 
+				
+				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+				
+			done < <(cd "$outfolder";youtube-dl -t "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			
+			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+}
+
+ 
+ 
+
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+
+	-p)
+	#execute the function to play  get the array with flash paths 
+	function_detect_flash_path
+	#run function play flash 
+	function_play_flash 
+	;;
+	-y)
+
+	function_download_flash_youtube_start
+	function_video
+	;;
+	-e)
+	
+	function_download_flash_youtube_start
+	function_extract
+	;;
+	-mp3)
+	
+	function_download_flash_youtube_start
+	function_mp3
+	;;
+	#save function 
+	-s)function_detect_flash_path
+	 function_save_flash
+	 ;;
+
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+else
+	function_help; exit 1
+fi
