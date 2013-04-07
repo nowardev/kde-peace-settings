@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash 
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -15,7 +15,7 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+version=0.1.1
 function_detect_flash_path(){
 	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 
 	
@@ -44,7 +44,7 @@ fi
 
 function_help(){
 	echo $"Usage : 
-	
+	version :  $version 
 	kde-service-menu-video-dl   <option>
 	
 	Options :
@@ -53,6 +53,7 @@ function_help(){
 	-y : download the video from youtube with youtube-dl 
 	-mp3: download the video from youtube and convert it on mp3
 	-e: download the video from youtube and extract audio track 
+	-v : print version 
 	-h : print this help 
 	
 	function detect flash based on:
@@ -95,12 +96,15 @@ function_save_flash(){
 
 
 if  [[ "${#array[@]}" == 1  ]] ; then 
+	kdialog --title $"Service Menu FFplay"  --passivepopup $"Detected flash ... cp "${array[0]}"  /tmp/Flash.flv" 2
 	a="/tmp/Flash.flv"  
 	if [[  -e "$a"  ]] ; then
 		if kdialog --title $"Service Menu FFplay"  --warningyesno  $" File $a already exists do you want overwrite ? "; then 
+
+			
 			 echo "cp "${array[0]}"  /tmp/Flash.flv"
 			cp "${array[0]}"  /tmp/Flash.flv
-			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 3
+			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 2
 		else 
 			echo "exiting .."
 			exit
@@ -109,12 +113,14 @@ if  [[ "${#array[@]}" == 1  ]] ; then
 		else
 			echo "copying file cp "${array[0]}"  /tmp/Flash.flv"
 			cp "${array[0]}"  /tmp/Flash.flv
+			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  flash video copied here /tmp/Flash.flv " 2
 			fi 
 			
 
 elif [[ "${#array[@]}" == 0  ]]; then 
 	kdialog --passivepopup $"sorry no flash found, this could be a bug on the function to detect flash video path  " 
 elif [[ "${#array[@]}" > 1  ]]; then
+kdialog --title $"Service Menu FFplay"  --passivepopup $"Detected Multiple flash ... cp "${array[0]}"  /tmp/Flash.flv" 2
 	a=1 
 	for file in ${array[@]}  ; do 
 		echo "cp "$file" /tmp/Flash_$a.flv" 
@@ -122,7 +128,7 @@ elif [[ "${#array[@]}" > 1  ]]; then
 		a=$(($a+1))
 		echo "copied!"
 		done
-		kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 3
+		kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 2
 else 
 		kdialog --error $"This is a bug please fix it " 
 fi 
@@ -277,7 +283,17 @@ if  [[ $1 == -*  ]]; then
 	-s)function_detect_flash_path
 	 function_save_flash
 	 ;;
+	-v) 
+	echo "
 
+kde-service-menu-video-dl  $version 
+	
+for bugs mail me to nowardev@gmail.com
+	
+	"
+ 
+	exit 
+	;;
 	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	esac
