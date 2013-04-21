@@ -37,11 +37,11 @@ golgu-translate -s -v  -i en -o it   -t  \"hello World\"
 
 This is the most complete example but you can just type the ouput language and the text , input language will be set like AUTO 
 
-translate-peace   -o es  -t \"hello World\" 
+golgu-translate   -o es  -t \"hello World\" 
 
 or you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
 
-translate-peace  -t  \"<text>\" 
+golgu-translate  -t  \"<text>\" 
 
 "
 }
