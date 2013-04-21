@@ -1,0 +1,201 @@
+#!/bin/bash 
+#license gpl 
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>
+
+function_help(){
+	
+	echo "
+	
+WHAT IS IT ?
+
+it's a script that let you to translate and to hear the pronunciation of text translated using google translate service so you need a connection to use this ...
+
+USAGE:
+
+golgu-translate  options  text 
+
+-s : translate and speak , you need of vlc or mplayer
+-o: output language , ex -o it 
+-i : input language , ex : -i en 
+-h : print this help 
+-v : print version and exit 
+
+example 
+
+golgu-translate -s -v  -i en -o it   -t  \"hello World\" 
+
+This is the most complete example but you can just type the ouput language and the text , input language will be set like AUTO 
+
+translate-peace   -o es  -t \"hello World\" 
+
+or you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
+
+translate-peace  -t  \"<text>\" 
+
+"
+}
+
+function_print_result(){
+	
+	#
+	echo "
+	
+Tranlation $1-$2  $3
+	
+	$o
+	
+	"
+}
+function_play_translated_text(){
+	
+	#$1 The output language  
+	#$2 it's the text already translated'
+	
+	if [[ ! -z "$1" || ! -z "$2" ]]; then 
+# 		echo "mplayer -user-agent Mozilla \"http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2\""
+			$player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2" >/dev/null  2>&1
+	else
+		echo $"Error exiting this function should be work in this way :
+		function_play_translated_text <outlanguage> <text-in-output-language>
+		"
+		exit 1
+		
+	fi 
+	exit 0
+}
+
+function_translate(){
+ 
+
+ 
+	result="$(curl -s -i --user-agent "" -d "sl=$1" -d "tl=$2" --data-urlencode "text=$3" http://translate.google.com)"
+	encoding="$(awk '/Content-Type: .* charset=/ {sub(/^.*charset=["'\'']?/,""); sub(/[ "'\''].*$/,""); print}' <<<"$result")"
+	translated_text="$(iconv -f $encoding <<<"$result" |  awk 'BEGIN {RS="</div>"};/<span[^>]* id=["'\'']?result_box["'\'']?/' | html2text -utf8)"
+	echo $translated_text	
+	
+	if [[ "$DEBUG" == on ]]; then 
+ 	echo "
+function translate debug: 
+ 
+input language:		$1 
+output language: 	$2 
+text to translate:	"$3" 
+translated text:	$translated_text  "
+	fi 
+
+}
+
+
+function_check_program(){
+	
+program[0]=curl
+program[1]=iconv
+program[2]=html2text
+program[3]=awk
+ 
+player[0]=mplayer
+player[1]=vlc
+ 
+ 
+
+
+for program in "${program[@]}"; 
+do if ! type -p "$program" >/dev/null;
+ then echo "$program not found; PLEASE INSTALL IT" >&2
+echo "error exiting..." >&2
+echo 
+ 
+echo "For debian : sudo apt-get install ${program[@]}  "
+ exit 1; 
+fi; done
+
+for program in "${player[@]}"; 
+do if ! type -p "$program" >/dev/null;
+ then echo "$program not found; PLEASE INSTALL IT" >&2
+ 
+echo "For debian : sudo apt-get install ${player[@]}  "
+  
+fi; done
+
+	
+}
+
+VERBOSE="off"
+SOUND="off"
+DEFAULT_INPUT_LANG="auto"
+DEFAULT_OUTPUT_LANG="en"
+DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
+DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
+VERSION="0.0.1"
+DEVELOPER="nowardev@gmail.com"
+player="$DEFAULT_PLAYER"
+ 
+function_check_program		
+ 
+
+ 	args=$@;  i=0;  while (( $# )); do 
+	case $1 in 
+	-h|--help|-\?) function_help; exit 0;;
+	-t ) shift 
+	 while (( $# )); do 
+ 
+	if [[ "$1" == "-i" || "$1" ==  "-o" || "$1" == "-d" || "$1" == "-v" || "$1" == "-s"     ]]; then 
+ 
+	break 
+		else 
+			
+			text[$i]=$1
+			i=$(($i+1))
+			 
+			 	  shift
+		fi 
+	 done
+	 text="${text[@]}"
+	 	 
+	;;
+#  	-d) input_lang=$DEFAULT_INPUT_LANG ; output_lang="$DEFAULT_OUTPUT_LANG";  shift  ;; 
+	-i ) input_lang="$2";  shift 2 ;; 
+	-o )output_lang="$2"; shift 2 ;; 	
+	-d) DEBUG="on"; shift;;
+	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
+	-s) SOUND="on"; shift;;
+	*) args+=( "$1" ); shift ;;
+		
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+	done
+ 
+ if [[ -z "$input_lang" ]]; then 
+	 input_lang=$DEFAULT_INPUT_LANG 
+fi 	
+
+if [[ -z "$output_lang" ]]; then 
+	output_lang="$DEFAULT_OUTPUT_LANG"
+ fi 
+ 
+if [[ -z "$text" ]] ; then 
+ 
+	text="${args/-s/}"
+# 	text="${args/-o/}"
+# 	text="${args/-i/}"
+# 	
+#  af sq ar az eu bn be bg ca Simplified Traditional hr cs da nl en eo et tl fi fr gl ka de el gu Creole iw hi hu is id ga it ja kn ko la lv lt mk ms mt no fa pl pt ro ru sr sk sl es sw sv ta te th tr uk ur vi cy yi
+	fi 
+	
+	function_translate "$input_lang" "$output_lang" "$text"
+ 
+	if [[ "$SOUND" == on ]]; then 
+	function_play_translated_text "$output_lang" "$translated_text"
+	fi 

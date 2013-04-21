@@ -1,0 +1,20 @@
+put the script on your $HOME/bin 
+
+if you want get it locally 
+	
+	
+if you want install the script in your system just put it on 
+	
+/usr/local/bin 
+
+**safer ^
+
+or if you prefer 
+
+/usr/bin 
+
+If you want just use the script without installation just do this 
+
+(in the folder which  contains the script ..)
+
+chmod +x golgu-translate ; ./golgu-translate -s -i es -o en -t hola muchacho
