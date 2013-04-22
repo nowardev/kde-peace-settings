@@ -21,6 +21,12 @@ WHAT IS IT ?
 
 it's a script that let you to translate and to hear the pronunciation of text translated using google translate service so you need a connection to use this ...
 
+LANGUAGES 
+
+it supports these languages :
+	
+af sq ar az eu bn be bg ca Simplified Traditional hr cs da nl en eo et tl fi fr gl ka de el gu Creole iw hi hu is id ga it ja kn ko la lv lt mk ms mt no fa pl pt ro ru sr sk sl es sw sv ta te th tr uk ur vi cy yi
+
 USAGE:
 
 golgu-translate  options  text 
@@ -35,35 +41,36 @@ example
 
 golgu-translate -s -v  -i en -o it   -t  \"hello World\" 
 
-This is the most complete example but you can just type the ouput language and the text , input language will be set like AUTO 
+This is the most complete example but you can just type the output language and the text , input language will be set like AUTO 
 
-golgu-translate   -o es  -t \"hello World\" 
+golgu-translate   -o es  -t \"hello world\" 
 
 or you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
 
 golgu-translate  -t  \"<text>\" 
 
+
+
 "
 }
 
-function_print_result(){
-	
-	#
-	echo "
-	
-Tranlation $1-$2  $3
-	
-	$o
-	
-	"
-}
+ 
 function_play_translated_text(){
 	
 	#$1 The output language  
 	#$2 it's the text already translated'
 	
 	if [[ ! -z "$1" || ! -z "$2" ]]; then 
-# 		echo "mplayer -user-agent Mozilla \"http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2\""
+		if [[ "$DEBUG" == on ]]; then 
+echo "
+
+function debug play_translated 
+
+Player selected : $player 
+link :  \"http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2\"
+"
+		fi 
+ 
 			$player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2" >/dev/null  2>&1
 	else
 		echo $"Error exiting this function should be work in this way :
@@ -104,8 +111,8 @@ program[1]=iconv
 program[2]=html2text
 program[3]=awk
  
-player[0]=mplayer
-player[1]=vlc
+knownplayer[0]=mplayer
+knownplayer[1]=vlc
  
  
 
@@ -120,11 +127,11 @@ echo "For debian : sudo apt-get install ${program[@]}  "
  exit 1; 
 fi; done
 
-for program in "${player[@]}"; 
+for program in "${knownplayer[@]}"; 
 do if ! type -p "$program" >/dev/null;
  then echo "$program not found; PLEASE INSTALL IT" >&2
  
-echo "For debian : sudo apt-get install ${player[@]}  "
+echo "For debian : sudo apt-get install ${knownplayer[@]}  "
   
 fi; done
 
@@ -139,7 +146,9 @@ DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
 DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
 VERSION="0.0.1"
 DEVELOPER="nowardev@gmail.com"
-player="$DEFAULT_PLAYER"
+player="$DEFAULT_PLAYER_ALTERNATE"
+
+ 
  
 function_check_program		
  
