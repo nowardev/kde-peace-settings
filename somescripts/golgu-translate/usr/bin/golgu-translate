@@ -144,7 +144,7 @@ DEFAULT_INPUT_LANG="auto"
 DEFAULT_OUTPUT_LANG="en"
 DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
 DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
-VERSION="0.0.1"
+VERSION="0.0.2"
 DEVELOPER="nowardev@gmail.com"
 player="$DEFAULT_PLAYER_ALTERNATE"
 
