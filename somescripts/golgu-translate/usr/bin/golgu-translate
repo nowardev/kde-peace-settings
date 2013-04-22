@@ -40,7 +40,7 @@ golgu-translate  options  text
 
 example 
 
-golgu-translate -s -v  -i en -o it   -t  \"hello World\" 
+golgu-translate -s -d  -i en -o it   -t  \"hello World\" 
 
 This is the most complete example but you can just type the output language and the text , input language will be set like AUTO 
 
