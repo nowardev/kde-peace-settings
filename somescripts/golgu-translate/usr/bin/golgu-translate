@@ -31,10 +31,11 @@ USAGE:
 
 golgu-translate  options  text 
 
--s : translate and speak , you need of vlc or mplayer
--o: output language , ex -o it 
--i : input language , ex : -i en 
+-d:  debug mode on 
 -h : print this help 
+-i : input language , ex : -i en 
+-o: output language , ex -o it 
+-s : translate and speak , you need of vlc or mplayer
 -v : print version and exit 
 
 example 
