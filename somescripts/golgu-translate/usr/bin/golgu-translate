@@ -49,6 +49,12 @@ You can also just type the output language and the text , input language will be
 
 golgu-translate   -o es  -t  hello world
 
+PIPED USE 
+
+golgu-translate can accept  the input from a pipe   in this way : 
+
+ echo hello  | golgu-translate -o fr -t \$(cat)
+
 fine @.@
 "
 }
