@@ -38,20 +38,18 @@ golgu-translate  options  text
 -s : translate and speak , you need of vlc or mplayer
 -v : print version and exit 
 
-example 
+you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
 
-golgu-translate -s -d  -i en -o it   -t  \"hello World\" 
-
-This is the most complete example but you can just type the output language and the text , input language will be set like AUTO 
-
-golgu-translate   -o es  -t \"hello world\" 
-
-or you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
-
-golgu-translate  -t  \"<text>\" 
+The easiest example :      golgu-translate    text without \"\" 
 
 
+The most complete example :  golgu-translate -s -d  -i en -o it   -t  hello World
 
+You can also just type the output language and the text , input language will be set like AUTO 
+
+golgu-translate   -o es  -t  hello world
+
+fine @.@
 "
 }
 
@@ -154,7 +152,14 @@ player="$DEFAULT_PLAYER_ALTERNATE"
 function_check_program		
  
 
- 	args=$@;  i=0;  while (( $# )); do 
+ 	args=$@;  i=0
+ 	if [[ -z $@ ]]; then
+		function_help
+		echo 
+		echo $"err : need some input :S"
+		exit 
+		fi 
+ 	while (( $# )); do 
 	case $1 in 
 	-h|--help|-\?) function_help; exit 0;;
 	-t ) shift 
