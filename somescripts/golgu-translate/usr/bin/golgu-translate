@@ -32,13 +32,19 @@ USAGE:
 golgu-translate  options  text 
 
 -d:  debug mode on 
+-demo : will start a tutorial for this script , you can add even an language code to listen this tutorial in your language : 
 -h : print this help 
 -i : input language , ex : -i en 
 -o: output language , ex -o it 
 -s : translate and speak , you need of vlc or mplayer
 -v : print version and exit 
 
+
+start the demo :  golgu-translate -demo it 
+
 you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
+
+
 
 The easiest example :      golgu-translate    text without \"\" 
 
@@ -59,13 +65,24 @@ fine @.@
 "
 }
 
+
+
+ function_demo (){
  
+	  for (( c=0; c<=${#demotext[@]}; c++ )); do 
+		set +x  
+		 function_translate "$input_lang" "$output_lang" "${demotext[$c]}"
+		      $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$output_lang&q=$translated_text"  >/dev/null  2>&1
+	 done 
+}
+
 function_play_translated_text(){
 	
 	#$1 The output language  
 	#$2 it's the text already translated'
 	
-	if [[ ! -z "$1" || ! -z "$2" ]]; then 
+	if [[ ! -z "$1" || ! -z "$2" ]]; then
+		
 		if [[ "$DEBUG" == on ]]; then 
 echo "
 
@@ -75,8 +92,29 @@ Player selected : $player
 link :  \"http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2\"
 "
 		fi 
+		
+		i=0
+		
+while read line ; do 
+	arr[$i]="$line"
+	i=$(($i+1))
+
+done< <(fold -w97 -s <<<"$2") #split text every 97 char
  
-			$player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2" >/dev/null  2>&1
+ 
+
+ for (( c=0; c<=${#arr[@]}; c++ )); do 
+	 $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arr[$c]}" >/dev/null  2>&1
+	 done   
+		
+		
+		
+		
+		
+		  
+			
+	 
+			 
 	else
 		echo $"Error exiting this function should be work in this way :
 		function_play_translated_text <outlanguage> <text-in-output-language>
@@ -115,7 +153,8 @@ program[0]=curl
 program[1]=iconv
 program[2]=html2text
 program[3]=awk
- 
+program[4]=fold
+
 knownplayer[0]=mplayer
 knownplayer[1]=vlc
  
@@ -132,14 +171,19 @@ echo "For debian : sudo apt-get install ${program[@]}  "
  exit 1; 
 fi; done
 
+test=0
 for program in "${knownplayer[@]}"; 
-do if ! type -p "$program" >/dev/null;
- then echo "$program not found; PLEASE INSTALL IT" >&2
+do if ! type -p "$program" >/dev/null; then 
+test=$(($test+1))
  
-echo "For debian : sudo apt-get install ${knownplayer[@]}  "
-  
-fi; done
+fi 
 
+done
+
+if [[ "$test" = 2 ]]; then 
+		echo "$program not found; PLEASE INSTALL IT" >&2
+ 		echo "For debian : sudo apt-get install ${knownplayer[@]}  "
+	fi 
 	
 }
 
@@ -149,8 +193,12 @@ DEFAULT_INPUT_LANG="auto"
 DEFAULT_OUTPUT_LANG="en"
 DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
 DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
-VERSION="0.0.2"
+VERSION="0.0.3"
 DEVELOPER="nowardev@gmail.com"
+
+#
+ 
+demotext=(   "Hello this is the demo function. it will help you to use this script. let's Start!" "This is the easiest example with audio. " "We want to translate from spanish to english  the words hola mundo"  "first of all, open a terminal  and type" " golgu-translate .. space .. minus.. s .. hola mundo" " As you can see this script will translate even without using quotes, or setting languages" " The default ouput language is english of course , instead for input language it's in auto mode" "but let's see another example" "we want translate from spanish to french the words hola mundo"  " so  type golgu .. minus .. 'translate'' .. space" "  minus .. o .. space .. f r ..  minus .. t .. space  .. hola-mundo" "So as you can understand from these examples"  "The Option.. minus .. s ..  it's to get audio but you can translate even without audio support"  "the option minus .. O .. it's to set output language" " The option .. minus i .. it's to set input language" "  if you are american or english, the option  o  is not required as well as the option i" " you can tweak the script to change the default output language"  " the option  minus .. t ..  it's used to set the text to translate but  it's not required " "even if it's better for you to use it "   "the Option minus  D   can be used to see more informations about the translation  ..."   " remember to install mplayer or vlc to listen this stuff   ")
 player="$DEFAULT_PLAYER_ALTERNATE"
 
  
@@ -189,6 +237,7 @@ function_check_program
 	-i ) input_lang="$2";  shift 2 ;; 
 	-o )output_lang="$2"; shift 2 ;; 	
 	-d) DEBUG="on"; shift;;
+	-demo)  DEBUG="on";  input_lang=en ;  output_lang=$2 ; if [[ -z $output_lang ]]; then output_lang=en; fi  ;   function_demo $output_lang ; exit 0 ;;
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
 	-s) SOUND="on"; shift;;
 	*) args+=( "$1" ); shift ;;
@@ -209,10 +258,7 @@ if [[ -z "$output_lang" ]]; then
 if [[ -z "$text" ]] ; then 
  
 	text="${args/-s/}"
-# 	text="${args/-o/}"
-# 	text="${args/-i/}"
-# 	
-#  af sq ar az eu bn be bg ca Simplified Traditional hr cs da nl en eo et tl fi fr gl ka de el gu Creole iw hi hu is id ga it ja kn ko la lv lt mk ms mt no fa pl pt ro ru sr sk sl es sw sv ta te th tr uk ur vi cy yi
+ 
 	fi 
 	
 	function_translate "$input_lang" "$output_lang" "$text"
