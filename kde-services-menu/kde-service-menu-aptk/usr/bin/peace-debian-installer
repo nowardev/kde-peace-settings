@@ -337,6 +337,15 @@ fi
 
 }
 
+function_dpkg_search_binary_in_package (){
+	
+	
+	ans="$(dpkg -S "$1")"; if [[ -z "$ans" ]]; then kdialog --title $"aptk"  --passivepopup  $" Sorry no answer from dpkg -$1  try  with another key.." 3 && peace-debian-installer menu ; else kdialog --title $"Discover what package a file belongs to" --msgbox  "$1 belongs to 
+
+$ans"  ; fi 
+	
+	
+}
 
 	 
 
@@ -413,7 +422,7 @@ kdialog --passivepopup   $" PPA Removed   $a" 2
 
 function_menu(){
 
-ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option"  aptinfo  $"Apt Info" aptfilelist $"List of files will be installed"  getdependences $"Show Dependences"  update $"Update"    upgrade  $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall   $"Search and install" getdependences $"Show Dependences"  remove  $"Remove" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
+ans=$(kdialog --title $"Aptk Menu" --menu  $"Choose an option"  aptinfo  $"Apt Info" aptfilelist $"List of files will be installed"  getdependences $"Show Dependences"  update $"Update"    upgrade  $"Upgrade"    distupgrade  $"Dist Upgrade" forceupdateupgrade $"Force UpGrade" forceupdatedistupgrade $"Force Dist-Upgrade"  search $"Search"  searchex $"Search exactly" reinstall $"Reinstall"    install $"Install" searchinstall   $"Search and install" getdependences $"Show Dependences"  remove  $"Remove" searchbinarypackage $"Discover what package a file belongs to" purge $"Purge"  hold $"Block upgrade for.."  installf $"Apt get install -f" autoremove $"Auto Remove" clean $"Delete packages Downloaded" dpkgrecover  $"dpkg reconfigure all"  edit $"Edit repository"  ppa $"Manage Repository and PPA"   removeblock $"Remove block")
 if [[ -z $ans ]] ; then
 exit 
 else 
@@ -520,6 +529,13 @@ function_dpkginfo "$2"
 
 dpkginfoinstalled)
 function_dpkginfoinstalled "$2"
+;;
+
+searchbinarypackage)
+ 
+q="$(kdialog --title $"aptk which package contains thi file"  --inputbox  $" Discover what package a file belongs to" "/usr/bin/ls")"
+function_dpkg_search_binary_in_package "$q"
+ 
 ;;
 edit)
 function_edit
