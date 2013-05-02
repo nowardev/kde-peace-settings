@@ -1,33 +1,59 @@
-
 WHAT IS IT ?
 
-it's a script that let you to translate and to hear the pronunciation of text translated using google translate service so you need a connection to use this ...
+it's a script that translates and makes you hear  the pronunciation using the google translation service,   to work properly you must have an active connection and obviously a player that can be either VLC or mplayer
 
-PROGRAMS 
+INSTALLATION 
 
-you need of :
+you need of  :
 
-vlc or mplayer if you want hear something 
+vlc or mplayer , gawk html2text iconv  curl fold 
 
+for debian systems :
+
+        sudo apt-get install mawk coreutils html2text mplayer # or vlc 
+
+
+LANGUAGES 
+
+it supports these languages :
+
+af sq ar az eu bn be bg ca zh-CN  zh-TW hr cs da nl en eo et tl fi fr gl ka de el gu Creole iw hi hu is id ga it ja kn ko la lv lt mk ms mt no fa pl pt ro ru sr sk sl es sw sv ta te th tr uk ur vi cy yi
 
 USAGE:
 
-golgu-translate  options  text 
+golgu-translate  options  -t  text 
 
--s : translate and speak , you need of vlc or mplayer
--o: output language , ex -o it 
--i : input language , ex : -i en 
+-d:  debug mode on 
+-demo : will start a tutorial for this script , you can add even an language code to listen this tutorial in your language : 
+-e : open golgu-traslate config file 
 -h : print this help 
+-i : input language ,example   example : -i en 
+-l : print languages and exit 
+-o: output language , example -o it 
+-p : player  :  -p vlc or -p mplayer 
+-s : translate and speak , you need of vlc or mplayer
 -v : print version and exit 
+-ws: write settings on config file located here /home/sem/.config/golgu-translate/golgu-translate.cfg
 
-example 
+start the demo :  golgu-translate -demo it 
 
-golgu-translate -s -v  -i en -o it   -t  "hello World" 
+you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
 
-This is the most complete example but you can just type the ouput language and the text , input language will be set like AUTO 
 
-golgu-translate   -o es  -t "hello World" 
 
-or you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
+The easiest example :      golgu-translate    text without "" 
 
-golgu-translate  -t  "<text>" 
+
+The most complete example :  golgu-translate -p mplayer -ws  -s -d  -i en -o it   -t  hello World
+
+You can also just type the output language and the text , input language will be set like AUTO 
+
+golgu-translate   -o es  -t  hello world
+
+PIPED USE 
+
+golgu-translate can accept  the input from a pipe   in this way : 
+
+ echo hello  | golgu-translate -o fr -t $(cat)
+
+fine @.@
