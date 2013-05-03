@@ -43,6 +43,7 @@ golgu-translate  options  -t  text
 -o: output language , example -o it 
 -p : player  :  -p vlc or -p mplayer 
 -s : translate and speak , you need of vlc or mplayer
+-t : text to translate
 -v : print version and exit 
 -ws: write settings on config file located here /home/sem/.config/golgu-translate/golgu-translate.cfg
 
