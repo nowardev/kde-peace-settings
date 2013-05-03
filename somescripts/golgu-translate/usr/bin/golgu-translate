@@ -79,7 +79,164 @@ fine @.@
 "
 }
 
+function_language(){
+echo "
+LANGUAGE TABLE 
+#######################################
+#note not all  languages are supported#
+#######################################
 
+af          Afrikaans                                                                     
+ak          Akan
+sq          Albanian
+am          Amharic
+ar          Arabic
+hy          Armenian
+az          Azerbaijani
+eu          Basque
+be          Belarusian
+bem         Bemba
+bn          Bengali
+bh          Bihari
+xx-bork     Bork, bork, bork!
+bs          Bosnian
+br          Breton
+bg          Bulgarian
+km          Cambodian
+ca          Catalan
+chr         Cherokee
+ny          Chichewa
+zh-CN       Chinese (Simplified)
+zh-TW       Chinese (Traditional)
+co          Corsican
+hr          Croatian
+cs          Czech
+da          Danish
+nl          Dutch
+xx-elmer    Elmer Fudd
+en          English
+eo          Esperanto
+et          Estonian
+ee          Ewe
+fo          Faroese
+tl          Filipino
+fi          Finnish
+fr          French
+fy          Frisian
+gaa         Ga
+gl          Galician
+ka          Georgian
+de          German
+el          Greek
+gn          Guarani
+gu          Gujarati
+xx-hacker   Hacker
+ht          Haitian Creole
+ha          Hausa
+haw         Hawaiian
+iw          Hebrew
+hi          Hindi
+hu          Hungarian
+is          Icelandic
+ig          Igbo
+id          Indonesian
+ia          Interlingua
+ga          Irish
+it          Italian
+ja          Japanese
+jw          Javanese
+kn          Kannada
+kk          Kazakh
+rw          Kinyarwanda
+rn          Kirundi
+xx-klingon  Klingon
+kg          Kongo
+ko          Korean
+kri         Krio (Sierra Leone)
+ku          Kurdish
+ckb         Kurdish (Soranî)
+ky          Kyrgyz
+lo          Laothian
+la          Latin
+lv          Latvian
+ln          Lingala
+lt          Lithuanian
+loz         Lozi
+lg          Luganda
+ach         Luo
+mk          Macedonian
+mg          Malagasy
+ms          Malay
+ml          Malayalam
+mt          Maltese
+mi          Maori
+mr          Marathi
+mfe         Mauritian Creole
+mo          Moldavian
+mn          Mongolian
+sr-ME       Montenegrin
+ne          Nepali
+pcm         Nigerian Pidgin
+nso         Northern Sotho
+no          Norwegian
+nn          Norwegian (Nynorsk)
+oc          Occitan
+or          Oriya
+om          Oromo
+ps          Pashto
+fa          Persian
+xx-pirate   Pirate
+pl          Polish
+pt-BR       Portuguese (Brazil)
+pt-PT       Portuguese (Portugal)
+pa          Punjabi
+qu          Quechua
+ro          Romanian
+rm          Romansh
+nyn         Runyakitara
+ru          Russian
+gd          Scots Gaelic
+sr          Serbian
+sh          Serbo-Croatian
+st          Sesotho
+tn          Setswana
+crs         Seychellois Creole
+sn          Shona
+sd          Sindhi
+si          Sinhalese
+sk          Slovak
+sl          Slovenian
+so          Somali
+es          Spanish
+es-419      Spanish (Latin American)
+su          Sundanese
+sw          Swahili
+sv          Swedish
+tg          Tajik
+ta          Tamil
+tt          Tatar
+te          Telugu
+th          Thai
+ti          Tigrinya
+to          Tonga
+lua         Tshiluba
+tum         Tumbuka
+tr          Turkish
+tk          Turkmen
+tw          Twi
+ug          Uighur
+uk          Ukrainian
+ur          Urdu
+uz          Uzbek
+vi          Vietnamese
+cy          Welsh
+wo          Wolof
+xh          Xhosa
+yi          Yiddish
+yo          Yoruba
+zu          Zulu
+"
+}
 
  function_demo (){
  
@@ -236,13 +393,13 @@ DEFAULT_INPUT_LANG="auto"
 DEFAULT_OUTPUT_LANG="en"
 DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
 DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
-VERSION="0.0.3"
+VERSION="0.0.4"
 DEVELOPER="nowardev@gmail.com"
 
 
 #
  
-demotext=(   "Hello this is the demo function. it will help you to use this script. let's Start!" "This is the easiest example with audio. " "We want to translate from spanish to english  the words hola mundo"  "first of all, open a terminal  and type" " golgu-translate .. space .. minus.. s .. hola mundo" " As you can see this script will translate even without using quotes, or setting languages" " The default ouput language is english of course" " instead for input language it's in auto mode" "but let's see another example" "we want translate from spanish to french the words hola mundo"  " so  type golgu .. minus .. 'translate'' .. space" "  minus .. o .. space .. f r ..  minus .. t .. space  .. hola-mundo" "So as you can understand from these examples"  "The Option.. minus .. s ..  it sets audio on  but you can translate even without audio support"  "the option minus .. O .. it sets the  output language" " The option .. minus i .. it sets the  input language"  "The Option.. minus .. w s .. writes your settings in config file " "The Option.. minus .. e ..  to edit the config-file with a text editor" " remember the default output language it's english so" " if you are american or english, the option  o  is not required as well as the option i" " you can tweak the script to change the default output language" "the option minus .. l .. ti prints the language codes" "the option minus .. -p .. it sets the player that can be mplayer or vlc "  " the option  minus .. t ..  it's used to set the text to translate but  it's not required " "even if it's better for you to use it "   "the Option minus  D   can be used to see more informations about the translation  ..."   " remember to install mplayer or vlc to listen this text   ")
+demotext=(   "Hello this is the demo function. it will help you to use this script. let's Start!" "This is the easiest example with audio. " "We want to translate from spanish to english  the words hola mundo"  "first of all, open a terminal  and type" " golgu-translate .. space .. minus.. s .. hola mundo" " As you can see this script will translate even without using quotes, or setting languages" " The default ouput language is english of course" " instead for input language it's in auto mode" "but let's see another example" "we want translate from spanish to french the words hola mundo"  " so  type golgu .. minus .. translate' .. space" "  minus .. o .. space .. f r ..  minus .. t .. space  .. hola mundo" "So as you can understand from these examples"  "The Option.. minus .. s ..  it sets audio on  but you can translate even without audio support"  "the option minus .. O .. it sets the  output language" " The option .. minus i .. it sets the  input language"  "The Option.. minus .. w s .. writes your settings in config file " "The Option.. minus .. e ..  it opens an text editor to tweak   the config-file with a text editor" " remember the default output language it's english so" " if you are american or english, the option  o  is not required as well as the option i" " you can tweak the script to change the default output language" "the option minus .. l .. it prints the language codes" "the option minus .. p .. it sets the player that can be mplayer or vlc "  " the option  minus .. t ..  it's used to set the text to translate but  it's not required " "even if it's better for you to use it "   "the Option minus  D   can be used to see more informations about the translation  ..."   " remember to install mplayer or vlc to listen this text   ")
 
 
  
@@ -299,7 +456,7 @@ demotext=(   "Hello this is the demo function. it will help you to use this scri
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
 	-ws) SAVESETTINGS="on"; shift ;;
 	-p)if [[ "$2" == "vlc" || "$2" == "cvlc" && ! -z "$(type "$2" )"  ]] ; then player="$DEFAULT_PLAYER" ; elif [[ "$2" == "mplayer" && ! -z "$(type "$2")"   ]]; then player="$DEFAULT_PLAYER_ALTERNATE"  ; else echo $"Sorry no player found please install mplayer or vlc... exiting ";player="$DEFAULT_PLAYER" ; exit 2  ; fi ; shift 2 ;;  
-	-l) echo $"languages : af sq ar az eu bn be bg ca zh-CN  zh-TW hr cs da nl en eo et tl fi fr gl ka de el gu Creole iw hi hu is id ga it ja kn ko la lv lt mk ms mt no fa pl pt ro ru sr sk sl es sw sv ta te th tr uk ur vi cy yi"; exit; shift;;
+	-l) function_language; exit; shift;;
 	-s) SOUND="on"; shift;;
 	*) args+=( "$1" ); shift ;;
 		
