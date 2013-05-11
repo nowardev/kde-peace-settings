@@ -25,11 +25,11 @@ INSTALLATION
 
 you need of  :
 
-vlc or mplayer , gawk html2text iconv  curl fold 
+vlc or mplayer , gawk html2text iconv  curl fold xclip #klipper for kde 
 
 for debian systems :
 	
-	sudo apt-get install mawk coreutils html2text mplayer # or vlc 
+	sudo apt-get install mawk coreutils html2text mplayer xclip #  vlc klipper 
 
 
 LANGUAGES 
@@ -42,6 +42,7 @@ USAGE:
 
 golgu-translate  options  -t  text 
 
+-c : copy translated tex on clipboard , you need of xclip or klipper 
 -d:  debug mode on 
 -demo : will start a tutorial for this script , you can add even an language code to listen this tutorial in your language : 
 -e : open golgu-traslate config file 
@@ -55,26 +56,63 @@ golgu-translate  options  -t  text
 -v : print version and exit 
 -ws: write settings on config file located here $HOME/.config/golgu-translate/golgu-translate.cfg
 
-start the demo :  golgu-translate -demo it 
+#####
+DEMO 
+#####
+ 
+------------------------
+golgu-translate -demo it 
+------------------------
+
+########
+EXAMPLES
+########
 
 you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
 
+The easiest example :  
+
+------------------------------------
+golgu-translate    text without \"\" 
+------------------------------------
 
 
-The easiest example :      golgu-translate    text without \"\" 
+The most complete example :  
 
 
-The most complete example :  golgu-translate -p mplayer -ws  -s -d  -i en -o it   -t  hello World
+---------------------------------------------------------------------
+golgu-translate -p mplayer -ws  -s -d  -i en -o it   -t  hello World
+---------------------------------------------------------------------
+
 
 You can also just type the output language and the text , input language will be set like AUTO 
 
-golgu-translate   -o es  -t  hello world
 
-PIPED USE 
+----------------------------------------
+golgu-translate   -o es  -t  hello world
+----------------------------------------
+
+
+#########
+CLIPBOARD 
+#########
+
+----------------------------------------
+golgu-translate -c -t hello world  -o it 
+---------------------------------------- 
+
+
+golgu-translate can copy translated text into system's clipboard  with option -c ,  it will work with system with X .  without X this program will not work ,  if you have kde it will copy text into klipper too 
+
+#########
+PIPED USE
+#########
 
 golgu-translate can accept  the input from a pipe   in this way : 
 
+---------------------------------------------
  echo hello  | golgu-translate -o fr -t \$(cat)
+---------------------------------------------
 
 fine @.@
 "
@@ -297,6 +335,18 @@ done< <(fold -w97 -s <<<"$2") #split text every 97 char
 	exit 0
 }
 
+function_os_clipboard(){
+	if [[ ! -z "$(pidof X)" &&   ! -z $(type qdbus) ]]; then 
+		
+	qdbus org.kde.klipper /klipper  org.kde.klipper.klipper.setClipboardContents "$translated_text"
+	
+	fi 
+	
+	if [[  ! -z "$(type xclip)" ]]; then 
+			echo "$translated_text" | xclip -selection c
+	fi 
+}
+
 function_translate(){
  
 
@@ -305,7 +355,8 @@ function_translate(){
 	encoding="$(awk '/Content-Type: .* charset=/ {sub(/^.*charset=["'\'']?/,""); sub(/[ "'\''].*$/,""); print}' <<<"$result")"
 	translated_text="$(iconv -f $encoding <<<"$result" |  awk 'BEGIN {RS="</div>"};/<span[^>]* id=["'\'']?result_box["'\'']?/' | html2text -utf8)"
 	echo $translated_text	
-	
+
+
 	if [[ "$DEBUG" == on ]]; then 
  	echo "
 function translate debug: 
@@ -315,7 +366,11 @@ output language: 	$2
 text to translate:	"$3" 
 translated text:	$translated_text  "
 	fi 
+	
 
+if [[ "$CLIPBOARD" == "on" ]]; then 
+	function_os_clipboard 
+fi
 }
 
 
@@ -330,8 +385,8 @@ program[4]=fold
 knownplayer[0]=mplayer
 knownplayer[1]=vlc
  
- 
-
+accessories[0]="klipper"
+accessories[1]="xclip"
 
 for program in "${program[@]}"; 
 do if ! type -p "$program" >/dev/null;
@@ -341,7 +396,7 @@ echo
  
 echo "For debian : 
 
-sudo apt-get install coreutils gawk  html2text curl libc-bin mplayer  # vlc "
+sudo apt-get install coreutils gawk  html2text curl libc-bin mplayer xclip  # vlc "
  exit 1; 
 fi; done
 
@@ -357,7 +412,25 @@ done
 if [[ "$test" = 2 ]]; then 
 		echo "$program not found; PLEASE INSTALL IT" >&2
  		echo "For debian : sudo apt-get install ${knownplayer[@]}  "
+fi 
+
+
+test=0
+for program in "${accessories[@]}"; 
+do if ! type -p "$accessories" >/dev/null; then 
+test=$(($test+1))
+ 
+fi 
+
+done
+
+if [[ "$test" = 2 ]]; then 
+		echo "$program not found; PLEASE INSTALL IT" >&2
+ 		echo "For debian : sudo apt-get install ${accessories[@]}  "
 	fi 
+
+
+ 
 	
 }
 
@@ -374,6 +447,7 @@ else
 	echo "input_lang=\"$input_lang\"" >> "$directory/golgu-translate.cfg"
 # 	echo "SOUND=\"$SOUND\"" >> "$directory/golgu-translate.cfg"
 	echo "player=\"$player\"" >> "$directory/golgu-translate.cfg"
+	echo "CLIPBOARD=\"$CLIPBOARD\"" >> "$directory/golgu-translate.cfg"
 # 	fi 
 fi 
  
@@ -394,9 +468,9 @@ DEFAULT_INPUT_LANG="auto"
 DEFAULT_OUTPUT_LANG="en"
 DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
 DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
-VERSION="0.0.4"
+VERSION="0.0.5"
 DEVELOPER="nowardev@gmail.com"
-
+CLIPBOARD="off"
 
 #
  
@@ -424,7 +498,7 @@ demotext=(   "Hello this is the demo function. it will help you to use this scri
 	-t ) shift 
 	 while (( $# )); do 
  
-	if [[ "$1" == "-i" || "$1" ==  "-o" || "$1" == "-d" || "$1" == "-v" || "$1" == "-s" || "$1" == "-e"  || "$1" == "-l"  || "$1"  == "-ws" ]]; then 
+	if [[ "$1" == "-i" || "$1" ==  "-o" || "$1" == "-d" || "$1" == "-v" || "$1" == "-s" || "$1" == "-e"  || "$1" == "-l"  || "$1"  == "-ws"   || "$1"  == "-c"  ]]; then 
  
  	break 
 		else 
@@ -457,6 +531,7 @@ demotext=(   "Hello this is the demo function. it will help you to use this scri
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
 	-ws) SAVESETTINGS="on"; shift ;;
 	-p)if [[ "$2" == "vlc" || "$2" == "cvlc" && ! -z "$(type "$2" )"  ]] ; then player="$DEFAULT_PLAYER" ; elif [[ "$2" == "mplayer" && ! -z "$(type "$2")"   ]]; then player="$DEFAULT_PLAYER_ALTERNATE"  ; else echo $"Sorry no player found please install mplayer or vlc... exiting ";player="$DEFAULT_PLAYER" ; exit 2  ; fi ; shift 2 ;;  
+	-c) CLIPBOARD="on"; shift;;
 	-l) function_language; exit; shift;;
 	-s) SOUND="on"; shift;;
 	*) args+=( "$1" ); shift ;;
