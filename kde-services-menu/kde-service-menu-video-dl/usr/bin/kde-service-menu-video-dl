@@ -225,7 +225,7 @@ function_video(){
 				
 				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
 				
-			done < <(cd "$outfolder";youtube-dl -t --extract-audio  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			done < <(cd "$outfolder";youtube-dl -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
 			
 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 	
@@ -245,7 +245,7 @@ function_extract(){
 				
 				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
 				
-			done < <(cd "$outfolder";youtube-dl -t "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			done < <(cd "$outfolder";youtube-dl -t --extract-audio "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
 			
 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 }
