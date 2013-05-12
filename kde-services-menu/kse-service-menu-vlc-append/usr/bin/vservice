@@ -232,6 +232,28 @@ done
 done< <(find "$1" -type f)
 
 }
+
+
+function_play(){
+	qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play
+}
+
+function_stop(){
+	qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Stop
+}
+
+function_pause(){
+	qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Pause
+}
+
+function_next(){
+	qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next
+}
+
+function_previous(){
+	qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous
+}
+
 ##########################################################################
 
 
@@ -246,6 +268,69 @@ while [[  -z "$(qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpr
  
  
 function_checkversion
+
+
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+	 
+	  
+	-o) if (($# > 1)); then
+			shift  
+			if [[ "$1" == play ]]; then 
+				function_play
+			elif [[ "$1" == stop ]]; then
+				function_stop
+			elif [[ "$1" == pause ]]; then 
+				function_pause
+			elif [[ "$1" == next ]]; then
+				function_next
+			elif [[ "$1" == previous ]]; then 
+				function_previous
+			else 
+				echo "No option given you should use this :
+				vservice -o play       or stop next etc " 1>&2 
+				exit 1 
+			fi 
+			;;
+		  
+	-fo) if (($# > 1)); then
+			shift ;for folder in "$@"; do
+		function_add_folder_shell "$folder"  
+		done
+		  else
+			echo $"ERROR:
+
+-f requires a folder at least" 1>&2
+			exit 1
+		  fi ;;
+		 -fox)if (($# > 1)); then
+			shift ;for folder in "$@"; do
+		function_add_folder "$folder"  
+		done
+		  else
+			function_message_error $"ERROR :
+
+-f requires a folder at least" 1>&2
+			exit 1
+		  fi
+		 ;;
+	-a)
+	function_analyze "$2"
+	function_menu_start
+# 	function_analyze n "$2"
+	;;
+	-e)  $texteditor "$listoffile"
+	
+	;;
+
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+else
+function_help; exit 1
+fi
 
 
 if [[ ! -e "$2" ]];then 
