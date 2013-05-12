@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 ##license gpl 
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -88,7 +88,7 @@ function_system() {
 	fi
 #install menu entry 
 
-	directory="$PWD/usr/share/kde4/services/ServiceMenus/"
+	directory="$PWD/usr/share/applications/kde4/"
 	if [[  -d "$directory"  ]] ; then 
 		if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
 			echo "$PWD/usr/share/applications/kde4/  detected "
@@ -168,28 +168,30 @@ fi
 
 
 #install every script with the correct permission
-	for file in $PWD/usr/bin/* ; do
-		echo "..............install -m 755 -D "$file"  "$folder_local_bash_scripts""
-		install -m 755 -D "$file"  "$folder_local_bash_scripts" 
-	done
+	if [[ -d "$PWD/usr/bin/" ]]; then 
+		for file in $PWD/usr/bin/* ; do
+			echo "..............install -m 755 -D "$file"  "$folder_local_bash_scripts""
+			install -m 755 -D "$file"  "$folder_local_bash_scripts" 
+		done
+	fi 
 
 #install the service menu 
-  
-	for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop ;  do
-		echo "installing.....install -m 644 -D "$file"  "$localprefix"share/kde4/services/ServiceMenus"
-		install -m 644 -D "$file"  ""$localprefix"share/kde4/services/ServiceMenus" 
-	done
+	if [[ -d "$PWD/usr/share/kde4/services/ServiceMenus/" ]]; then 
+		for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop ;  do
+			echo "installing.....install -m 644 -D "$file"  "$localprefix"share/kde4/services/ServiceMenus"
+			install -m 644 -D "$file"  ""$localprefix"share/kde4/services/ServiceMenus" 
+		done
+	fi 
 #install the menu entry if exist 
 
-  #install menu entry 
+  #install menu entry in ~/.kde/share/applnk
 	if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
+		function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applnk"
+		
 	
 		for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
-			function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applications"
-			function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applications/kde4"
-			 
-			echo "installing.....install -m 755 -D $file  "$localprefix"share/applications/kde4/" 
-			install -m 755 -D "$file"  ""$localprefix"share/applications/kde4/"
+ 			echo "installing.....install -m 755 -D $file "$localprefix"share/applnk" 
+			install -m 755 -D "$file"  ""$localprefix"share/applnk"
 		done
 	fi 
 
@@ -252,19 +254,19 @@ messageremoved=""
  
   done
   
-#remove the menu entry if it exist
-if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-	
-	for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
-		file="${file##*/}"
-		if [[ -e "$localprefix/share/applications/kde4/$file"  ]]; then 
-			echo "rm  "$localprefix"share/applications/kde4/$file"
-			rm  ""$localprefix"share/applications/kde4/$file"
-			messageremoved="$messageremoved  "$localprefix"share/applications/kde4/$file"
-		fi 
-	done
-fi 
  
+ 
+#remove menu entry
+  #install menu entry in ~/.kde/share/applnk
+	if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
+		for file in $PWD/usr/share/applications/kde4/*.desktop ; do
+			file="${file##*/}"
+ 			echo "removing ... "$localprefix"share/applnk/$file " 
+			rm  ""$localprefix"share/applnk/$file"
+			messageremoved="$messageremoved  "$localprefix"share/applnk/$file "
+		done
+	fi 
+
 ####################################################################
 kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2 2>/dev/null
@@ -335,7 +337,7 @@ done
 
 #remove the menu entry if it exist
 if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-	echo $"Menu entry detected"
+	echo $"Folder Menu entry detected"
 	for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
 		file="${file##*/}"
 		if [[ -e "$prefix/share/applications/kde4/$file"  ]]; then 
