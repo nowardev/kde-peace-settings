@@ -1,12 +1,14 @@
 [Desktop Entry]
-Name=ShoWebKam
 Exec=showebkam
-Icon=camera-web
+## X-DocPath=
 Type=Application
-Categories=Qt;KDE;AudioVideo;Video;
-GenericName=ShoWebKam
-Comment=Display your Webcam
-Comment[it]=Mostra Webcam
-GenericName[it]=Mostra Webcam
 Terminal=false
-InitialPreference=10
+Icon=camera-web
+GenericName=Display Webcam
+GenericName[it]=Mostra Webcam
+Name=ShoWebKam 
+Comment[it]=Mostra Webcam 
+X-KDE-StartupNotify=true
+X-DBUS-StartupType=Unique
+Categories=Qt;KDE;AudioVideo;Audio;
+ 

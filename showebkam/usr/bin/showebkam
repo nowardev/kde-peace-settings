@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash 
  
 #Copyright (C) 2012 nowardev nowardev@gmail.com
  
@@ -16,7 +16,7 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version="0.0.2"
+version="0.0.3"
 license="GPLv3"
 developer="nowardev@gmail.com"
 config="$HOME/.showebkam"
@@ -92,7 +92,7 @@ showebkam h                         print this help
 
 "
 
-	rm /tmp/showebkam.log
+	if [[ -e /tmp/showebkam.log ]] ; then  rm /tmp/showebkam.log; fi 
 	$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> /tmp/showebkam.log
 
 	if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log you can try to remove $config running in terminal showebkam d "
