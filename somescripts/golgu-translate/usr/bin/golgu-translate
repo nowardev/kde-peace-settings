@@ -60,6 +60,8 @@ golgu-translate  options  -t  text
 DEMO 
 #####
  
+ golgu-translate -demo <language>
+ 
 ------------------------
 golgu-translate -demo it 
 ------------------------
