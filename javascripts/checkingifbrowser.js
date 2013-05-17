@@ -42,39 +42,61 @@
 //  var test =defaultApplication("text/plain").split(" ")
 //  print (test[0])
 //create an array with destkop files  
-var array = ["firefox.desktop","chromium-browser.desktop","chrome.desktop","konqbrowser.desktop","midori.desktop","qupzilla.desktop","opera-browser.desktop"] 
+
+var array = ["konqbrowser.desktop","qupzilla.desktop","midori.desktop","rekonq.desktop","firefox.desktop","chromium-browser.desktop","chrome.desktop","opera-browser.desktop"] 
 //loop over the array checking if exist the file if it exist print stuff 
-var k=0
+var taskmanager=[]
 for(var i=0; i<array.length; i++){ 
-
-
- if (applicationExists(array[i])){  
-   if (array[i]=="firefox.desktop"){
-		var taskmanager[k]="file://"applicationPath(array[i])"?wmClass=Firefox,"
-		print ( "file://"+applicationPath(array[i])+"?wmClass=Firefox")
-		k=k++
- 		}
-  else if(array[i]=="opera-browser.desktop"){
-	print ( "file://"+applicationPath(array[i])+"?wmClass=Opera")
-		  }
-  else if(array[i]=="chromium-browser.desktop"){
-	print ( "file://"+applicationPath(array[i])+"?wmClass=Chromium-browser")
-		  }
-  else if(array[i]=="midori.desktop"){
-	print ( "file://"+applicationPath(array[i])+"?wmClass=Midori")
-		  }
-  else if(array[i]=="konqbrowser.desktop"){
-	print ( "file://"+applicationPath(array[i])+"?wmClass=Konqueror")
-		  }
-  else if(array[i]=="qupzilla.desktop"){
-	print ( "file://"+applicationPath(array[i])+"?wmClass=Qupzilla")
-		  }
-	 }
+	
+	
+	if (applicationExists(array[i])){  
+		if(array[i]=="konqbrowser.desktop"){
+			taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Konqueror")
+			//print ( "file://"+applicationPath(array[i])+"?wmClass=Konqueror")
+		}
+		else  if (array[i]=="firefox.desktop"){
+			taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Firefox")
+			//print ( "file://"+applicationPath(array[i])+"?wmClass=Firefox")
+			
+		}
+		else if(array[i]=="opera-browser.desktop"){
+		  taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Opera")
+			//print ( "file://"+applicationPath(array[i])+"?wmClass=Opera")
+		}
+		else if(array[i]=="chromium-browser.desktop"){
+		   taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Chromium-browser")
+			//print ( "file://"+applicationPath(array[i])+"?wmClass=Chromium-browser")
+		}
+		else if(array[i]=="midori.desktop"){
+		     taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Midori")
+			//print ( "file://"+applicationPath(array[i])+"?wmClass=Midori")
+		}
+		
+		else if(array[i]=="qupzilla.desktop"){
+		  taskmanager.push("file://"+applicationPath(array[i])+"?wmClass=Qupzilla")
+			//print ( "file://"+applicationPath(array[i])+"?wmClass=Qupzilla")
+		}
+	}
 	else{
 		print (array[i]+" do not exist ")
 	}
-   
- }
+	
+}
+
+//convert the array in a string 
+taskmanager.toString()
+
+//add a new panel 
+var panel = new Panel 
+panel.location = 'bottom'
+
+//add the taskmanager 
+var icontasks = panel.addWidget("icontasks")
+	icontasks.currentConfigGroup = new Array('Launchers')
+	icontasks.writeConfig("Items",taskmanager)
+print ("Items","\""+taskmanager +"\"")
+
+
 // var array="tex/plain , browser, filemanger, mailer, imClient, terminal, video/quicktime".split(",")
 //  for(var i=0; i<array.length; i++){ 
 //    var testing = defaultApplication("\""+array[i]+"\"")
