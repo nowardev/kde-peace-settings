@@ -19,22 +19,97 @@
 var screenrect = screenGeometry(0) // get information about your screen h w 
 
 function chromeos(){
+
+ 
 	
+	var default_browser=defaultApplication("browser").split(" ")
+	var pathdefault_browser="file://"+applicationPath(default_browser[0]+".desktop")
+	
+	var default_filemanager=defaultApplication("filemanager").split(" ")
+	var pathdefault_filemanager="file://"+applicationPath(default_filemanager[0]+".desktop")
+	
+	var default_terminal=defaultApplication("terminal").split(" ")
+	var pathdefault_terminal="file://"+applicationPath(default_terminal[0]+".desktop")
+	
+	var default_office=defaultApplication("application/msword")
+	if(default_office.match("libreoffice")){
+	var default_office=default_office.split(" ")
+	var pathdefault_office="file://"+applicationPath(default_office[0]+"-writer"+".desktop")
+ 
+	}
+	else{
+	var default_office=default_office.split(" ")
+	var pathdefault_office="file://"+applicationPath(default_office[0]+".desktop")
+	}
+	
+	var default_imclient=defaultApplication("imClient").split(" ")
+	var pathdefault_imclient="file://"+applicationPath(default_imclient[0]+".desktop")
+	
+	var default_mailer=defaultApplication("mailer").split(" ")
+	var pathdefault_mailer="file://"+applicationPath(default_mailer[0]+".desktop")	
+	
+	var default_imageviewer=defaultApplication("image/png").split(" ")
+	var pathdefault_imageviewer="file://"+applicationPath(default_imageviewer[0]+".desktop")	
+	
+	var default_videoplayer=defaultApplication("video/mp4") 
+	
+	if (default_videoplayer.match("/usr/bin/") ){
+	 var default_videoplayer = default_videoplayer.replace("/usr/bin/","").split(" ")
+	 
+	}
+	else {
+	  default_videoplayer.split(" ")
+	}
+  	var pathdefault_videoplayer="file://"+applicationPath(default_videoplayer[0]+".desktop")	
 	
 	
 	var activity = new Activity("sal")
 	activity.name = i18n("ChromeOs Activity")
-	activity.writeConfig("EnabledEntries","plasma-sal-bookmarks.desktop,plasma-sal-contacts.desktop,plasma-sal-multimedia.desktop,plasma-sal-internet.desktop,plasma-sal-graphics.desktop,plasma-sal-games.desktop,plasma-sal-office.desktop")
+	activity.writeConfig("EnabledEntries","plasma-sal-multimedia.desktop,plasma-sal-internet.desktop,plasma-sal-graphics.desktop,plasma-sal-games.desktop,plasma-sal-office.desktop,wine-wine/,Education/,Settingsmenu/,plasma-sal-system.desktop,plasma-sal-utility.desktop,plasma-sal-development.desktop")
 	activity.wallpaperPlugin = "image"
 	activity.wallpaperMode = "SingleImage"
 	activity.currentConfigGroup = Array("Wallpaper", "image")
 	activity.writeConfig("wallpaper", "nowardev-chromeos")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
+	i=0
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]
+	activity.writeConfig("url",pathdefault_browser	)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",pathdefault_filemanager)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",pathdefault_imageviewer)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",pathdefault_videoplayer)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",pathdefault_terminal)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",pathdefault_office)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",pathdefault_imclient)
+	i++
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",applicationPath("systemsettings.desktop"))
+	i++
+	var desktopfile = "kcalc.desktop"
+	var executable  = "kcalc"
+	if (applicationExists(executable)) {  
+	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]	
+	activity.writeConfig("url",applicationPath(desktopfile))	
+	}
+ 
+ 
+	)
+	
 	activity.reloadConfig()
-	
-	
 }
 
 chromeos()
 
-//loadTemplate("org.kde.plasma-desktop.gnome2Panel")
+//loadTemplate("org.kde.plasma-desktop.chromeos2Panel")
+ 
