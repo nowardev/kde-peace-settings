@@ -70,7 +70,7 @@ function chromeos(){
 	var notification = panel.addWidget ("notifier")
 	var network = panel.addWidget("org.kde.networkmanagement")
 	var printer = panel.addWidget("printmanager")
-	var notification = panel.addWidget ("notifications")
+	var notification = panel.addWidget ("org.kde.notifications")
 	var battery = panel.addWidget("battery")
 	
 	panel.addWidget("showdesktop") 

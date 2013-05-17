@@ -50,7 +50,7 @@ var screenrect = screenGeometry(0)
 function activitymac(){
 	
 	
-	var activity   = new Activity("desktop")
+	var activity   = new Activity("folderview")
 	activity.name = i18n("Mac Activity")
 	activity.wallpaperPlugin = "image"
 	activity.wallpaperMode = "SingleImage"
