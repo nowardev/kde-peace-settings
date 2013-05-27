@@ -522,7 +522,7 @@ demotext=(   "Hello this is the demo function. it will help you to use this scri
 	if [[ -z "$REPLY" ]];then
 		nano "$HOME/.config/golgu-translate/golgu-translate.cfg"
 	else
-		"$REPLY $HOME/.config/golgu-translate/golgu-translate.cfg "
+		$REPLY "$HOME/.config/golgu-translate/golgu-translate.cfg"
 	fi
  
 	exit ;;
@@ -572,5 +572,4 @@ function_translate "$input_lang" "$output_lang" "$text"
 if [[ "$SOUND" == on ]]; then 
 function_play_translated_text "$output_lang" "$translated_text"
 fi 
-	
-	
+ 
