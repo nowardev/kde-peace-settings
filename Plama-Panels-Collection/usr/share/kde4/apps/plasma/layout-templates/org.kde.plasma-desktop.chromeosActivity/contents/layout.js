@@ -20,9 +20,9 @@ var screenrect = screenGeometry(0) // get information about your screen h w
 
 function chromeos(){
 
- 
+	//check which browser is installed and which one is the default one 
 	
-	var default_browser=defaultApplication("browser").split(" ")
+var default_browser=defaultApplication("browser").split(" ")
 	var pathdefault_browser="file://"+applicationPath(default_browser[0]+".desktop")
 	
 	var default_filemanager=defaultApplication("filemanager").split(" ")
@@ -72,6 +72,12 @@ function chromeos(){
 	activity.writeConfig("wallpaper", "nowardev-chromeos")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
 	i=0
+// 	var stripwidget = [pathdefault_browser , pathdefault_filemanager , pathdefault_imageviewer , pathdefault_imclient , pathdefault_mailer , pathdefault_office , pathdefault_terminal, pathdefault_videoplayer, "systemsettings.desktop", "kcalc.desktop"]
+// 	
+// 	for (i=0; i< stripwidget.lenght ; i++) {
+// 		activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]
+// 		activity.writeConfig("url",stripwidget[i]	)
+// 	}
 	activity.currentConfigGroup = ['stripwidget', 'favourite-'+i]
 	activity.writeConfig("url",pathdefault_browser	)
 	i++
@@ -104,7 +110,7 @@ function chromeos(){
 	}
  
  
-	)
+	
 	
 	activity.reloadConfig()
 }
