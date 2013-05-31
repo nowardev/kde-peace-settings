@@ -44,8 +44,8 @@ function RemoveOldPanels()
 	}
 }
 
-RemoveOldPanels() //load the function 
-RemoveOldPanels() //reload the function  to avoid plasma crashes 
+// RemoveOldPanels() //load the function 
+// RemoveOldPanels() //reload the function  to avoid plasma crashes 
 //////////////////////////////////////////////////////////
 
 
@@ -77,18 +77,18 @@ function nowardevdouble(){
 	//launcher.writeConfig("icon", "start-here")
 	
 	
-	// 			var widget = "kwinbutton"
-	// 			/*check if the widget is installed and add if it is to your panel*/
-	// 			if (knownWidgetTypes.indexOf(widget) > -1) {
-		// 				var widget = panel.addWidget(widget)
-	// 				widget.writeConfig("ActionType", "1")
-	// 				widget.writeConfig("Maximized", "1")
-	// 				
-	// 			} 
-	// 			else {
-		// 				print("your system doesn't provide "+widget )
-	// 				
-	// 			}	
+	var widget = "kwinbutton"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		var widget = panel.addWidget(widget)
+		widget.writeConfig("ActionType", "1")
+		widget.writeConfig("Maximized", "1")
+		
+	} 
+	else {
+		print("your system doesn't provide "+widget )
+		
+	}  
 	
 	
 	
@@ -96,18 +96,31 @@ function nowardevdouble(){
 	
 	var menubar = panel.addWidget("menubar")
 	
-	var clock = panel.addWidget("digital-clock")
-	clock.writeConfig("showDate", "false")
-	clock.writeConfig("showDay", "false")
-	clock.writeConfig("showSeconds", "false")
-	clock.writeConfig("showYear", "false")
-	clock.writeConfig("showShadow", "false")
-	//clock.writeConfig("showTimezone", "true")
-	clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
-	clock.writeConfig("useCustomColor", "true")
-	clock.writeConfig("plainClockColor", "255,255,255")
-	clock.writeConfig("plainClockDrawShadow", "false")
+	var widget ="adjustableclock"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		
+		
+		
+		var clock =  panel.addWidget("adjustableclock") 
+		clock.writeConfig("clipboardExpressions","Clock.toString(Clock.Time\\, {'short': true}),Clock.toString(Clock.Time),,Clock.toString(Clock.Date\\, {'short': true}),Clock.toString(Clock.Date),,Clock.toString(Clock.DateTime\\, {'short': true}),Clock.toString(Clock.DateTime),Clock.toString(Clock.Year) + '-' + Clock.toString(Clock.Month) + '-' + Clock.toString(Clock.DayOfMonth) + ' ' + Clock.toString(Clock.Hour) + ':' + Clock.toString(Clock.Minute) + ':' + Clock.toString(Clock.Second),,Clock.toString(Clock.Timestamp)")
+		clock.writeConfig("theme","progress")
+	}
+	else{
+		var clock = panel.addWidget("digital-clock")
+		clock.writeConfig("showDate", "true")
+		clock.writeConfig("showDay", "true")
+		clock.writeConfig("showSeconds", "true")
+		clock.writeConfig("showShadow", "false")
+		clock.writeConfig("showYear", "true")
+		//clock.writeConfig("showTimezone", "true")
+		clock.writeConfig("plainClockFont", "Serif,12,-1,5,75,0,0,0,0,0")
+		clock.writeConfig("useCustomColor", "true")
+		clock.writeConfig("plainClockColor", "255,255,255")
+		clock.writeConfig("plainClockDrawShadow", "false")
+	}
 	
+	panel.addWidget("showdesktop")
 	
 	var panel = new Panel
 	if (panelIds.length == 2) {
@@ -244,9 +257,12 @@ function nowardevdouble(){
 	var widget = "kwinbutton"
 	/*check if the widget is installed and add if it is to your panel*/
 	if (knownWidgetTypes.indexOf(widget) > -1) {
-		var widget = panel.addWidget(widget)
-		widget.writeConfig("ActionType", "2")
-		widget.writeConfig("Maximized", "1")
+		var widget1 = panel.addWidget(widget)
+		widget1.writeConfig("ActionType", "2")
+		widget1.writeConfig("Maximized", "1")
+		var widget2 = panel.addWidget(widget)
+		widget2.writeConfig("ActionType", "3")
+		widget2.writeConfig("Maximized", "1")
 		
 	} 
 	else {
@@ -254,30 +270,28 @@ function nowardevdouble(){
 		
 	}
 	
-	var widget = "kwinbutton"
-	/*check if the widget is installed and add if it is to your panel*/
-	if (knownWidgetTypes.indexOf(widget) > -1) {
-		var widget = panel.addWidget(widget)
-		widget.writeConfig("ActionType", "3")
-		widget.writeConfig("Maximized", "1")
-		
-	} 
-	else {
-		print("your system doesn't provide "+widget )
-		
-	}
+ 
 	
-
-	var widget = "kwinbutton"
-	/*check if the widget is installed and add if it is to your panel*/
-	if (knownWidgetTypes.indexOf(widget) > -1) {
-		var spacer = panel.addWidget("panelspacer_internal")
-		
-	} 
-	else {
-		print("skypping spacer")
-		
-	}
+	var weather = panel.addWidget("weather")
+	weather.writeConfig("Share","false")
+	weather.writeConfig("pressureUnit","5008")
+	weather.writeConfig("source","wettercom|weather|Verona, Veneto, IT|IT0VE0284;Verona")
+	weather.writeConfig("speedUnit","9001")
+	weather.writeConfig("temperatureUnit","6001")
+	weather.writeConfig("updateInterval","30")
+	weather.writeConfig("visibilityUnit","2007")
+	
+	
+// 	var widget = "kwinbutton"
+// 	/*check if the widget is installed and add if it is to your panel*/
+// 	if (knownWidgetTypes.indexOf(widget) > -1) {
+// 		var spacer = panel.addWidget("panelspacer_internal")
+// 		
+// 	} 
+// 	else {
+// 		print("skypping spacer")
+// 		
+// 	}
 	
 
 	
