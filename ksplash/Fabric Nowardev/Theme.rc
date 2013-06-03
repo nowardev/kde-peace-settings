@@ -1,0 +1,9 @@
+[KSplash Theme: Fabric Nowardev]
+Name = Fabric Nowardev
+Description = QML Animated KDE logo with dots on fabric background
+Version = 1.0
+Author = Nowardev <nowardev at gmail.com>
+Homepage = http://www.nowardev.wordpress.com
+
+# Theme behaviour settings.
+Engine = KSplashQML
