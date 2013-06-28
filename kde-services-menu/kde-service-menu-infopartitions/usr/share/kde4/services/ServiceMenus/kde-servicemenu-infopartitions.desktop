@@ -21,13 +21,13 @@ Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
 # X-KDE-Priority=TopLevel
-X-KDE-Submenu=Info Partitions
-X-KDE-Submenu[it]=Info Partizioni
+# X-KDE-Submenu=Info Partitions
+# X-KDE-Submenu[it]=Info Partizioni
 
 
 [Desktop Action info]
 Exec=kdialog --msgbox "<pre>$(lsblk)</pre>" ; echo "%u" >/dev/null 
-Icon=info
-Name=Info Partions
+Icon=dialog-information
+Name=Info partitions
 Name[it]=Info Partizioni
   
