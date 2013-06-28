@@ -1,0 +1,33 @@
+#Copyright (C) 2013 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+[Desktop Entry]
+Actions=info; 
+Icon=dolphin
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
+Type=Service
+# X-KDE-Priority=TopLevel
+X-KDE-Submenu=Info Partitions
+X-KDE-Submenu[it]=Info Partizioni
+
+
+[Desktop Action info]
+Exec=echo "%u" >/dev/null 
+Icon=info
+Name=Info Partions
+Name[it]=Info Partizioni
+  
