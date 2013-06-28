@@ -26,7 +26,7 @@ X-KDE-Submenu[it]=Info Partizioni
 
 
 [Desktop Action info]
-Exec=kdialog --msgbox "$(lsblk)" ; echo "%u" >/dev/null 
+Exec=kdialog --msgbox "<pre>$(lsblk)</pre>" ; echo "%u" >/dev/null 
 Icon=info
 Name=Info Partions
 Name[it]=Info Partizioni
