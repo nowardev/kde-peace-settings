@@ -47,14 +47,7 @@ fi
 
 function_system() {
 
-	sudoerror=false
-	pas=$( $"Insert Root Password $wrongpas" 2>/dev/null )
-	
-	
-	if [[ -z "$pas" ]];then
-		kdialog --error $"No password given exiting..." 2>/dev/null 
-		exit  
-	fi
+
 		
 		
 		#install every script with the correct permission
@@ -62,7 +55,7 @@ function_system() {
 		if [[  -d "$directory"  ]] ; then
 			for file in $PWD/usr/bin/* ; do
 				echo "installing..... sudo -S  install -m 755 -D "$file"  "/usr/local/bin""
-				echo "$pas" | sudo -S  install -m 755 -D "$file"  "/usr/local/bin" 2>/dev/null 
+				  sudo  install -m 755 -D "$file"  "/usr/local/bin" 2>/dev/null 
 				
 				#wtf need to fix this shit very ugly xD
 				if [[ $? ==  1 ]]; then

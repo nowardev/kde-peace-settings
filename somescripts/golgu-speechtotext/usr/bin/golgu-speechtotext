@@ -60,7 +60,7 @@ USAGE:
 golgu-speechtotext  <options>  
 
 -a : function run applications and commands activated , for keys look down  ...
--c : set channels , some mic require 2 channel some others require 1 channel to work properly with ffmpeg
+-c : set channels , some mic require 2 channels some others require 1 channel to work properly with ffmpeg
 -e : open golgu-speechtotext config file 
 -h : print this help 
 -l : print languages and exit 
@@ -99,7 +99,8 @@ open browser
 search for 
 show webcam 
 open text editor
-what time is it  
+what time is it 
+suspend computer
 
 "
 }
@@ -369,7 +370,37 @@ if [[ -z "$(type -p ffmpeg)" ]] ; then
 		fi 
 }
 
+function_detect_webcam(){
+i=0
+	while read line ;do
+		webcamdetected[$i]="$line"
+		i=$(($i+1))
+	done< <(ls /dev | grep video)
+	if [[ -z ${webcamdetected[@]}  ]] ; then 
+		echo "no webcam detected ... plugin ? driver? bug?"
+		webcamdevice="none"
+	elif [[ ${#webcamdetected[@]} >1 ]] ; then 
+		echo $"I have detected more than 1 webcam please select on (0-$((${#webcamdetected[@]}-1))) 
+"
+	i=0
+	for (( i=0 ; i <${#webcamdetected[@]};i++)); do 
+		echo $"Choose $i for this webcam:  ${webcamdetected[$i]} "
 
+	done
+		read 
+		
+
+	if [[ -z "$REPLY" ]];then
+		echo $"No answer sorry exiting.."
+		exit
+	else
+		webcamdevice="/dev/"${webcamdetected[$REPLY]}""
+		
+	fi
+	REPLY=""
+	echo
+	fi
+}
 
 
 
@@ -390,11 +421,61 @@ else
 # 	fi 
 fi 
  }
+function_ask_settings(){
+ 
+echo $"Choose your language: en-us it fr de a pseudo corret list can be read typing golgu-speechtotext -l PRESS ENTER for en-us"
+read   
+
+    if [[ -z "$REPLY" ]];then
+        input_lang="en-us"
+    else
+        input_lang="$REPLY"
+    fi
+REPLY=""
+echo
+
+echo $"Choose how many channels has your mic ? PRESS ENTER FOR 1 or any key for 2 "
+read   
+
+    if [[ -z "$REPLY" ]];then
+    
+        channel="1"
+    else
+	testvariable="$REPLY"
+		if [[ -z "$testvariable" ]]; then
+			echo $"EMPTY CHANNEL SETTING IT TO 1"
+    
+		elif  [[ "$testvariable" != *[!0-9]*  ]] ;then
+			echo $"MUST BE A NUMBER 1 OR 2  CHANNEL SETTING IT TO 1"
+			channel="$testvariable"
+		else
+			echo  $"MUST BE A NUMBER 1 OR 2  CHANNEL SETTING IT TO 1 ...you have written "\" $testvariable \"" "
+		exit 2
+    
+		fi 
+		
+    fi
+    
+ 
+REPLY=""
+echo
+	
+	function_detect_mic
+	function_detect_webcam
+	function_save_settings
+	function_load_settings
+}
 
 function_load_settings(){
 	a="$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg" 
 	if [[  -e "$a"  ]] ; then
 	. "$a"  
+		if [[ -z $microphone ]] ; then 
+		function_ask_settings
+		fi 
+	else 
+
+	function_ask_settings
 	fi 
 
 }
@@ -442,9 +523,9 @@ echo
 
 function_open_programs(){
  
-enus=("open browser" "open text editor" "show webcam" "close computer" "hibernate computer" "suspend computer" "open link" "select all" "copy text" "paste text" "delete text" "what time is it" "search for" )
+enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "open link" "select all" "copy text" "paste text" "delete text" "what time is it" "search" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "apri link" "seleziona tutto" "copia testo" "incolla testo" "cancella testo" "che ora" "cerca questo"  )
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "apri link" "seleziona tutto" "copia testo" "incolla testo" "cancella testo" "che ora" "cerca"  )
 
 case "$language_open_browser" in 
 "en-us"|"en"| "en-gb")
@@ -471,6 +552,13 @@ for r in "${variable[@]}" ; do
 		echo "running function launch application and run command : grep -i "$r"   \"$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst\""
 		fi 
 		case $r in 
+		
+		"suspend computer"|"sospendi computer")
+		dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
+		;;
+# 		"shut down"|"chiudi computer")
+# 		dbus-send --print-reply --system --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Shutdown /usr/lib/x86_64-linux-gnu/qt4/bin/qdbus --system org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
+# 		;;
 		"what time is it" |"che ora" )
 		 if [[ ! -z $(type golgu-translate) ]];then golgu-translate -s -i $golgu_translate_languagecode -o $golgu_translate_languagecode -t $(date +"%I:%M" ) ;exit ; else date +"%I:%M";  fi 
 		;;
@@ -480,43 +568,21 @@ for r in "${variable[@]}" ; do
 		"open text editor"| "apri editor di testo")
 		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'
 		;;
-		"search for" |"cerca questo" )
-		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		"search" |"cerca" )
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
 		xdg-open 'https://duckduckgo.com/?q='"$question"'&v=n'
 		;;
 		"show webcam"|"show web cam" |"mostra webcam" | "mostra web cam")
-		if [[ -z $webcamdevice ]]; then  
-			i=0
-			while read line ;do
-				webcamdetected[$i]="$line"
-				i=$(($i+1))
-			done< <(ls /dev | grep video)
-			if [[ -z ${webcamdetected[@]}  ]] ; then 
-				echo "no webcam detected ... plugin ? driver? bug?"
-			elif [[ ${#webcamdetected[@]} >1 ]] ; then 
-				echo $"I have detected more than 1 webcam please select on (0-$((${#webcamdetected[@]}-1))) 
-"
-			i=0
-			for (( i=0 ; i <${#webcamdetected[@]};i++)); do 
-				echo $"Choose $i for this webcam:  ${webcamdetected[$i]} "
-
-			done
-				read 
-		
-
-			if [[ -z "$REPLY" ]];then
-				echo $"No answer sorry exiting.."
-				exit
-			else
-				webcamdevice="/dev/"${webcamdetected[$REPLY]}""
-				
-			fi
-			REPLY=""
-			echo
-			fi
+		if [[ -z $webcamdevice  ]]; then  
+			function_detect_webcam
 			 
 		fi 
+		
+		if [[ "$webcamdevice" != "none" ]]; then
 		$binarywebcam -f video4linux2 -i "$webcamdevice" -video_size 320x240
+		else 
+		echo $"sorry i was not able to detect your webcam if you have just plugged one in your computer try to remove old settings "
+		fi
 		;;
 		
 		esac
@@ -543,7 +609,9 @@ DEFAULT_MICROPHONE="hw:0,0"
 DEFAULT_MIC_CHANNEL="1"
 RUNAPPLICATION="off"
 logfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.log"
-
+settingsfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg"
+function_check_program	
+function_load_settings
 args=$@;  i=0
  	if [[ -z $@ ]]; then
 		function_help
@@ -553,9 +621,7 @@ args=$@;  i=0
 		exit 
 	fi
 	
-	function_check_program	
- 
-	function_load_settings
+
  
  	while (( $# )); do 
 	case $1 in 
@@ -584,6 +650,7 @@ args=$@;  i=0
 	exit ;;
  	
 	-d) DEBUG="on"; shift;;
+	-ds) rm "$settingsfile"; shift ;echo $"settings file deleted." ; exit ;;
 	-w) webcamdevice="$2" ; shift 2;;
  
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
