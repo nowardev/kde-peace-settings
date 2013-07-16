@@ -1,100 +1,94 @@
+Copyright (C) 2013 nowardev@gmail.com.
+Permission is granted to copy, distribute and/or modify this document
+under the terms of the GNU Free Documentation License, Version 1.3
+or any later version published by the Free Software Foundation;
+with no Invariant Sections, no Front-Cover Texts, and no Back-Cover Texts.
+A copy of the license is included in the section entitled \"GNU
+Free Documentation License\" here http://www.gnu.org/licenses/fdl-1.3.txt 
+
 
 WHAT IS IT ?
 
-it's a script that translates and makes you hear  the pronunciation using the google translation service,   to work properly you must have an active connection and obviously a player that can be either VLC or mplayer
+it's a script that records your voice with ffmpeg or avconv and it sends to google server to be converted into text.It can even performe some operation like open a browser show your webcam search for stuff on internet for now this function can be used only in english and italian :) 
+
+TROUBLES WITH MIC : 
+
+if you have some problems with the default mic or if you want use the webcam's mic you can set it in this way
+
+-m hw:x,x , the  default one is hw:0,0
+
+where x,x must a set of numbers , you can understand them reading your configuration
+
+#########################################################
+00-00: ALC269VC Analog : ALC269VC Analog : playback 1 : capture 1
+02-00: USB Audio : USB Audio : capture 1
+#########################################################
+
+if you get some problems recording audio just see this file /home/sem/.config/golgu-speechtotext/golgu-speechtotext.log, you could get some problem with ffmpeg \ avcon because some mic require 2 channels some other require 1 channel mono...
 
 INSTALLATION 
 
 you need of  :
 
-vlc or mplayer , gawk html2text iconv  curl fold xclip #klipper for kde 
+ffmpeg or avconv awk 
 
 for debian systems :
 
-        sudo apt-get install mawk coreutils html2text mplayer xclip #  vlc klipper 
+        sudo apt-get install awk ffmpeg #avconv
 
 
 LANGUAGES 
 
-it supports these languages :
+it supports these languages some code could be wrong ... :
 
 af sq ar az eu bn be bg ca zh-CN  zh-TW hr cs da nl en eo et tl fi fr gl ka de el gu Creole iw hi hu is id ga it ja kn ko la lv lt mk ms mt no fa pl pt ro ru sr sk sl es sw sv ta te th tr uk ur vi cy yi
 
 USAGE:
 
-golgu-translate  options  -t  text 
+golgu-speechtotext  <options>  
 
--c : copy translated tex on clipboard , you need of xclip or klipper 
--d:  debug mode on 
--demo : will start a tutorial for this script , you can add even an language code to listen this tutorial in your language : 
--e : open golgu-traslate config file 
+-a : function run applications and commands activated , for keys look down  ...
+-c : set channels , some mic require 2 channels some others require 1 channel to work properly with ffmpeg
+-e : open golgu-speechtotext config file 
 -h : print this help 
--i : input language ,example   example : -i en 
 -l : print languages and exit 
--o: output language , example -o it 
--p : player  :  -p vlc or -p mplayer 
--s : translate and speak , you need of vlc or mplayer
--t : text to translate
+-i : set input language 
 -v : print version and exit 
--ws: write settings on config file located here /home/sem/.config/golgu-translate/golgu-translate.cfg
-
-#####
-DEMO 
-#####
- 
-------------------------
-golgu-translate -demo it 
-------------------------
+-w : set webcam device to use , example : -w /dev/video0
+-ws: write settings on config file located here /home/sem/.config/golgu-speechtotext/golgu-speechtotext.cfg
 
 ########
 EXAMPLES
 ########
+ 
+ 
+ 
+------------------------
+golgu-speechtotext -i en-us 
+------------------------
 
-you can try to translate without set languages , the input language will be set to AUTO and the output to ENGLISH 
+------------------------
+golgu-speechtotext -i en-us -c 
+------------------------
 
-The easiest example :  
+#######################################
+FUNCTIONS RUN APPLICATIONS AND COMMANDS 
+#######################################
 
-------------------------------------
-golgu-translate    text without "" 
-------------------------------------
+this function if activated can run applications and do some stuff ... like open the browser or show your webcam , if you have more than one it will ask you to pick one .. 
 
+------------------------
+golgu-speechtotext -i en-us -a
+------------------------
 
-The most complete example :  
+key words :
 
-
----------------------------------------------------------------------
-golgu-translate -p mplayer -ws  -s -d  -i en -o it   -t  hello World
----------------------------------------------------------------------
-
-
-You can also just type the output language and the text , input language will be set like AUTO 
-
-
-----------------------------------------
-golgu-translate   -o es  -t  hello world
-----------------------------------------
-
-
-#########
-CLIPBOARD 
-#########
-
-----------------------------------------
-golgu-translate -c -t hello world  -o it 
----------------------------------------- 
-
-
-golgu-translate can copy translated text into system's clipboard  with option -c ,  it will work with system with X .  without X this program will not work ,  if you have kde it will copy text into klipper too 
-
-#########
-PIPED USE
-#########
-
-golgu-translate can accept  the input from a pipe   in this way : 
-
----------------------------------------------
- echo hello  | golgu-translate -o fr -t $(cat)
----------------------------------------------
+open browser 
+search for 
+show webcam 
+open text editor
+what time is it 
+suspend computer
 
 fine @.@
 
