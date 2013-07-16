@@ -1,0 +1,51 @@
+#license gpl 
+#This program is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>
+#nowardev 2013 nowardev@gmail.com
+
+DEPENDENCES
+
+
+you need of  :
+
+gawk ffmpeg or avconv
+
+for debian systems :
+
+        sudo apt-get install mawk ffmpeg avconv
+
+
+        put the script on your $HOME/bin 
+
+ INSTALLATION 
+ 
+ 
+if you want get it locally 
+	
+
+	
+if you want install the script in your system just put it on 
+	
+/usr/local/bin 
+
+**safer ^
+
+or if you prefer 
+
+/usr/bin 
+
+If you want just use the script without installation just do this 
+
+(in the folder which  contains the script ..)
+
+chmod +x golgu-speechtotext ; ./golgu-speechtotext -c 1 -i en-us -a 
