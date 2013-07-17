@@ -1,4 +1,4 @@
-#!/bin/bash  
+#!/bin/bash 
 #license gpl 
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -74,14 +74,16 @@ EXAMPLES
 ########
  
  
- 
-------------------------
-golgu-speechtotext -i en-us 
-------------------------
+set input language to english Usa, the default one if not specified ..
 
-------------------------
-golgu-speechtotext -i en-us -c 
-------------------------
+---------------------------
+golgu-speechtotext -i en-us 
+---------------------------
+
+set channel to mono usefull for some mic (logitech)
+--------------------------------
+golgu-speechtotext -i en-us -c 1
+--------------------------------
 
 #######################################
 FUNCTIONS RUN APPLICATIONS AND COMMANDS 
@@ -89,14 +91,14 @@ FUNCTIONS RUN APPLICATIONS AND COMMANDS
 
 this function if activated can run applications and do some stuff ... like open the browser or show your webcam , if you have more than one it will ask you to pick one .. 
 
-------------------------
+-------------------------------
 golgu-speechtotext -i en-us -a
-------------------------
+-------------------------------
 
 key words :
 
 open browser 
-search for 
+search 
 show webcam 
 open text editor
 what time is it 
@@ -317,7 +319,9 @@ test=0
 
 function_detect_mic(){
 
-
+if  [[ $DEBUG == "on" ]] ; then 
+echo $"Loading detect mic function"
+fi 
 i=0
 while read line ;do
 audiocard[$i]="$line"
@@ -357,6 +361,9 @@ REPLY=""
 else
  microphone="${audiocard[0]}"
  fi 
+ if  [[ $DEBUG == "on" ]] ; then 
+echo $"Microphone detected $microphone"
+fi 
 }
 
 
@@ -382,24 +389,31 @@ i=0
 	elif [[ ${#webcamdetected[@]} >1 ]] ; then 
 		echo $"I have detected more than 1 webcam please select on (0-$((${#webcamdetected[@]}-1))) 
 "
-	i=0
-	for (( i=0 ; i <${#webcamdetected[@]};i++)); do 
-		echo $"Choose $i for this webcam:  ${webcamdetected[$i]} "
+		i=0
+		for (( i=0 ; i <${#webcamdetected[@]};i++)); do 
+			echo $"Choose $i for this webcam:  ${webcamdetected[$i]} "
 
-	done
+		done
 		read 
 		
 
-	if [[ -z "$REPLY" ]];then
-		echo $"No answer sorry exiting.."
-		exit
-	else
-		webcamdevice="/dev/"${webcamdetected[$REPLY]}""
+		if [[ -z "$REPLY" ]];then
+			tput setaf 1
+			echo $"No answer sorry exiting.."
+			tput setaf 8
+			exit
+		else
+			webcamdevice="/dev/"${webcamdetected[$REPLY]}""
 		
+		fi
+		REPLY=""
+		echo
+	else
+		webcamdevice="/dev/"${webcamdetected[0]}""
 	fi
-	REPLY=""
-	echo
-	fi
+	if  [[ $DEBUG == "on" ]] ; then 
+		echo $"Detected webcam $webcamdevice"
+	fi 
 }
 
 
@@ -422,6 +436,7 @@ else
 fi 
  }
 function_ask_settings(){
+function_detect_mic
  
 echo $"Choose your language: en-us it fr de a pseudo corret list can be read typing golgu-speechtotext -l PRESS ENTER for en-us"
 read   
@@ -432,6 +447,7 @@ read
         input_lang="$REPLY"
     fi
 REPLY=""
+	
 echo
 
 echo $"Choose how many channels has your mic ? PRESS ENTER FOR 1 or any key for 2 "
@@ -460,7 +476,7 @@ read
 REPLY=""
 echo
 	
-	function_detect_mic
+
 	function_detect_webcam
 	function_save_settings
 	function_load_settings
@@ -483,16 +499,16 @@ function_load_settings(){
 
 function_record(){
 #$1 recording file
-
+rm "$logfile"
 echo $"Recording from $microphone Please press CTRL C to stop recording .... "
 if [[ "$DEBUG" == "on" ]] ; then 
 echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1""
 fi 
 $binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
 
-if [[ -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; then 
+if [[ ! -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; then 
 $binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
-elif [[ -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
+elif [[ ! -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
 $binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
 
 fi 
@@ -513,12 +529,21 @@ wget -q -U "Mozilla/5.0" --post-file "$1" --header "Content-Type: audio/x-flac; 
 
 
 function_display_text(){
+if [[ ! -s "$1" ]]; then 
+tput setaf 1
+echo $"
+Sorry no voice detected ... check mic settings ... maybe mic is not plugged or maybe  channel must be set to 1 or 2 with option -c 1 or -c 2 or your ffmpeg\avcon has some problems 
+
+"
+tput setaf 8
+exit 
+else 
 echo "
 Text Detected: 
 "
 cat "$1"
 echo 
-
+fi 
 }
 
 function_open_programs(){
@@ -563,14 +588,14 @@ for r in "${variable[@]}" ; do
 		 if [[ ! -z $(type golgu-translate) ]];then golgu-translate -s -i $golgu_translate_languagecode -o $golgu_translate_languagecode -t $(date +"%I:%M" ) ;exit ; else date +"%I:%M";  fi 
 		;;
 		"open browser" |"apri browser" )
-		xdg-open 'https://duckduckgo.com/'
+		xdg-open 'https://duckduckgo.com/' & exit
 		;;
 		"open text editor"| "apri editor di testo")
-		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'
+		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
 		;;
 		"search" |"cerca" )
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdg-open 'https://duckduckgo.com/?q='"$question"'&v=n'
+		xdg-open 'https://duckduckgo.com/?q='"$question"'&v=n'& exit
 		;;
 		"show webcam"|"show web cam" |"mostra webcam" | "mostra web cam")
 		if [[ -z $webcamdevice  ]]; then  
@@ -579,9 +604,13 @@ for r in "${variable[@]}" ; do
 		fi 
 		
 		if [[ "$webcamdevice" != "none" ]]; then
-		$binarywebcam -f video4linux2 -i "$webcamdevice" -video_size 320x240
+		$binarywebcam -f video4linux2 -i "$webcamdevice" -video_size 320x240 & exit
 		else 
-		echo $"sorry i was not able to detect your webcam if you have just plugged one in your computer try to remove old settings "
+		tput setaf 1
+		echo $"
+		sorry i was not able to detect your webcam if you have just plugged one in your computer try to remove old settings "
+		tput setaf 8
+		exit
 		fi
 		;;
 		
