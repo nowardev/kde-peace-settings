@@ -40,13 +40,17 @@ if you get some problems recording audio just see this file $logfile, you could 
 
 INSTALLATION 
 
+Put the script in your $HOME/bin or /usr/local/bin or /usr/bin and give it chmod +x 
+
 you need of  :
 
-ffmpeg or avconv awk 
+ffmpeg or avconv awk #minitube chromium  
 
 for debian systems :
 	
-	sudo apt-get install awk ffmpeg #avconv
+	sudo apt-get install awk ffmpeg #avconv minitube chromium-browser
+
+	
 
 
 LANGUAGES 
@@ -61,6 +65,7 @@ golgu-speechtotext  <options>
 
 -a : function run applications and commands activated , for keys look down  ...
 -c : set channels , some mic require 2 channels some others require 1 channel to work properly with ffmpeg
+-ds : delete settings file $HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
 -e : open golgu-speechtotext config file 
 -h : print this help 
 -l : print languages and exit 
@@ -95,7 +100,7 @@ this function if activated can run applications and do some stuff ... like open 
 golgu-speechtotext -i en-us -a
 -------------------------------
 
-key words :
+english  keys :
 
 open browser 
 search 
@@ -103,7 +108,18 @@ show webcam
 open text editor
 what time is it 
 suspend computer
+minitube key 
 
+
+italian keys 
+
+apri browser
+cerca 
+mostra webcam 
+apri editor di testo 
+che ora è
+sospendi computer 
+minitube chiave
 "
 }
 
@@ -436,6 +452,9 @@ else
 fi 
  }
 function_ask_settings(){
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+fi 
 function_detect_mic
  
 echo $"Choose your language: en-us it fr de a pseudo corret list can be read typing golgu-speechtotext -l PRESS ENTER for en-us"
@@ -480,9 +499,15 @@ echo
 	function_detect_webcam
 	function_save_settings
 	function_load_settings
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
 }
 
 function_load_settings(){
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+fi 
 	a="$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg" 
 	if [[  -e "$a"  ]] ; then
 	. "$a"  
@@ -493,12 +518,20 @@ function_load_settings(){
 
 	function_ask_settings
 	fi 
-
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
 }
 
 
 function_record(){
+
 #$1 recording file
+
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+fi 
+
 rm "$logfile"
 echo $"Recording from $microphone Please press CTRL C to stop recording .... "
 if [[ "$DEBUG" == "on" ]] ; then 
@@ -511,6 +544,9 @@ $binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$l
 elif [[ ! -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
 $binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
 
+fi
+if [[ "$DEBUG" == "on" ]]; then
+set +x
 fi 
 }
  
@@ -519,12 +555,14 @@ fi
 function_speechtotext(){
 #$1 file flac to sent to google 
 #$2 language
-if [[ $DEBUG="on" ]] ; then 
-echo "
-wget -q -U \"Mozilla/5.0\" --post-file \"$1\" --header \"Content-Type: audio/x-flac; rate=16000\" -O - \"http://www.google.com/speech-api/v1/recognize?lang=\"$2\"&client=chromium\" | cut -d\" -f12  >\"$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst\""
+if [[ "$DEBUG" == "on" ]]; then
+set -x
 fi 
 
 wget -q -U "Mozilla/5.0" --post-file "$1" --header "Content-Type: audio/x-flac; rate=16000" -O - "http://www.google.com/speech-api/v1/recognize?lang="$2"&client=chromium" | cut -d\" -f12  >"$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst"
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
 }
 
 
@@ -544,13 +582,17 @@ Text Detected:
 cat "$1"
 echo 
 fi 
+ 
 }
 
 function_open_programs(){
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+fi 
  
-enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "open link" "select all" "copy text" "paste text" "delete text" "what time is it" "search" )
+enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "apri link" "seleziona tutto" "copia testo" "incolla testo" "cancella testo" "che ora" "cerca"  )
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" )
 
 case "$language_open_browser" in 
 "en-us"|"en"| "en-gb")
@@ -574,10 +616,16 @@ for r in "${variable[@]}" ; do
 
 	if [[ ! -z "$(grep -i "$r"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then
 		if [[ "$DEBUG" == "on" ]]; then
-		echo "running function launch application and run command : grep -i "$r"   \"$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst\""
+ 		set -x
 		fi 
 		case $r in 
-		
+		"type" | "digita")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		xdotool type "$question"
+		;;
+		"show menu" | "mostra menu") if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi 
+		;;
+		#if [[ ! -z "$(grep -i "type" | "digita"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then xdotool type "$(awk 'n=index($0,"digita"){print substr($0,n+1)}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" ; fi ;
 		"suspend computer"|"sospendi computer")
 		dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
 		;;
@@ -593,6 +641,21 @@ for r in "${variable[@]}" ; do
 		"open text editor"| "apri editor di testo")
 		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
 		;;
+		"minitube")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		minitube  "$question" & exit
+		;;
+		"youtube")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		
+		xdg-open 'http://www.youtube.com/results?search_query='"$question" & exit
+		;; 
+		"search image"| "cerca immagin")
+		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		
+		xdg-open 'https://www.google.it/search?&um=1&ie=UTF-8&hl=en&tbm=isch&source=og&q='"$question" & exit
+		;;
+		
 		"search" |"cerca" )
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
 		xdg-open 'https://duckduckgo.com/?q='"$question"'&v=n'& exit
@@ -621,7 +684,9 @@ for r in "${variable[@]}" ; do
 
 
 done
-
+		if [[ "$DEBUG" == "on" ]]; then
+ 		set +x
+		fi 
 
 
  
@@ -630,7 +695,7 @@ done
 # rm mic.flac  > /dev/null 2>&1
 
 
-VERSION="0.0.2"
+VERSION="0.0.3"
 DEVELOPER="nowardev@gmail.com"
 DEBUG="off"
 DEFAULT_INPUT_LANG="en-us"
@@ -641,14 +706,14 @@ logfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.log"
 settingsfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg"
 function_check_program	
 function_load_settings
-args=$@;  i=0
- 	if [[ -z $@ ]]; then
-		function_help
-		echo 
-		echo $"err : need some input :S
-		"
-		exit 
-	fi
+# args=$@;  i=0
+#  	if [[ -z $@ ]]; then
+# 		function_help
+# 		echo 
+# 		echo $"err : need some input :S
+# 		"
+# 		exit 
+# 	fi
 	
 
  
@@ -681,6 +746,7 @@ args=$@;  i=0
 	-d) DEBUG="on"; shift;;
 	-ds) rm "$settingsfile"; shift ;echo $"settings file deleted." ; exit ;;
 	-w) webcamdevice="$2" ; shift 2;;
+	-log) cat "$logfile";exit ;  shift ;; 
  
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
 	-ws) SAVESETTINGS="on"; shift ;;
@@ -704,10 +770,6 @@ if [[ !  -d "$directory"  ]] ; then
 	mkdir "$directory" 
 	
 fi
-
-
-
-
 
 
 if [[ -z "$input_lang" ]]; then 
