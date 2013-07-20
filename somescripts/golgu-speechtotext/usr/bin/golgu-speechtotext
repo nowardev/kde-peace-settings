@@ -543,7 +543,45 @@ if [[ ! -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; th
 $binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
 elif [[ ! -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
 $binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
+elif [[ ! -z  "$( awk '/Device or resource busy/{print}' "$logfile")" ]] ; then 
+tput setaf 1
+echo $"
+ERROR EXITING : 
 
+Device or resource busy
+
+some application is using your mic please kill it ,lsof | grep pcm should tell you which application is using your mic so you can kill it using the PID , or  you could restart alsa with this command :
+
+sudo alsa force-reload
+
+"
+tput setaf 8
+exit
+elif  [[ ! -z  "$( awk '/cannot open audio device/{print}' "$logfile")" ]] ; then 
+tput setaf 1
+echo $"
+ERROR EXITING 
+cannot open audio device SETTINGS ARE CORRECT? it seems system doens't recognize your card this could be due to a temp problem , expecially with usb cards or maybe the driver doesn't work properly
+
+try to reload alsa driver with this 
+
+sudo alsa force-reload
+
+try to remove your usb audio card \ webcam microphone and plug in it again 
+
+load an older kernel 
+
+:) if doens't work your settings could be wrong run this 
+
+cat $logfile
+
+settings i have used to record ... 
+
+$binary  -f  alsa  -ac 1 -$channel $microphone -ar 16000 -acodec flac -vn -y "$1"  
+
+"
+tput setaf 8
+exit 
 fi
 if [[ "$DEBUG" == "on" ]]; then
 set +x
