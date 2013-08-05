@@ -16,100 +16,306 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version="0.0.3"
-license="GPLv3"
-developer="nowardev@gmail.com"
-config="$HOME/.showebkam"
-
-if [[  "$1" ==  d ]] ; then  rm "$config" ; fi 
-if [[  "$1" ==  h ]] ; then echo "
-$version $license $developer
 
 
-Usage: showebkam <option>
+
+function_help() {
+
+echo "
+version : $1 developer : $2  license : $3 
+
+
+
+
+
+Usage: showebkam <options>
 
 example :
 
-showebkam d                         remove your config file located here $config
+showebkam -b /usr/bin/ffplay	:set the path for ffplay or avplay 
+showebcam -d			:enable debug mode
+showebkam -ds			:remove your config file located here $settingsfile
+showebkam -e			:edit the config file $settingsfile
+showebkam -log			:show the logfile  $logfile 
+showebkam -w video1 		:set webcam 1 , you can get the list of your webcams typing ls /dev | grep video
+showebkam -ws			:write settings in the $settingsfile
+showebkam -vs 320x240		:set the video size for your webcam 
+showebkam -v			:show the version and exit 
+showebkam -h			:print this help 
 
-showebkam h                         print this help 
+showebkam 
 
 "
-exit
+
+}
+
+function_save_settings(){
+
+#$1 directory where config are stored
+#$2 file where you should save configs 
+if [[ !  -d "$1"  ]] ; then
+	mkdir "$1"
+else
+ 
+	echo "device=\"$device\"" > "$2" 
+	echo "resolution=\"$resolution\"" >> "$2"
+	echo "binary=\"$binary\"" >> "$2"
+
 fi 
+ }
+
+
+ 
+function_load_settings(){
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+fi 
+	a="$settingsfile" 
+	if [[  -e "$a"  ]] ; then
+	echo $"file $settingsfile exist loading configs"
+	. "$a"  
+	echo $"Done"
+		if [[ -z "$device" || -z "$resolution" || -z "$binary" ]] ; then 
+		
+		kdialog --passivepopup  $"File $settingsfile is not written well or it's empty now i will regenerate it..."  
+		function_ask_settings
+		fi 
+	else 
+
+	function_ask_settings
+	fi 
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
+}
+
+
+
+function_ask_settings(){
+
+function_detect_ffplay
+function_detect_webcams
+
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+
+fi
+
+
+
+	device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
+	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
+	binary="$(kdialog --textinputbox $"FFplay or AVplay path"  "$binary")"
+	
+function_save_settings "$directory" "$settingsfile"
+
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
+
+}
+
+
+
+ 
+
+
+function_detect_ffplay(){
 
 if [[ -z "$(type -p ffplay)" ]] ; then 
 	if [[ -z "$(type -p avplay)" ]] ; then  kdialog --passivepopup $"FFplay or AVplay is not present in your system please install it "; else binary="$(type -p avplay)" ; fi  
 		else 
 			binary="$(type -p ffplay)"
 		fi 
-
-a=0 ; while read line ; do  webcams[$a]="$line" ;  echo $"Detected Webcams: /dev/$line" ; a=$(($a+1)); done< <(ls /dev/ | grep video)
-	
+ }
  
+ 
+function_detect_webcams(){
+echo $"Detected Webcams:
+"
+a=0 ; while read line ; do  webcams[$a]="$line" ;  echo $" /dev/$line" ; a=$(($a+1)); done< <(ls /dev/ | grep video)
+echo "
 
-if [[ ! -e "$config" ]]; then 
-	device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
-	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
-	echo "device: $device
-resolution: $resolution	" >"$config"
-	kdialog --passivepopup $"Configs saved in $config"
-	else
-	device="$(awk -F':' '/device:/{gsub(/ /,"") ; print $2}'  "$config" )"
-	resolution="$(awk -F':' '/resolution:/{gsub(/ /,"") ; print $2}' "$config")"
+Remember to specify only video0 or video1 and not all the path(/dev/video0) here it is for example : 
+
+showebkam -w ${webcams[0]}
+"
+
+# echo "Detected webcams: "
+# 
+# for web in $webcams[@] ; do 
+# echo "/dev/"
+}
+ 
+function_check_program(){
+
+requiresome[0]="ffplay"
+requiresome[1]="avplay"
+
+test=0
+for program in "${requiresome[@]}"; 
+do if ! type -p "$program" >/dev/null; then 
+test=$(($test+1))
+ 
 fi 
 
-	
-	
-	
-if [[ -z "$device" || -z "$resolution" ]]; then echo  $"File $config is not written well ..."  ;exit 1 ;  fi 
-	
-	
-	
-	
-	
-if [[ !  -z   "$(ls /dev/ | grep video)" ]]; then 
+done
+
+if [[ "$test" = 2 ]]; then 
+		echo "avplay and ffplay not found; PLEASE INSTALL IT , you can install avconv or ffmpeg" >&2
+ 		echo "For debian : sudo apt-get install ffmpeg #avconv  "
+fi 
 
 
+if [[ -z   "$(ls /dev/ | grep video)" ]]; then
+kdialog --title $"ShoWebKam" --error  $"Your WebCam seems to be unplugged , if not it's a driver issue "
+exit 1
+fi 
+}
+
+function_showebkam(){
 
 
-	if [[ -z "$device" || -z "$resolution" ]]; then kdialog --passivepopup $"Exiting ... device or resolution is empty"; exit 1 ;  fi 
-
+if [[ "$DEBUG" == "on" ]]; then
+set -x
 	echo "
 $version $license $developer
 
 detected webcams ${webcams[@]}
 resolution $resolution
-binary $binary 
+binary $binary "
 
-Usage: showebkam <option>
+fi
 
-example :
 
-showebkam d                         remove your config file located here $config
 
-showebkam h                         print this help 
 
-"
-
-	if [[ -e /tmp/showebkam.log ]] ; then  rm /tmp/showebkam.log; fi 
-	$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> /tmp/showebkam.log
-
-	if [[ ! -z "$(grep -i err /tmp/showebkam.log )" ]] ; then kdialog --passivepopup $"Error ... Driver error ? Config error ? please read this file /tmp/showebkam.log you can try to remove $config running in terminal showebkam d "
-	kdialog --yesno $"you get an error...  would you try to reset your configs   ?"
+	echo "	$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution""> "$logfile"
+	$binary -f video4linux2 -i "/dev/$device" -video_size "$resolution" 2>> "$logfile"
 	
-		if [[ "$?" == 0 ]] ; then 
-			showebkam d
-		fi 
-	fi
+	
+if [[ "$DEBUG" == "on" ]]; then
+set +x
 
+fi
+
+}
+
+
+function_check_error(){
+
+
+# case 
+# 
+# esac 
+if [[ "$DEBUG" == "on" ]] ;then 
+notifywith="kdialog --title ShoWebKam --passivepopup"
 else
-	kdialog --title $"My App Title"  --sorry  $"ls /dev/ | grep video
+notifywith="echo"
+fi
+	
+# 	echo $"function check error activated"
 
-has given no output. Plug in your webcam?
+	if [[ ! -z "$(grep -i err "$logfile" )" || ! -z  "$(grep -i "Cannot open video device" "$logfile" )"   ]] ; then
+		if [[ ! -z  "$(grep -i "Cannot open video device" "$logfile" )" ]] ; then 
+			$notifywith $"Cannot open video device , are you sure your webcam is plugged ? if yes you can try to remove $settingsfile running in terminal showebkam -ds "
+		
+		elif [[ ! -z "$(grep -i err "$logfile" )" ]] ; then 
+		
+			$notifywith $"Error ... Driver error ? Config error ? please read this file $logfile you can try to remove $settingsfile running in terminal showebkam -ds "
+		fi 
+		
+		if [[ "$DEBUG" == "off" ]] ;then 
+			echo $"you get an error...  would you try to reset your configs  (y\n) ?"
+			read 
+		
+			testvariable="$REPLY" 
+				case "$testvariable" in
+
+				[y/Y]|[-y/-Y]|[y/Y][e/E][s/S])
+				rm "$settingsfile"
+				;;
+
+				[n/N]|[n/N][o/O])
+				echo $"there is an error... please check $logfile exiting"
+				exit 
+				;;
+				esac
+		else 
+		
+			kdialog --title ShoWebKam --yesno  $"you get an error...  would you try to reset your configs   ?"
 	
-if you already did it  and you got this message it means your webcam can't be handle from your kernel or you have not installed a proper driver"
-	exit 
+			if [[ "$?" == 0 ]] ; then 
+				rm "$settingsfile"
+				kdialog --passivepopup $"deleted  $settingsfile"
+			exit
+			fi 
+		fi
+
+	fi
 	
+
+ 
+
+}
+ 
+version="0.0.4"
+license="GPLv3"
+developer="nowardev@gmail.com"
+settingsfile="$HOME/.config/showebkam/.showebkam"
+directory="$HOME/.config/showebkam/"
+logfile="/tmp/showebkam.log"
+SAVESETTINGS="off"
+	
+function_load_settings
+ 
+ 	while (( $# )); do 
+	case $1 in 
+	-h|--help|-\?) function_help $version $developer $license ; exit 0;;
+
+
+	-e) 
+	echo $"type your terminal editor , nano vim kate gedit etc..press enter for nano"
+	read   
+	
+	if [[ -z "$REPLY" ]];then
+		nano "$settingsfile"
+	else
+		$REPLY "$settingsfile"
+	fi
+ 
+	exit ;;
+ 	
+	-d) DEBUG="on"; shift;;
+	-dw)function_detect_webcams ; exit ;;
+	-b)binary="$2" ; shift 2 ;; 
+	 
+	-ds) rm "$settingsfile"; shift ;echo $"settings file deleted." ; exit ;;
+	-w) device="$2" ; shift 2;;
+	-log) cat "$logfile";exit ;  shift ;; 
+ 
+  
+	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
+	-vs)resolution="$2" ; shift 2 ;;
+	-ws) SAVESETTINGS="on"; shift ;;
+ 
+	*) args+=( "$1" ); shift ;;
+		
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	-*) echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	esac
+	done
+	
+	
+function_check_program
+function_showebkam
+
+if [[ "$SAVESETTINGS" == "on" ]] ; then 
+function_save_settings "$directory" "$settingsfile"
 fi 
 
+ 
+function_check_error
+ 
+
+ 
