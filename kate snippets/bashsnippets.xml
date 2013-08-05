@@ -14,6 +14,17 @@ fi </fillin>
  </item>
  <item>
   <displayprefix></displayprefix>
+  <match>eof</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>"(_EOF
+"${cursor}$mystring"
+_EOF
+)"
+</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
   <match>check_if_empty</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
