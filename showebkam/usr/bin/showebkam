@@ -175,11 +175,12 @@ fi
 
 function_showebkam(){
 
+function_detect_webcams
 
 if [[ "$DEBUG" == "on" ]]; then
 set -x
 	echo "
-$version $license $developer
+$VERSION $LICENSE $DEVELOPER
 
 detected webcams ${webcams[@]}
 resolution $resolution
@@ -259,9 +260,9 @@ fi
 
 }
  
-version="0.0.4"
-license="GPLv3"
-developer="nowardev@gmail.com"
+VERSION="0.0.5"
+LICENSE="GPLv3"
+DEVELOPER="nowardev@gmail.com"
 settingsfile="$HOME/.config/showebkam/.showebkam"
 directory="$HOME/.config/showebkam/"
 logfile="/tmp/showebkam.log"
@@ -271,7 +272,7 @@ function_load_settings
  
  	while (( $# )); do 
 	case $1 in 
-	-h|--help|-\?) function_help $version $developer $license ; exit 0;;
+	-h|--help|-\?) function_help $VERSION $DEVELOPER $LICENSE; exit 0;;
 
 
 	-e) 
@@ -295,7 +296,7 @@ function_load_settings
 	-log) cat "$logfile";exit ;  shift ;; 
  
   
-	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
+	-v) echo version $VERSION  developer $DEVELOPER license $LICENSE; exit  ; shift;;
 	-vs)resolution="$2" ; shift 2 ;;
 	-ws) SAVESETTINGS="on"; shift ;;
  
