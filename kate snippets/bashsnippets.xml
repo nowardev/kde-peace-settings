@@ -427,6 +427,102 @@ name="${name%%.*}"     # remove extensions like .ogg .ogv .txt</fillin>
  </item>
  <item>
   <displayprefix></displayprefix>
+  <match>function_save_settings</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>function_save_settings(){
+
+#$1 directory where config are stored
+#$2 file where you should save configs 
+if [[ !  -d "$1"  ]] ; then
+	mkdir "$1"
+else
+ 
+	echo "device=\"$device\"" > "$2" 
+	echo "resolution=\"$resolution\"" >> "$2"
+	echo "binary=\"$binary\"" >> "$2"
+
+fi 
+ }</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>function_load_settings</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>function_load_settings(){
+	  
+#$1 is the file where are stored your settings that should be saved in this way : echo "input_lang=\"$input_lang\"" > "$file_where_to_store_settings"  
+
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+fi 
+	a="$1" 
+	if [[  -e "$a"  ]] ; then
+	. "$a"  
+		if [[ -z $somevariable ]] ; then 
+		function_ask_settings
+		fi 
+	else 
+
+	function_ask_settings
+	fi 
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
+}</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>function_save_settings</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>function_save_settings(){
+
+#$1 directory where config are stored
+#$2 file where you should save configs 
+if [[ !  -d "$1"  ]] ; then
+	mkdir "$1"
+else
+ 
+	echo "device=\"$device\"" > "$2" 
+	echo "resolution=\"$resolution\"" >> "$2"
+	echo "binary=\"$binary\"" >> "$2"
+
+fi 
+ }</fillin>
+ </item>
+ <item>
+  <displayprefix></displayprefix>
+  <match>function_ask_settings</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>function_ask_settings(){
+
+#function_detect_ffplay
+#function_detect_webcams
+
+if [[ "$DEBUG" == "on" ]]; then
+set -x
+
+fi
+
+
+
+	device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
+	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
+	binary="$(kdialog --textinputbox $"FFplay or AVplay path"  "$binary")"
+	
+function_save_settings "$directory" "$settingsfile"
+
+if [[ "$DEBUG" == "on" ]]; then
+set +x
+fi 
+
+}</fillin>
+ </item> 
+ <item>
+  <displayprefix></displayprefix>
   <match>kmsg</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
