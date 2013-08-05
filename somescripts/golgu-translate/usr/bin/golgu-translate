@@ -44,8 +44,9 @@ golgu-translate  options  -t  text
 
 -c : copy translated tex on clipboard , you need of xclip or klipper 
 -d:  debug mode on 
--demo : will start a tutorial for this script , you can add even an language code to listen this tutorial in your language : 
+-demo : will start a tutorial for this script , you can add even an language code to listen this tutorial in your language 
 -e : open golgu-traslate config file 
+-f : open a text file , just a normal txt 
 -h : print this help 
 -i : input language ,example   example : -i en 
 -l : print languages and exit 
@@ -83,9 +84,14 @@ The most complete example :
 
 
 ---------------------------------------------------------------------
-golgu-translate -p mplayer -ws  -s -d  -i en -o it   -t  hello World
+golgu-translate -c -p mplayer -ws  -s -d  -i en -o it   -t  hello World
 ---------------------------------------------------------------------
 
+reading from a file: 
+
+---------------------------------------------------------------------
+golgu-translate -f /var/log/dmesg
+---------------------------------------------------------------------
 
 You can also just type the output language and the text , input language will be set like AUTO 
 
@@ -112,9 +118,9 @@ PIPED USE
 
 golgu-translate can accept  the input from a pipe   in this way : 
 
----------------------------------------------
- echo hello  | golgu-translate -o fr -t \$(cat)
----------------------------------------------
+-------------------------------------------------
+ echo hello  | golgu-translate -s -o fr -t \$(cat)
+-------------------------------------------------
 
 fine @.@
 "
@@ -288,10 +294,15 @@ zu          Zulu
 	 done 
 }
 
+ 
+
+
 function_play_translated_text(){
 	
 	#$1 The output language  
 	#$2 it's the text already translated'
+	
+	
 	
 	if [[ ! -z "$1" || ! -z "$2" ]]; then
 		
@@ -305,28 +316,43 @@ link :  \"http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2\"
 "
 		fi 
 		
-		i=0
 		
-while read line ; do 
-	arr[$i]="$line"
-	i=$(($i+1))
 
-done< <(fold -w97 -s <<<"$2") #split text every 97 char
+###split text in lines replacing , - and . with a new line 
+j=0
+while read line ;do
+	arrayA[$j]="$line"
+	j=$(($j+1))
+
+done< <(awk '{ gsub(/[.,] |-/,"\n"); print}' << _EOF
+$2
+_EOF
+)
  
  
-
- for (( c=0; c<=${#arr[@]}; c++ )); do 
-	 $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arr[$c]}" >/dev/null  2>&1
-	 done   
-		
-		
-		
-		
-		
-		  
+ 
+#now split lines every 97 char to be sure to be played infact google free stuff has 97 char like limit
+i=0
+for r in "${arrayA[@]}" ; do
 			
-	 
-			 
+	while read line ; do 
+		arrayB[$i]="$line"
+		i=$(($i+1)) 
+	done< <(fold -w97 -s <<< "$r")
+
+done
+ 
+#  for r in "${arrayB[@]}" ; do
+# echo "$r" >>/tmp/stored
+# done 
+ 
+ 
+ 
+#PLAY THE TEXT WITH THE PLAYER 
+ for (( c=0; c<=${#arrayB[@]}; c++ )); do 
+	 $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arrayB[$c]}" >/dev/null  2>&1
+	 done   
+
 	else
 		echo $"Error exiting this function should be work in this way :
 		function_play_translated_text <outlanguage> <text-in-output-language>
@@ -470,7 +496,7 @@ DEFAULT_INPUT_LANG="auto"
 DEFAULT_OUTPUT_LANG="en"
 DEFAULT_PLAYER="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
 DEFAULT_PLAYER_ALTERNATE="mplayer -user-agent Mozilla"
-VERSION="0.0.5"
+VERSION="0.0.6"
 DEVELOPER="nowardev@gmail.com"
 CLIPBOARD="off"
 
@@ -530,6 +556,7 @@ demotext=(   "Hello this is the demo function. it will help you to use this scri
 	-o )output_lang="$2"; shift 2 ;; 	
 	-d) DEBUG="on"; shift;;
 	-demo)  DEBUG="on";  input_lang=en ;  output_lang=$2 ; if [[ -z $output_lang ]]; then output_lang=en; fi  ;   function_demo $output_lang ; exit 0 ;;
+	-f) text="$(cat "$2")" ; shift 2;;
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
 	-ws) SAVESETTINGS="on"; shift ;;
 	-p)if [[ "$2" == "vlc" || "$2" == "cvlc" && ! -z "$(type "$2" )"  ]] ; then player="$DEFAULT_PLAYER" ; elif [[ "$2" == "mplayer" && ! -z "$(type "$2")"   ]]; then player="$DEFAULT_PLAYER_ALTERNATE"  ; else echo $"Sorry no player found please install mplayer or vlc... exiting ";player="$DEFAULT_PLAYER" ; exit 2  ; fi ; shift 2 ;;  
