@@ -15,14 +15,38 @@
 #nowardev 2013 nowardev@gmail.com
 #
 
+#keys
+
+enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track")
+
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" "traduci" "apri file manager" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" )
+
+function_show_keys(){
+echo "english keys
+
+${enus[@]}
+
+italian keys 
+
+${it[@]}
+"
+}
 
 function_help(){
 
 echo  $"  
+
 	
 WHAT IS IT ?
 
 it's a script that records your voice with ffmpeg or avconv and it sends to google server to be converted into text.It can even performe some operation like open a browser show your webcam search for stuff on internet for now this function can be used only in english and italian :) 
+
+WHY ?
+
+for my own fun 
+because programming for me it's an hobby and a relax time 
+i hate  repetitive works like this shit: open folder and select all put them in vlc and click play :D this is shit wtf!, ah playlist ... well i put my music in the folder music and so... i want all my playlist it's all the folder :D
+
 
 TROUBLES WITH MIC : 
 
@@ -48,7 +72,7 @@ ffmpeg or avconv awk #minitube chromium
 
 for debian systems :
 	
-	sudo apt-get install awk ffmpeg #avconv minitube chromium-browser
+	sudo apt-get install awk ffmpeg #avconv minitube mplayer or vlc
 
 	
 
@@ -68,8 +92,11 @@ golgu-speechtotext  <options>
 -ds : delete settings file $HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
 -e : open golgu-speechtotext config file 
 -h : print this help 
--l : print languages and exit 
+-k : show keys 
 -i : set input language 
+-l : print languages and exit 
+-s : play text 
+-t : example -t 3  will record only 3 seconds then will process your voice
 -v : print version and exit 
 -w : set webcam device to use , example : -w /dev/video0
 -ws: write settings on config file located here $HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
@@ -103,25 +130,46 @@ golgu-speechtotext -i en-us -a
 english  keys :
 
 open browser 
+open link
+open file manager
 search 
 show webcam 
 open text editor
 what time is it 
 suspend computer
-minitube key 
+minitube key
+type
+open folder documents
+open folder download
+open folder pictures
+open folder music
+open folder videos
+open folder public
 
 
 italian keys 
 
 apri browser
+apri cartella documenti
+apri cartella download
+apri cartella foto
+apri cartella musica
+apri cartella video
+apri cartella pubblica
+apri link
+apri file manager
 cerca 
+digita
 mostra webcam 
 apri editor di testo 
 che ora è
 sospendi computer 
 minitube chiave
+
+
 "
 }
+
 
 function_print_languages(){
 echo $"This is a language table : IT COULD BE NOT SO GOOD ... "
@@ -328,8 +376,30 @@ fi
 
 test=0
  
-  
+knownplayer[0]=mplayer
+knownplayer[1]=vlc
+
+for program in "${knownplayer[@]}"; 
+do if ! type -p "$program" >/dev/null; then 
+test=$(($test+1)) ; else player="$program"; break
  
+fi 
+
+done
+
+if [[ "$test" = 2 ]]; then 
+		echo "$program not found; PLEASE INSTALL IT" >&2
+ 		echo "For debian : sudo apt-get install ${knownplayer[@]}  "
+fi 
+
+if [[ "$player" == "mplayer" ]] ; then 
+player="mplayer -user-agent Mozilla"
+elif [[ "$player" == "vlc" ]] ; then 
+player="cvlc --http-user-agent=Mozilla/5.0 --play-and-exit"
+else
+echo $"Error no player please install or vlc or mplayer or modify this script ;)"
+exit
+fi 
 	
 }
 
@@ -434,6 +504,56 @@ i=0
 
 
 
+function_play_translated_text(){
+	
+	#$1 The output language  
+	#$2 it's the text already translated'
+	
+	if [[ ! -z "$1" || ! -z "$2" ]]; then
+		
+		if [[ "$DEBUG" == on ]]; then 
+echo "
+
+function debug play_translated 
+
+Player selected : $player 
+link :  \"http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=$2\"
+"
+		fi 
+		
+		i=0
+		
+while read line ; do 
+	arr[$i]="$line"
+	i=$(($i+1))
+
+done< <(fold -w97 -s <<<"$2") #split text every 97 char
+ 
+ 
+
+ for (( c=0; c<=${#arr[@]}; c++ )); do 
+	 $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arr[$c]}" >/dev/null  2>&1
+	 done   
+		
+		
+		
+		
+		
+		  
+			
+	 
+			 
+	else
+		echo $"Error exiting this function should be work in this way :
+		function_play_translated_text <outlanguage> <text-in-output-language>
+		"
+		exit 1
+		
+	fi 
+# 	exit 0
+}
+
+
 function_save_settings(){
 
 directory="$HOME/.config/golgu-speechtotext" 
@@ -524,6 +644,10 @@ fi
 }
 
 
+function_record_sox(){
+
+rec   -c $channel -t alsa  $microphone -r 16000 "$1"  silence 1 0.1 3% $seconds 3.0 3%  2>>"$logfile" 
+}
 function_record(){
 
 #$1 recording file
@@ -532,20 +656,33 @@ if [[ "$DEBUG" == "on" ]]; then
 set -x
 fi 
 
-rm "$logfile"
-echo $"Recording from $microphone Please press CTRL C to stop recording .... "
-if [[ "$DEBUG" == "on" ]] ; then 
-echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1""
-fi 
-$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
+#if [[ ! -z ]] ; then  sleep "$timer" ; killall -INT $pid ; fi 
 
-if [[ ! -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; then 
-$binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
-elif [[ ! -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
-$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>"$logfile" 
-elif [[ ! -z  "$( awk '/Device or resource busy/{print}' "$logfile")" ]] ; then 
-tput setaf 1
-echo $"
+
+rm "$logfile"
+
+if [[ $TIMER == "off" ]] ; then 
+	echo $"Recording from $microphone Please press CTRL C to stop recording .... "
+	if [[ "$DEBUG" == "on" ]] ; then 
+		echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1""
+	fi 
+
+
+	echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1"
+" > "$logfile" 
+$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile"  
+
+	if [[ ! -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; then 
+		echo "$binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1"  
+" > "$logfile" 
+		$binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile"  
+	elif [[ ! -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
+		echo "$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1"
+">"$logfile"
+		$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile" 
+	elif [[ ! -z  "$( awk '/Device or resource busy/{print}' "$logfile")" ]] ; then 
+		tput setaf 1
+		echo $"
 ERROR EXITING : 
 
 Device or resource busy
@@ -555,11 +692,11 @@ some application is using your mic please kill it ,lsof | grep pcm should tell y
 sudo alsa force-reload
 
 "
-tput setaf 8
-exit
-elif  [[ ! -z  "$( awk '/cannot open audio device/{print}' "$logfile")" ]] ; then 
-tput setaf 1
-echo $"
+	tput setaf 8
+	exit
+	elif  [[ ! -z  "$( awk '/cannot open audio device/{print}' "$logfile")" ]] ; then 
+		tput setaf 1
+		echo $"
 ERROR EXITING 
 cannot open audio device SETTINGS ARE CORRECT? it seems system doens't recognize your card this could be due to a temp problem , expecially with usb cards or maybe the driver doesn't work properly
 
@@ -580,12 +717,101 @@ settings i have used to record ...
 $binary  -f  alsa  -ac 1 -$channel $microphone -ar 16000 -acodec flac -vn -y "$1"  
 
 "
-tput setaf 8
-exit 
-fi
+	tput setaf 8
+		exit 
+	fi
+
+
+	
+	
+	
+else 
+	echo $"Recording from $microphone timer on $time .... "
+
+	if [[ "$DEBUG" == "on" ]] ; then 
+		echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1""
+	fi 
+
+
+	echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1"
+" > "$logfile" 
+$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile"  &  pid="$!" 
+
+	if [[ ! -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; then 
+		echo "$binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1"  
+" > "$logfile" 
+		$binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile"  &  pid="$!" 
+	elif [[ ! -z "$( awk '/cannot set channel count to 2/{print}' "$logfile")"  ]]; then 
+		echo "$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1"
+">"$logfile"
+		$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile" &  pid="$!" 
+	elif [[ ! -z  "$( awk '/Device or resource busy/{print}' "$logfile")" ]] ; then 
+		tput setaf 1
+		echo $"
+ERROR EXITING : 
+
+Device or resource busy
+
+some application is using your mic please kill it ,lsof | grep pcm should tell you which application is using your mic so you can kill it using the PID , or  you could restart alsa with this command :
+
+sudo alsa force-reload
+
+"
+	tput setaf 8
+	exit
+	elif  [[ ! -z  "$( awk '/cannot open audio device/{print}' "$logfile")" ]] ; then 
+		tput setaf 1
+		echo $"
+ERROR EXITING 
+cannot open audio device SETTINGS ARE CORRECT? it seems system doens't recognize your card this could be due to a temp problem , expecially with usb cards or maybe the driver doesn't work properly
+
+try to reload alsa driver with this 
+
+sudo alsa force-reload
+
+try to remove your usb audio card \ webcam microphone and plug in it again 
+
+load an older kernel 
+
+:) if doens't work your settings could be wrong run this 
+
+cat $logfile
+
+settings i have used to record ... 
+
+$binary  -f  alsa  -ac 1 -$channel $microphone -ar 16000 -acodec flac -vn -y "$1"  
+
+"
+	tput setaf 8
+		exit 
+	fi
+fi 
+
+
 if [[ "$DEBUG" == "on" ]]; then
 set +x
 fi 
+
+if [[ "$TIMER" == "on" ]] ; then 
+ 
+testvariable="$time"
+
+
+	if [[ -z "$testvariable" ]]; then
+		echo $"you need to specify a time to stop recording with option -t exiting ... err no time set" 2>>"$logfile"
+		exit 1
+
+	elif  [[ "$testvariable" != *[!0-9]*  ]] ;then
+    
+		sleep "$time" && killall -INT "$binary" 2>>"$logfile"
+    
+	else
+		echo  $"your variable is not a number ...you have written "\" $testvariable \"" " 2>>"$logfile"
+		exit 2
+    
+	fi 
+fi 
+
 }
  
  
@@ -608,8 +834,14 @@ function_display_text(){
 if [[ ! -s "$1" ]]; then 
 tput setaf 1
 echo $"
-Sorry no voice detected ... check mic settings ... maybe mic is not plugged or maybe  channel must be set to 1 or 2 with option -c 1 or -c 2 or your ffmpeg\avcon has some problems 
 
+
+cat "$logfile"
+
+$(cat "$logfile")
+
+
+Sorry no voice detected ... check mic settings ... maybe mic is not plugged or maybe  channel must be set to 1 or 2 with option -c 1 or -c 2 or your ffmpeg\avcon has some problems check the log 
 "
 tput setaf 8
 exit 
@@ -628,17 +860,15 @@ if [[ "$DEBUG" == "on" ]]; then
 set -x
 fi 
  
-enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" )
 
 case "$language_open_browser" in 
 "en-us"|"en"| "en-gb")
-golgu_translate_languagecode="en"
+golgu_speak_languagecode="en"
 variable=("${enus[@]}")
 ;;
 "it")
-golgu_translate_languagecode="it"
+golgu_speak_languagecode="it"
 variable=("${it[@]}")
 ;;
 
@@ -659,7 +889,7 @@ for r in "${variable[@]}" ; do
 		case $r in 
 		"type" | "digita")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdotool type "$question"
+		xdotool type "$question" 
 		;;
 		"show menu" | "mostra menu") if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi 
 		;;
@@ -671,13 +901,93 @@ for r in "${variable[@]}" ; do
 # 		dbus-send --print-reply --system --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Shutdown /usr/lib/x86_64-linux-gnu/qt4/bin/qdbus --system org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 # 		;;
 		"what time is it" |"che ora" )
-		 if [[ ! -z $(type golgu-translate) ]];then golgu-translate -s -i $golgu_translate_languagecode -o $golgu_translate_languagecode -t $(date +"%I:%M" ) ;exit ; else date +"%I:%M";  fi 
+		
+		date="$(date +"%I:%M" )"
+		echo "$date" 
+		function_play_translated_text "$golgu_speak_languagecode"  "$date" 
+		
+		exit
 		;;
 		"open browser" |"apri browser" )
 		xdg-open 'https://duckduckgo.com/' & exit
 		;;
+		"open link" |"apri link" )
+		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		http="$(awk '/http:\/\//{print}' <<_EOF
+"$question"
+_EOF
+)"
+		if [[ -z $http  ]] ; then question="http://""$question"; fi 
+ 
+		xdg-open $question & exit
+		;;
+		"apri file manager"| "open file manager") #xdotool   search --class dolphin   key ctrl+a
+		xdg-open "$HOME" & exit
+		;;
+		"apri cartella documenti"| "open folder documents") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		xdg-open "$question"& exit
+		;;
+		"play music folder"| "riproduci cartella musica") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z $(type vservice ) ]] ; then vservice folder "$question" && qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else $"To use this function you need to install vlc and vlc append service menu . you can find it on kde-apps"; fi 
+		;;
+		"player stop"|"lettore stop")
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"player next track"|"lettore prossima traccia")
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then  qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next  ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"player previous track"|"lettore traccia precedente")
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then  qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous  ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"player continue"|"lettore continua")
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"apri cartella video"| "open folder video") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/VIDEOS/{gsub(/XDG_VIDEOS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder documents it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
 		"open text editor"| "apri editor di testo")
 		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
+		;;
+		"apri cartella documenti"| "open folder documents") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder videos it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"apri cartella musica"| "open folder music") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder music it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"apri cartella download"| "open folder download") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOWNLOAD/{gsub(/XDG_DOWNLOAD_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder download it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"apri cartella foto"| "open folder pictures") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PICTURES/{gsub(/XDG_PICTURES_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder pictures it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"apri cartella pubblica"| "open folder plublic") #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PUBLIC/{gsub(/XDG_PUBLICSHARE_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder public it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		
+		"open text editor"| "apri editor di testo")
+		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
+		;;
+		"traslate"| "traduci")
+# 		outlang="$(awk '{ print $3  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" #-o  "$outlang"
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		if $(type golgu-translate >/dev/null) ; then golgu-translate -d -s  -t "$question";else 
+		echo $"please download and install golgu-traslate you can copy it into $HOME/bin or /usr/local/bin or /usr/bin";fi ; exit 
 		;;
 		"minitube")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
@@ -696,7 +1006,7 @@ for r in "${variable[@]}" ; do
 		
 		"search" |"cerca" )
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdg-open 'https://duckduckgo.com/?q='"$question"'&v=n'& exit
+		xdg-open 'https://www.google.it/search?q='"$question"& exit
 		;;
 		"show webcam"|"show web cam" |"mostra webcam" | "mostra web cam")
 		if [[ -z $webcamdevice  ]]; then  
@@ -730,16 +1040,26 @@ done
  
 }
 
+function_dictated(){
+kate $HOME/golgu_dictated.lst 
+
+katewid="$(xdotool  search --name golgu_dictated| head -1)"
+
+xdotool  windowactivate $katewid
+}
+
 # rm mic.flac  > /dev/null 2>&1
 
 
-VERSION="0.0.3"
+VERSION="0.0.6"
 DEVELOPER="nowardev@gmail.com"
 DEBUG="off"
 DEFAULT_INPUT_LANG="en-us"
 DEFAULT_MICROPHONE="hw:0,0"
 DEFAULT_MIC_CHANNEL="1"
 RUNAPPLICATION="off"
+PLAYTEXT="off"
+TIMER="off"
 logfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.log"
 settingsfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg"
 function_check_program	
@@ -782,10 +1102,13 @@ function_load_settings
 	exit ;;
  	
 	-d) DEBUG="on"; shift;;
+	-s) PLAYTEXT="on"; shift;;
 	-ds) rm "$settingsfile"; shift ;echo $"settings file deleted." ; exit ;;
 	-w) webcamdevice="$2" ; shift 2;;
+	-k) function_show_keys ; exit ;;
 	-log) cat "$logfile";exit ;  shift ;; 
- 
+	-t) TIMER="on"; time="$2"; shift 2;;
+  
 	-v) echo version $VERSION  developer $DEVELOPER; exit  ; shift;;
 	-ws) SAVESETTINGS="on"; shift ;;
  
@@ -812,7 +1135,22 @@ fi
 
 if [[ -z "$input_lang" ]]; then 
  
-	 input_lang=$DEFAULT_INPUT_LANG 
+	 input_lang=$DEFAULT_INPUT_LANG
+else 
+
+
+case "$input_lang" in 
+"en-us"|"en"| "en-gb")
+golgu_speak_languagecode="en"
+ 
+;;
+"it")
+golgu_speak_languagecode="it"
+ 
+;;
+
+esac
+
 fi 
 
 
@@ -835,6 +1173,12 @@ function_detect_ffmpegavplay
 function_record "$HOME/.config/golgu-speechtotext/golgu-speechtotext.flac"
 function_speechtotext "$HOME/.config/golgu-speechtotext/golgu-speechtotext.flac" "$input_lang" #"$output_lang" "$text"
 function_display_text "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst"
+
+if [[ ! -z $(grep -i -E 'computer|vaio' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" ) ]] ; then 
+RUNAPPLICATION="on"
+function_play_translated_text "en" "$USER, ok i will do $(awk '{gsub(/computer/,""); print}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst") "
+
+fi 
  
 if [[ "$RUNAPPLICATION" == "on" ]]; then 
 	language_open_browser="$input_lang"
@@ -845,4 +1189,6 @@ if [[ "$SAVESETTINGS" == "on" ]]; then
 	function_save_settings	
 fi  
 
- 
+if [[ "$PLAYTEXT" == "on"  ]] ; then
+function_play_translated_text "$golgu_speak_languagecode" "$(cat "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")"
+fi 
