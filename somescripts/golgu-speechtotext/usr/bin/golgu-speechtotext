@@ -17,9 +17,9 @@
 
 #keys
 
-enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track")
+enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track" "system monitor" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" "traduci" "apri file manager" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" )
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" "traduci" "apri file manager" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" )
 
 function_show_keys(){
 echo "english keys
@@ -670,7 +670,7 @@ if [[ $TIMER == "off" ]] ; then
 
 	echo "$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1"
 " > "$logfile" 
-$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile"  
+$binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac  -vn -y "$1" 2>>"$logfile"  
 
 	if [[ ! -z "$( awk '/cannot set channel count to 1/{print}' "$logfile")"  ]]; then 
 		echo "$binary  -f  alsa  -ac 2 -i $microphone -ar 16000 -acodec flac -vn -y "$1"  
@@ -1003,7 +1003,10 @@ _EOF
 		
 		xdg-open 'https://www.google.it/search?&um=1&ie=UTF-8&hl=en&tbm=isch&source=og&q='"$question" & exit
 		;;
+		"system monitor"| "monitor di sistema")
+		if $(type ksysguard >/dev/null) ; then ksysguard  ;else $"this function will work only on kde desktop"; fi 
 		
+		;;
 		"search" |"cerca" )
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
 		xdg-open 'https://www.google.it/search?q='"$question"& exit
