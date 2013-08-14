@@ -19,17 +19,23 @@
 
 enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track" "system monitor" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" "traduci" "apri file manager" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" )
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" "traduci" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" )
+
+fr=("navigateur open" "éditeur de texte libre" "montrer webcam" "arrêtez l'ordinateur" "hibernate ordinateur" "suspendre ordinateur" "quelle heure est-il" "image recherche" "rechercher" "youtube" "minitube" "Menu montrer" "catégorie" "traduire" "Open File Manager" "Ouvrir le lien" "documents de dossiers ouverts" "Téléchargement du dossier ouvert" "musique de dossier ouvert" "Ouvrir le dossier des photos" "dossier public ouvert" "Ouvrez le dossier vidéos" "jouer dossier de musique" "joueur d'arrêt" "joueur continue" "joueur piste suivante" "joueur piste précédente" "moniteur système")
+
+es=("navegador abierto" "editor de texto abierto" "mostrar cámara web" "apagar el equipo" "hibernación equipo" "suspender equipo" "Qué hora es" "la búsqueda de imágenes" "búsqueda" "youtube" "minitubo" "menú muestra" "tipo" "traducir" "administrador de archivos abiertos" "relación abierta" "documentos de la carpeta abierta" "Descarga carpeta abierta" "música carpeta abierta" "Abrir carpeta imágenes" "pública carpeta abierta" "Abra la carpeta Vídeos" "jugar carpeta de música" "reproductor de parada" "reproductor de continuar" "reproductor pista siguiente" "reproductor pista anterior" "monitor de sistema" )
+
+de=("offenen Browser" "Open Text-Editor" "Webcam zeigen" "Computer herunterfahren" "Hibernate Computer" "aussetzen Computer" "Wie spät ist es" "Suchbild" "Suche" "youtube" "minitube" "zeigen Menü" "Art" "übersetzen" "Open File Manager" "open link" "geöffneten Ordner Dokumente" "Ordner öffnen Download" "geöffneten Ordner Musik" "Öffnen Sie den Ordner Bilder" "geöffneten Ordner öffentlichen" "Ordner öffnen Videos" "spielen Musik-Ordner" "Spieler Anschlag" "Spieler weiter" "Spieler nächsten Titel" "Spieler vorherigen Track" "System Monitor" )
 
 function_show_keys(){
 echo "english keys
-
-${enus[@]}
-
-italian keys 
-
-${it[@]}
 "
+for value in "${enus[@]}" ; do  echo "\"$value\"" ; done 
+echo "
+italian keys 
+"
+for value in "${it[@]}" ; do echo "\"$value\""  ; done
+
 }
 
 function_help(){
@@ -680,7 +686,9 @@ $binary  -f  alsa  -ac $channel -i $microphone -ar 16000 -acodec flac  -vn -y "$
 		echo "$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1"
 ">"$logfile"
 		$binary  -f  alsa  -ac 1 -i $microphone -ar 16000 -acodec flac -vn -y "$1" 2>>"$logfile" 
-	elif [[ ! -z  "$( awk '/Device or resource busy/{print}' "$logfile")" ]] ; then 
+	fi
+		
+	if [[ ! -z  "$( awk '/Device or resource busy/{print}' "$logfile")" ]] ; then 
 		tput setaf 1
 		echo $"
 ERROR EXITING : 
@@ -871,7 +879,14 @@ variable=("${enus[@]}")
 golgu_speak_languagecode="it"
 variable=("${it[@]}")
 ;;
-
+fr)
+golgu_speak_languagecode="fr"
+variable=("${fr[@]}")
+;;
+es)
+golgu_speak_languagecode="es"
+variable=("${es[@]}")
+;;
 esac
 
 
@@ -887,131 +902,13 @@ for r in "${variable[@]}" ; do
  		set -x
 		fi 
 		case $r in 
-		"type" | "digita")
-		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdotool type "$question" 
-		;;
-		"show menu" | "mostra menu") if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi 
-		;;
-		#if [[ ! -z "$(grep -i "type" | "digita"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then xdotool type "$(awk 'n=index($0,"digita"){print substr($0,n+1)}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" ; fi ;
-		"suspend computer"|"sospendi computer")
-		dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
-		;;
-# 		"shut down"|"chiudi computer")
-# 		dbus-send --print-reply --system --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Shutdown /usr/lib/x86_64-linux-gnu/qt4/bin/qdbus --system org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
-# 		;;
-		"what time is it" |"che ora" )
-		
-		date="$(date +"%I:%M" )"
-		echo "$date" 
-		function_play_translated_text "$golgu_speak_languagecode"  "$date" 
-		
-		exit
-		;;
-		"open browser" |"apri browser" )
+		"open browser" | "apri browser" |"navegador abierto" |"navigateur open" | "offenen Browser")
 		xdg-open 'https://duckduckgo.com/' & exit
 		;;
-		"open link" |"apri link" )
-		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		http="$(awk '/http:\/\//{print}' <<_EOF
-"$question"
-_EOF
-)"
-		if [[ -z $http  ]] ; then question="http://""$question"; fi 
- 
-		xdg-open $question & exit
-		;;
-		"apri file manager"| "open file manager") #xdotool   search --class dolphin   key ctrl+a
-		xdg-open "$HOME" & exit
-		;;
-		"apri cartella documenti"| "open folder documents") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		xdg-open "$question"& exit
-		;;
-		"play music folder"| "riproduci cartella musica") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z $(type vservice ) ]] ; then vservice folder "$question" && qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else $"To use this function you need to install vlc and vlc append service menu . you can find it on kde-apps"; fi 
-		;;
-		"player stop"|"lettore stop")
-		if [[ ! -z $(qdbus | grep vlc ) ]] ; then qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
-		;;
-		"player next track"|"lettore prossima traccia")
-		if [[ ! -z $(qdbus | grep vlc ) ]] ; then  qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next  ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
-		;;
-		"player previous track"|"lettore traccia precedente")
-		if [[ ! -z $(qdbus | grep vlc ) ]] ; then  qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous  ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
-		;;
-		"player continue"|"lettore continua")
-		if [[ ! -z $(qdbus | grep vlc ) ]] ; then qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
-		;;
-		"apri cartella video"| "open folder video") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/VIDEOS/{gsub(/XDG_VIDEOS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder documents it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
-		;;
-		"open text editor"| "apri editor di testo")
+		"open text editor" | "apri editor di testo" |"editor de texto abierto" |"éditeur de texte libre" | "Open Text Editor")
 		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
 		;;
-		"apri cartella documenti"| "open folder documents") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder videos it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
-		;;
-		"apri cartella musica"| "open folder music") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder music it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
-		;;
-		"apri cartella download"| "open folder download") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOWNLOAD/{gsub(/XDG_DOWNLOAD_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder download it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
-		;;
-		"apri cartella foto"| "open folder pictures") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PICTURES/{gsub(/XDG_PICTURES_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder pictures it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
-		;;
-		"apri cartella pubblica"| "open folder plublic") #xdotool   search --class dolphin   key ctrl+a
-		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PUBLIC/{gsub(/XDG_PUBLICSHARE_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
- 
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder public it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
-		;;
-		
-		"open text editor"| "apri editor di testo")
-		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
-		;;
-		"traslate"| "traduci")
-# 		outlang="$(awk '{ print $3  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" #-o  "$outlang"
-		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		if $(type golgu-translate >/dev/null) ; then golgu-translate -d -s  -t "$question";else 
-		echo $"please download and install golgu-traslate you can copy it into $HOME/bin or /usr/local/bin or /usr/bin";fi ; exit 
-		;;
-		"minitube")
-		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		minitube  "$question" & exit
-		;;
-		"youtube")
-		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		
-		xdg-open 'http://www.youtube.com/results?search_query='"$question" & exit
-		;; 
-		"search image"| "cerca immagin")
-		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		
-		xdg-open 'https://www.google.it/search?&um=1&ie=UTF-8&hl=en&tbm=isch&source=og&q='"$question" & exit
-		;;
-		"system monitor"| "monitor di sistema")
-		if $(type ksysguard >/dev/null) ; then ksysguard  ;else $"this function will work only on kde desktop"; fi 
-		
-		;;
-		"search" |"cerca" )
-		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdg-open 'https://www.google.it/search?q='"$question"& exit
-		;;
-		"show webcam"|"show web cam" |"mostra webcam" | "mostra web cam")
+		"show webcam" | "mostra web cam" |"mostrar cámara web" |"montrer webcam" | "Webcam zeigen")
 		if [[ -z $webcamdevice  ]]; then  
 			function_detect_webcam
 			 
@@ -1027,7 +924,155 @@ _EOF
 		exit
 		fi
 		;;
+# 		"shut down computer" | "chiudi computer" |"apagar el equipo" |"arrêtez l'ordinateur" | "Computer herunterfahren")
+# dbus-send --print-reply --system --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Shutdown /usr/lib/x86_64-linux-gnu/qt4/bin/qdbus --system org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
+# 		;;
+# 		"hibernate computer" | "iberna computer" |"hibernación equipo" |"hibernate ordinateur" | "Hibernate Computer")
+		"suspend computer" | "sospendi computer" |"suspender equipo" |"suspendre ordinateur" | "aussetzen Computer")
+		dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
+		;;
+		"what time is it" | "che ora" |"Qué hora es" |"quelle heure est-il" | "Wie spät ist es")
+		date="$(date +"%I:%M" )"
+		echo "$date" 
+		function_play_translated_text "$golgu_speak_languagecode"  "$date" 
 		
+		exit
+		;;
+		"search image" | "cerca immagin" |"la búsqueda de imágenes" |"image recherche" | "Suchbild")
+		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		
+		xdg-open 'https://www.google.it/search?&um=1&ie=UTF-8&hl=en&tbm=isch&source=og&q='"$question" & exit
+		;;
+		"search" | "cerca" |"búsqueda" |"rechercher" | "Suche")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		xdg-open 'https://www.google.it/search?q='"$question"& exit
+		;;
+		"youtube")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		
+		xdg-open 'http://www.youtube.com/results?search_query='"$question" & exit
+		;;
+		"minitube")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		minitube  "$question" & exit
+		;;
+		"show menu" | "mostra menu" |"menú muestra" |"Menu montrer" | "zeigen Menü")
+		if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi 
+		;;
+		"type" | "digita" |"tipo" |"catégorie" | "Art")
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		xdotool type "$question" 
+		#if [[ ! -z "$(grep -i "type" | "digita"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then xdotool type "$(awk 'n=index($0,"digita"){print substr($0,n+1)}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" ; fi ;
+		;;
+		"translate" | "traduci" |"traducir" |"traduire" | "übersetzen")
+# 		outlang="$(awk '{ print $3  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" #-o  "$outlang"
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		if $(type golgu-translate >/dev/null) ; then golgu-translate -d -s  -t "$question";else 
+		echo $"please download and install golgu-traslate you can copy it into $HOME/bin or /usr/local/bin or /usr/bin";fi ; exit 
+		;;
+		"open file manager" | "apri file manager" |"administrador de archivos abiertos" |"Open File Manager" | "Open File Manager")
+		#xdotool   search --class dolphin   key ctrl+a
+		xdg-open "$HOME" & exit
+		;;
+		"open link" | "apri link" |"relación abierta" |"Ouvrir le lien" | "open link")
+		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		http="$(awk '/http:\/\//{print}' <<_EOF
+"$question"
+_EOF
+)"
+		if [[ -z $http  ]] ; then question="http://""$question"; fi 
+ 
+		xdg-open $question & exit
+		;;
+
+ 
+  
+		"open folder documents" | "apri cartella documenti" |"documentos de la carpeta abierta" |"documents de dossiers ouverts" | "geöffneten Ordner Dokumente")
+ #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		xdg-open "$question"& exit
+		;;
+		"open folder download" | "apri cartella download" |"Descarga carpeta abierta" |"Téléchargement du dossier ouvert" | "Ordner öffnen Download")
+		 #xdotool   search --class dolphin   key ctrl+a
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOWNLOAD/{gsub(/XDG_DOWNLOAD_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder download it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit 
+		;;
+		"open folder music" | "apri cartella musica" |"música carpeta abierta" |"musique de dossier ouvert" | "geöffneten Ordner Musik")
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder music it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+ 
+# 		if [[ ! -z $(type vservice ) ]] ; then vservice folder "$question" && qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else $"To use this function you need to install vlc and vlc append service menu . you can find it on kde-apps"; fi 
+		;;
+		"open folder pictures" | "apri cartella foto" |"Abrir carpeta imágenes" |"Ouvrir le dossier des photos" | "Öffnen Sie den Ordner Bilder")
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PICTURES/{gsub(/XDG_PICTURES_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder pictures it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"open folder public" | "apri cartella pubblica" |"pública carpeta abierta" |"dossier public ouvert" | "geöffneten Ordner öffentlichen")
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PUBLIC/{gsub(/XDG_PUBLICSHARE_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder public it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"open folder videos" | "apri cartella video" |"Abra la carpeta Vídeos" |"Ouvrez le dossier vidéos" | "Ordner öffnen Videos")
+		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/VIDEOS/{gsub(/XDG_VIDEOS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder documents it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		;;
+		"play music folder" | "riproduci cartella musica" |"jugar carpeta de música" |"jouer dossier de musique" | "spielen Musik-Ordner")
+		 question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)"
+		 
+		 if [[ -z "$question" ]] ; then  echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+ 
+		if [[ ! -z $(type vservice ) ]] ; then vservice folder "$question" && qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else $"To use this function you need to install vlc and vlc append service menu . you can find it on kde-apps"; fi 
+		;;
+		"player stop" | "lettore stop" |"reproductor de parada" |"joueur d'arrêt" | "Spieler Anschlag")
+		 
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"player continue " | "lettore continua" |"reproductor de continuar" |"joueur continue" | "Spieler weiter")
+
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Play ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"player next track" | "lettore prossima traccia" |"reproductor pista siguiente" |"joueur piste suivante" | "Spieler nächsten Titel")
+
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then  qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next  ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		"player previous track" | "lettore traccia precedente" |"reproductor pista anterior" |"joueur piste précédente" | "Spieler vorherigen Track")
+		if [[ ! -z $(qdbus | grep vlc ) ]] ; then  qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous  ; else echo $"Sorry , it seems you have started vlc without qdbus support please fix this , it could be fixed in this way just make sure your launcher has this in the command lin vlc --control dbus " ; exit 1; fi 
+		;;
+		 
+ 
+		"system monitor" | "monitor di sistema" |"monitor de sistema" |"moniteur système" | "System Monitor")
+		if $(type ksysguard >/dev/null) ; then ksysguard  ;else $"this function will work only on kde desktop"; fi 
+		
+		;;
+		
+		
+		
+# 		"apri cartella documenti"| "open folder documents") #xdotool   search --class dolphin   key ctrl+a
+# 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+#  
+# 		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder videos it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+# 		;;
+# 		"apri cartella musica"| "open folder music") #xdotool   search --class dolphin   key ctrl+a
+# 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
+#  
+# 		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder music it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+# 		;;
+
+
+ 
+
+
+
+		
+
+
+ 
+
+ 
 		esac
 		
 	fi 
@@ -1054,7 +1099,7 @@ xdotool  windowactivate $katewid
 # rm mic.flac  > /dev/null 2>&1
 
 
-VERSION="0.0.6"
+VERSION="0.0.7"
 DEVELOPER="nowardev@gmail.com"
 DEBUG="off"
 DEFAULT_INPUT_LANG="en-us"
