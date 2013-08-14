@@ -63,14 +63,14 @@ if you have some problems with the default mic or if you want use the webcam's m
 where x,x must a set of numbers , you can understand them reading your configuration
 
 #########################################################
-$(cat /proc/asound/pcm| grep -i capture )
+\$(cat /proc/asound/pcm| grep -i capture )
 #########################################################
 
 if you get some problems recording audio just see this file $logfile, you could get some problem with ffmpeg \ avcon because some mic require 2 channels some other require 1 channel mono...
 
 INSTALLATION 
 
-Put the script in your $HOME/bin or /usr/local/bin or /usr/bin and give it chmod +x 
+Put the script in your \$HOME/bin or /usr/local/bin or /usr/bin and give it chmod +x 
 
 you need of  :
 
@@ -95,7 +95,7 @@ golgu-speechtotext  <options>
 
 -a : function run applications and commands activated , for keys look down  ...
 -c : set channels , some mic require 2 channels some others require 1 channel to work properly with ffmpeg
--ds : delete settings file $HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
+-ds : delete settings file \$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
 -e : open golgu-speechtotext config file 
 -h : print this help 
 -k : show keys 
@@ -105,7 +105,7 @@ golgu-speechtotext  <options>
 -t : example -t 3  will record only 3 seconds then will process your voice
 -v : print version and exit 
 -w : set webcam device to use , example : -w /dev/video0
--ws: write settings on config file located here $HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
+-ws: write settings on config file located here \$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg
 
 ########
 EXAMPLES
@@ -133,47 +133,32 @@ this function if activated can run applications and do some stuff ... like open 
 golgu-speechtotext -i en-us -a
 -------------------------------
 
-english  keys :
-
-open browser 
-open link
-open file manager
-search 
-show webcam 
-open text editor
-what time is it 
-suspend computer
-minitube key
-type
-open folder documents
-open folder download
-open folder pictures
-open folder music
-open folder videos
-open folder public
-
-
-italian keys 
-
-apri browser
-apri cartella documenti
-apri cartella download
-apri cartella foto
-apri cartella musica
-apri cartella video
-apri cartella pubblica
-apri link
-apri file manager
-cerca 
-digita
-mostra webcam 
-apri editor di testo 
-che ora è
-sospendi computer 
-minitube chiave
-
-
+english keys
 "
+for value in "${enus[@]}" ; do  echo "\"$value\"" ; done 
+echo "
+italian keys 
+"
+for value in "${it[@]}" ; do echo "\"$value\""  ; done
+echo "
+spanish keys 
+"
+for value in "${es[@]}" ; do echo "\"$value\""  ; done
+
+echo "
+french keys 
+"
+for value in "${fr[@]}" ; do echo "\"$value\""  ; done
+
+echo "
+german keys 
+"
+for value in "${de[@]}" ; do echo "\"$value\""  ; done
+
+echo "
+NB SOME KEYS DOESN'T WORK LIKE HIBERNATE OR CLOSE COMPUTER , JUST SUSPEND COMPUTER  WORKS !
+"
+
 }
 
 
@@ -886,6 +871,10 @@ variable=("${fr[@]}")
 es)
 golgu_speak_languagecode="es"
 variable=("${es[@]}")
+;;
+de)
+golgu_speak_languagecode="de"
+variable=("${de[@]}")
 ;;
 esac
 
