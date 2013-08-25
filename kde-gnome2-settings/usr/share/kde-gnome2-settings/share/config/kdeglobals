@@ -165,7 +165,10 @@ contrast=7
 GraphicEffectsLevel=0
 
 
-
+[Locale]
+DateFormat=%a, %m, %y
+DateFormatShort=%a %d/%m \s
+TimeFormat=%H:%M
 
 [KFileDialog Settings]
 Automatically select filename extension=true

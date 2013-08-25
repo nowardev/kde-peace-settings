@@ -15,7 +15,7 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-loadTemplate("org.kde.plasma-desktop.nowardevPanel")
+loadTemplate("org.kde.plasma-desktop.gnome2Panel")
 
 for (var i = 0; i < screenCount; ++i) {
     var desktop = new Activity
@@ -23,10 +23,10 @@ for (var i = 0; i < screenCount; ++i) {
     desktop.screen = i
     desktop.wallpaperPlugin = 'image'
     desktop.wallpaperMode = 'SingleImage'
-   var wallpaper = "Fog_on_the_West_Lake"
+    var wallpaper = "Fog_on_the_West_Lake"
     desktop.currentConfigGroup = new Array("Wallpaper", "image");
     desktop.writeConfig("wallpaper", wallpaper);
-   desktop.writeConfig("userswallpaper", wallpaper);
+    desktop.writeConfig("userswallpaper", wallpaper);
 
     //Create more panels for other screens
     if (i > 0){
