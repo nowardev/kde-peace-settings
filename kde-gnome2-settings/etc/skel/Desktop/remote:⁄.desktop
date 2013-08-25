@@ -1,0 +1,6 @@
+[Desktop Entry]
+Icon=network-workgroup
+Name[en_US]=remote:⁄
+Name=remote:⁄
+Type=Link
+URL[$e]=remote:/

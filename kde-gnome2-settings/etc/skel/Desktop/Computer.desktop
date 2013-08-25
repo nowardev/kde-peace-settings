@@ -1,0 +1,19 @@
+[Desktop Entry]
+Comment[en_US]=
+Comment=
+Exec=kde-open "$HOME"
+GenericName[en_US]=
+GenericName=
+Icon=computer
+MimeType=
+Name[en_US]=Computer
+Name=Computer
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
