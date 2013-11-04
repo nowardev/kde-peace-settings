@@ -15,19 +15,16 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-
-#a="/usr/share/kubuntu-low-fat-settings"
-b="/usr/share/kubuntu-default-settings"
-c="/usr/share/kubuntu-mobile-default-settings"
+ 
 
 
 
 if [[ -z "$KDEDIRS" ]]; then 
-export KDEDIRS=/usr/share/kde-peace-settings/:/usr 
+export KDEDIRS=/usr/share/kde-gnome2-settings/:/usr 
 
 else 
 
-export KDEDIRS=/usr/share/kde-peace-settings/:$KDEDIRS:/usr
+export KDEDIRS=/usr/share/kde-gnome2-settings/:$KDEDIRS:/usr
 
 fi 
 
