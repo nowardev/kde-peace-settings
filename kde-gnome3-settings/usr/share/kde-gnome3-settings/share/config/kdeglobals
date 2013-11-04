@@ -164,7 +164,10 @@ contrast=7
 [KDE-Global GUI Settings]
 GraphicEffectsLevel=0
 
-
+[Locale]
+DateFormat=%a, %m, %y
+DateFormatShort=%a %d/%m \s
+TimeFormat=%H:%M
 
 
 [KFileDialog Settings]
