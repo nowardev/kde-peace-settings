@@ -19,6 +19,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+desktop="gnome3"
 
 function_install(){ 
 
@@ -80,16 +81,16 @@ done
 
 #kde peace settings
 
-cp -r  "$PWD"/usr/share/kde-peace-settings  /usr/share/
+cp -r  "$PWD"/usr/share/kde-$desktop-settings  /usr/share/
 
 #kde peace doc 
-cp -r  "$PWD"/usr/share/doc/kde-peace-settings  /usr/share/doc/
+cp -r  "$PWD"/usr/share/doc/kde-$desktop-settings  /usr/share/doc/
 }
 
 function_uninstall(){
 
-rm -R  /usr/share/doc/kde-peace-settings
-rm -R  /usr/share/kde-peace-settings  
+rm -R  /usr/share/doc/kde-$desktop-settings
+rm -R  /usr/share/kde-$desktop-settings  
 rm /usr/share/applications/mimeapps.list
 rm /etc/X11/Xsession.d/50peace
 
