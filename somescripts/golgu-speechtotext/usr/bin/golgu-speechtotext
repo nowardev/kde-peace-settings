@@ -17,24 +17,43 @@
 
 #keys
 
-enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track" "system monitor" )
+enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track" "system monitor" "system settings" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "digita" "traduci" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" )
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "scrivi" "traduci" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" "impostazioni di sistema" )
 
-fr=("navigateur open" "éditeur de texte libre" "montrer webcam" "arrêtez l'ordinateur" "hibernate ordinateur" "suspendre ordinateur" "quelle heure est-il" "image recherche" "rechercher" "youtube" "minitube" "Menu montrer" "catégorie" "traduire" "Open File Manager" "Ouvrir le lien" "documents de dossiers ouverts" "Téléchargement du dossier ouvert" "musique de dossier ouvert" "Ouvrir le dossier des photos" "dossier public ouvert" "Ouvrez le dossier vidéos" "jouer dossier de musique" "joueur d'arrêt" "joueur continue" "joueur piste suivante" "joueur piste précédente" "moniteur système")
+fr=("navigateur open" "éditeur de texte libre" "montrer webcam" "arrêtez l'ordinateur" "hibernate ordinateur" "suspendre ordinateur" "quelle heure est-il" "image recherche" "rechercher" "youtube" "minitube" "Menu montrer" "catégorie" "traduire" "Open File Manager" "Ouvrir le lien" "documents de dossiers ouverts" "Téléchargement du dossier ouvert" "musique de dossier ouvert" "Ouvrir le dossier des photos" "dossier public ouvert" "Ouvrez le dossier vidéos" "jouer dossier de musique" "joueur d'arrêt" "joueur continue" "joueur piste suivante" "joueur piste précédente" "moniteur système" "paramètres du système")
 
-es=("navegador abierto" "editor de texto abierto" "mostrar cámara web" "apagar el equipo" "hibernación equipo" "suspender equipo" "Qué hora es" "la búsqueda de imágenes" "búsqueda" "youtube" "minitubo" "menú muestra" "tipo" "traducir" "administrador de archivos abiertos" "relación abierta" "documentos de la carpeta abierta" "Descarga carpeta abierta" "música carpeta abierta" "Abrir carpeta imágenes" "pública carpeta abierta" "Abra la carpeta Vídeos" "jugar carpeta de música" "reproductor de parada" "reproductor de continuar" "reproductor pista siguiente" "reproductor pista anterior" "monitor de sistema" )
+es=("navegador abierto" "editor de texto abierto" "mostrar cámara web" "apagar el equipo" "hibernación equipo" "suspender equipo" "Qué hora es" "la búsqueda de imágenes" "búsqueda" "youtube" "minitubo" "menú muestra" "tipo" "traducir" "administrador de archivos abiertos" "relación abierta" "documentos de la carpeta abierta" "Descarga carpeta abierta" "música carpeta abierta" "Abrir carpeta imágenes" "pública carpeta abierta" "Abra la carpeta Vídeos" "jugar carpeta de música" "reproductor de parada" "reproductor de continuar" "reproductor pista siguiente" "reproductor pista anterior" "monitor de sistema" "configuración del sistema" )
 
-de=("offenen Browser" "Open Text-Editor" "Webcam zeigen" "Computer herunterfahren" "Hibernate Computer" "aussetzen Computer" "Wie spät ist es" "Suchbild" "Suche" "youtube" "minitube" "zeigen Menü" "Art" "übersetzen" "Open File Manager" "open link" "geöffneten Ordner Dokumente" "Ordner öffnen Download" "geöffneten Ordner Musik" "Öffnen Sie den Ordner Bilder" "geöffneten Ordner öffentlichen" "Ordner öffnen Videos" "spielen Musik-Ordner" "Spieler Anschlag" "Spieler weiter" "Spieler nächsten Titel" "Spieler vorherigen Track" "System Monitor" )
+de=("offenen Browser" "Open Text-Editor" "Webcam zeigen" "Computer herunterfahren" "Hibernate Computer" "aussetzen Computer" "Wie spät ist es" "Suchbild" "Suche" "youtube" "minitube" "zeigen Menü" "Art" "übersetzen" "Open File Manager" "open link" "geöffneten Ordner Dokumente" "Ordner öffnen Download" "geöffneten Ordner Musik" "Öffnen Sie den Ordner Bilder" "geöffneten Ordner öffentlichen" "Ordner öffnen Videos" "spielen Musik-Ordner" "Spieler Anschlag" "Spieler weiter" "Spieler nächsten Titel" "Spieler vorherigen Track" "System Monitor" "Systemeinstellungen" )
 
 function_show_keys(){
-echo "english keys
+echo "
+english keys
 "
 for value in "${enus[@]}" ; do  echo "\"$value\"" ; done 
 echo "
 italian keys 
 "
 for value in "${it[@]}" ; do echo "\"$value\""  ; done
+echo "
+spanish keys 
+"
+for value in "${es[@]}" ; do echo "\"$value\""  ; done
+
+echo "
+french keys 
+"
+for value in "${fr[@]}" ; do echo "\"$value\""  ; done
+
+echo "
+german keys 
+"
+for value in "${de[@]}" ; do echo "\"$value\""  ; done
+
+echo "
+NB SOME KEYS DO NOT WORK LIKE HIBERNATE OR CLOSE COMPUTER , JUST SUSPEND COMPUTER  WORKS !
+"
 
 }
 
@@ -45,13 +64,13 @@ echo  $"
 	
 WHAT IS IT ?
 
-it's a script that records your voice with ffmpeg or avconv and it sends to google server to be converted into text.It can even performe some operation like open a browser show your webcam search for stuff on internet for now this function can be used only in english and italian :) 
+it's a script that records your voice with ffmpeg or avconv and it sends to google server to be converted into text.It can even performe some operation like open a browser show your webcam search for stuff on internet for now this function can be used only in en-us it es fr de 
 
 WHY ?
 
 for my own fun 
 because programming for me it's an hobby and a relax time 
-i hate  repetitive works like this shit: open folder and select all put them in vlc and click play :D this is shit wtf!, ah playlist ... well i put my music in the folder music and so... i want all my playlist it's all the folder :D
+i hate  repetitive works like this shit: open folder and select all put them in vlc and click play :D this is shit wtf!, ah playlist ... well i put my music in the folder music and so... 
 
 
 TROUBLES WITH MIC : 
@@ -63,7 +82,7 @@ if you have some problems with the default mic or if you want use the webcam's m
 where x,x must a set of numbers , you can understand them reading your configuration
 
 #########################################################
-\$(cat /proc/asound/pcm| grep -i capture )
+cat /proc/asound/pcm| grep -i capture 
 #########################################################
 
 if you get some problems recording audio just see this file $logfile, you could get some problem with ffmpeg \ avcon because some mic require 2 channels some other require 1 channel mono...
@@ -74,7 +93,7 @@ Put the script in your \$HOME/bin or /usr/local/bin or /usr/bin and give it chmo
 
 you need of  :
 
-ffmpeg or avconv awk #minitube chromium  
+ffmpeg or avconv awk #minitube chromium  vlc or mplayer to listen the detected text...
 
 for debian systems :
 	
@@ -156,7 +175,7 @@ german keys
 for value in "${de[@]}" ; do echo "\"$value\""  ; done
 
 echo "
-NB SOME KEYS DOESN'T WORK LIKE HIBERNATE OR CLOSE COMPUTER , JUST SUSPEND COMPUTER  WORKS !
+NB SOME KEYS DO NOT WORK LIKE HIBERNATE OR CLOSE COMPUTER , JUST SUSPEND COMPUTER  WORKS !
 "
 
 }
@@ -401,15 +420,17 @@ echo $"Loading detect mic function"
 fi 
 i=0
 while read line ;do
-audiocard[$i]="$line"
+audiocard[$i]="hw:$line"
 i=$(($i+1))
-done< <(awk -F '[:-]' '/capture/{printf "hw:%d,%d\n", $1,$2}' /proc/asound/pcm)
+done< <(awk -F '[:-]' '/capture/{printf "%d,%d\n", $1,$2}' /proc/asound/pcm) #investigate to replace fist value  cut -d "-"  -f 1  /proc/asound/pcm | cut -d :  -f 1 
+#the second value  cut -d "-"  -f 2  /proc/asound/pcm | cut -d :  -f 1
+
 
 i=0
 while read line ;do
 audionamecard[$i]="$line"
 i=$(($i+1))
-done< <(awk -F':' '/capture/{sub(/ /,"") ;print $3}' /proc/asound/pcm)
+done< <(grep capture /proc/asound/pcm | cut -d : -f 2)
 
  
 if [[ ${#audiocard[@]} >1 ]]; then 
@@ -948,7 +969,7 @@ for r in "${variable[@]}" ; do
 		"show menu" | "mostra menu" |"menú muestra" |"Menu montrer" | "zeigen Menü")
 		if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi 
 		;;
-		"type" | "digita" |"tipo" |"catégorie" | "Art")
+		"type" | "digita"| "scrivi" |"tipo" |"catégorie" | "Art")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
 		xdotool type "$question" 
 		#if [[ ! -z "$(grep -i "type" | "digita"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then xdotool type "$(awk 'n=index($0,"digita"){print substr($0,n+1)}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" ; fi ;
@@ -1038,7 +1059,9 @@ _EOF
 		
 		;;
 		
-		
+		"system settings"| "impostazioni di sistema"|"paramètres du système"|"configuración del sistema"|"Systemeinstellungen")
+		if [[ ! -z $(type systemsettings ) ]] ; then systemsettings   ; else $"This function will work only if you have kde sorry."; fi 
+		;;
 		
 # 		"apri cartella documenti"| "open folder documents") #xdotool   search --class dolphin   key ctrl+a
 # 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
@@ -1179,10 +1202,25 @@ else
 case "$input_lang" in 
 "en-us"|"en"| "en-gb")
 golgu_speak_languagecode="en"
+iwill="ok i will do this action"
  
 ;;
 "it")
 golgu_speak_languagecode="it"
+iwill="ok farò questa azione"
+;;
+"fr")
+golgu_speak_languagecode="fr"
+iwill="ok je vais faire cette action"
+;;
+"es")
+golgu_speak_languagecode="es"
+iwill="ok voy a terminar esta acción"
+ 
+;;
+"de")
+golgu_speak_languagecode="de"
+iwill="ok ich werde diese Aktion"
  
 ;;
 
@@ -1213,7 +1251,7 @@ function_display_text "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst"
 
 if [[ ! -z $(grep -i -E 'computer|vaio' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" ) ]] ; then 
 RUNAPPLICATION="on"
-function_play_translated_text "en" "$USER, ok i will do $(awk '{gsub(/computer/,""); print}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst") "
+function_play_translated_text "$input_lang" "computer, $iwill $(awk '{gsub(/computer/,""); print}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst") "
 
 fi 
  
