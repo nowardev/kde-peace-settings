@@ -1,0 +1,17 @@
+[Desktop Entry]
+Encoding=UTF-8
+Icon=eyes
+Name=Crazy Panel
+ServiceTypes=Plasma/LayoutTemplate
+Type=Service
+X-KDE-PluginInfo-Author=Nowardev
+X-KDE-PluginInfo-Category=
+X-KDE-PluginInfo-Depends=
+X-KDE-PluginInfo-Email=nowardev@gmail.com
+X-KDE-PluginInfo-EnabledByDefault=true
+X-KDE-PluginInfo-License=GPL
+X-KDE-PluginInfo-Name=org.kde.plasma-desktop.crazyPanel
+X-KDE-PluginInfo-Version=1.0
+X-KDE-PluginInfo-Website=http://nowardev.wordpress.com
+X-Plasma-ContainmentCategories=panel
+X-Plasma-Shell=plasma-desktop

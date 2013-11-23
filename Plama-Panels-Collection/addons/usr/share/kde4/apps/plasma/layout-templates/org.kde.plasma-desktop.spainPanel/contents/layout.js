@@ -63,9 +63,9 @@ yawp.writeConfig("update interval","15")
 
 yawp.currentConfigGroup = new Array('locations')
 
-yawp.writeConfig("city01","accuweather,Casa Olivar\\, Spain(Andalucia),Spain,ES,EUR.ES.SP001.CASA+OLIVAR,")
-yawp.writeConfig("city02","accuweather,Freila\\, Spain(Andalucia),Spain,ES,EUR.ES.SP001.FREILA,")
-yawp.writeConfig("city03","accuweather,Granada\\, Spain(Andalucia),Spain,ES,EUR.ES.SP001.GRANADA,")
+yawp.writeConfig("city01",'accuweather,Casa Olivar\\, Spain(Andalucia),Spain,ES,EUR.ES.SP001.CASA+OLIVAR,')
+yawp.writeConfig("city02",'accuweather,Freila\\, Spain(Andalucia),Spain,ES,EUR.ES.SP001.FREILA,')
+yawp.writeConfig("city03",'accuweather,Granada\\, Spain(Andalucia),Spain,ES,EUR.ES.SP001.GRANADA,')
 yawp.writeConfig("selected","2")
 
 

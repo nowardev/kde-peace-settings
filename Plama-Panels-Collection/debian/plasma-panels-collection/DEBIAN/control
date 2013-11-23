@@ -1,0 +1,12 @@
+Package: plasma-panels-collection
+Version: 4.11.2-1ubuntu0~ppa1
+Architecture: all
+Maintainer: Peace Nowardev <nowardev@gmail.com>
+Installed-Size: 308
+Depends: plasma-widget-activitymanager, plasma-widget-adjustableclock, plasma-widget-bkodama, plasma-widget-cpuload, plasma-widget-cwp, plasma-widget-fastuserswitch, plasma-widget-lancelot, plasma-widget-mail, plasma-widget-makestatus, plasma-widget-memusage, plasma-widget-menubar, plasma-widget-message-indicator, plasma-nm, plasma-widget-quickaccess, plasma-widget-simplemonitor, plasma-widget-translatoid, plasma-widget-veromix, plasma-widget-weatherforecast, plasma-widget-wifi, plasma-widget-yawp, plasma-widgets-addons, plasma-widgets-workspace
+Section: kde
+Priority: extra
+Homepage: http://code.google.com/p/kde-peace-settings/
+Description: Collection of Plasma panels
+ Plasma panel collection is a collection of panels for kde desktop. you can choose unity-like panel gnome2-like gnome3-like mac and several others
+ target  of this collection is to help users to be more comfortable on Kde desktop.
