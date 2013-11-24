@@ -68,7 +68,7 @@ function chromeos(){
 	
 	var mixer = panel.addWidget("veromix-plasmoid")
 	var notification = panel.addWidget ("notifier")
-	var network = panel.addWidget("org.kde.plasma-nm")
+	var network = panel.addWidget("org.kde.networkmanagement")
 	var widget = "org.kde.printmanager"
 	/*check if the widget is installed and add if it is to your panel*/
 	if (knownWidgetTypes.indexOf(widget) > -1) {

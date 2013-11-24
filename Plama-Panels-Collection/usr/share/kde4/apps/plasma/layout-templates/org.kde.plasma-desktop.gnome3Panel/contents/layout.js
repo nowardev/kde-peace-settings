@@ -147,7 +147,7 @@ function gnome3(){
 	
 	
 	var notification = panel.addWidget ("notifier")
-	var network = panel.addWidget("org.kde.plasma-nm")
+	var network = panel.addWidget("org.kde.networkmanagement")
 	
 	var widget = "notifications"
 	/*check if the widget is installed and add if it is to your panel*/

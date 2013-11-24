@@ -90,7 +90,7 @@ mv ~/.kde/share/config/plasma-desktop-appletsrc ~/.kde/share/config/plasma-deskt
 
 LOCAL INSTALLATION (you should use this for a safer installation...) THIS DOC SI FOR 1.9 edit this line 
 
-link="http://kde-peace-settings.googlecode.com/files/Plama-Panels-Collection_2.0.tar.gz" ; name="${link##*/}"  ;  for file in ~/.kde/share/kde4/services/plasma-layout-*.desktop; do rm "$file" ;done ; for f in ~/.kde/share/apps/plasma/layout-templates/org.kde* ; do rm -R "$f"; done ; for f in ~/.kde/share/apps/plasma/layout-templates/nowardev.* ; do rm -R "$f"; done ; cd /tmp; rm -R /tmp/Plama-Panels-Collection ; wget "link" -D /tmp/ ; tar -zxvf "$name" ; cd /tmp/Plama-Panels-Collection/usr/share/kde4/apps/plasma/layout-templates/ ; for folder in */ ; do zip -r ${folder%/}.zip "$folder" -x "*.git*" -x "*.svn*" -x "*~" ; done ; for file in *.zip ; do plasmapkg -t layout-template -i "$file"; done
+link="https://kde-peace-settings.googlecode.com/files/plasma-panels-collections-4.11.2-a.tar.gz";rm -R /tmp/Plama-Panels-Collection ; for file in ~/.kde/share/kde4/services/plasma-layout-*.desktop; do rm "$file" ;done ; for f in ~/.kde/share/apps/plasma/layout-templates/org.kde* ; do rm -R "$f"; done ; for f in ~/.kde/share/apps/plasma/layout-templates/nowardev.* ; do rm -R "$f"; done ; cd /tmp;  wget "$link" -D /tmp/ ; tar -zxvf "${link##*/}";cp -R /tmp/plasma-panels-collection*/addons/usr/  /tmp/plasma-panels-collection*/ ;cd /tmp/plasma-panels-collections*/usr/share/kde4/apps/plasma/layout-templates/ ; for folder in */ ; do zip -r ${folder%/}.zip "$folder" -x "*.git*" -x "*.svn*" -x "*~" ; done ; for file in *.zip ; do plasmapkg -t layout-template -i "$file"; done
 
 	
 	

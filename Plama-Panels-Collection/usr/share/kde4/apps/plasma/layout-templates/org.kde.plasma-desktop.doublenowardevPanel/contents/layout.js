@@ -245,7 +245,7 @@ function nowardevdouble(){
 	
 	
 	var systemtray = panel.addWidget("systemtray")
-	systemtray.writeConfig("hidden","battery,Desktop Sharing,notifier,KGpg,org.kde.networkmanagement,Resize and Rotate,KMix")
+	systemtray.writeConfig("auto","battery,Desktop Sharing,notifier,KGpg,org.kde.networkmanagement,Resize and Rotate,KMix")
 	
 	var launcher = panel.addWidget("simplelauncher")
 	launcher.writeConfig("format", "Description")
