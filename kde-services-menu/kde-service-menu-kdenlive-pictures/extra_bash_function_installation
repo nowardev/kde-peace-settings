@@ -1,0 +1,119 @@
+
+function_extra_install_global(){
+	
+	if [[   -z $(cat "$HOME/.bashrc" | grep 'alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias gf="sudo apt-get upgrade -f"
+alias gf="sudo apt-get dist-upgrade -f"
+alias i="sudo apt-get install "
+alias ai="apt-cache show  "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="apt-cache search "
+alias a="sudo apt-get autoremove"' 2>/dev/null) ]]; then
+		
+		
+		kdialog --title $"My App Title"  --yesno   $"do you want install the alias for apt? 
+		
+alias u='sudo apt-get update'
+alias g='sudo apt-get upgrade'
+alias gf='sudo apt-get upgrade -f'
+alias gf='sudo apt-get dist-upgrade -f'
+alias i='sudo apt-get install '
+alias ai='apt-cache show  '
+alias r='sudo apt-get remove '
+alias p='sudo apt-get --purge remove '
+alias s='apt-cache search '
+alias a='sudo apt-get autoremove'
+alias h = help of these alias 
+		
+		" 2>/dev/null
+		
+		case "$?" in
+		0) 
+		
+		echo '
+alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias gf="sudo apt-get upgrade -f"
+alias gf="sudo apt-get dist-upgrade -f"
+alias i="sudo apt-get install "
+alias ai="apt-cache show  "
+alias r="sudo apt-get remove "
+alias p="sudo apt-get --purge remove "
+alias s="apt-cache search "
+alias a="sudo apt-get autoremove"
+alias h="echo \"
+u==>sudo apt-get update
+g==>sudo apt-get upgrade
+gf==>sudo apt-get upgrade -f
+gf==>sudo apt-get dist-upgrade -f
+i==>sudo apt-get install 
+ai==>apt-cache show  
+r==>sudo apt-get remove 
+p==>sudo apt-get --purge remove 
+s==>apt-cache search 
+a==>sudo apt-get autoremove\"
+"
+		
+		
+peaceshow()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peaceshow $filenames ai
+		
+peacei()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peacei $filenames i
+
+
+peacep()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peacep $filenames p
+
+
+peacer()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} &&
+complete -F peacer $filenames r' >>~/.bashrc
+		echo "Function executed"
+		
+		;;
+		*)
+		echo "Function executed"
+		exit 
+		;;
+		esac
+		echo "Function executed"
+		exit
+		# 		else 
+		# 	
+		# 			kdialog --title $"My App Title"  --passivepopup  $"I will not add apt-get shortcuts because you have already on your ~/.bashrc file " 3 2>/dev/null
+		fi 
+}
+
+function_extra_install_system(){
+	echo testing good
+}
+
+function_extra_install_local(){
+	echo testing good local
+}

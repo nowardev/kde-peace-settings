@@ -1,0 +1,38 @@
+[Desktop Action delete]
+Exec=sed -i "\\%u,d" /tmp/listoffilekdenliveautomatic.txt  && echo %u >/dev/null
+Icon=draw-eraser
+Name=remove from the list
+Name[it]=rimuovi dalla lista
+
+[Desktop Action deleteall]
+Exec=rm /tmp/listoffilekdenliveautomatic.txt  && echo %u >/dev/null
+Icon=edit-delete
+Name=delete presentation's list
+Name[it]=cancella la lista della presentazione
+
+[Desktop Action enqueque]
+Exec=echo %u >> /tmp/listoffilekdenliveautomatic.txt  && echo %u >/dev/null
+Icon=list-add
+Name=enqueque to presentation's list
+Name[it]=aggiungi alla lista della presentazione
+
+[Desktop Action generate]
+Exec=akw $(kdialog --combobox "time for picture" 3 4 5 6 7 8 9 10 11 12 13 14 15 16 17 18 19 20 21 22 23 24 25 26 27 28 29 30 40 50 60 --default 5 --title "Time for Picture") $(kdialog --combobox "time for transition" 1 2 3 4 5 6 7 8 9 10  --default 1 --title "Time for transition")  $(kdialog --combobox "Set TV" PAL NTSC 29.97  --default PAL --title "TV") $(kdialog --combobox "Aspect ratio" 1 2 3 4 5  --default 1 --title "Aspect ratio") && $(kdialog --yesno "Do you want open the project with kdenlive" --title "Open Kdenlive" && kdenlive /tmp/automaticslide/automaticslide.kdenlive || kdialog --passivepopup "Project is here /tmp/automaticslide/automaticslide.kdenlive" --title "Done"   )
+Icon=arrow-right
+Name=generate kdenlive project
+Name[it]=genera progetto kdenlive
+
+[Desktop Action kdenlive]
+Exec=\skdenlive /tmp/automaticslide/automaticslide.kdenlive
+Icon=kdenlive
+Name=start kdenlive
+Name[it]=avvia kdenlive
+
+[Desktop Entry]
+Actions=enqueque;delete;deleteall;_SEPARATOR_;generate;kdenlive
+Icon=kdenlive
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,image/.*
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Create a presentation
+X-KDE-Submenu[it]=Crea una presentazione

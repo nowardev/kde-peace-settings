@@ -1,0 +1,56 @@
+[Desktop Action delete]
+Exec=sed -i "\\%u,d" "$HOME/listoffilekdenliveautomaticvideo.txt"
+Icon=draw-eraser
+Name=remove from the VIDEO list
+Name[it]=rimuovi dalla lista VIDEO
+
+[Desktop Action deleteall]
+Exec=rm "$HOME/listoffilekdenliveautomaticvideo.txt" & echo %u >/dev/null
+Icon=edit-delete
+Name=delete VIDEO presentation's list
+Name[it]=cancella la lista della presentazione VIDEO
+
+[Desktop Action enqueque]
+Exec=echo %u >> "$HOME/listoffilekdenliveautomaticvideo.txt"
+Icon=list-add
+Name=enqueque to VIDEO list
+Name[it]=aggiungi alla lista VIDEO
+
+[Desktop Action generate]
+Exec=if [[ $(type -p akm-video) == "" ]] ; then kdialog --error "i can't locate akm-video"  ; else  akm-video  ;fi  && echo %u >/dev/null
+Icon=arrow-right
+Name=generate kdenlive VIDEO project
+Name[it]=genera progetto VIDEO kdenlive 
+
+[Desktop Action kdenlive]
+Exec=kdenlive $HOME/automaticslide/automaticslide.kdenlive  && echo %u >/dev/null
+Icon=kdenlive
+Name=start kdenlive
+Name[it]=avvia kdenlive
+
+[Desktop Action info]
+Exec=kdialog --msgbox "Version 0.7.8b Author : Nowardev" && echo %u >/dev/null
+Icon=dialog-information
+Name=info
+Name[it]=Info
+
+[Desktop Action editlist]
+Exec=kate $HOME/listoffilekdenliveautomaticvideo.txt && echo %u >/dev/null
+Icon=document-edit
+Name=Edit the list with kate
+Name[it]=edita la lista con kate
+
+[Desktop Action unlock]
+Exec=akm-video unlock
+Icon=object-unlocked
+Name=unlock script
+Name[it]=Rilascia script
+
+[Desktop Entry]
+Actions=enqueque;editlist;delete;deleteall;_SEPARATOR_;generate;kdenlive;unlock;info
+Icon=kdenlive
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,video/.*
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Create a VIDEO presentation
+X-KDE-Submenu[it]=Crea una presentazione VIDEO

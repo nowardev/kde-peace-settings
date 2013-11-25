@@ -1,0 +1,946 @@
+#!/bin/bash -x
+######################################################################
+#2008 Creative2 a kubuntu user 
+#
+# thanks a lot to : 
+#
+#
+# 
+#irc bash script channel for suggestion fix and more thank u guys !!
+# prince_jammys
+# greycat
+# trash
+# samuele bordignon 
+# lhunath
+#Irc italian community
+#kdenlive team
+#and many others
+######################################################################
+# This program is free software: you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+ 
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>
+ 
+#NOT IMPLEMETED: AUDIO
+version="0.7.8b"
+tempfolder="$HOME/automaticslide"                                     ##store the kdenlive's project
+listoffile="$HOME/listoffilekdenliveautomaticvideo.txt"                    ##paths file
+                                                                      ## Luma folder
+
+
+
+
+
+
+
+
+
+
+#######################################FUNCTION HELP##################################################################
+functionhelp(){
+
+echo "Script version $version tested on kdenlive:
+
+ 0.7.8
+
+
+WHAT\'S IT:
+
+hi this script generates a kdenlive project automatically to create a presentation from
+videos.
+
+INFO:
+
+--luma folder is here :          $HOME/slidelumafolder
+
+--kdenlive temp files are here : $tempfolder/automaticslide.kdenlive
+
+--list of files MUST BE HERE :   $listoffile
+
+
+USE:
+
+** akm-video  -h print this help
+
+akm-video   <time-for-transition> <PAL|NTSC> <aspect-ratio>
+
+example:
+
+    akm-video  10 PAL 1
+
+10 second for transition
+PAL standard tv for europe region
+1 aspect ratio for the picture, you should write always 1
+"
+}
+
+
+
+ 
+########################################FUNCTION CHECK##############################################
+#
+#
+#
+
+checkprogram(){
+
+program[1]=awk
+program[2]=kdenlive
+program[3]=convert
+program[4]=mplayer
+program[5]=ffmpeg
+
+
+if ! type -p "kdialog" >/dev/null; then
+				  	 if ! type -p "zenity" >/dev/null;then
+						    echo "no dialog found! using echo"
+						    akmdialog="echo"
+					else
+						    akmdialog="zenity"
+					fi
+	else
+		akmdialog="kdialog"
+	 
+echo $akmdialog
+fi
+
+for program in "${program[@]}"; 
+do 
+if ! type -p "$program" >/dev/null;
+ then echo "$program not found; PLEASE INSTALL IT" >&2
+
+
+	
+ 
+
+echo "error exiting..." >&2
+echo 
+echo "For debian : ${program[@]}  "
+echo 
+echo "if you have kubuntu it should be :"
+echo 
+echo "remember you NEED MEDIBUNTU REPOSITORY"
+echo
+echo "if you don't know what is visit this page "
+echo 
+echo "https://help.ubuntu.com/community/Medibuntu"
+echo 
+echo "then when you have done type this on konsole:"
+echo 
+case $akmdialog in 
+
+kdialog)
+kdialog --sorry "make sure you have  ${program[@]} installed it seems you have not $program" --title "MISSING PROGRAM EXITING "
+
+;;
+
+zenity)
+
+zenity --error --text="make sure you have  ${program[@]} installed it seems you have not $program" --title="MISSING PROGRAM EXITING" --width=200 --height=100
+
+;;
+
+echo )
+
+echo  "make sure you have  ${program[@]} installed it seems you have not $program" 
+;;
+
+esac
+
+echo "sudo apt-get install awk imagemagick  mplayer  sox libsox-fmt-all ffmpeg libavcodec-unstripped-52 libavdevice-unstripped-52 libavformat-unstripped-52 libavutil-unstripped-49 libpostproc-unstripped-51 libswscale-unstripped-0"
+echo
+echo "oh yea :D if you wann some of more for your kubuntu you could install kubuntu-restricted-extras"
+echo
+echo "ERROR MISSING PROGRAMS"
+exit 1; 
+fi; done
+}
+
+
+
+functionkdenlivechecking(){
+version=$(kdenlive --version | awk '/Kdenlive:/{print $2}')
+
+if [[ "$version"=="0.7.8"  ]]; then 
+echo "This script was tested on kdenlive 0.7.8 and you have it :)"
+else
+echo "your kdenlive version is $vesion , you could get some problem this script is tested on 
+kdenlive 0.7.8!  "
+fi
+
+
+
+#compiing luma file in you home
+
+#check if exist and is empty a folder...
+if ( shopt -s nullglob dotglob; f=($HOME/slidelumafolder/*); ((${#f[@]})) );then 
+echo "checking  $HOME/slidelumafolder/...Luma folder exist and is not empty...ok"
+
+else 
+
+      if [[ ! -e $HOME/slidelumafolder ]];then
+	mkdir $HOME/slidelumafolder
+	mkdir $HOME/slidelumafolder/PAL
+	mkdir $HOME/slidelumafolder/NTSC
+
+      fi
+
+ 
+
+ for var in /usr/share/mlt/lumas/NTSC/*.png ; do 
+mynamevariable="${var##*/}"                     #2 get the name only
+mynamevari="${var##*/}"
+mynamevariable="${mynamevari%%.*}"  
+convert "$var" "$HOME/slidelumafolder/NTSC/$mynamevariable.pgm "  #convert  #pgm
+
+done
+	
+	
+ for var in /usr/share/mlt/lumas/PAL/* ; do 
+mynamevariable="${var##*/}"                     #2 get the name only
+mynamevari="${var##*/}"
+mynamevariable="${mynamevari%%.*}"  
+convert "$var" "$HOME/slidelumafolder/PAL/$mynamevariable.pgm" 
+echo "done!"
+done
+
+case $akmdialog in 
+
+kdialog)
+kdialog --sorry "Please remake presentation i had to create the luma files...sorry! you can find them here HOME/slidelumafolder"
+;;
+zenity)
+zenity --error --text="Please remake presentation i had to create the luma files...sorry! you can find them here $HOME/slidelumafolder" --title="MISSING PROGRAM EXITING" --width=200 --height=100
+;;
+echo )
+echo  "Please remake presentation i had to create the luma files...sorry! you can find them here $HOME/slidelumafolder" 
+;;
+esac
+
+	   
+
+exit
+fi 
+
+if [[ ! -e $listoffile ]];then
+	functionhelp
+echo "$listoffile where is ??"
+exit 1
+      fi
+}
+
+##############FUNCTION CHECK end #######################
+ 
+
+
+
+functionvideo(){
+
+
+ 
+
+i=1                                                              #inizialize variable
+totalframeformyslidevideo=0                                      #inizialize total frame video variable 
+
+while read line                                                  #reading the list of file libe by line
+	do
+		
+		videolenght[$i]=$(mplayer -identify "$line"  -ao null -vo null -frames 0 2>/dev/null | awk  -F= '/ID_LENGTH=/{print $2}') #get the video lenght and create an array
+		videofps[$i]=$parameterfixingvideo  #getthe correct frame for second from the user cuz only in this way you get the right number of frame on kdenlive
+
+#OBSOLETE REMOVING? videofps[$i]=$(mplayer -identify "$line"  -ao null -vo null -frames 0 2>/dev/null | awk  -F= '/ID_VIDEO_FPS/{print $2}')
+		
+
+		videotototalframe[$i]=$(bc <<< "scale=2; ${videofps[$i]}*${videolenght[$i]}") # Calculate the video frame with bc 
+		videotototalframe[$i]=${videotototalframe[$i]%%.*}                            #trasform floating value 1234.0000 ------_>1234
+
+		
+		firstduration[$i]=$(bc <<< "scale=2; ${videotototalframe[$i]}-$totalframefortransition") #
+		parameter=$(bc<<< "scale=2; 2*$totalframefortransition ")
+		secondduration[$i]=$(bc <<< "scale=2; ${videotototalframe[$i]}-$parameter")              #get video frame -2timefor transitioin
+
+
+ 
+			if [[ $i == 1 || $i == $numberoffiles  ]]; then  #start to sum frame to get the total frame for the project
+				sumframe=${firstduration[$i]}
+			else
+				sumframe=${secondduration[$i]}
+			
+				
+				
+				
+				
+			fi
+ 			totalframeformyslidevideo=$(bc<<< "scale=2; $totalframeformyslidevideo+$sumframe")
+
+		echo lenght ${videolenght[$i]} >>$HOME/automaticslide/videoslide.log
+		echo fps $line  ${videofps[$i]} >>$HOME/automaticslide/videoslide.log
+		echo videotototalframe $line ${videotototalframe[$i]} >>$HOME/automaticslide/videoslide.log
+		echo firstduration $line ${firstduration[$i]}  >>$HOME/automaticslide/videoslide.log
+		echo secondduration $line ${secondduration[$i]} >>$HOME/automaticslide/videoslide.log
+		echo "totalframe for the slide $totalframeformyslidevideo" >>$HOME/automaticslide/videoslide.log
+		echo   >>$HOME/automaticslide/videoslide.log
+
+
+
+i=$(($i+1))
+	done<$listoffile
+
+        
+	
+
+
+
+}
+
+
+
+                                                #start the video function
+
+
+
+
+
+
+
+
+
+
+##########################################RANDOM LUMA EFFECT FOR EVEN FILE!#######################################à
+randomeffectlumaeven(){
+ 
+number=0                                                     #initialize  
+infvalue=1                                                   # set inf value for random function
+maxvalue="${#lumaarray[@]}"                                  # set max value for random funtction
+while [ $number -le $infvalue ]                              #random fucntion 
+do
+  number=$RANDOM                                             # give a random numbver among infvalue and maxvalue
+  let "number %= $maxvalue"                                  # Scales $number down within $RANGE.
+done
+####################################print to the file###################################################
+
+ 
+ 
+
+lumatoapply="$lumafolder/${lumaarray[number]}"               #give you the lume name  
+echo "effect applied "$lumatoapply""                         # print the name of luma files 
+outslide=$(($2-1))                                           #give me the outframe less one to fix the problem with mlt.
+							     #i dunno why but it seeems you have to remove one frame to get the correct transition
+
+# $1 is the frame where transition should start outsile the frame where the transition finish
+
+echo "<transition in=\"$1\" out=\"$outslide\" id=\"transition$3\" >">> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"a_track\" >4</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"b_track\" >5</property >" >>"$tempfolder"/automaticslide.kdenlive 
+echo "<property name=\"factory\" >loader</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"resource\" >"$lumatoapply"</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"mlt_type\" >transition</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"mlt_service\" >luma</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"automatic\" >1</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"kdenlive_id\">luma</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"reverse\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"force_track\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"invert\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"softness\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo " </transition >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"resource\" >"$lumatoapply"</property>"
+###write in the mlt file this is different if the effects is odd or even
+### so there is the same function for odd transition...
+ 
+}
+
+ 
+randomeffectlumaoodd(){
+ 
+number=0                                          #initialize
+infvalue=1
+maxvalue="${#lumaarray[@]}"
+while [ $number -le $infvalue ]
+do
+  number=$RANDOM
+  let "number %= $maxvalue"                       # Scales $number down within $RANGE.
+done
+
+
+ 
+
+ 
+
+lumatoapply="$lumafolder/${lumaarray[number]}"
+echo "effect applied "$lumatoapply""
+outslide=$(($2-1))
+
+echo "$1 $outslide" >>$HOME/automaticslide/videoslide.log
+echo "out "
+echo "<transition in=\"$1\" out=\"$outslide\" id=\"transition$3\" >">> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"a_track\" >4</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"b_track\" >5</property >" >>"$tempfolder"/automaticslide.kdenlive 
+echo "<property name=\"factory\" >loader</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"resource\" >"$lumatoapply"</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"mlt_type\" >transition</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"mlt_service\" >luma</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"automatic\" >1</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"kdenlive_id\">luma</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"reverse\" >1</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"force_track\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"invert\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"softness\" >0</property >" >>"$tempfolder"/automaticslide.kdenlive
+echo " </transition >" >>"$tempfolder"/automaticslide.kdenlive
+
+ 
+ 
+
+
+
+
+}
+
+
+
+#######################################START THE SCRIPT#############################################
+
+checkprogram             #START FUNCTION CHECHKPROGRAM  TO EXIT IF YOU HAVE NOT INSTALLED SOME STUFF
+echo $1
+
+ case $1 in
+ 			 [s/S][e/E][r/R][v/V][e/E][r/R])
+			  akmdialog=echo
+		 ;;
+			  [h/H][e/E][l/L][P/p])
+			  functionhelp 
+			  exit
+		 ;;
+			  [u/U][n/N][l/L][o/O][c/C][k/K])
+			    if [[  -d $lockdir ]] ; then
+				  echo "nothing to do"
+				  debug=""
+			    else 
+				  echo "i will try to remove $lockdir"
+				  debug="remove lock"
+			    fi
+		 ;;
+			  *)
+			  echo "input empty\or not valid continue....OK"
+		;;
+ esac
+
+
+lockdir=/tmp/automtizekdenlive.lock
+ if mkdir "$lockdir"
+ then
+     echo >&2 "successfully acquired lock"
+
+     # Remove lockdir when the script finishes, or when it receives a signal
+     trap 'rm -rf "$lockdir"' 0    # remove directory when script finishes
+     trap "exit 2" 1 2 3 15        # terminate script when receiving signal
+
+     # Optionally create temporary files in this directory, because
+     # they will be removed automatically:
+     tmpfile=$lockdir/filelist
+
+ else
+     echo >&2 "cannot acquire lock, giving up on $lockdir"
+echo $debug
+      if [[ $debug == "remove lock" ]] ;then 
+		rm -r $lockdir
+	    echo $debug
+      else
+	      echo "continue"
+      fi
+     exit 0
+ fi
+
+ 
+
+
+if [[ $akmdialog == kdialog ]]; then 
+
+transitiontime="$(kdialog --slider "time for video transitions [1- 60]s " 1  60 1 --default 5 --title "Time for transition")"                                                   #get the second for transition from user
+tv="$(kdialog --combobox "Set TV" PAL NTSC 29.97  --default PAL --title "TV")"                                                               #get the pal|ntsc from user  	
+aspectratio="$(kdialog --combobox "Aspect ratio" 1 2 3 4 5  --default 1 --title "Aspect ratio")"                                                      #get the aspect ratio from user
+
+
+elif [[ $akmdialog == zenity ]];then 
+
+transitiontime="$(zenity --scale --text "time for video transitions [1- 60]s" --min-value=1 --max-value=60 --value=1 --step 1)"
+tv="$(zenity  --list  --text "Set TV" --radiolist  --column "Pick" --column "Opinion" TRUE PAL FALSE NTSC )"      
+aspectratio="$(zenity  --list  --text "SAspect ratio" --radiolist  --column "Pick" --column "Opinion" TRUE 1 FALSE 2 FALSE 3 FALSE 4 FALSE 5)"                                                         #get the pal|ntsc from user 
+
+
+elif [[ $akmdialog == echo ]];then 
+
+echo "set Time for transitions"
+read
+		if [[ $REPLY =~ ^[0-9]+$ ]] ; then 
+			transitiontime="$REPLY"
+		else
+			  echo "is not a number ... error exit" 
+			  exit
+		fi
+echo "pal or ntsc , europe pal for america ntsc"
+read
+		if [[ $REPLY == [p/P][a/A][l/L] ]] ; then 
+			 tv=PAL
+		elif [[ $REPLY == [n/N][t/T][s/S][c/C] ]];then 
+			   tv=NTSC
+		else 
+			  echo "i need pal or ntsc  ... error exit" 
+			  exit
+		fi
+echo "aspect ratio should be 1 "
+read
+		if [[ $REPLY =~ ^[0-9]+$ ]] ; then 
+			aspectratio="$REPLY"
+		else
+			aspectratio=1
+		fi
+
+
+fi 
+
+if [[ $transitiontime == "" || $tv == ""  || $aspectratio == "" ]] ; then
+
+		case $akmdialog in 
+
+			kdialog)
+				kdialog --msgbox "No input given! erro1" 
+				exit
+			;;
+			zenity)
+				zenity --error --text="no input given! erro1" --title="NO INPUTS GIVEN" --width=200 --height=100
+				exit
+			;;
+			echo)
+				echo "no input given! erro1"
+				exit
+			;;
+			*)
+				echo "continue"
+		esac
+
+else
+echo "continue"
+fi
+
+
+
+numberoffiles=$(wc -l  "$listoffile" | awk '{print $1}')              ##get the number of files on "$listoffile"
+
+
+
+case $tv in
+	    [n/N][t/T][s/S][c/C])
+tv="ntsc"                                                             #obsolete?
+parameterfixingvideo=30                                               #set the frame for ntsc standard              
+frameforsecond="30"
+lumafolder="$HOME/slidelumafolder/PAL"                             #set the luma folder for ntsc standard                              
+                                                                      #you can add in your folder every luma you want                                                    
+	     ;;
+	    [p/P][a/A][l/L])
+tv="pal"
+parameterfixingvideo=25
+frameforsecond="25"
+lumafolder="$HOME/slidelumafolder/PAL"
+	     ;;
+ *)
+tv="PAL"
+frameforsecond=$2
+ parameterfixingvideo=$2
+lumafolder="$HOME/slidelumafolder/PAL"
+esac
+
+echo "frame for second $frameforsecond"
+
+
+cd  "$lumafolder"                                                                   ## go in the luma folder
+lumaarray=(*)                                                                       ## create a array with name's luma files 
+echo total pgm files.."${#lumaarray[@]}" >>$HOME/automaticslide/videoslide.log      ## print how many files there are in the folder 
+
+
+
+
+
+
+
+
+totalframefortransition=$(($transitiontime*$parameterfixingvideo)) #get the total frame for transiziotn but was not clear xD?
+functionvideo      
+functionkdenlivechecking #START FUNCTION functionkdenlivechecking
+
+
+
+
+
+if [ ! -d "$tempfolder" ]; then mkdir "$tempfolder"; fi #if there is not the temp folder create it ! 
+
+###################create the correct wisley configuration file###################################
+# 
+if [[ -e $tempfolder/automaticslide.kdenlive ]]; then #check If exist  old project 
+   rm $tempfolder/automaticslide.kdenlive             #Remove it!
+fi
+
+
+############REMOVE OLD CONFIGURATION####################### OBSOLETE REMOVING ?
+if [[ -e /tmp/nowarslide.txt ]]; then
+rm /tmp/nowarslide.txt
+fi
+##########################################################
+
+#Print some stuff#
+#
+	
+	echo "total files... "$numberoffiles"" 
+	echo "time for picture "$timeforpicture""   #OBSOLETE REMOVING ?
+	echo "time for transition "$transitiontime"" 
+	echo "tv...."$tv""  
+###############set frame for seconds##############################
+#if [[ "$tv" == [P/a][A/a][L/l]  ]] ; then 
+#	frameforsecond="25"
+#	echo "frame for second $frameforsecond"
+#elif [[ "$tv" == [n/N][T/t][s/S][c/C]  ]] ; then 
+#	frameforsecond="30"
+#	echo "frame for second $frameforsecond"
+#else
+#	frameforsecond="$tv"
+#	echo "frame for second $frameforsecond"
+#fi
+##################################################################################
+#
+#
+#
+################start to write project#############################################
+echo "<?xml version='1.0' encoding='utf-8'?>" >>$tempfolder/automaticslide.kdenlive 
+echo "<mlt title=\"Anonymous Submission\" root=\"$HOME/Documents\" >" >> $tempfolder/automaticslide.kdenlive
+###################################################################################
+
+
+	number=1
+	numberoftransition=$(($numberoffiles-1)) #set number of transition = number of photos -1
+	#totalframeforpicture=$(($frameforsecond*$timeforpicture )) #OBSOLETE REMOVING ?
+	totalframefortransition=$(($frameforsecond*$transitiontime )) # number of frames for transition ...
+
+
+	#echo "start first transition...$(($totalframeforpicture-$totalframefortransition))" >> $tempfolder/automaticslide.log
+	#echo "end fist transition...$totalframeforpicture" >> $tempfolder/automaticslide.log
+
+	#firstduration=$(($totalframeforpicture-$totalframefortransition)) 
+	#secondduration=$(($totalframeforpicture-$((2*$totalframefortransition))))
+	
+
+totalframeformyslide=$totalframeformyslidevideo
+
+#$(($(($numberoffiles*$(($totalframeforpicture-$totalframefortransition))))+$totalframefortransition)) #$totalframeformyslidevideo #
+
+	echo "total frame $totalframeformyslide" >> $tempfolder/automaticslide.log
+
+	totalsecondsforslide="$(($totalframeformyslide/$frameforsecond))"
+
+	echo "total second for slide $totalsecondsforslide" >> $tempfolder/automaticslide.log
+
+####################create id start###################################################################################
+
+
+
+
+
+###################end random effect#####################################
+
+
+ 
+echo " <producer in=\"0\" out=\"14999\" id=\"black\" >" >> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"mlt_type\" >producer</property>" >> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"aspect_ratio\" >0.000000</property>" >> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"length\" >15000</property>" >> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"eof\" >pause</property>" >> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"resource\" >black</property>" >> "$tempfolder"/automaticslide.kdenlive
+echo "<property name=\"mlt_service\" >colour</property>" >> "$tempfolder"/automaticslide.kdenlive
+echo " </producer>" >> "$tempfolder"/automaticslide.kdenlive
+echo " <playlist id=\"black_track\" >" >> "$tempfolder"/automaticslide.kdenlive
+echo "  <entry in=\"0\" out=\"$totalframeformyslide\" producer=\"black\" />" >> "$tempfolder"/automaticslide.kdenlive
+echo " </playlist>" >> "$tempfolder"/automaticslide.kdenlive
+echo " <playlist id=\"playlist1\" />" >> "$tempfolder"/automaticslide.kdenlive
+if [[ ! "$5" ]] ; then #if therere is not audio then.. 
+echo " <playlist id=\"playlist2\" />" >> "$tempfolder"/automaticslide.kdenlive
+else
+echo " <playlist id=\"playlist2\">" >> "$tempfolder"/automaticslide.kdenlive
+ echo "<entry in=\"0\" out=\"$totalframeformyslide\" producer=\"1_1\" />" >> "$tempfolder"/automaticslide.kdenlive
+echo "</playlist>" >>"$tempfolder"/automaticslide.kdenlive
+fi
+echo " <playlist id=\"playlist3\" />" >> "$tempfolder"/automaticslide.kdenlive
+
+
+
+##########################create producer for every file##############################
+a=1
+while read line
+    do
+
+echo video total frame  ${videotototalframe[$a]} >>$HOME/automaticslide/videoslide.log
+
+echo  "<producer in=\"0\" out=\"${videotototalframe[$a]}\" id=\"$a\" >" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"mlt_type\" >producer</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"aspect_ratio\" >1</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"length\" >15000</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"eof\" >pause</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"resource\" >$line</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"ttl\" >25</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"progressive\" >1</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<property name=\"mlt_service\" >pixbuf</property>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "</producer>" >>"$tempfolder"/automaticslide.kdenlive
+a=$(($a+1))
+         
+    done < "$listoffile"       
+####create producer for every file END##############################
+
+
+################################start odd files############################################
+number=0  
+while [ $(($((2*$number))+1)) -le "$numberoffiles"   ]
+do
+echo "iniziale  $(($((2*$number))+1))"
+videoindex=$(($((2*$number))+1))
+
+#note the playlist 5 contains 1 3 5 files ... and the black lenght is the frame that should be empty from 
+#for example  if the first clips si 100 frames and se second is 100 too with transition of 10 frames it means you should have
+#a black lenght of 90 but on the playlist 4 because it's the empty frame 
+
+	if [[  $(($((2*$number))+1)) == 1 ]] ; then 
+		echo  "<playlist id=\"playlist5\" >" >>"$tempfolder"/automaticslide.kdenlive
+echo   lista prima durata $videoindex  ${firstduration[$(($videoindex-1))]} >>$HOME/automaticslide/videoslide.log
+		 echo "<entry in=\"0\" out=\""$((${videotototalframe[$videoindex]}-1))"\" producer="\"$videoindex"\" />"	>>"$tempfolder"/automaticslide.kdenlive
+		number=$(($number+1 ))
+	else
+echo   lista prima durata $videoindex  ${firstduration[$(($videoindex-1))]} >>$HOME/automaticslide/videoslide.log
+		echo "<blank length=\""${secondduration[$(($videoindex-1))]}"\" />" >>"$tempfolder"/automaticslide.kdenlive
+		echo "<entry in=\"0\" out=\""$((${videotototalframe[$videoindex]}-1))"\" producer=\""$videoindex"\" />" >>"$tempfolder"/automaticslide.kdenlive
+		number=$(($number+1 ))
+	
+fi
+ 
+ 
+ done
+ echo "</playlist>" >>"$tempfolder"/automaticslide.kdenlive
+
+
+##########################create playlist 2 even files###############################################
+number=1 
+while [ $((2*$number)) -le "$numberoffiles"   ]
+do
+echo iniziale $((2*$number))
+videoindex=$((2*$number))
+
+ 
+
+
+
+############first file must print playlist id too#######################
+	if [[ $(( 2*$number )) == 2 ]] ; then 
+		echo  "<playlist id=\"playlist4\" >" >>"$tempfolder"/automaticslide.kdenlive
+		echo "<blank length=\""${firstduration[$(($videoindex-1))]}"\" />">>"$tempfolder"/automaticslide.kdenlive
+
+		echo "<entry in=\"0\" out=\""$((${videotototalframe[$videoindex]}-1))"\" producer="\"$(( 2*$number ))"\" />" >>"$tempfolder"/automaticslide.kdenlive
+		number=$(($number+1 ))
+echo   lista prima durata $videoindex  ${firstduration[$(($videoindex-1))]} >>$HOME/automaticslide/videoslide.log
+########the normal file must print only they own stuff#################
+	else
+echo   lista prima durata $videoindex  ${firstduration[$(($videoindex-1))]} >>$HOME/automaticslide/videoslide.log
+
+		echo "<blank length=\""${secondduration[$(($videoindex-1))]}"\" />" >>"$tempfolder"/automaticslide.kdenlive
+		echo "<entry in=\"0\" out=\""$((${videotototalframe[$videoindex]}-1))"\" producer=\""$(( 2*$number ))"\" />" >>"$tempfolder"/automaticslide.kdenlive
+		number=$(($number+1 ))
+	
+fi
+  done
+
+echo "</playlist>" >>"$tempfolder"/automaticslide.kdenlive
+echo "<tractor title=\"Anonymous Submission\" global_feed=\"1\" in=\"0\" out=\"$totalframeformyslide.000000\" id=\"maintractor\" >" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<track producer=\"black_track\" />"  >>"$tempfolder"/automaticslide.kdenlive
+echo  "<track hide=\"video\" producer=\"playlist1\" />" >>"$tempfolder"/automaticslide.kdenlive
+echo  " <track hide=\"video\" producer=\"playlist2\" />" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<track producer=\"playlist3\" />" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<track producer=\"playlist4\" />" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<track producer=\"playlist5\" />">>"$tempfolder"/automaticslide.kdenlive
+
+  
+
+count=1
+countoftransition=$(($numberoffiles-1))
+files="/tmp/nowar.nowar"
+ 
+ 
+#echo  $(($count*$totalframeforpicture ))
+echo "count of file " "$count"
+echo "count of transition $countoftransition"
+ pointofend=$(($numberoffiles-1 ))
+ while [ $((2*$count)) -le "$pointofend"   ]
+do
+
+correction=0
+ echo "start"
+parameter=$((2*$count))
+
+transitionstart=0
+for ((k=1; k <= $parameter ; k++)) ; do 
+transitionstart=$(($transitionstart+${videotototalframe[$k]}))
+#echo $(($transitionstart+${videotototalframe[$k]})) >>/tmp/beta
+
+done
+
+transitionstart=$(($transitionstart-$(($parameter*$totalframefortransition )) ))
+transitionend=$(($transitionstart+$totalframefortransition ))  
+
+echo $transitionstart >>/tmp/delta
+echo $transitionend >>/tmp/delta
+
+randomeffectlumaeven $transitionstart $transitionend $parameter
+echo "randomeffectlumaeven $transitionstart $transitionend $parameter"
+transitionend=$(($transitionend-$correction))
+ count=$(($count+1 ))	
+
+done
+#######random effect odd
+count=0
+ while [ $(($((2*$count))+1)) -le "$pointofend"   ]
+do
+  echo "start"
+##correction=$(($((3*$count))+2))
+
+correction=0
+odd=$(($((2*$count))+1))
+##transitionstart=$(($(($odd*${videotototalframe[$odd]} ))- $(($odd*$totalframefortransition ))))
+##transitionend=$(($(($odd*${videotototalframe[$odd]} ))- $(($(($(($odd-1 ))*$totalframefortransition ))))+$correction))
+
+transitionstart=0      
+for ((k=1; k <= $odd ; k++)) ; do 
+transitionstart=$(($transitionstart+${videotototalframe[$k]})) #get the number where transition start 
+echo $(($transitionstart+${videotototalframe[$k]})) >>/tmp/beta #if you calculate for the fist video 
+done                                                            # it's video1_total_frame-1timetransitionframe ; video1_total_frame 
+                                                                # for the second transitition
+								#video_1_total_frame+video_2_total_frame-2_transitionframe     
+								#video_1_total_frame+video_2_total_frame-1_transitionframe     
+								#and so on...
+								#video1+video2+video3-3_transitionframe     
+								#video1+video2+video3-2_transitionframe     
+
+
+transitionstart=$(($transitionstart-$(($odd*$totalframefortransition )) ))
+transitionend=$(($transitionstart+$totalframefortransition ))
+
+#echo $transitionstart >> /tmp/delta
+#echo $transitionend >>/tmp/delta
+
+randomeffectlumaoodd $transitionstart $transitionend  $((2*$count))
+echo "randomeffectlumaoodd $transitionstart $transitionend  $((2*$count))"
+count=$(($count+1 ))
+done
+echo "</tractor>" >>"$tempfolder"/automaticslide.kdenlive
+echo "<kdenlivedoc profile=\"dv_$tv\" kdenliveversion=\"0.7.7.1\" version=\"0.85\" projectfolder=\"$HOME/kdenlive\"  >" >>"$tempfolder"/automaticslide.kdenlive
+ #echo "<documentproperties zonein=\"0\" zoneout=\"88\" zoom=\"4\" verticalzoom=\"1\" position=\"422\"/>" >>"$tempfolder"/automaticslide.kdenlive
+ #echo " <profileinfo width=\"720\" display_aspect_den=\"3\" frame_rate_den=\"1\" description=\"DV/DVD PAL\" height=\"576\" frame_rate_num=\"25\" display_aspect_num=\"4\" progressive=\"0\" sample_aspect_num=\"16\" sample_aspect_den=\"15\"/>" >>"$tempfolder"/automaticslide.kdenlive
+echo  "<tracksinfo>" >>"$tempfolder"/automaticslide.kdenlive
+ echo  "<trackinfo blind=\"1\" mute=\"0\" locked=\"0\" trackname=\"\" type=\"audio\" />" >>"$tempfolder"/automaticslide.kdenlive
+ echo  "<trackinfo blind=\"1\" mute=\"0\" locked=\"0\" trackname=\"\" type=\"audio\" />" >>"$tempfolder"/automaticslide.kdenlive
+ echo  "<trackinfo blind=\"0\" mute=\"0\" locked=\"0\" trackname=\"\" />" >>"$tempfolder"/automaticslide.kdenlive
+ echo  "<trackinfo blind=\"0\" mute=\"0\" locked=\"0\" trackname=\"\" />" >>"$tempfolder"/automaticslide.kdenlive
+ echo  "<trackinfo blind=\"0\" mute=\"0\" locked=\"0\" trackname=\"\" />" >>"$tempfolder"/automaticslide.kdenlive
+ echo  " </tracksinfo>" >>"$tempfolder"/automaticslide.kdenlive
+  
+
+   
+nlist=1
+while read line
+    do
+namepicture=$(basename "$line")
+echo " <kdenlive_producer audio_max=\"0\" channels=\"0\" duration=\"${videotototalframe[$nlist]}\" default_audio=\"0\" video_max=\"0\"   frequency=\"0\" in=\"0\"  aspect_ratio=\"1.000000\" out=\"${videotototalframe[$nlist]}\"   type=\"5\" id=\"$nlist\" name=\"$namepicture\" default_video=\"0\" resource=\"$line\" />" >>"$tempfolder"/automaticslide.kdenlive
+nlist=$(($nlist+1))
+     done < "$listoffile" 
+if [[ ! "$5" ]] ; then #if therere is not audio then.. 
+echo "no audio"
+else
+
+echo " <kdenlive_producer audiocodec=\"PCM signed 16-bit little-endian\" channels=\"2\" duration=\"$totalframeformyslide\"   frequency=\"44100\"   type=\"1\" id=\"1_1\" name=\"out.wav\" resource=\"$tempfolder/out.wav\" />" >>"$tempfolder"/automaticslide.kdenlive
+fi
+
+
+ echo  "<markers/>" >>"$tempfolder"/automaticslide.kdenlive
+ echo  "<groups/>" >>"$tempfolder"/automaticslide.kdenlive
+echo "</kdenlivedoc>" >>"$tempfolder"/automaticslide.kdenlive
+echo "</mlt>" >>"$tempfolder"/automaticslide.kdenlive
+echo ""
+echo  "file generated here $tempfolder/automaticslide.kdenlive" 
+
+case $akmdialog in 
+
+kdialog)
+kdialog --msgbox "file generated here $tempfolder/automaticslide.kdenlive" 
+;;
+zenity)
+zenity --error --text="file generated here $tempfolder/automaticslide.kdenlive" --title="MISSING PROGRAM EXITING" --width=200 --height=100
+;;
+echo)
+echo  "file generated here $tempfolder/automaticslide.kdenlive" 
+;;
+esac
+ 
+
+#START######################OPEN THE PROJECT##############################################################
+
+if [[ $akmdialog == kdialog ]]; then 
+
+ans=$(kdialog --yesno "Do you want open the project with kdenlive" --title "Open Kdenlive")
+	if [[ $? == 0 ]]; then
+
+		kdenlive $HOME/automaticslide/automaticslide.kdenlive
+	else  
+		echo "bye :D" 
+		exit
+	fi
+
+
+elif [[ $akmdialog == zenity ]];then 
+
+ans=$(zenity --question --text "Do you want open the project with kdenlive" ) 
+
+	if [[ $? == 0 ]]; then
+
+		kdenlive $HOME/automaticslide/automaticslide.kdenlive
+	else  
+		echo "bye :D" 
+		exit
+	fi
+
+
+elif [[ $akmdialog == echo ]];then 
+
+echo "Do you want start kdenlive :S ?"
+
+
+	 read
+		 case $REPLY in
+ 			  [y/Y]|[y/Y][e/E][s/S])
+			  kdenlive $HOME/automaticslide/automaticslide.kdenlive
+		 ;;
+			   [n/N]|[n/N][o/O])
+			  echo "bye :D" 
+			  exit
+		 ;;
+			  *)
+			  echo "boom dude yes or no "
+			  exit
+		;;
+		esac
+  fi 
+#END######################OPEN THE PROJECT##############################################################
+
+
+   
+
+
