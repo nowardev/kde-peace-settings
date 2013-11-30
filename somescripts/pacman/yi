@@ -32,7 +32,9 @@ if [[ -z "${b[@]}" ]]; then
 echo $"not packages found with $1 name"
 exit
 else 
-echo $"i am installing these ${b[@]} ok ?press ENTER for YES"
+echo $"${b[@]} 
+
+DO YOU WANT INSTALL THESE PACKAGES ?   press ENTER for YES"
 read   
 
 
