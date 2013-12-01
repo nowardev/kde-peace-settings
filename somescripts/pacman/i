@@ -32,14 +32,20 @@ if [[ -z "${b[@]}" ]]; then
 echo $"not packages found with $1 name"
 exit
 else 
-echo $"i am installing these ${b[@]} ok ?press ENTER for YES"
+
+echo $"
+Packages selected: 
+
+${b[@]} 
+
+do you want install these packages ? Y\n or press ENTER for YES"
 read   
 
 
 case "$REPLY" in
 
 ""|[yY]|-y|-Y]|[yY][eE][sS])
-pacman -Sy ${b[@]}
+sudo pacman -Sy ${b[@]}
 
 ;;
 

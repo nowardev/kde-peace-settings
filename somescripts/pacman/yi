@@ -32,16 +32,19 @@ if [[ -z "${b[@]}" ]]; then
 echo $"not packages found with $1 name"
 exit
 else 
-echo $"${b[@]} 
+echo $"
+Packages selected: 
 
-DO YOU WANT INSTALL THESE PACKAGES ?   press ENTER for YES"
+${b[@]} 
+
+do you want install these packages ? Y\n or press ENTER for YES"
 read   
 
 
 case "$REPLY" in
 
 ""|[yY]|-y|-Y]|[yY][eE][sS])
-yaourt -Sy ${b[@]}
+sudo yaourt -Sy ${b[@]}
 
 ;;
 
