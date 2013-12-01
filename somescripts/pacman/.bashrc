@@ -27,22 +27,22 @@ alias u="sudo pacman -Syy"
  "
  
  alias yu="sudo yaourt -Syy"
- alias yg="sudo pacman -Syu"
-#  alias yi="sudo pacman -Sy"
- alias ypi="pacman -Qii"
- alias yr="sudo pacman -Rs "
- alias yp="sudo pacman -Rn"
- alias ys="pacman -Ss"
- alias yc="sudo pacman -Sc"
+ alias yg="sudo yaourt -Syu"
+#  alias yi="sudo yaourt -Sy"
+ alias ypi="yaourt -Qii"
+ alias yr="sudo yaourt -Rs "
+ alias yp="sudo yaourt -Rn"
+ alias ys="yaourt -Ss"
+ alias yc="sudo yaourt -Sc"
  alias yh="echo \"
- u=sudo pacman -Syy
- g=sudo pacman -Syu
- i=sudo pacman -Sy
- pi=pacman -Qii
- r=sudo pacman -Rs
- p=sudo pacman -Rn
- s=pacman -Ss
- c=sudo pacman -Sc\"
+ u=sudo yaourt -Syy
+ g=sudo yaourt -Syu
+ i=sudo yaourt -Sy
+ pi=yaourt -Qii
+ r=sudo yaourt -Rs
+ p=sudo yaourt -Rn
+ s=yaourt -Ss
+ c=sudo yaourt -Sc\"
  "
  peacefun()
  {
@@ -79,57 +79,57 @@ alias openbashrc="kde-open ~/.bashrc"
 alias alsamixer="alsamixer -V all"
 # alias conferencelog="cat /home/archpeace/parole-conference-010alpha17/error.log"
 
-conferencepulse()
-{
-#license gpl 
-#copyright nowardev@gmail.com
-
-
-i=0
-while read line ;do
-audiocard[$i]="$line"
-i=$(($i+1))
-done< <( grep capture /proc/asound/pcm | cut -b 2)
-
-i=0
-while read line ;do
-audionamecard[$i]="$line"
-i=$(($i+1))
-done< <(grep capture /proc/asound/pcm | cut -d : -f 2)
-
- 
-if [[ ${#audiocard[@]} >1 ]]; then 
-echo $"I have detected more than 1 microphone in your computer please select what you want use (0-$((${#audiocard[@]}-1)))
-"
-
- 
- 
-i=0
-for (( i=0 ; i <${#audiocard[@]};i++)); do 
-    echo $"Choose $i for this audio card:  ${audionamecard[$i]} "
-
-done
-
- 
-read   
- 
-    if [[ -z "$REPLY" ]];then
-        microphone="${audiocard[0]}"
-    else
-    echo $"MicroPhone selected "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}""
-       microphone="${audiocard["$REPLY"]}"
-    fi
-    
-REPLY=""
-else
- microphone="${audiocard[0]}"
- fi 
-
-	/home/archpeace/parole-conference-010alpha17/./parole-conference -n $USER -d pulse -D plughw:$microphone
-
-
-}
+# conferencepulse()
+# {
+# #license gpl 
+# #copyright nowardev@gmail.com
+# 
+# 
+# i=0
+# while read line ;do
+# audiocard[$i]="$line"
+# i=$(($i+1))
+# done< <( grep capture /proc/asound/pcm | cut -b 2)
+# 
+# i=0
+# while read line ;do
+# audionamecard[$i]="$line"
+# i=$(($i+1))
+# done< <(grep capture /proc/asound/pcm | cut -d : -f 2)
+# 
+#  
+# if [[ ${#audiocard[@]} >1 ]]; then 
+# echo $"I have detected more than 1 microphone in your computer please select what you want use (0-$((${#audiocard[@]}-1)))
+# "
+# 
+#  
+#  
+# i=0
+# for (( i=0 ; i <${#audiocard[@]};i++)); do 
+#     echo $"Choose $i for this audio card:  ${audionamecard[$i]} "
+# 
+# done
+# 
+#  
+# read   
+#  
+#     if [[ -z "$REPLY" ]];then
+#         microphone="${audiocard[0]}"
+#     else
+#     echo $"MicroPhone selected "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}""
+#        microphone="${audiocard["$REPLY"]}"
+#     fi
+#     
+# REPLY=""
+# else
+#  microphone="${audiocard[0]}"
+#  fi 
+# 
+# 	/home/archpeace/parole-conference-010alpha17/./parole-conference -n $USER -d pulse -D plughw:$microphone
+# 
+# 
+# }
 
 
 #yaourt -Ss kdeplasma-applets- | awk '/^aur\/kdeplasma-applets/&&!/git/&&!/svn/ { sub(/^aur\//, ""); print $1 }'
-export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/core_perl:/home/archpeace/bin
+# export PATH=/usr/local/sbin:/usr/local/bin:/usr/bin:/usr/bin/core_perl:/home/archpeace/bin
