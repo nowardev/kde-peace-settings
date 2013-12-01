@@ -27,7 +27,7 @@ fi
 
 if [[ "$1" =~ \* ]]; then 
 
-b=($(pacman -Sl | cut -d " " -f 2 | grep -i ${1//\*/}| grep -v l10n )) 
+b=($(pacman -qSl | grep -i ${1//\*/}| grep -v l10n )) 
 if [[ -z "${b[@]}" ]]; then
 echo $"not packages found with $1 name"
 exit
@@ -45,7 +45,7 @@ read
 case "$REPLY" in
 
 ""|[yY]|-y|-Y]|[yY][eE][sS])
-sudo pacman -Sy ${b[@]}
+sudo pacman -Syu "${b[@]}"
 
 ;;
 

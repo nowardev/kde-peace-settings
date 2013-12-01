@@ -27,7 +27,8 @@ fi
 
 if [[ "$1" =~ \* ]]; then 
 
-b=($(yaourt -Sl 2>&1 | cut -d "/" -f 2 |cut -d " " -f1 | grep -i ${1//\*/}| grep -v l10n )) 
+# b=($(yaourt -Sql 2>&1 | cut -d "/" -f 2 |cut -d " " -f1 | grep -i ${1//\*/}| grep -v l10n )) 
+b=($(yaourt -Sql  |  grep -i | grep -i ${1//\*/}| grep -v l10n))
 if [[ -z "${b[@]}" ]]; then
 echo $"not packages found with $1 name"
 exit
@@ -44,7 +45,7 @@ read
 case "$REPLY" in
 
 ""|[yY]|-y|-Y]|[yY][eE][sS])
-sudo yaourt -Sy ${b[@]}
+sudo yaourt -Syu "${b[@]}"
 
 ;;
 
