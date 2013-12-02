@@ -48,14 +48,14 @@ alias u="sudo pacman -Syy"
  {
  cur=`_get_cword`
  
-  COMPREPLY=( $( pacman -Sl | cut -d " " -f 2 | grep ^$cur 2> /dev/null ) )
+  COMPREPLY=( $( pacman -Slq | grep ^$cur 2> /dev/null ) )
  
   return 0
 }
  peacefunyaourt()
  {
  cur=`_get_cword`
- COMPREPLY=( $( yaourt -Sl 2>&1 | cut -d "/" -f 2 |cut -d " " -f1| grep ^$cur 2> /dev/null ) )
+ COMPREPLY=( $( yaourt -Slq | grep ^$cur 2> /dev/null ) )
  return 0
 }
  complete -F peacefun $filenames pi
