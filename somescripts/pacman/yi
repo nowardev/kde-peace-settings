@@ -60,5 +60,7 @@ esac
 
 REPLY=""
 fi 
+else
+sudo yaourt -Sy "$1"
 fi 
   

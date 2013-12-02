@@ -60,5 +60,7 @@ esac
 
 REPLY=""
 fi 
+else 
+sudo pacman -Syu "$1"
 fi 
   
