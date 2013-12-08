@@ -51,7 +51,8 @@ kdialog --passivepopup "kate is starting..  " 1
 kate & kpid="$!"
  
 else
-kpid=$(pidof kate)
+kpidarray=($(pidof kate))
+kpid="${kpidarray[1]}"
 echo kate is running..
 fi
 }
