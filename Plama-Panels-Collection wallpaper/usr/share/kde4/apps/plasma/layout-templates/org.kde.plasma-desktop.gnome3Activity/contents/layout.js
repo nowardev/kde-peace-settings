@@ -46,7 +46,14 @@ function RemoveOldPanels()
 //RemoveOldPanels() //load the function 
 //////////////////////////////////////////////////////////
 
+  
+
 var screenrect = screenGeometry(0) 
+var x = screenrect.width
+var y = screenrect.height
+var xy = x+"x"+y
+print (xy)
+
 function activitygnome3(){
 	
 	var activity = new Activity("desktop")
@@ -68,7 +75,7 @@ function activitygnome3(){
 	activity.wallpaperPlugin = "image"
 	activity.wallpaperMode = "SingleImage"
 	activity.currentConfigGroup = Array("Wallpaper", "image")
-	activity.writeConfig("wallpaper", "fabric-gnome")
+	activity.writeConfig("wallpaper", "/usr/share/wallpapers/fabric-gnome/contents/images/"+xy+".png")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
 	activity.reloadConfig()
 }
