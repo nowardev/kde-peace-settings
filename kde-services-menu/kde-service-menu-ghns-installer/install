@@ -414,7 +414,7 @@ esac
 
 
 bin="/usr/local/bin/"
-folder_local_bash_scripts="$HOME/binv"
+folder_local_bash_scripts="$HOME/bin"
 prefix="$(kde4-config --prefix)"
 localprefix="$(kde4-config --localprefix)"
 
