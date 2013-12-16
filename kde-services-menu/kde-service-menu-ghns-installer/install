@@ -142,20 +142,29 @@ function_check_folder_and_create_it_if_doesnt_exist "$folder_local_bash_scripts"
 # fi
 
 #if the variable is NOT EMPTY then don't do again export 
-if  [[ -z $(echo "$PATH"| grep  "$folder_local_bash_scripts") ]]; then
+if  [[ $PATH != *$folder_local_bash_scripts* ]]; then
 	export "PATH=$PATH:$folder_local_bash_scripts"
+	 
 	#execute the command everytiem you login
-	echo "export PATH=$PATH:$folder_local_bash_scripts" >> "$HOME/.bash_profile" 
+	kdialog --title $"INFO"  --yes-label $"Yes, i want Add"  --no-label $"Noo" --cancel-label $"Cancell"  --warningyesnocancel   $" I have detected that in your \$PATH there is not this folder $HOME/bin , so you will not be able to execute this script the program locally , DO YOU WANT ADD $HOME/bin to your path?" 
 	
-	#check if bash_profile has bashrc  sourced  within 
-	if  [[ -z $(  grep "source "$HOME/.bashrc"" "$HOME/.bash_profile" )  ]];then
-		echo "source "$HOME/.bashrc"" >> "$HOME/.bash_profile"
-	else
-		echo $"source $HOME/.bashrc already present"
-	fi
+	if [[ $? == 0 ]] ; then 
+		echo "export PATH=$PATH" >> "$HOME/.bash_profile" 
+  	#check if bash_profile has bashrc  sourced  within 
+		if  [[ -z $(  grep "source "$HOME/.bashrc"" "$HOME/.bash_profile" )  ]];then
+			echo "source "$HOME/.bashrc"" >> "$HOME/.bash_profile"
+		else
+			echo $"source $HOME/.bashrc already present"
+		fi
 
-	#load the new stuff into bash shell 
-	source "$HOME/.bash_profile"
+		#load the new stuff into bash shell 
+		source "$HOME/.bash_profile"
+	else
+		kdialog --title $"Service Menu Installer"  --msgbox  $" This Program is installed locally but you will not be able to run it properly: this is your current $PATH , and should be $PATH::$folder_local_bash_scripts"
+  
+	fi 
+	 
+
 
 else
 	echo
@@ -164,7 +173,7 @@ else
 fi 
 
 
-
+ 
 
 
 #install every script with the correct permission
@@ -405,7 +414,7 @@ esac
 
 
 bin="/usr/local/bin/"
-folder_local_bash_scripts="$HOME/bin"
+folder_local_bash_scripts="$HOME/binv"
 prefix="$(kde4-config --prefix)"
 localprefix="$(kde4-config --localprefix)"
 
