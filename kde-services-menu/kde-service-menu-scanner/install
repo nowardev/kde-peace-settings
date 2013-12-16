@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 ##license gpl 
 #This program is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
@@ -35,13 +35,13 @@ function_check_folder_and_create_it_if_doesnt_exist () {
 function_checksudo(){
 
 if [[ $sudoerror == true ]] ; then
-function_systemwide
+function_system
 wrongpas=$"before you typed a WRONG PASS"
 fi
 
 }
 
-function_systemwide() {
+function_system() {
 
 	sudoerror=false
 	pas=$(kdialog --password $"Insert Root Password $wrongpas" 2>/dev/null )
@@ -88,7 +88,7 @@ function_systemwide() {
 	fi
 #install menu entry 
 
-	directory="$PWD/usr/share/kde4/services/ServiceMenus/"
+	directory="$PWD/usr/share/applications/kde4/"
 	if [[  -d "$directory"  ]] ; then 
 		if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
 			echo "$PWD/usr/share/applications/kde4/  detected "
@@ -116,11 +116,15 @@ pas=""
 
 if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
 	if [[ $(declare -F function_extra_install_global ) ]]; then 
-		echo $"Wide Function Extra Install Global"
+		echo $"Function Extra Install Global"
 		function_extra_install_global	
-	elif [[ $(declare -F function_extra_install_wide )  ]]; then 
-		echo "Wide Install Extra function Detected executing.."
-		function_extra_install_wide
+	else 
+		echo $"No Extra global Install functions"
+	fi 
+	
+	if [[ $(declare -F function_extra_install_system )  ]]; then 
+		echo "Function Extra Install System executing.."
+		function_extra_install_system
 	else 
 		echo $"No Extra wide Install functions"
 	fi 
@@ -138,20 +142,29 @@ function_check_folder_and_create_it_if_doesnt_exist "$folder_local_bash_scripts"
 # fi
 
 #if the variable is NOT EMPTY then don't do again export 
-if  [[ -z $(echo "$PATH"| grep  "$folder_local_bash_scripts") ]]; then
+if  [[ $PATH != *$folder_local_bash_scripts* ]]; then
 	export "PATH=$PATH:$folder_local_bash_scripts"
+	 
 	#execute the command everytiem you login
-	echo "export PATH=$PATH:$folder_local_bash_scripts" >> "$HOME/.bash_profile" 
+	kdialog --title $"INFO"  --yes-label $"Yes, i want Add"  --no-label $"Noo" --cancel-label $"Cancell"  --warningyesnocancel   $" I have detected that in your \$PATH there is not this folder $HOME/bin , so you will not be able to execute this script the program locally , DO YOU WANT ADD $HOME/bin to your path?" 
 	
-	#check if bash_profile has bashrc  sourced  within 
-	if  [[ -z $(  grep "source "$HOME/.bashrc"" "$HOME/.bash_profile" )  ]];then
-		echo "source "$HOME/.bashrc"" >> "$HOME/.bash_profile"
-	else
-		echo $"source $HOME/.bashrc already present"
-	fi
+	if [[ $? == 0 ]] ; then 
+		echo "export PATH=$PATH" >> "$HOME/.bash_profile" 
+  	#check if bash_profile has bashrc  sourced  within 
+		if  [[ -z $(  grep "source "$HOME/.bashrc"" "$HOME/.bash_profile" )  ]];then
+			echo "source "$HOME/.bashrc"" >> "$HOME/.bash_profile"
+		else
+			echo $"source $HOME/.bashrc already present"
+		fi
 
-	#load the new stuff into bash shell 
-	source "$HOME/.bash_profile"
+		#load the new stuff into bash shell 
+		source "$HOME/.bash_profile"
+	else
+		kdialog --title $"Service Menu Installer"  --msgbox  $" This Program is installed locally but you will not be able to run it properly: this is your current $PATH , and should be $PATH::$folder_local_bash_scripts"
+  
+	fi 
+	 
+
 
 else
 	echo
@@ -160,32 +173,34 @@ else
 fi 
 
 
-
+ 
 
 
 #install every script with the correct permission
-	for file in $PWD/usr/bin/* ; do
-		echo "..............install -m 755 -D "$file"  "$folder_local_bash_scripts""
-		install -m 755 -D "$file"  "$folder_local_bash_scripts" 
-	done
+	if [[ -d "$PWD/usr/bin/" ]]; then 
+		for file in $PWD/usr/bin/* ; do
+			echo "..............install -m 755 -D "$file"  "$folder_local_bash_scripts""
+			install -m 755 -D "$file"  "$folder_local_bash_scripts" 
+		done
+	fi 
 
 #install the service menu 
-  
-	for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop ;  do
-		echo "installing.....install -m 644 -D "$file"  "$localprefix"share/kde4/services/ServiceMenus"
-		install -m 644 -D "$file"  ""$localprefix"share/kde4/services/ServiceMenus" 
-	done
+	if [[ -d "$PWD/usr/share/kde4/services/ServiceMenus/" ]]; then 
+		for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop ;  do
+			echo "installing.....install -m 644 -D "$file"  "$localprefix"share/kde4/services/ServiceMenus"
+			install -m 644 -D "$file"  ""$localprefix"share/kde4/services/ServiceMenus" 
+		done
+	fi 
 #install the menu entry if exist 
 
-  #install menu entry 
+  #install menu entry in ~/.kde/share/applnk
 	if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
+		function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applnk"
+		
 	
 		for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
-			function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applications"
-			function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applications/kde4"
-			 
-			echo "installing.....install -m 755 -D $file  "$localprefix"share/applications/kde4/" 
-			install -m 755 -D "$file"  ""$localprefix"share/applications/kde4/"
+ 			echo "installing.....install -m 755 -D $file "$localprefix"share/applnk" 
+			install -m 755 -D "$file"  ""$localprefix"share/applnk"
 		done
 	fi 
 
@@ -196,13 +211,17 @@ fi
 	
 	if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
 		if [[  $(declare -F function_extra_install_global )  ]]; then
-			echo "Global extra function Detected Executing.."
+			echo "Global Extra function Detected Executing.."
 			function_extra_install_global
-		elif [[ $(declare -F function_extra_install_local ) ]]; then 
-			echo "Local Install Extra function Detected executing.."
+		else 
+			echo $"No Extra global Install functions"
+		fi
+			
+		if [[ $(declare -F function_extra_install_local ) ]]; then 
+			echo "Function Extra Install Local executing.."
 			function_extra_install_local
 		else 
-			echo $"No Extra local Install functions"
+			echo $"No Extra Local Install functions"
 		fi 
 
 	fi 
@@ -210,7 +229,7 @@ fi
 }
 
 
-function_remove(){
+function_remove_local(){
 
 ##remove local 
 messageremoved=""
@@ -244,19 +263,19 @@ messageremoved=""
  
   done
   
-#remove the menu entry if it exist
-if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-	
-	for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
-		file="${file##*/}"
-		if [[ -e "$localprefix/share/applications/kde4/$file"  ]]; then 
-			echo "rm  "$localprefix"share/applications/kde4/$file"
-			rm  ""$localprefix"share/applications/kde4/$file"
-			messageremoved="$messageremoved  "$localprefix"share/applications/kde4/$file"
-		fi 
-	done
-fi 
  
+ 
+#remove menu entry
+  #install menu entry in ~/.kde/share/applnk
+	if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
+		for file in $PWD/usr/share/applications/kde4/*.desktop ; do
+			file="${file##*/}"
+ 			echo "removing ... "$localprefix"share/applnk/$file " 
+			rm  ""$localprefix"share/applnk/$file"
+			messageremoved="$messageremoved  "$localprefix"share/applnk/$file "
+		done
+	fi 
+
 ####################################################################
 kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2 2>/dev/null
@@ -264,13 +283,17 @@ kdialog --passivepopup $"Removed these files  $messageremoved" 2 2>/dev/null
 if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
 	
 	if [[ $(declare -F function_extra_deinstall_global )  ]]; then 
-		echo $"Function extra deinstall global detected executing"
+		echo $"Function Extra Deinstall Global Local detected executing .."
 		function_extra_deinstall_global
-	elif [[ $(declare -F function_extra_deinstall_local )   ]]; then 
-		echo $"Function extra deinstall local detected executing"
+	else
+		echo  $"No Function Extra Global Local Deinstall Detected"
+	fi 
+	
+	if [[ $(declare -F function_extra_deinstall_local )   ]]; then 
+		echo "Function Extra Deinstall Local executing.."
 		function_extra_deinstall_local
 	else 
-		echo $"No Function extra deinstall detected"
+		echo $"No Function Extra Local Deinstall Detected"
 	fi 
 
 fi 
@@ -323,12 +346,12 @@ done
 
 #remove the menu entry if it exist
 if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-	echo $"Menu entry detected"
+	echo $"Folder Menu entry detected"
 	for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
 		file="${file##*/}"
 		if [[ -e "$prefix/share/applications/kde4/$file"  ]]; then 
 			echo "rm  "$prefix/share/applications/kde4/$file""
-			echo "$pas" | sudo -S rm  ""$prefix"share/applications/kde4/$file"
+			echo "$pas" | sudo -S rm  ""$prefix"/share/applications/kde4/$file"
 			messageremoved="$messageremoved  "$prefix"share/applications/kde4/$file"
 		fi 
 	done
@@ -343,11 +366,15 @@ if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then
 	if [[ $(declare -F function_extra_deinstall_global )  ]]; then 
 		echo $"Function extra deinstall global detected executing"
 		function_extra_deinstall_global
-	elif [[ $(declare -F function_extra_deinstall_wide ) ]]; then 
-		echo $"Function extra deinstall wide detected executing"
-		function_extra_deinstall_wide
 	else
-		echo $"No Function extra deinstall wide detected"
+		echo  $"No Function Extra Global System Deinstall Detected"
+	fi 
+	
+	if [[ $(declare -F function_extra_deinstall_system ) ]]; then 
+		echo $"Function Extra Deinstall System  detected executing"
+		function_extra_deinstall_system
+	else
+		echo $"No Function Extra Deinstall System detected"
 	fi 
 
 fi 
@@ -365,12 +392,12 @@ function_local
 ;;
 
 sw)
-function_systemwide
+function_system
 
 ;;
 
 r)
-function_remove
+function_remove_local
 ;;
 rs)
 function_remove_system
@@ -397,7 +424,9 @@ if [[ -e "$PWD/extra_bash_function_installation" ]]; then
 . $PWD/extra_bash_function_installation"
 
 . "$PWD/extra_bash_function_installation"  
-elif [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
+fi 
+
+if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
 	echo $"Extra deinstallation file detected loading functions
 . $PWD/extra_bash_function_deinstallation"
 
