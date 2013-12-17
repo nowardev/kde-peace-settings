@@ -76,8 +76,8 @@ function activitygnome3(){
 	activity.wallpaperMode = "SingleImage"
 	activity.currentConfigGroup = Array("Wallpaper", "image")
 	activity.writeConfig("wallpaper", "fabric-gnome")
-//         activity.writeConfig("wallpaper", "/usr/share/wallpapers/fabric-gnome/contents/images/"+xy+".png")
-	activity.writeConfig("wallpaperposition","2")
+//      activity.writeConfig("wallpaper", "/usr/share/wallpapers/fabric-gnome/contents/images/"+xy+".png")
+// 	activity.writeConfig("wallpaperposition","2")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
 	activity.reloadConfig()
 }

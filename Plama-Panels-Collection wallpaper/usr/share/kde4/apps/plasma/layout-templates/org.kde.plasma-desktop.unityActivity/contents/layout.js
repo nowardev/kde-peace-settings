@@ -55,6 +55,7 @@ function activityunity(){
 	activity.wallpaperMode = "SingleImage"
 	activity.currentConfigGroup = Array("Wallpaper", "image")
 	activity.writeConfig("wallpaper", "fabric")
+	activity.writeConfig("wallpaperposition","2")
 	
 	
 	//activity.wallpaperPlugin = "image"

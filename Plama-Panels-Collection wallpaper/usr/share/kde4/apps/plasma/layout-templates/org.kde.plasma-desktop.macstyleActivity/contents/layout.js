@@ -46,7 +46,11 @@ function RemoveOldPanels()
 }
 //RemoveOldPanels() //load the function 
 //////////////////////////////////////////////////////////
-var screenrect = screenGeometry(0)  
+var screenrect = screenGeometry(0) 
+var xy = screenrect.width+"x"+screenrect.height
+print(xy)
+
+
 function activitymac(){
 	
 	
@@ -56,6 +60,7 @@ function activitymac(){
 	activity.wallpaperMode = "SingleImage"
 	activity.currentConfigGroup = Array("Wallpaper", "image")
 	activity.writeConfig("wallpaper", "fabric")
+ 	activity.writeConfig("wallpaperposition","2")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
 	
 	
@@ -115,6 +120,7 @@ function activitymac(){
 	var mediaplayer = activity.addWidget("mediaplayer")
 	mediaplayer.geometry = new QRectF(10+( screenrect.width/2),3*(screenrect.height)/8,screenrect.width/4,screenrect.height/4)
 	
+	activity.reloadConfig()
 	activity.reloadConfig()
 }
 activitymac()

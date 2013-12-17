@@ -70,6 +70,7 @@ var default_browser=defaultApplication("browser").split(" ")
 	activity.wallpaperMode = "SingleImage"
 	activity.currentConfigGroup = Array("Wallpaper", "image")
 	activity.writeConfig("wallpaper", "fabric")
+	activity.writeConfig("wallpaperposition","2")
 	activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
 	i=0
 // 	var stripwidget = [pathdefault_browser , pathdefault_filemanager , pathdefault_imageviewer , pathdefault_imclient , pathdefault_mailer , pathdefault_office , pathdefault_terminal, pathdefault_videoplayer, "systemsettings.desktop", "kcalc.desktop"]
