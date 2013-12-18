@@ -108,8 +108,11 @@ function gnome2(){
 	var dolphin = panel.addWidget("quicklaunch")
 	dolphin.writeConfig("iconUrls","file:////usr/share/applications/kde4/dolphin.desktop")
 	
-	var firefox = panel.addWidget("quicklaunch")
-	firefox.writeConfig("iconUrls","file:///usr/share/applications/firefox.desktop")
+	var default_browser=defaultApplication("browser").split(" ")
+	var pathdefault_browser="file://"+applicationPath(default_browser[0]+".desktop")
+	
+	var browser_icon = panel.addWidget("quicklaunch")
+	browser_icon.writeConfig("iconUrls",pathdefault_browser)
 	
 	panel.addWidget("pastebin")
 	
