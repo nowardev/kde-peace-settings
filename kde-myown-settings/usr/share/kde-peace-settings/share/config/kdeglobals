@@ -135,23 +135,24 @@ inactiveBlend=75,71,67
 inactiveForeground=237,237,238
 
 [General]
+BrowserApplication[$e]=!chromium-browser
 ColorScheme=nowardevlight
-shadeSortColumn=true
 XftAntialias=true
-XftHintStyle=hintfull
+XftHintStyle=hintslight
 XftSubPixel=rgb
-desktopFont=Cantarell,10,-1,5,50,0,0,0,0,0
-fixed=Monospace,10,-1,5,50,0,0,0,0,0
-font=Cantarell,10,-1,5,50,0,0,0,0,0
-menuFont=Cantarell,10,-1,5,50,0,0,0,0,0
-smallestReadableFont=Cantarell,10,-1,5,50,0,0,0,0,0
-taskbarFont=Cantarell,10,-1,5,50,0,0,0,0,0
-toolBarFont=Cantarell,10,-1,5,50,0,0,0,0,0
+desktopFont=Ubuntu,12,-1,5,50,0,0,0,0,0
+fixed=Monospace,12,-1,5,50,0,0,0,0,0
+font=Ubuntu,12,-1,5,50,0,0,0,0,0
+menuFont=Ubuntu,12,-1,5,50,0,0,0,0,0
+shadeSortColumn=true
+smallestReadableFont=Ubuntu,12,-1,5,50,0,0,0,0,0
+taskbarFont=Ubuntu,12,-1,5,50,0,0,0,0,0
+toolBarFont=Ubuntu,12,-1,5,50,0,0,0,0,0
 widgetStyle=oxygen
-BrowserApplication[$e]=!firefox
+
 
 [Icons]
-Theme=oxygen
+Theme=KFaenza
 
 [KDE]
 ShowDeleteCommand=false

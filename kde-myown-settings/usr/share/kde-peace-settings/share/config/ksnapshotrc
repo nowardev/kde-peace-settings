@@ -1,6 +1,6 @@
 [GENERAL]
 delay=4
-filename[$e]=file:///tmp/peace-screenshot.jpeg
+filename[$e]=file:///tmp/nowardev-screenshot.jpeg
 includeDecorations=true
 includePointer=true
 mode=0

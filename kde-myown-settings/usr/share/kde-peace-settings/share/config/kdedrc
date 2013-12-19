@@ -1,31 +1,31 @@
 [Module-bluedevil]
-autoload=false
+autoload=true
 
 [Module-device_automounter]
-autoload=false
+autoload=true
 
 [Module-dnssdwatcher]
-autoload=false
+autoload=true
 
 [Module-freespacenotifier]
-autoload=false
+autoload=true
 
 [Module-kwrited]
-autoload=false
+autoload=true
 
 [Module-nepomuksearchmodule]
-autoload=false
+autoload=true
 
 [Module-networkmanagement]
-autoload=false
+autoload=true
 
 [Module-obexftpdaemon]
-autoload=false
+autoload=true
 
 [Module-randrmonitor]
-autoload=false
+autoload=true
 
 [Module-remotedirnotify]
-autoload=false
+autoload=true
 
 
