@@ -15,7 +15,7 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-loadTemplate("org.kde.plasma-desktop.nowardevPanel")
+loadTemplate("org.kde.plasma-desktop.doublenowardevPanel")
 
 for (var i = 0; i < screenCount; ++i) {
     var desktop = new Activity

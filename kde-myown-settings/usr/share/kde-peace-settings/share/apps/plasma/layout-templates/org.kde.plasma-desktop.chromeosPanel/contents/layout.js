@@ -1,7 +1,7 @@
 //Copyright (C) 2012 nowardev nowardev@gmail.com
- 
+
 //This file is part of kde-peace-settings.
- 
+
 //kde-peace-settings is free software: you can redistribute it and/or modify
 //it under the terms of the GNU General Public License as published by
 //the Free Software Foundation, either version 3 of the License, or
@@ -15,16 +15,16 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-////////function remove in case of error of first remove :S
+//CHROMEOS PANELS 
 
 function remove()
 {
-  for (i in panelIds) {
-        
-
-	panelById(panelIds[i]).remove()
-    }
-  
+	for (i in panelIds) {
+		
+		
+		panelById(panelIds[i]).remove()
+	}
+	
 }
 //////////////////////////////////////////////////////////
 
@@ -32,67 +32,108 @@ function remove()
 /////function remove standard///////////////////////////////
 function RemoveOldPanels()
 {
-    for (i in panelIds) {
-       // panelById(panelIds[i]).remove()
-       p = panelById(panelIds[i]);
-       if (typeof p === "undefined") {
-       print("E: Couldn't find first panel");
-       remove() //load the remove function in case of problems
-       }
-        else 	{
-	  panelById(panelIds[i]).remove()
-	  	} 
-                                    }
+	for (i in panelIds) {
+		// panelById(panelIds[i]).remove()
+		p = panelById(panelIds[i]);
+		if (typeof p === "undefined") {
+			print("E: Couldn't find first panel")
+			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		} 
+	}
 }
 
 //RemoveOldPanels() //load the function 
- //////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////
 
 
-var screenrect = screenGeometry(0); // get information about your screen h w 
+var screenrect = screenGeometry(0) // get information about your screen h w 
 
 //start another function to create panels layout
 function chromeos(){
-
-var panel = new Panel
-if (panelIds.length == 1) {
-    // we are the only panel, so set the location for the user panel.location = 'bottom'
-    panel.location = 'bottom'
-}
-
-
-
-
-
-    panel.height = screenrect.height/30;
- 
-   var mixer = panel.addWidget("veromix-plasmoid");
-   var notification = panel.addWidget ("notifier");
-   var network = panel.addWidget("org.kde.networkmanagement");
-   var notification = panel.addWidget ("notifications");
-   var batte = panel.addWidget("battery");
-  
-panel.addWidget("showdesktop") ;
-var icontasks = panel.addWidget("icontasks");
-icontasks.writeConfig("showOnlyCurrentActivity","false");
-icontasks.writeConfig("showOnlyCurrentDesktop","false");
-icontasks.writeConfig("showOnlyCurrentScreen","false");
-icontasks.writeConfig("style","1");
-
-pager = panel.addWidget("pager");
-pager.writeGlobalConfig("rows", "1");
-
-panel.addWidget("trash");
-//panel.addWidget("smooth-tasks")
-//panel.addWidget("launcher")
-//panel.addWidget("pastebin")
-//panel.addWidget("tasks")
-   // launcher = panel.addWidget("simplelauncher");
-   // launcher.writeConfig("format", "Description");
-   // launcher.writeConfig("showMenuTitles", "true");
-   // launcher.writeConfig("views", "Applications,Favorites,Computer,Settings,RunCommand,Leave");
-    //launcher.writeConfig("icon", "start-here");
-    var launcher = panel.addWidget("launcher");
+	
+	var panel = new Panel
+	if (panelIds.length == 1) {
+		// we are the only panel, so set the location for the user panel.location = 'bottom'
+		panel.location = 'bottom'
+	}
+	
+	
+	
+	
+	
+	panel.height = screenrect.height/30
+	
+	var mixer = panel.addWidget("veromix-plasmoid")
+	var notification = panel.addWidget ("notifier")
+	var network = panel.addWidget("org.kde.networkmanagement")
+	var widget = "org.kde.printmanager"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		var widget = panel.addWidget(widget)
+		
+	} 
+	else {
+		
+		
+		var widget = "printmanager"
+		/*check if the widget is installed and add if it is to your panel*/
+		if (knownWidgetTypes.indexOf(widget) > -1) {
+			var widget = panel.addWidget(widget)
+			
+		} 
+		else {
+			print("your system doesn't provide "+widget )
+		}
+	}
+	
+	
+	var widget = "notifications"
+	/*check if the widget is installed and add if it is to your panel*/
+	if (knownWidgetTypes.indexOf(widget) > -1) {
+		var widget = panel.addWidget(widget)
+		
+	} 
+	else {
+		
+		
+		var widget = "org.kde.notifications"
+		/*check if the widget is installed and add if it is to your panel*/
+		if (knownWidgetTypes.indexOf(widget) > -1) {
+			var widget = panel.addWidget(widget)
+			
+		} 
+		else {
+			print("your system doesn't provide "+widget )
+		}
+	}
+	
+	var battery = panel.addWidget("battery")
+	
+	 panel.addWidget("trash")
+	var icontasks = panel.addWidget("icontasks")
+	icontasks.writeConfig("showOnlyCurrentActivity","false")
+	icontasks.writeConfig("showOnlyCurrentDesktop","false")
+	icontasks.writeConfig("showOnlyCurrentScreen","false")
+	icontasks.writeConfig("style","1")
+	
+	
+	
+	panel.addWidget("showdesktop")
+	pager = panel.addWidget("pager")
+	pager.writeGlobalConfig("rows", "1")
+	//panel.addWidget("smooth-tasks")
+	//panel.addWidget("launcher")
+	//panel.addWidget("pastebin")
+	//panel.addWidget("tasks")
+	// launcher = panel.addWidget("simplelauncher")
+	// launcher.writeConfig("format", "Description")
+	// launcher.writeConfig("showMenuTitles", "true")
+	// launcher.writeConfig("views", "Applications,Favorites,Computer,Settings,RunCommand,Leave")
+	//launcher.writeConfig("icon", "start-here")
+	// 	var launcher = panel.addWidget("launcher")
 }
 
 chromeos()
