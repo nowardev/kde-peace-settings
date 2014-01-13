@@ -335,6 +335,19 @@ else
 	 ffmpeg -f  alsa  -ac 1 -ar 48000 -i hw:$microphone,0  -vn $file
  
 }
+
+ksleep(){
+dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
+}
+
+kshutdown(){
+qdbus org.kde.ksmserver /KSMServer logout 0 2 0
+
+}
+
+kreboot(){
+qdbus org.kde.ksmserver /KSMServer logout 0 1 0
+}
 # # export SDL_VIDEO_X11_DGAMOUSE=0
 # 
 alias one="dh_make -s -c gpl"
