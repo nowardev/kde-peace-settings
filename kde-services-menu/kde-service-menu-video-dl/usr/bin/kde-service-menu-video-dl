@@ -15,7 +15,7 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.1.1
+version=0.2.0
 function_detect_flash_path(){
 	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 
 	
@@ -51,8 +51,11 @@ function_help(){
 	-p   : play Flash video with ffplay
 	-s  :  saves Flash Video , files will be copied in /tmp folder 
 	-y : download the video from youtube with youtube-dl 
+	-y : download the video from youtube with youtube-dl choosign video quality
 	-mp3: download the video from youtube and convert it on mp3
+	-mp3q: download the video from youtube and convert it on mp3 but select the video quality
 	-e: download the video from youtube and extract audio track 
+	-eq: download the video from youtube and extract audio track  selecting before video quality
 	-v : print version 
 	-h : print this help 
 	
@@ -89,22 +92,93 @@ else
 		kdialog --error $"This is a bug please fix it " 
 fi 
 }
+function_save_flash_with_title(){
 
+#get the dbus number 
+	konquerordbus=$(qdbus | grep konqueror)
+	testvariable="$konquerordbus"
+	
+	if [[  -z  "$testvariable"    ]] ; then
+		echo "$testvariable is empty"
+		kdialog --passivepopup "exiting ... no konqueror aviable :P "
+		exit 2
+	else
+		echo "$testvariable"
+	fi 
+
+#get the active window 
+	for i in $konquerordbus; do
+		
+    if [[ $(qdbus $i /konqueror/MainWindow_1 org.qtproject.Qt.QWidget.isActiveWindow) = "true" ]]; then
+	#get the title 
+	youtubetitle="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle)"
+	#blank about:blank
+	#get the title without -youtube weird word 
+	title="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle |awk '{gsub(/- YouTube/,""); gsub(/ /,"_"); print }'|awk '{gsub(/[^a-z|0-9|_ ]/,""); print }')"
+	url="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL)"
+	cleanurl="$(qdbus $i /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL  | awk -F '&' '{print $1}')"
+	echo   $"Downloading .. $url clearurl  $cleanurl"  
+	
+	break;
+    fi
+done
+
+
+if  [[ "${#array[@]}" == 1  ]] ; then 
+	kdialog --title $"Service Menu Kde-video-dl"  --passivepopup $"Detected flash ... cp "${array[0]}"  /tmp/$title.flv" 2
+	a="/tmp/$title.flv"  
+	if [[  -e "$a"  ]] ; then
+		if kdialog --title $"Service Menu Kde-video-dl"  --warningyesno  $" File $a already exists do you want overwrite ? "; then 
+
+			
+			 echo "cp "${array[0]}"  /tmp/$title.flv"
+			cp "${array[0]}"  "/tmp/$title.flv"
+			kdialog --title $"Service Menu Kde-video-dl"  --passivepopup  $" Job done  files are in /tmp folder " 2
+			qdbus $(qdbus | grep -m1 konqueror) /konqueror/MainWindow_1 org.kde.Konqueror.MainWindow.newTab '/tmp' False
+
+		else 
+			echo "exiting .."
+			exit
+		fi 
+ 
+		else
+			echo "copying file cp "${array[0]}"  /tmp/$title.flv"
+			cp "${array[0]}"  "/tmp/$title.flv"
+			kdialog --title $"Service Menu Kde-video-dl"  --passivepopup  $" Job done  flash video copied here /tmp/$title.flv " 2
+			fi 
+			
+
+elif [[ "${#array[@]}" == 0  ]]; then 
+	kdialog --passivepopup $"sorry no flash found, this could be a bug on the function to detect flash video path  " 
+elif [[ "${#array[@]}" > 1  ]]; then
+kdialog --title $"Service Menu Kde-video-dl"  --passivepopup $"Detected Multiple flash ... cp "${array[0]}"  /tmp/$title.flv" 2
+	a=1 
+	for file in ${array[@]}  ; do 
+		echo "cp "$file" /tmp/$title.flv_$a.flv" 
+		cp "$file" "/tmp/$title_$a.flv"
+		a=$(($a+1))
+		echo "copied!"
+		done
+		kdialog --title $"Service Menu Kde-video-dl"  --passivepopup  $" Job done  files are in /tmp folder " 2
+else 
+		kdialog --error $"This is a bug please fix it " 
+fi 
+}
 
 function_save_flash(){
 
 
 
 if  [[ "${#array[@]}" == 1  ]] ; then 
-	kdialog --title $"Service Menu FFplay"  --passivepopup $"Detected flash ... cp "${array[0]}"  /tmp/Flash.flv" 2
+	kdialog --title $"Service Menu Kde-video-dl"  --passivepopup $"Detected flash ... cp "${array[0]}"  /tmp/Flash.flv" 2
 	a="/tmp/Flash.flv"  
 	if [[  -e "$a"  ]] ; then
-		if kdialog --title $"Service Menu FFplay"  --warningyesno  $" File $a already exists do you want overwrite ? "; then 
+		if kdialog --title $"Service Menu Kde-video-dl"  --warningyesno  $" File $a already exists do you want overwrite ? "; then 
 
 			
 			 echo "cp "${array[0]}"  /tmp/Flash.flv"
 			cp "${array[0]}"  /tmp/Flash.flv
-			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 2
+			kdialog --title $"Service Menu Kde-video-dl"  --passivepopup  $" Job done  files are in /tmp folder " 2
 		else 
 			echo "exiting .."
 			exit
@@ -113,14 +187,14 @@ if  [[ "${#array[@]}" == 1  ]] ; then
 		else
 			echo "copying file cp "${array[0]}"  /tmp/Flash.flv"
 			cp "${array[0]}"  /tmp/Flash.flv
-			kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  flash video copied here /tmp/Flash.flv " 2
+			kdialog --title $"Service Menu Kde-video-dl"  --passivepopup  $" Job done  flash video copied here /tmp/Flash.flv " 2
 			fi 
 			
 
 elif [[ "${#array[@]}" == 0  ]]; then 
 	kdialog --passivepopup $"sorry no flash found, this could be a bug on the function to detect flash video path  " 
 elif [[ "${#array[@]}" > 1  ]]; then
-kdialog --title $"Service Menu FFplay"  --passivepopup $"Detected Multiple flash ... cp "${array[0]}"  /tmp/Flash.flv" 2
+kdialog --title $"Service Menu Kde-video-dl"  --passivepopup $"Detected Multiple flash ... cp "${array[0]}"  /tmp/Flash.flv" 2
 	a=1 
 	for file in ${array[@]}  ; do 
 		echo "cp "$file" /tmp/Flash_$a.flv" 
@@ -128,12 +202,35 @@ kdialog --title $"Service Menu FFplay"  --passivepopup $"Detected Multiple flash
 		a=$(($a+1))
 		echo "copied!"
 		done
-		kdialog --title $"Service Menu FFplay"  --passivepopup  $" Job done  files are in /tmp folder " 2
+		kdialog --title $"Service Menu Kde-video-dl"  --passivepopup  $" Job done  files are in /tmp folder " 2
 else 
 		kdialog --error $"This is a bug please fix it " 
 fi 
 }
 
+function_detect_flash_quality() {
+ 
+#detect which formats you can dowload create a menu to choose what user prefer  
+ 
+ code=() ; format=() ; desc=() 
+ 
+ while IFS="         " read -r c f d; do code+=("$c"); format+=("$f"); desc+=("$d"); done<<<"$(youtube-dl -F  $cleanurl | grep -A 20 DASH )"
+ 
+ 
+ARGS="--menu \"Choose your profile\" --"
+for ((i=0; i<${#desc[@]}; i++)); do
+ARGS="$ARGS \"${code[$i]}\" \"${format[$i]}  ${desc[$i]} \""
+done
+ 
+SELECTED_OPTIONS=$(echo $ARGS | xargs kdialog)
+echo "user has choosen  $SELECTED_OPTIONS"
+if [[ -z "$SELECTED_OPTIONS" ]] ; then 
+detectedquality=""
+else
+
+detectedquality="-f $SELECTED_OPTIONS"
+fi 
+}
 
 function_download_flash_youtube_start(){
 	
@@ -230,12 +327,36 @@ function_video(){
 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 	
 }
+
+function_video_quality_detected(){
+	
+	while read  line ; do 
+				
+				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+				
+			done < <(cd "$outfolder";youtube-dl $detectedquality -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			
+			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+	
+}
+
 function_mp3(){
 	while read  line ; do 
 				
 				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
 				
 			done < <(cd "$outfolder";youtube-dl  -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			
+			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+}
+
+
+function_mp3_quality(){
+	while read  line ; do 
+				
+				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+				
+			done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
 			
 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 }
@@ -250,7 +371,49 @@ function_extract(){
 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 }
 
+function_extract_quality(){
+	while read  line ; do 
+				
+				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+				
+			done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+			
+			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+}
+
  
+ function_test(){
+ set -x
+ 
+ 	#get the dbus number 
+	konquerordbus=$(qdbus | grep konqueror)
+	testvariable="$konquerordbus"
+	
+	if [[  -z  "$testvariable"    ]] ; then
+		echo "$testvariable is empty"
+		kdialog --passivepopup "exiting ... no konqueror aviable :P "
+		exit 2
+	else
+		echo "$testvariable"
+	fi 
+#get the active window 
+	for i in $konquerordbus; do
+		
+    if [[ $(qdbus $i /konqueror/MainWindow_1 org.qtproject.Qt.QWidget.isActiveWindow) = "true" ]]; then
+	#get the title 
+	youtubetitle="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle)"
+	#blank about:blank
+	#get the title without -youtube weird word 
+	title="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle |awk '{gsub(/- YouTube/,""); print }')"
+	url="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL)"
+	cleanurl="$(qdbus $i /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL  | awk -F '&' '{print $1}')"
+	echo   $"Downloading .. $url clearurl  $cleanurl"  
+	
+	break;
+    fi
+done
+echo $youtubetitle $title $url  $cleanurl
+}
  
 
 
@@ -274,14 +437,40 @@ if  [[ $1 == -*  ]]; then
 	function_download_flash_youtube_start
 	function_extract
 	;;
+	-eq)
+	function_download_flash_youtube_start
+	function_detect_flash_quality
+	function_extract_quality
+	;;
 	-mp3)
 	
 	function_download_flash_youtube_start
 	function_mp3
 	;;
+	-mp3q)
+	function_download_flash_youtube_start
+	function_detect_flash_quality
+	function_mp3_quality
+	;;
 	#save function 
 	-s)function_detect_flash_path
 	 function_save_flash
+	 ;;
+	 #save with title 
+	 -st)
+	 function_detect_flash_path
+	 function_save_flash_with_title
+	 ;;
+# 	 -ttt)
+# 	 #function_test
+# 	 cleanurl="http://www.youtube.com/watch?v=dYw4meRWGd4"
+# 	 function_detect_flash_quality 
+# 	 ;;
+	 -yq)
+	 function_download_flash_youtube_start
+	 function_detect_flash_quality
+	 function_video_quality_detected
+	 
 	 ;;
 	-v) 
 	echo "
