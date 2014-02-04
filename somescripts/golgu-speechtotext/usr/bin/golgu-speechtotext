@@ -17,9 +17,9 @@
 
 #keys
 
-enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track" "system monitor" "system settings" )
+enus=("open browser" "open text editor" "show webcam" "shut down computer" "hibernate computer" "suspend computer" "reboot" "what time is it" "search image" "search" "youtube" "minitube" "show menu" "type" "translate" "open file manager" "open link" "open folder documents" "open folder download" "open folder music" "open folder pictures" "open folder public" "open folder videos" "play music folder" "player stop" "player continue " "player next track"  "player previous track" "system monitor" "system settings" )
 
-it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "scrivi" "traduci" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" "impostazioni di sistema" )
+it=("apri browser" "apri editor di testo" "mostra webcam" "mostra web cam" "chiudi computer" "iberna computer" "sospendi computer" "riavvia" "che ora" "cerca immagin" "cerca" "youtube" "minitube" "mostra menu" "scrivi" "traduci" "apri file manager" "apri link" "apri cartella documenti" "apri cartella download" "apri cartella musica" "apri cartella foto" "apri cartella pubblica" "apri cartella video" "riproduci cartella musica" "lettore stop" "lettore continua" "lettore traccia precedente" "lettore prossima traccia" "monitor di sistema" "impostazioni di sistema" )
 
 fr=("navigateur open" "éditeur de texte libre" "montrer webcam" "arrêtez l'ordinateur" "hibernate ordinateur" "suspendre ordinateur" "quelle heure est-il" "image recherche" "rechercher" "youtube" "minitube" "Menu montrer" "catégorie" "traduire" "Open File Manager" "Ouvrir le lien" "documents de dossiers ouverts" "Téléchargement du dossier ouvert" "musique de dossier ouvert" "Ouvrir le dossier des photos" "dossier public ouvert" "Ouvrez le dossier vidéos" "jouer dossier de musique" "joueur d'arrêt" "joueur continue" "joueur piste suivante" "joueur piste précédente" "moniteur système" "paramètres du système")
 
@@ -913,10 +913,10 @@ for r in "${variable[@]}" ; do
 		fi 
 		case $r in 
 		"open browser" | "apri browser" |"navegador abierto" |"navigateur open" | "offenen Browser")
-		xdg-open 'https://duckduckgo.com/' & exit
+		xdg-open 'https://duckduckgo.com/' & function_delete_action_and_exit
 		;;
 		"open text editor" | "apri editor di testo" |"editor de texto abierto" |"éditeur de texte libre" | "Open Text Editor")
-		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst'& exit
+		echo > /tmp/newfile.lst ; xdg-open '/tmp/newfile.lst' & function_delete_action_and_exit
 		;;
 		"show webcam" | "mostra web cam" |"mostrar cámara web" |"montrer webcam" | "Webcam zeigen")
 		if [[ -z $webcamdevice  ]]; then  
@@ -925,7 +925,7 @@ for r in "${variable[@]}" ; do
 		fi 
 		
 		if [[ "$webcamdevice" != "none" ]]; then
-		$binarywebcam -f video4linux2 -i "$webcamdevice" -video_size 320x240 & exit
+		$binarywebcam -f video4linux2 -i "$webcamdevice" -video_size 320x240 
 		else 
 		tput setaf 1
 		echo $"
@@ -934,12 +934,21 @@ for r in "${variable[@]}" ; do
 		exit
 		fi
 		;;
-# 		"shut down computer" | "chiudi computer" |"apagar el equipo" |"arrêtez l'ordinateur" | "Computer herunterfahren")
+ 		"shut down computer" | "chiudi computer" |"apagar el equipo" |"arrêtez l'ordinateur" | "Computer herunterfahren")
+		dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop & function_delete_action_and_exit
+		;;
+		"reboot"|"riavvia"| "reiniciar"|"redémarrer" |"neustart")
+		dbus-send --system --print-reply --dest="org.freedesktop.ConsoleKit" /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Restart & function_delete_action_and_exit
+		;;
+
+
 # dbus-send --print-reply --system --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Shutdown /usr/lib/x86_64-linux-gnu/qt4/bin/qdbus --system org.freedesktop.ConsoleKit /org/freedesktop/ConsoleKit/Manager org.freedesktop.ConsoleKit.Manager.Stop
 # 		;;
-# 		"hibernate computer" | "iberna computer" |"hibernación equipo" |"hibernate ordinateur" | "Hibernate Computer")
+		"hibernate computer" | "iberna computer" |"hibernación equipo" |"hibernate ordinateur" | "Hibernate Computer")
+		dbus-send --system --print-reply --dest="org.freedesktop.UPower" /org/freedesktop/UPower org.freedesktop.UPower.Hibernate & function_delete_action_and_exit
+		;;
 		"suspend computer" | "sospendi computer" |"suspender equipo" |"suspendre ordinateur" | "aussetzen Computer")
-		dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
+		dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend & function_delete_action_and_exit
 		;;
 		"what time is it" | "che ora" |"Qué hora es" |"quelle heure est-il" | "Wie spät ist es")
 		date="$(date +"%I:%M" )"
@@ -949,29 +958,29 @@ for r in "${variable[@]}" ; do
 		exit
 		;;
 		"search image" | "cerca immagin" |"la búsqueda de imágenes" |"image recherche" | "Suchbild")
-		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" 
 		
-		xdg-open 'https://www.google.it/search?&um=1&ie=UTF-8&hl=en&tbm=isch&source=og&q='"$question" & exit
+		xdg-open 'https://www.google.it/search?&um=1&ie=UTF-8&hl=en&tbm=isch&source=og&q='"$question"  & function_delete_action_and_exit
 		;;
 		"search" | "cerca" |"búsqueda" |"rechercher" | "Suche")
-		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdg-open 'https://www.google.it/search?q='"$question"& exit
+		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" 
+		xdg-open 'https://www.google.it/search?q='"$question" & function_delete_action_and_exit
 		;;
 		"youtube")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
 		
-		xdg-open 'http://www.youtube.com/results?search_query='"$question" & exit
+		xdg-open 'http://www.youtube.com/results?search_query='"$question" & function_delete_action_and_exit
 		;;
 		"minitube")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		minitube  "$question" & exit
+		minitube  "$question" & function_delete_action_and_exit
 		;;
 		"show menu" | "mostra menu" |"menú muestra" |"Menu montrer" | "zeigen Menü")
-		if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi 
+		if [[ ! -z "$(type plasma-desktop )" ]] ; then  qdbus org.kde.krunner /App org.kde.krunner.App.display;  else echo $"Sorry this function is only for kde only for now ..." ; fi  & function_delete_action_and_exit
 		;;
 		"type" | "digita"| "scrivi" |"tipo" |"catégorie" | "Art")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
-		xdotool type "$question" 
+		xdotool type "$question" & function_delete_action_and_exit
 		#if [[ ! -z "$(grep -i "type" | "digita"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then xdotool type "$(awk 'n=index($0,"digita"){print substr($0,n+1)}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" ; fi ;
 		;;
 		"translate" | "traduci" |"traducir" |"traduire" | "übersetzen")
@@ -982,7 +991,7 @@ for r in "${variable[@]}" ; do
 		;;
 		"open file manager" | "apri file manager" |"administrador de archivos abiertos" |"Open File Manager" | "Open File Manager")
 		#xdotool   search --class dolphin   key ctrl+a
-		xdg-open "$HOME" & exit
+		xdg-open "$HOME" & function_delete_action_and_exit
 		;;
 		"open link" | "apri link" |"relación abierta" |"Ouvrir le lien" | "open link")
 		question="$(awk '{ for (i=3; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
@@ -992,7 +1001,7 @@ _EOF
 )"
 		if [[ -z $http  ]] ; then question="http://""$question"; fi 
  
-		xdg-open $question & exit
+		xdg-open $question & function_delete_action_and_exit
 		;;
 
  
@@ -1001,34 +1010,34 @@ _EOF
  #xdotool   search --class dolphin   key ctrl+a
 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOCUM/{gsub(/XDG_DOCUMENTS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
  
-		xdg-open "$question"& exit
+		xdg-open "$question"& function_delete_action_and_exit
 		;;
 		"open folder download" | "apri cartella download" |"Descarga carpeta abierta" |"Téléchargement du dossier ouvert" | "Ordner öffnen Download")
 		 #xdotool   search --class dolphin   key ctrl+a
 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/DOWNLOAD/{gsub(/XDG_DOWNLOAD_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
  
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder download it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit 
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder download it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi  
 		;;
 		"open folder music" | "apri cartella musica" |"música carpeta abierta" |"musique de dossier ouvert" | "geöffneten Ordner Musik")
 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder music it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder music it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi 
  
 # 		if [[ ! -z $(type vservice ) ]] ; then vservice folder "$question" && qdbus org.mpris.MediaPlayer2.vlc /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause ; else $"To use this function you need to install vlc and vlc append service menu . you can find it on kde-apps"; fi 
 		;;
 		"open folder pictures" | "apri cartella foto" |"Abrir carpeta imágenes" |"Ouvrir le dossier des photos" | "Öffnen Sie den Ordner Bilder")
 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PICTURES/{gsub(/XDG_PICTURES_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
  
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder pictures it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder pictures it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi 
 		;;
 		"open folder public" | "apri cartella pubblica" |"pública carpeta abierta" |"dossier public ouvert" | "geöffneten Ordner öffentlichen")
 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/PUBLIC/{gsub(/XDG_PUBLICSHARE_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
  
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder public it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder public it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi 
 		;;
 		"open folder videos" | "apri cartella video" |"Abra la carpeta Vídeos" |"Ouvrez le dossier vidéos" | "Ordner öffnen Videos")
 		if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then question="$(awk '/VIDEOS/{gsub(/XDG_VIDEOS_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)" ; else echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "; exit 1 ; fi  
  
-		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder documents it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi & exit
+		if [[ ! -z "$question" ]] ; then xdg-open "$question" ; else $"the folder documents it's not set on this file ~/.config/user-dirs.dirs please fix this first. ";exit;  fi 
 		;;
 		"play music folder" | "riproduci cartella musica" |"jugar carpeta de música" |"jouer dossier de musique" | "spielen Musik-Ordner")
 		 question="$(awk '/MUSIC/{gsub(/XDG_MUSIC_DIR=|\"/,"");print}'  ~/.config/user-dirs.dirs)"
@@ -1096,10 +1105,16 @@ done
  		set +x
 		fi 
 
-
  
 }
 
+function_delete_action_and_exit(){
+	a="$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst"  
+	if [[  -e "$a"  ]] ; then
+	rm "$a"
+	fi 
+	exit
+}
 function_dictated(){
 kate $HOME/golgu_dictated.lst 
 
@@ -1111,7 +1126,7 @@ xdotool  windowactivate $katewid
 # rm mic.flac  > /dev/null 2>&1
 
 
-VERSION="0.0.7"
+VERSION="0.0.8"
 DEVELOPER="nowardev@gmail.com"
 DEBUG="off"
 DEFAULT_INPUT_LANG="en-us"
@@ -1251,7 +1266,7 @@ function_display_text "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst"
 
 if [[ ! -z $(grep -i -E 'computer|vaio' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" ) ]] ; then 
 RUNAPPLICATION="on"
-function_play_translated_text "$input_lang" "computer, $iwill $(awk '{gsub(/computer/,""); print}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst") "
+function_play_translated_text "$input_lang" "$iwill $(awk '{gsub(/computer/,""); print}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst") "
 
 fi 
  
