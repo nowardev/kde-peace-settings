@@ -1,0 +1,22 @@
+#!/bin/bash
+ 
+
+slaptext=("an alien ware big-tower." "an SuSE 9.2 Professional manual." "the full perldoc." "a back to the future." "a crowbar (uhhh, that hurts!)." "a rather large squid" "a hydraulic pump" "a book by Stephen King" "a 10mbit network card" "a ladies handbag" "some girl scouts" "a football team" "a bottle" "a yellow marsh-mellow" "a match" "the queen of England" "a taxi" "100 feet of wire" "a bag of Cheerios" "a hat" "a fist" "the back hand" "the forehead" "a computer monitor" "a coconut" "a microphone" "a cellphone" "a snowplough" "a doggy" "Bill Clinton" "a stone" "a club. With a nail in it" "a small asteroid, rich in iron" "a small interstellar spaceship" "a fresh zucchini" "a laptop" "a big dictionary" "a baseball bat" "Never Net" "some porn" "a mIRC script" "a canoe" "a tortoise" "a horse" "the book of Kells" "Tin-tin's father, Hergé" "a whale" "a rubber dildo" "a well groomed poodle" "a channel operator" "a news paper (New York Times Sunday Edition)" "a gnarly werewolf" "a vampire. They really suck" "a Perl script" "a bag of doggie chow" "a fat walrus" "an IPv6 address" "a catholic priest" "James Dean" "Ronald MacDonald (he *IS* good for something)" "Autoconf version 2.13" "a PRIVMSG" "an email address" "some ANSI color codes" "a thermonuclear weapon. Ye haw" "the hitch hikers guide to the galaxy, revised edition" "Nessie, the Loch Ness monster" "a tuna. Still in the can! *BONK* That will leave a mark" "a few fluffy pillows" "a red Chinese dragon" "a linux-manual (signed by L. Torvalds)" "Stage1" "Bill Gates underpants" "GM Abraham and the whole OW-Staff" "Sphere 1.0" "a Linux kernel" "Lenin's Collected Works" "Stalin's Collected Works" "a iron Tux" "a glowing 23" "your mum (CLEAN YOUR ROOM!)" "a complete GNOME-Documentation" "a Portage-tree" "thand[Z]'s transparent Tanga" "a Kernel panic" "Windoze XP" "an AK-47 (die, you imperialist dog!)" "a bag full with Michael Jackson's dropped noses" "an NBP-Manifesto (Hail Limo-new! Hail our Leader! Hail!)" "an NBP-Flag (Lead us to freedom, Leader Limo-new!)" "Mein Kampf (Doppelausgabe, Hardcover)" "Invader Zim's iron fist" "some ASCII-Arts" "The Family Learning Channel" "GOD" "Dorian Grey's picture" "some unlocked Grenades *BOOM*" "the Win2k Bug list") 
+
+  
+
+RANGE="${#slaptext[@]}"
+
+echo
+
+number=$RANDOM
+let "number %= $RANGE"
+#           ^^
+# message=" "
+message="${slaptext["$number"]}"
+ 
+
+#konversation send $1 = 0 $2 = channel  $3 your typed nickname so to run this script if you saved like slap type on konversation 
+#/slap nicknamefriend
+qdbus org.kde.konversation /irc say irc.ubuntu.com "$2" "/me  slaps $3 with $message"
+ 
