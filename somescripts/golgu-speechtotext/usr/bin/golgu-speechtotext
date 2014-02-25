@@ -152,34 +152,12 @@ this function if activated can run applications and do some stuff ... like open 
 golgu-speechtotext -i en-us -a
 -------------------------------
 
-english keys
-"
-for value in "${enus[@]}" ; do  echo "\"$value\"" ; done 
-echo "
-italian keys 
-"
-for value in "${it[@]}" ; do echo "\"$value\""  ; done
-echo "
-spanish keys 
-"
-for value in "${es[@]}" ; do echo "\"$value\""  ; done
-
-echo "
-french keys 
-"
-for value in "${fr[@]}" ; do echo "\"$value\""  ; done
-
-echo "
-german keys 
-"
-for value in "${de[@]}" ; do echo "\"$value\""  ; done
-
-echo "
-NB SOME KEYS DO NOT WORK LIKE HIBERNATE OR CLOSE COMPUTER , JUST SUSPEND COMPUTER  WORKS !
 "
 
 }
 
+
+ 
 
 function_print_languages(){
 echo $"This is a language table : IT COULD BE NOT SO GOOD ... "
@@ -544,7 +522,14 @@ done< <(fold -w97 -s <<<"$2") #split text every 97 char
  
 
  for (( c=0; c<=${#arr[@]}; c++ )); do 
-	 $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arr[$c]}" >/dev/null  2>&1
+	filename="/tmp/${arr[$c]// /_}.mp3" #replace space with _
+	echo $filename
+ 
+	wget --user-agent  "$DEFAULT_USER_AGENT_WGET" "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arr[$c]}" -O "$filename" >/dev/null  2>&1
+# 	/home/shared/git/ffmpeg-05-23-13/ffmpeg -i "$filename" -f s16le -ar 48000 pipe:1 > ~/.seren/fifo 
+	$player "$filename"
+ 
+# 	 $player "http://translate.google.com/translate_tts?ie=UTF-8&tl=$1&q=${arr[$c]}" >/dev/null  2>&1
 	 done   
 		
 		
@@ -728,7 +713,7 @@ cat $logfile
 
 settings i have used to record ... 
 
-$binary  -f  alsa  -ac 1 -$channel $microphone -ar 16000 -acodec flac -vn -y "$1"  
+$binary  -f  alsa  -ac $channel $microphone -ar 16000 -acodec flac -vn -y "$1"  
 
 "
 	tput setaf 8
@@ -980,6 +965,7 @@ for r in "${variable[@]}" ; do
 		;;
 		"type" | "digita"| "scrivi" |"tipo" |"catégorie" | "Art")
 		question="$(awk '{ for (i=2; i<=NF; i++)  printf "%s ",$i  }' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )"
+# 		kdialog --passivepopup "$question"
 		xdotool type "$question" & function_delete_action_and_exit
 		#if [[ ! -z "$(grep -i "type" | "digita"   "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst")" ]]; then xdotool type "$(awk 'n=index($0,"digita"){print substr($0,n+1)}' "$HOME/.config/golgu-speechtotext/golgu-speechtotext.lst" )" ; fi ;
 		;;
@@ -1135,8 +1121,10 @@ DEFAULT_MIC_CHANNEL="1"
 RUNAPPLICATION="off"
 PLAYTEXT="off"
 TIMER="off"
+DEFAULT_USER_AGENT_WGET="Mozilla/5.0 (X11; Ubuntu; Linux x86_64; rv:25.0) Gecko/20100101 Firefox/25.0"
 logfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.log"
 settingsfile="$HOME/.config/golgu-speechtotext/golgu-speechtotext.cfg"
+
 function_check_program	
 function_load_settings
 # args=$@;  i=0

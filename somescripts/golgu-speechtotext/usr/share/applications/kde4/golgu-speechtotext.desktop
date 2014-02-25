@@ -1,0 +1,11 @@
+[Desktop Entry]
+Name=Golgu Speech To Text
+Exec=golgu-speechtotext -t 5 
+Icon=run-build-configure
+Type=Application
+Categories=Qt;KDE;System;
+GenericName=Apt tool
+Comment=Software Installer
+GenericName[it]=Apt Menu
+Terminal=false
+InitialPreference=10
