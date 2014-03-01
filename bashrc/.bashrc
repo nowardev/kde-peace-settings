@@ -371,23 +371,23 @@ echo $(( $(date -d $REPLAY +%s)- $(date  +%s) ))
 }
 
 
-upnp-peace-add-tcp (){
+upnp-add-tcp (){
 upnpc -a $(ifconfig wlan0 | grep "inet addr" | cut -d : -f 2 | cut -d " " -f 1) $1 $1 TCP
 }
 
-upnp-peace-add-udp (){
+upnp-add-udp (){
 upnpc -a $(ifconfig wlan0 | grep "inet addr" | cut -d : -f 2 | cut -d " " -f 1) $1 $1 UDP
 }
 
-upnp-peace-r-tcp (){
+upnp-r-tcp (){
 upnpc -d $1 TCP
 }
 
-upnp-peace-r-udp (){
+upnp-r-udp (){
 upnpc -d $1 UDP
 
 }
-upnp-peace-list (){
+upnp-list (){
 upnpc -l
 
 }
