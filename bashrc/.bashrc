@@ -335,6 +335,11 @@ else
 	 ffmpeg -f  alsa  -ac 1 -ar 48000 -i hw:$microphone,0  -vn $file
  
 }
+pastebin(){
+curl -F sprunge=@- sprunge.us
+
+
+}
 
 ksleep(){
 dbus-send --print-reply --dest='org.freedesktop.PowerManagement' /org/freedesktop/PowerManagement org.freedesktop.PowerManagement.Suspend
@@ -350,6 +355,44 @@ qdbus org.kde.ksmserver /KSMServer logout 0 1 0
 }
 # # export SDL_VIDEO_X11_DGAMOUSE=0
 # 
+
+sleep24(){
+echo $"Type time in this format  hh:mm  or hh:mm:ss"
+read 
+echo $REPLY
+echo $(( $(date -d $REPLAY +%s)- $(date  +%s) ))
+}
+
+sleepdate(){
+echo $"Type time in this format  02/27/2014  or 02/27/2014 10:19"
+read 
+echo $REPLY
+echo $(( $(date -d $REPLAY +%s)- $(date  +%s) ))
+}
+
+
+upnp-peace-add-tcp (){
+upnpc -a $(ifconfig wlan0 | grep "inet addr" | cut -d : -f 2 | cut -d " " -f 1) $1 $1 TCP
+}
+
+upnp-peace-add-udp (){
+upnpc -a $(ifconfig wlan0 | grep "inet addr" | cut -d : -f 2 | cut -d " " -f 1) $1 $1 UDP
+}
+
+upnp-peace-r-tcp (){
+upnpc -d $1 TCP
+}
+
+upnp-peace-r-udp (){
+upnpc -d $1 UDP
+
+}
+upnp-peace-list (){
+upnpc -l
+
+}
+
+
 alias one="dh_make -s -c gpl"
 alias two="debuild -uc -us --source-option=--include-binaries --source-option=-isession"
 alias three="cd .. ; sudo pbuilder build"
