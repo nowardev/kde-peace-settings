@@ -79,8 +79,9 @@ void PhononWidget::setUrl(const KUrl &url)
     if (m_url != url) {
         stop(); // emits playingStopped() signal
         m_url = url;
-	if( m_playAut ->isChecked() )
-	 play();
+	if(m_playAut ->isChecked()){
+	   play();
+	}
     }
 }
 
