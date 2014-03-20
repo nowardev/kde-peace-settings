@@ -39,6 +39,7 @@ namespace Phonon
 class EmbeddedVideoPlayer;
 class QToolButton;
 class QVBoxLayout;
+class QCheckBox;
 
 class PhononWidget : public QWidget
 {
