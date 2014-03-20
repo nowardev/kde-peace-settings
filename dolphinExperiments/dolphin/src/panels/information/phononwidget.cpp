@@ -66,6 +66,7 @@ PhononWidget::PhononWidget(QWidget *parent)
     m_stopButton(0),
     m_topLayout(0),
     m_media(0),
+    m_playAut(0),
     m_seekSlider(0),
     m_audioOutput(0),
     m_videoPlayer(0)
@@ -77,6 +78,9 @@ void PhononWidget::setUrl(const KUrl &url)
     if (m_url != url) {
         stop(); // emits playingStopped() signal
         m_url = url;
+        if (m_playAut ->isChecked()){
+            play();
+        }
     }
 }
 
@@ -116,10 +120,12 @@ void PhononWidget::showEvent(QShowEvent *event)
         m_playButton = new QToolButton(this);
         m_stopButton = new QToolButton(this);
         m_seekSlider = new Phonon::SeekSlider(this);
+        m_playAut = new QCheckBox(this);
 
         controlsLayout->addWidget(m_playButton);
         controlsLayout->addWidget(m_stopButton);
         controlsLayout->addWidget(m_seekSlider);
+        controlsLayout->addWidget(m_playAut);
 
         m_topLayout->addLayout(controlsLayout);
 
@@ -140,6 +146,9 @@ void PhononWidget::showEvent(QShowEvent *event)
         connect(m_stopButton, SIGNAL(clicked()), this, SLOT(stop()));
 
         m_seekSlider->setIconVisible(false);
+        
+        m_playAut->setToolTip(i18n("play automatically"));
+        m_playAut->setIconSize(buttonSize);
 
         // Creating an audio player or video player instance might take up to
         // 2 seconds when doing it the first time. To prevent that the user

@@ -82,6 +82,7 @@ class PhononWidget : public QWidget
 
         QToolButton *m_playButton;
         QToolButton *m_stopButton;
+        QCheckBox *m_playAut;
 
         QVBoxLayout *m_topLayout;
         Phonon::MediaObject *m_media;
