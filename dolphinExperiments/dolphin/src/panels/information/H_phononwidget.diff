@@ -1,0 +1,18 @@
+--- temp/phononwidget.h	2014-02-25 19:41:45.000000000 +0100
++++ phononwidget.h	2014-03-20 11:16:51.445959028 +0100
+@@ -39,6 +39,7 @@
+ class EmbeddedVideoPlayer;
+ class QToolButton;
+ class QVBoxLayout;
++class QCheckBox;
+ 
+ class PhononWidget : public QWidget
+ {
+@@ -82,6 +83,7 @@
+ 
+         QToolButton *m_playButton;
+         QToolButton *m_stopButton;
++        QCheckBox *m_playAut;
+ 
+         QVBoxLayout *m_topLayout;
+         Phonon::MediaObject *m_media;
