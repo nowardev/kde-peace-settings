@@ -30,6 +30,7 @@
 #include <QHBoxLayout>
 #include <QShowEvent>
 #include <QToolButton>
+#include <QCheckBox>
 
 #include <KDialog>
 #include <KIcon>
