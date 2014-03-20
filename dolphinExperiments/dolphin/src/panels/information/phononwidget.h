@@ -38,7 +38,6 @@ namespace Phonon
 
 class EmbeddedVideoPlayer;
 class QToolButton;
-class QCheckBox;
 class QVBoxLayout;
 
 class PhononWidget : public QWidget
@@ -64,7 +63,6 @@ class PhononWidget : public QWidget
          */
         void hasVideoChanged(bool hasVideo);
 
-
     protected:
         virtual void showEvent(QShowEvent *event);
         virtual void hideEvent(QHideEvent *event);
@@ -84,7 +82,6 @@ class PhononWidget : public QWidget
 
         QToolButton *m_playButton;
         QToolButton *m_stopButton;
-	QCheckBox *m_playAut;
 
         QVBoxLayout *m_topLayout;
         Phonon::MediaObject *m_media;
