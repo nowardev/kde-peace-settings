@@ -63,21 +63,72 @@ fi
 
 link="http://download.kde.org/stable/4.12.3/src/kde-baseapps-4.12.3.tar.xz"
 if [[ ! -z "$1" ]] ; then 
-link="$1"
+	link="$1"
 fi 
 namextension="${link##*/}"
 name="${namextension/.tar.xz/}"  
 cd "$directory" 
- wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/H_phononwidget.diff
- wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/phononwidget.diff 
- wget "$link" 
- tar -xJf $namextension 
-  patch "$directory/$name/dolphin/src/panels/information/phononwidget.cpp" <"$directory"/phononwidget.diff
- patch "$directory/$name/dolphin/src/panels/information/phononwidget.h" <"$directory"/H_phononwidget.diff
- cd "$directory/$name"
- mkdir build 
- cd build 
- cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. 
- make $multicore 
- cd dolphin/src/ 
- ./dolphin
+wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/H_phononwidget.diff
+wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/phononwidget.diff 
+wget "$link" 
+tar -xJf $namextension 
+patch "$directory/$name/dolphin/src/panels/information/phononwidget.cpp" <"$directory"/phononwidget.diff
+patch "$directory/$name/dolphin/src/panels/information/phononwidget.h" <"$directory"/H_phononwidget.diff
+cd "$directory/$name"
+mkdir build 
+cd build 
+cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. 
+make $multicore 
+ 
+ 
+
+
+echo $"ok if everything is good and you like this patch you can install it locally just create a symbolic link to the new dolphin, do you want create it , NOTE THAT YOU NEED $HOME/bin directory , do you want create symbolic link? (y\n)  "
+read   
+
+testvariable="$REPLY" 
+case "$testvariable" in
+
+ [y/Y]|[-y/-Y]|[y/Y][e/E][s/S])
+bindirectory="$HOME/bin"
+	if [[  -d "$bindirectory"  ]] ; then
+		ln -s "$directory/$name/build/dolphin/src/dolphin" ~/bin/dolphin-autoplay
+		echo $"Ok now you can test the new dolphin typing :  dolphin-autoplay
+
+NOTE IF YOU HAVE JUST CREATED $HOME/bin you need to reboot or the system will not recognize that folder like binary folder.
+"
+			if [[ -z $(type dolphin-autoplay) ]] ; then 
+				echo $"it seems that $HOME/bin is not in your PATH or other error occoured please fix this before to run again dolphin-autoplay"
+			else
+				dolphin-autoplay
+			fi
+		
+
+	else
+		echo $"creating $bindirectory"
+		mkdir "$bindirectory"
+		ln -s "$directory/$name/build/dolphin/src/dolphin" ~/bin/dolphin-autoplay
+		echo $" 
+
+you NEED to reboot or the system will not recognize $bindirectory  like binary folder.
+
+after you have rebooted , you can test the new dolphin typing :  dolphin-autoplay
+"  
+	fi
+
+;;
+
+[n/N]|[n/N][o/O])
+	echo $"exiting..."
+	exit
+ 
+;;
+*)
+	echo $"No valid answer exiting..."
+	exit
+
+;;
+esac
+
+#  cd dolphin/src/ 
+#  ./dolphin
