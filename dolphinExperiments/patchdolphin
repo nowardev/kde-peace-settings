@@ -1,2 +1,83 @@
 #!/bin/bash
-cd /tmp ; wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/H_phononwidget.diff ; wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/phononwidget.diff ; wget http://download.kde.org/stable/4.12.3/src/kde-baseapps-4.12.3.tar.xz ; tar -xJf kde-baseapps-4.12.3.tar.xz ;  patch /tmp/kde-baseapps-4.12.3/dolphin/src/panels/information/phononwidget.cpp </tmp/phononwidget.diff; patch /tmp/kde-baseapps-4.12.3/dolphin/src/panels/information/phononwidget.h <H_phononwidget.diff; cd /tmp/kde-baseapps-4.12.3; mkdir build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. ; make ; cd dolphin/src/ ; ./dolphin
+#Copyright (C) 2014 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+
+directory="$HOME/patchdolphin"
+if [[ ! -d "$directory"  ]] ; then
+	mkdir "$directory"
+	echo $"created $directory"
+else
+echo $"this $directory already exist , DO YOU WANT  move it to $HOME/patchdolphin_old ? (y\n)  "
+read   
+
+testvariable="$REPLY" 
+case "$testvariable" in
+
+ [y/Y]|[-y/-Y]|[y/Y][e/E][s/S])
+mv "$HOME/patchdolphin" "$HOME/patchdolphin_old"
+mkdir "$directory"
+
+;;
+
+[n/N]|[n/N][o/O])
+echo $"exiting..."
+exit
+ 
+;;
+*)
+echo $"No valid answer exiting..."
+exit
+
+;;
+esac
+fi
+#######core detection################ 
+core="$(nproc)"
+testvariable="$core"
+
+if [[  -z  "$testvariable"    ]] ; then
+echo "unable to detect cores"
+multicore=""
+else
+multicore="-j $core"
+fi 
+####################################
+
+
+#dowload patch dowload kde base apps patch it and compile it 
+
+link="http://download.kde.org/stable/4.12.3/src/kde-baseapps-4.12.3.tar.xz"
+if [[ ! -z "$1" ]] ; then 
+link="$1"
+fi 
+namextension="${link##*/}"
+name="${namextension/.tar.xz/}"  
+cd "$directory" 
+ wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/H_phononwidget.diff
+ wget https://kde-peace-settings.googlecode.com/git/dolphinExperiments/dolphin/src/panels/information/phononwidget.diff 
+ wget "$link" 
+ tar -xJf $namextension 
+  patch "$directory/$name/dolphin/src/panels/information/phononwidget.cpp" <"$directory"/phononwidget.diff
+ patch "$directory/$name/dolphin/src/panels/information/phononwidget.h" <"$directory"/H_phononwidget.diff
+ cd "$directory/$name"
+ mkdir build 
+ cd build 
+ cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr/local .. 
+ make $multicore 
+ cd dolphin/src/ 
+ ./dolphin
