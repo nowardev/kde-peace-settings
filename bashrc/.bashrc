@@ -136,29 +136,33 @@ function wgets()
 # alias screncast_stop="pkill --signal TERM oggenc & pkill --signal TERM ffmpeg "
 # 
 
-
-
 alias u="sudo apt-get update"
 alias g="sudo apt-get upgrade"
 alias uf="echo sudo apt-get upgrade -f  && sudo apt-get upgrade -f"
 alias gf="sudo apt-get dist-upgrade -f"
 alias i="sudo apt-get install"
 alias ai="apt-cache show"
+alias li="dpkg --get-selections | grep -v deinstall"
 alias r="sudo apt-get remove "
 alias p="sudo apt-get --purge remove "
 alias s="apt-cache search "
 alias a="sudo apt-get autoremove"
+alias save-apt-list="dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst ; echo saved on $HOME/apt-list.lst"
+alias install-apt-list="sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade"
 alias h="echo \"
-u==>sudo apt-get update
-g==>sudo apt-get upgrade
-uf==>sudo apt-get upgrade -f
-gf==>sudo apt-get dist-upgrade -f
-i==>sudo apt-get install
-ai==>apt-cache show  
-r==>sudo apt-get remove 
-p==>sudo apt-get --purge remove 
-s==>apt-cache search 
-a==>sudo apt-get autoremove\"
+u			#update repository list			sudo apt-get update
+g			#upgrade				sudo apt-get upgrade
+uf			#force upgrade				sudo apt-get upgrade -f
+gf			#force dist-upgrade			sudo apt-get dist-upgrade -f
+i			#install packages			sudo apt-get install
+ai			#information about the package		apt-cache show
+li			#list packages installed		dpkg --get-selections | grep -v deinstall
+r			#remove a package			sudo apt-get remove 
+p			#remove a packate & conf file		sudo apt-get --purge remove 
+s			#search for a software			apt-cache search 
+a			#autoremove a software			sudo apt-get autoremove
+save-apt-list		#save list of packages installed	dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst
+install-apt-list	#install a list of packages in		sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade\"
 "
  peacefun()
 {
@@ -392,6 +396,14 @@ upnpc -l
 
 }
 
+buildpackage(){
+sudo dpkg-buildpackage -j $(grep -c ^processor /proc/cpuinfo) -b -rfakeroot -us -uc 
+}
+
+
+makejcore(){
+make -j $(grep -c ^processor /proc/cpuinfo)
+}
 
 alias one="dh_make -s -c gpl"
 alias two="debuild -uc -us --source-option=--include-binaries --source-option=-isession"
