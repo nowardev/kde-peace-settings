@@ -17,7 +17,7 @@ fi </fillin>
   <match>eof</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
-  <fillin>"(_EOF
+  <fillin>"(&lt&lt_EOF
 "${cursor}$mystring"
 _EOF
 )"
@@ -646,7 +646,7 @@ unset newarray[2]</fillin>
   <match>saving_nasty_code</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
-  <fillin>cat  &lt;&lt;EOF'>> /tmp/file 
+  <fillin>cat  &lt;&lt;&apos;EOF&apos;&gt;&gt; /tmp/file 
 ${cursor} bla bla
 bla even more bla 
 

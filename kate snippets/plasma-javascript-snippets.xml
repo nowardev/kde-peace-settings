@@ -73,15 +73,10 @@ icontasks.writeConfig("unity","true")
 //icontasks.writeConfig("Enabled","true")
 
 icontasks.currentConfigGroup = new Array('DockManager') // CONFIGURE DOCKERS HELPERS
-icontasks.writeConfig("Enabled","true")	
-icontasks.writeConfig("EnabledHelpers",userhome+"/.local/share/dockmanager/scripts/kate.py,"+userhome+"/.local/share/dockmanager/scripts/konqueror.py,"+userhome+"/.local/share/dockmanager/scripts/krdc_menus.py,"+userhome+"/.local/share/dockmanager/scripts/rekonq.py,"+userhome+"/.local/share/dockmanager/scripts/akonadi.py,"+userhome+"/.local/share/dockmanager/scripts/firefox.py,"+userhome+"/.local/share/dockmanager/scripts/konsole.py,"+userhome+"/.local/share/dockmanager/scripts/dolphin.py,"+userhome+"/.local/share/dockmanager/scripts/kopete.py,"+userhome+"/.local/share/dockmanager/scripts/amarok.py")
+icontasks.writeConfig("Enabled","true")	icontasks.writeConfig("EnabledHelpers",userhome+"/.local/share/dockmanager/scripts/kate.py,"+userhome+"/.local/share/dockmanager/scripts/konqueror.py,"+userhome+"/.local/share/dockmanager/scripts/krdc_menus.py,"+userhome+"/.local/share/dockmanager/scripts/rekonq.py,"+userhome+"/.local/share/dockmanager/scripts/akonadi.py,"+userhome+"/.local/share/dockmanager/scripts/firefox.py,"+userhome+"/.local/share/dockmanager/scripts/konsole.py,"+userhome+"/.local/share/dockmanager/scripts/dolphin.py,"+userhome+"/.local/share/dockmanager/scripts/kopete.py,"+userhome+"/.local/share/dockmanager/scripts/amarok.py")
 
 icontasks.currentConfigGroup = new Array('Launchers') // CONFIGURE LAUNCHERS
-icontasks.writeConfig("Items","file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/vlc.desktop?wmClass=Vlc,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")
-//icontasks.writeConfig("browser", "preferred://browser, , , ") // add to icontask the prefered browser automatically this is good but it put where it wants the launcher so it sucks 
-//icontasks.writeConfig("filemanager", "preferred://filemanager, , , ")
-
-</fillin>
+icontasks.writeConfig("Items","file:///usr/share/applications/chromium-browser.desktop?wmClass=Chromium-browser,file:///usr/share/applications/firefox.desktop?wmClass=Firefox,file:///usr/share/applications/kde4/konversation.desktop?wmClass=Konversation,file:////usr/share/applications/kde4/dolphin.desktop?wmClass=Dolphin,file:///usr/share/applications/kde4/kate.desktop?wmClass=Kate,file:///usr/share/applications/kde4/konsole.desktop?wmClass=Konsole,file:///usr/share/applications/kde4/ksnapshot.desktop?wmClass=Ksnapshot,file:///usr/share/applications/vlc.desktop?wmClass=Vlc,file:///usr/share/applications/kde4/systemsettings.desktop?wmClass=Systemsettings")</fillin>
  </item>
  <item>
   <displayprefix></displayprefix>
@@ -252,7 +247,7 @@ yawp.writeConfig("update interval","45")
  
 yawp.currentConfigGroup = new Array('locations')
 
-yawp.writeConfig("city01",'accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome')
+yawp.writeConfig("city01","accuweather,Verona\\, Italy(Veneto),Italy,it,EUR.IT.IT020.VERONA,Europe/Rome")
 yawp.writeConfig("selected","0")
  
 //yawp.geometry = new QRectF(0,0,screenrect.width/4,screenrect.height/3)</fillin>
@@ -370,15 +365,6 @@ launcher.globalShortcut = "F13"
   <fillin> var activity = new Activity("sal")
 activity.name = i18n("Search and Launch")
 
-activity.writeConfig("EnabledEntries","plasma-sal-bookmarks.desktop,plasma-sal-contacts.desktop,plasma-sal-multimedia.desktop,plasma-sal-internet.desktop,plasma-sal-graphics.desktop,plasma-sal-games.desktop,plasma-sal-office.desktop")
-activity.wallpaperPlugin = "image"
-activity.wallpaperMode = "SingleImage"
-activity.currentConfigGroup = Array("Wallpaper", "image")
-activity.writeConfig("wallpaper", "nowardev-chromeos")
-activity.writeConfig("previewPlugins","imagethumbnail,jpegthumbnail,kffmpegthumbnailer") 
-activity.currentConfigGroup = ['stripwidget', 'favourite-0']
-activity.writeConfig("url","/usr/share/applications/kde4/dolphin.desktop")
-activity.reloadConfig()
 </fillin>
  </item>
  <item>
@@ -664,13 +650,12 @@ battery
 bookmarks
 calculator
 character-selector
-check-exist-application
 check-widget-installed
 clock
 current
 currentappcontrol
 daisy
-device-notifier
+devicenotifier
 global-shortcut
 instant-message-presence
 irc
@@ -721,7 +706,7 @@ write-config
 
  
 
-awk '/match/{gsub(/match/,"");gsub(/&lt;>/,"");gsub(/&lt;\/>/,"");print $1}'  ~/.kde/share/apps/ktexteditor_snippets/data/*plasma*.xml | sort -u  >/tmp/snippets-help ; kate /tmp/snippets-help 
+awk '/match/{gsub(/match/,"");gsub(/&lt;>/,"");gsub(/&lt;\/>/,"");print $1}'  ~/.kde/share/apps/ktexteditor_snippets/data/*plasma*.xml | sort >/tmp/snippets-help ; kate /tmp/snippets-help 
 
 
 </fillin>
@@ -985,30 +970,6 @@ print("your system doesn't provide "+widget )
  
 } </fillin>
  </item>
-  <item>
-  <displayprefix></displayprefix>
-  <match>check-exist-application</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin> var desktopfile = "firefox.desktop"
-var binary="firefox"
-if (applicationExists(binary)){  
-print (binary+" exist"+" with this path:         "+applicationPath(binary))
-print (binary+".desktop file located here :     "+applicationPath(desktopfile))
-// print (userDataPath("services" ,"firefox"))
-}
-else{
-  print (binary+" do not exist ")
-}</fillin>
- </item>
- <item>
-  <displayprefix></displayprefix>
-  <match>global-shortcut</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>globalShortcut = "${cursor}F13"
-</fillin>
- </item>
  <item>
   <displayprefix></displayprefix>
   <match>current</match>
@@ -1062,68 +1023,5 @@ var widget = panel.addWidget(widget)
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
   <fillin>loadTemplate("org.kde.plasma-desktop.${cursor}nowardevPanel")</fillin>
- </item>
-  <item>
- <match>default_texeditor</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("text/plain").split(" "))</fillin>
- </item>
-  <item>
-<match>default_videoplayer</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("video/quicktime").split(","))</fillin>
- </item>
-  <item>
-<match>default_browser</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("browser"))</fillin>
- </item>
-  <item>
-<match>default_filemanager</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("filemanager"))</fillin>
- </item>
-  <item>
-<match>default_mail_client</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("mailer"))</fillin>
- </item>
-  <item>
-<match>default_terminal</match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("terminal"))</fillin>
- </item>
-  <item>
-<match>default_istant_messanger </match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>print (defaultApplication("imClient"))</fillin>
- </item>
- <item>
-<match>check_which_browser_installed </match>
-  <displaypostfix></displaypostfix>
-  <displayarguments></displayarguments>
-  <fillin>
-var array = ["firefox.desktop","chromium-browser.desktop","chrome.desktop","konqbrowser.desktop","midori.desktop","qupzilla.desktop","opera-browser.desktop"] 
-//loop over the array checking if exist the file if it exist print stuff 
- for(var i=0; i&lt;array.length; i++){ 
- 
-
- if (applicationExists(array[i])){  
- 
-		print ( "file://"+applicationPath(array[i]))
-		// print (userDataPath("services" ,"firefox"))
-	}
-	else{
-		print (array[i]+" do not exist in your system ")
-	}
-   
- } </fillin>
  </item>
 </snippets>
