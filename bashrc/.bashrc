@@ -376,11 +376,11 @@ echo $(( $(date -d $REPLAY +%s)- $(date  +%s) ))
 
 
 upnp-add-tcp (){
-upnpc -a $(ifconfig wlan0 | grep "inet addr" | cut -d : -f 2 | cut -d " " -f 1) $1 $1 TCP
+upnpc -a $(hostname -I) $1 $1 TCP
 }
 
 upnp-add-udp (){
-upnpc -a $(ifconfig wlan0 | grep "inet addr" | cut -d : -f 2 | cut -d " " -f 1) $1 $1 UDP
+upnpc -a $(hostname -I) $1 $1 UDP
 }
 
 upnp-r-tcp (){
