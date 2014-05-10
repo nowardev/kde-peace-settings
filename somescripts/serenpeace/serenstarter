@@ -1,0 +1,94 @@
+#!/bin/bash 
+#license gpl 
+#copyright nowardev@gmail.com
+
+	program[0]="upnpc"
+	program[1]="seren"
+	for program in "${program[@]}";
+	do if ! type -p "$program" >/dev/null;
+	then echo "$program not found; PLEASE INSTALL IT" >&2
+	echo "error exiting..." >&2
+	exit 1;
+	fi; done
+
+serenstarter()
+{
+
+#CHECK PULSEAUDIO 
+pulseactive="$(pidof pulseaudio)"
+defaultdevice="00,00"
+
+#get audio cards 
+i=0
+while read line ;do
+IFS=- read -r  d m <<< "$line"; a="$d,$m" 
+audiocard[$i]="plughw:$a"
+i=$(($i+1))
+done< <( grep capture /proc/asound/pcm | cut -d : -f 1)
+if [[ ! -z "$pulseactive" ]] ;then audiocard[$i]="pulse"; defaultdevice="pulse"; fi 
+
+
+#get name of audio cards 
+i=0
+while read line ;do
+audionamecard[$i]="$line"
+i=$(($i+1))
+done< <(grep capture /proc/asound/pcm | cut -d : -f 2)
+if [[ ! -z "$pulseactive" ]] ;then audionamecard[$i]="PULSEAUDIO (default)"; fi 
+
+
+if [[ ${#audiocard[@]} >1 ]]; then 
+
+echo $"
+I have detected more than 1 microphone in your computer please select what you want to  use (0-$((${#audiocard[@]}-1)))
+"
+
+i=0
+for (( i=0 ; i <${#audiocard[@]};i++)); do 
+	tput setf 2
+	echo $"Choose $i for this Microphone:  ${audionamecard[$i]} "
+done
+
+
+read   
+
+ 
+	if [[ "$REPLY" -ge "0" && "$REPLY" -lt "${#audiocard[@]}" ]];then
+		tput setf 5
+		echo $"MicroPhone selected : device "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}""
+		microphone="${audiocard["$REPLY"]}"
+	else
+		echo $"No Valid choice : setting microphone with $defaultdevice"
+		microphone="$defaultdevice"
+	fi
+    
+REPLY=""
+else
+microphone="${audiocard[0]}"
+fi 
+
+tput setf 3
+echo $"
+upnpc -d 8110 UDP    &&  upnpc -a $( hostname -I) 8110 8110 UDP 
+
+opening port 8110 now for your computer , wait a moment...
+"
+upnpc -d 8110 UDP >/dev/null    &&  upnpc -a $( hostname -I) 8110 8110 UDP >/dev/null  && tput setf 2 &&  echo $"port 8110 is opened" 
+tput setf 7
+
+
+ 
+tput setf 5 ; echo "launching command : seren -n $USER -d pulse -D $microphone"; tput setf 7 ; seren -n $USER -d pulse -D $microphone 
+
+ 
+
+ 
+#closing port 
+tput setf 3
+echo $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
+tput setf 2
+echo $"port 8110 closed"
+tput setf 7
+}
+
+serenstarter

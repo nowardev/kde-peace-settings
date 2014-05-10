@@ -1,0 +1,23 @@
+[Desktop Entry]
+Categories=Network;IRCClient;
+Comment[en_US]=Open Source Voip terminal Program
+Comment=Open Source Voip terminal Program
+Exec=serenstarter
+GenericName[en_US]=Voip Chat
+GenericName=Voip Chat
+GenericName[it]=Voip Chat
+Icon=voicecall
+MimeType=
+Name[en_US]=Seren
+Name=Seren
+Name[it]=seren
+Path=
+StartupNotify=true
+Terminal=true
+TerminalOptions=
+Type=Application
+Version=0.0.18
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=
