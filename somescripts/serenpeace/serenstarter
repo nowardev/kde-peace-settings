@@ -2,7 +2,7 @@
 #license gpl 
 #copyright nowardev@gmail.com
 
-	program[0]="upnpcA"
+	program[0]="upnpc"
 	#program[1]="seren"
 	for program in "${program[@]}";
 	do if ! type -p "$program" >/dev/null;then
