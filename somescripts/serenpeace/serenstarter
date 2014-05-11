@@ -2,13 +2,20 @@
 #license gpl 
 #copyright nowardev@gmail.com
 
-	program[0]="upnpc"
-	program[1]="seren"
+	program[0]="upnpcA"
+	#program[1]="seren"
 	for program in "${program[@]}";
-	do if ! type -p "$program" >/dev/null;
-	then echo "$program not found; PLEASE INSTALL IT" >&2
-	echo "error exiting..." >&2
-	exit 1;
+	do if ! type -p "$program" >/dev/null;then
+	tput setf 4
+	echo "$program not found; PLEASE INSTALL IT" >&2
+	echo "
+	
+	WARNING : 
+	
+	SEREN WILL NOT WORK PROPERLY...
+	
+	" >&2
+	tput setf 7
 	fi; done
 
 serenstarter()
