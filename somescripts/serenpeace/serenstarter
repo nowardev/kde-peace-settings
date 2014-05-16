@@ -99,3 +99,4 @@ tput setf 7
 }
 
 serenstarter
+#wget https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter
