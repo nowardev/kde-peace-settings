@@ -48,7 +48,7 @@ I have detected more than 1 microphone in your computer please select what you w
 
 i=0
 for (( i=0 ; i <${#audiocard[@]};i++)); do 
-	tput setf 2
+	tput setaf 2
 	echo $"Choose $i for this Microphone:  ${audionamecard[$i]} "
 done
 
@@ -57,7 +57,7 @@ read
 
  
 	if [[ "$REPLY" -ge "0" && "$REPLY" -lt "${#audiocard[@]}" ]];then
-		tput setf 5
+		tput setaf 5
 		echo $"MicroPhone selected : device "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}""
 		microphone="${audiocard["$REPLY"]}"
 	else
@@ -70,29 +70,29 @@ else
 microphone="${audiocard[0]}"
 fi 
 
-tput setf 3
+tput setaf 3
 echo $"
 upnpc -d 8110 UDP    &&  upnpc -a $( hostname -I) 8110 8110 UDP 
 
 opening port 8110 now for your computer , wait a moment...
 "
-upnpc -d 8110 UDP >/dev/null    &&  upnpc -a $( hostname -I) 8110 8110 UDP >/dev/null  && tput setf 2 &&  echo $"port 8110 is opened" 
-tput setf 7
+upnpc -d 8110 UDP >/dev/null    &&  upnpc -a $( hostname -I) 8110 8110 UDP >/dev/null  && tput setaf 2 &&  echo $"port 8110 is opened" 
+tput setaf 7
 
 
  
-tput setf 5 ; echo "launching command : seren -n $USER $pulseactive -D $microphone"; tput setf 7 ; seren -n $USER $pulseactive -D $microphone 
+tput setaf 5 ; echo "launching command : seren -n $USER $pulseactive -D $microphone"; tput setaf 7 ; seren -n $USER $pulseactive -D $microphone 
 
  
 
  
 #closing port 
-tput setf 3
+tput setaf 3
 echo $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
-tput setf 2
+tput setaf 2
 echo $"port 8110 closed"
-tput setf 7
+tput setaf 7
 }
 
 serenstarter
-#wget https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter
+#wget https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter; sudo cp $HOME/serenstarter /usr/bin/serenstarter
