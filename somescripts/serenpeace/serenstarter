@@ -3,19 +3,12 @@
 #copyright nowardev@gmail.com
 
 	program[0]="upnpc"
-	#program[1]="seren"
+	program[1]="seren"
 	for program in "${program[@]}";
-	do if ! type -p "$program" >/dev/null;then
-	tput setf 4
-	echo "$program not found; PLEASE INSTALL IT" >&2
-	echo "
-	
-	WARNING : 
-	
-	SEREN WILL NOT WORK PROPERLY...
-	
-	" >&2
-	tput setf 7
+	do if ! type -p "$program" >/dev/null;
+	then echo "$program not found; PLEASE INSTALL IT" >&2
+	echo "error exiting..." >&2
+	exit 1;
 	fi; done
 
 serenstarter()
@@ -24,6 +17,9 @@ serenstarter()
 #CHECK PULSEAUDIO 
 pulseactive="$(pidof pulseaudio)"
 defaultdevice="00,00"
+
+if [[ ! -z "$pulseactive" ]] ;then pulseactive="-d pulse";else  pulseactive=""; fi 
+
 
 #get audio cards 
 i=0
@@ -85,7 +81,7 @@ tput setf 7
 
 
  
-tput setf 5 ; echo "launching command : seren -n $USER -d pulse -D $microphone"; tput setf 7 ; seren -n $USER -d pulse -D $microphone 
+tput setf 5 ; echo "launching command : seren -n $USER $pulseactive -D $microphone"; tput setf 7 ; seren -n $USER $pulseactive -D $microphone 
 
  
 
