@@ -1,0 +1,7 @@
+#!/bin/bash 
+#license gpl 
+# 
+
+echo $"Upgrading serenstarter ..."
+
+wget --no-check-certificate https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter #; sudo cp $HOME/serenstarter /usr/bin/serenstarter ; rm $HOME/serenstarter
