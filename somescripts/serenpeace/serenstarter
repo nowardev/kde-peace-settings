@@ -1,6 +1,7 @@
 #!/bin/bash 
 #license gpl 
 #copyright nowardev@gmail.com
+version="0.0.1"
 
 	program[0]="upnpc"
 	program[1]="seren"
@@ -11,7 +12,32 @@
 	exit 1;
 	fi; done
 
-serenstarter()
+
+ 
+function_ask_name(){
+
+username="$USER"
+tput setaf 3
+echo $"
+
+Please Type a nickname, or press ENTER to set: $username"
+
+read 
+
+	if [[ -z "$REPLY" ]];then
+		tput setaf 3
+		echo $"No name selecting $USER"
+		
+	else
+		tput setaf 3
+		echo $"nickname:  $REPLY"
+		username="$REPLY"
+	fi
+
+
+}
+
+starter()
 {
 
 #CHECK PULSEAUDIO 
@@ -81,7 +107,7 @@ tput setaf 7
 
 
  
-tput setaf 5 ; echo "launching command : seren -n $USER $pulseactive -D $microphone"; tput setaf 7 ; seren -n $USER $pulseactive -D $microphone 
+tput setaf 5 ; echo "launching command : seren -n $username $pulseactive -D $microphone"; tput setaf 7 ; seren -n $username $pulseactive -D $microphone 
 
  
 
@@ -91,8 +117,23 @@ tput setaf 3
 echo $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
 tput setaf 2
 echo $"port 8110 closed"
+
+
+tput setaf 5
+echo $"To run again seren type:
+
+ serenstarter 
+
+or directly:
+
+ seren -n nickname"
+
 tput setaf 7
+
+
 }
 
-serenstarter
+function_ask_name
+starter
+
 #wget https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter; sudo cp $HOME/serenstarter /usr/bin/serenstarter
