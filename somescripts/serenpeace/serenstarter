@@ -2,12 +2,14 @@
 #license gpl 
 #copyright nowardev@gmail.com
 version="0.0.1"
+keyboard_default="us"
 
 	program[0]="upnpc"
 	program[1]="seren"
 	for program in "${program[@]}";
 	do if ! type -p "$program" >/dev/null;
 	then echo "$program not found; PLEASE INSTALL IT" >&2
+	tput setaf 1
 	echo "error exiting..." >&2
 	exit 1;
 	fi; done
@@ -34,6 +36,31 @@ read
 		username="$REPLY"
 	fi
 
+
+}
+
+function_ask_keyboard(){
+
+
+
+tput setaf 3
+echo $"
+
+Please select a keyboard layout, (us it es fr de): $keyboard_default"
+
+read 
+
+	if [[ -z "$REPLY" ]];then
+		tput setaf 3
+		echo $"No input given  selecting $keyboard_default"
+		
+	else
+		tput setaf 3
+		echo $"keyboard:  $REPLY"
+		keyboard="$REPLY"
+	fi
+	
+	loadkeys $keyboard
 
 }
 
@@ -126,7 +153,9 @@ echo $"To run again seren type:
 
 or directly:
 
- seren -n nickname"
+ seren -n nickname
+ 
+To change keyboard layout type"
 
 tput setaf 7
 
