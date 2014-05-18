@@ -11,6 +11,7 @@ keyboard_default="us"
 	then echo "$program not found; PLEASE INSTALL IT" >&2
 	tput setaf 1
 	echo "error exiting..." >&2
+	tput setaf 7
 	exit 1;
 	fi; done
 
