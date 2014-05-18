@@ -20,11 +20,11 @@ keyboard_default="us"
 function_ask_name(){
 
 username="$USER"
-tput setaf 3
+tput setaf 6
 echo $"
 
 Please Type a nickname, or press ENTER to set: $username"
-
+tput setaf 3
 read 
 
 	if [[ -z "$REPLY" ]];then
@@ -44,11 +44,11 @@ function_ask_keyboard(){
 
 
 
-tput setaf 3
+tput setaf 6
 echo $"
 
 Please select a keyboard, (us it es fr de) or press ENTER to set: $keyboard_default"
-
+tput setaf 3
 read 
 
 	if [[ -z "$REPLY" ]];then
