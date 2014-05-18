@@ -54,6 +54,7 @@ read
 	if [[ -z "$REPLY" ]];then
 		tput setaf 3
 		echo $"No input given  selecting $keyboard_default"
+		keyboard="$keyboard_default"
 		
 	else
 		tput setaf 3
