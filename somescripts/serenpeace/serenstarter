@@ -47,7 +47,7 @@ function_ask_keyboard(){
 tput setaf 3
 echo $"
 
-Please select a keyboard layout, (us it es fr de): $keyboard_default"
+Please select a keyboard, (us it es fr de) or press ENTER to set: $keyboard_default"
 
 read 
 
@@ -148,21 +148,35 @@ echo $"port 8110 closed"
 
 
 tput setaf 5
-echo $"To run again seren type:
+echo $"
 
- serenstarter 
+HOW CHANGE KEYBOARD LAYOUT:
 
-or directly:
+############################################
+sudo dpkg-reconfigure console-data
+sudo dpkg-reconfigure keyboard-configuration
+sudo service keyboard restart
+############################################
 
- seren -n nickname
- 
-To change keyboard layout type"
+HOW START VOIP SEREN 
+
+type in the terminal:
+
+############
+serenstarter
+############
+
+You can start seren also with:
+
+#################
+seren -n nickname 
+#################"
 
 tput setaf 7
 
 
 }
-
+function_ask_keyboard
 function_ask_name
 starter
 
