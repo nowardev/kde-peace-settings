@@ -4,4 +4,9 @@
 
 echo $"Upgrading serenstarter ..."
 
-wget --no-check-certificate https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter ; sudo cp $HOME/serenstarter /usr/local/bin/serenstarter ; rm $HOME/serenstarter ;sudo cp $HOME/serenstarter/serenstarterupdater /usr/local/bin/serenstarterupdater ;
+wget --no-check-certificate https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter 
+chmod +x $HOME/serenstarter 
+sudo cp $HOME/serenstarter /usr/local/bin/serenstarter
+rm $HOME/serenstarter 
+sudo cp $HOME/serenstarterupdater /usr/local/bin/serenstarterupdater
+rm $HOME/serenstarterupdater
