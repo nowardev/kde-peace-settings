@@ -1,0 +1,86 @@
+#!/bin/bash 
+#license gpl 
+# copyright nowardev@gmail.com
+
+
+# ADD SERENUSER TO SUDO GROUP 
+sudo adduser serenuser sudo
+
+# ADD GROUP LOADKEYS 
+sudo  groupadd loadkeys
+
+# SET GROUP FOR LOADKEYS BINARY
+sudo chgrp loadkeys /bin/loadkeys
+
+# ADD SERENUSER TO THE GROUP
+sudo gpasswd -a serenuser loadkeys 
+
+#ADD SERERUSER TO SUDO 
+#echo '%loadkeys debianseren=(ALL)NOPASSWD:/bin/loadkeys' | sudo tee -a /etc/sudoers
+
+# SETUID, GROUP- AND USER-ONLY READ AND EXECUTION
+sudo chmod 4750 /usr/bin/loadkeys 
+sudo chmod 4750 /bin/loadkeys 
+
+#AUTOLOGIN 
+sudo sed -i 's/1\:2345\:respawn\:\/sbin\/getty 38400 tty1/1\:2345\:respawn\:\/bin\/login -f serenuser tty1 <\/dev\/tty1 >\/dev\/tty1 2\>\&1/'  /etc/inittab
+
+echo '#old line to avoid autologin for serenuser
+#comment the line where there is serenuser and decomment this one
+#1:2345:respawn:/sbin/getty 38400 tty1'| sudo tee -a /etc/inittab 
+
+
+
+
+#AUTOLOAD SERENSTARTER
+echo '
+
+
+if [[ "$(tty)" == "/dev/tty1" ]]; then
+serenstarter
+#seren -n serenuser 
+fi
+
+pastebinseren(){
+curl -F sprunge=@- sprunge.us
+}
+' >>$HOME/.bashrc
+
+
+
+
+#AUTOMESSAGE TO LOGIN 
+
+echo $"adding some message after login "
+
+echo 'echo "
+
+HOW CHANGE KEYBOARD LAYOUT:
+
+############################################
+sudo dpkg-reconfigure console-data
+sudo dpkg-reconfigure keyboard-configuration
+sudo service keyboard restart
+############################################
+
+HOW START VOIP SEREN 
+
+type in the terminal:
+
+############
+serenstarter
+############
+
+You can start seren also with:
+
+#################
+seren -n nickname 
+#################
+" >> /etc/motd' | sudo -s
+
+#INSTALL UPNPC CONSOLE-DATA FOR KEYBOARDS
+#DOWNLOAD SERENSTARTER SERENUPDATER MOVE THEM TO USR LOCAL BIN 
+sudo apt-get install miniupnpc console-data sudo alsa-utils  ; sudo loadkeys it ;cd $HOME ; wget --no-check-certificate https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarterupdater -O $HOME/serenstarterupdater ;wget --no-check-certificate https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x serenstarter ; chmod +x serenstarterupdater;sudo cp serenstarter /usr/local/bin/serenstarter ; sudo cp serenstarterupdater /usr/local/bin/serenupdater
+
+
+
