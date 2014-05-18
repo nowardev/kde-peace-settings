@@ -96,14 +96,13 @@ if [[ ! -z "$pulseactive" ]] ;then audionamecard[$i]="PULSEAUDIO (default)"; fi
 
 
 if [[ ${#audiocard[@]} >1 ]]; then 
-
+tput setaf 6
 echo $"
 I have detected more than 1 microphone in your computer please select what you want to  use (0-$((${#audiocard[@]}-1)))
 "
 
 i=0
 for (( i=0 ; i <${#audiocard[@]};i++)); do 
-	tput setaf 2
 	echo $"Choose $i for this Microphone:  ${audionamecard[$i]} "
 done
 
@@ -126,12 +125,11 @@ microphone="${audiocard[0]}"
 fi 
 
 tput setaf 3
-echo $"
+echo -ne $"
 upnpc -d 8110 UDP    &&  upnpc -a $( hostname -I) 8110 8110 UDP 
 
 opening port 8110 now for your computer , wait a moment...
-"
-upnpc -d 8110 UDP >/dev/null    &&  upnpc -a $( hostname -I) 8110 8110 UDP >/dev/null  && tput setaf 2 &&  echo $"port 8110 is opened" 
+" && upnpc -d 8110 UDP >/dev/null    &&  upnpc -a $( hostname -I) 8110 8110 UDP >/dev/null  && tput setaf 2 &&  echo $"port 8110 is opened" 
 tput setaf 7
 
 
@@ -143,9 +141,8 @@ tput setaf 5 ; echo "launching command : seren -n $username $pulseactive -D $mic
  
 #closing port 
 tput setaf 3
-echo $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
-tput setaf 2
-echo $"port 8110 closed"
+echo -ne $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
+tput setaf 2 && echo $"port 8110 closed"
 
 
 tput setaf 5
@@ -180,5 +177,3 @@ tput setaf 7
 function_ask_keyboard
 function_ask_name
 starter
-
-#wget https://kde-peace-settings.googlecode.com/git/somescripts/serenpeace/serenstarter  -O $HOME/serenstarter ; chmod +x $HOME/serenstarter; sudo cp $HOME/serenstarter /usr/bin/serenstarter
