@@ -405,6 +405,38 @@ makejcore(){
 make -j $(grep -c ^processor /proc/cpuinfo)
 }
 
+qemu-vmdk_img(){
+	"$path_vmdk"="$1"  
+	"$path_img"="${1%%.*}.img"
+	
+	qemu-img convert -f vmdk -O raw "$path_vmdk" "path_img"
+ 
+}
+
+qemu-vdi_img(){
+	"$path_vdi"="$1"  
+	"$path_img"="${1%%.*}.img"
+	
+	qemu-img convert -f vdi -O raw "$path_vdi" "path_img"
+ 
+}
+
+qemu-img_vmdk(){
+	"$path_img"="$1"  
+	"$path_vmdk"="${1%%.*}.vmdk"
+	
+	qemu-img convert -f raw -O vmdk  "path_img" "$path_vmdk"
+ 
+}
+
+qemu-img_vdi(){
+	"$path_img"="$1"
+	"$path_vdi"="${1%%.*}.vdi" 
+	
+	qemu-img convert -f raw -O vdi "path_img" "$path_vdi"
+ 
+}
+
 alias one="dh_make -s -c gpl"
 alias two="debuild -uc -us --source-option=--include-binaries --source-option=-isession"
 alias three="cd .. ; sudo pbuilder build"
@@ -430,4 +462,14 @@ extract () {
      else
          echo "'$1' is not a valid file"
      fi
+}
+
+
+xz-compress(){
+tar cJvf ${1%%.*}.tar.xz "$1"
+}
+
+pastebin(){
+curl -F sprunge=@- sprunge.us
+
 }
