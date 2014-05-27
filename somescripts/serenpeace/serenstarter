@@ -57,11 +57,7 @@ tput setaf 3
 
 case "$hostname" in 
 tinyseren)
-tput setaf 6
-echo $"
 
-Please select a keyboard, (us it es fr de) or press ENTER to set: $keyboard_default"
-tput setaf 3
 read 
 
 	if [[ -z "$REPLY" ]];then
@@ -204,17 +200,15 @@ if [[ "$(hostname)" == "tinyseren" ]] ; then
 	echo $"
 
 HOW CHANGE KEYBOARD LAYOUT:
-
 #############################################
 search in this location : /usr/share/kmap
-there are many folder for example for italian
+there are many folders for example for italian
 keyboard :
 
 sudo loadkmap < /usr/share/kmap/qwerty/it-ibm.kmap
 
 To make this permanent, add the command to /opt/bootlocal.sh (missing the sudo, since bootlocal is executed as root)
-############################################
-"
+############################################"
 else
 
 	tput setaf 3
