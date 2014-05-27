@@ -3,17 +3,22 @@
 #copyright nowardev@gmail.com
 version="0.0.1"
 keyboard_default="us"
+hostname="$(hostname)"
 
-	program[0]="upnpc"
-	program[1]="seren"
-	for program in "${program[@]}";
-	do if ! type -p "$program" >/dev/null;
-	then echo "$program not found; PLEASE INSTALL IT" >&2
-	tput setaf 1
-	echo "error exiting..." >&2
-	tput setaf 7
-	exit 1;
-	fi; done
+
+tinykeyboard[0]="/usr/share/kmap/us.kmap" #default in tinycore
+tinykeyboard[1]="/usr/share/kmap/qwerty/it-ibm.kmap"
+tinykeyboard[2]="/usr/share/kmap/qwerty/es.kmap"
+tinykeyboard[3]="/usr/share/kmap/azerty/fr.kmap"
+tinykeyboard[4]="/usr/share/kmap/qwertz/de.kmap"
+
+program[0]="upnpc"
+program[1]="seren"
+for program in "${program[@]}";
+do if ! type -p "$program" >/dev/null;
+then tput setaf 1 ;  echo "$program not found; PLEASE INSTALL IT" >&2
+tput setaf 7
+fi; done
 
 
  
@@ -49,6 +54,52 @@ echo $"
 
 Please select a keyboard, (us it es fr de) or press ENTER to set: $keyboard_default"
 tput setaf 3
+
+case "$hostname" in 
+tinyseren)
+tput setaf 6
+echo $"
+
+Please select a keyboard, (us it es fr de) or press ENTER to set: $keyboard_default"
+tput setaf 3
+read 
+
+	if [[ -z "$REPLY" ]];then
+		tput setaf 3
+		echo $"No input given  selecting $keyboard_default"
+		keyboard="${tinykeyboard[0]}"
+		
+	else
+		tput setaf 3
+		echo $"keyboard:  $REPLY"
+		case $REPLY in 
+		us)
+		keyboard="${tinykeyboard[0]}"
+		;;
+		it)
+		keyboard="${tinykeyboard[1]}"
+		;;
+		es)
+		keyboard="${tinykeyboard[2]}"
+		;;
+		fr)
+		keyboard="${tinykeyboard[3]}"
+		;;
+		de)
+		keyboard="${tinykeyboard[4]}"
+		;;
+		*)
+		echo $"wrong name this script will only recognize us it es fr de for more layut edit this file : /opt/bootlocal.sh in the line loadkmap , remember to do filetool -b to save your settings!"
+		keyboard="${tinykeyboard[0]}"
+		;;
+		esac
+	fi
+	
+	sudo loadkmap < "$keyboard"
+
+
+;;
+debianseren)
 read 
 
 	if [[ -z "$REPLY" ]];then
@@ -63,7 +114,11 @@ read
 	fi
 	
 	loadkeys $keyboard
-
+;;
+*)
+echo 
+;;
+esac 
 }
 
 starter()
@@ -124,14 +179,16 @@ else
 microphone="${audiocard[0]}"
 fi 
 
-tput setaf 3
-echo -ne $"
+if [[ "$(hostname)" != "tinyseren" ]] ; then 
+
+	tput setaf 3
+	echo -ne $"
 upnpc -d 8110 UDP    &&  upnpc -a $( hostname -I) 8110 8110 UDP 
 
 opening port 8110 now for your computer , wait a moment...
 " && upnpc -d 8110 UDP >/dev/null    &&  upnpc -a $( hostname -I) 8110 8110 UDP >/dev/null  && tput setaf 2 &&  echo $"port 8110 is opened" 
-tput setaf 7
-
+	tput setaf 7
+fi 
 
  
 tput setaf 5 ; echo "launching command : seren -n $username $pulseactive -D $microphone"; tput setaf 7 ; seren -n $username $pulseactive -D $microphone 
@@ -140,13 +197,33 @@ tput setaf 5 ; echo "launching command : seren -n $username $pulseactive -D $mic
 
  
 #closing port 
-tput setaf 3
-echo -ne $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
-tput setaf 2 && echo $"port 8110 closed"
+
+if [[ "$(hostname)" == "tinyseren" ]] ; then 
+
+	tput setaf 5
+	echo $"
+
+HOW CHANGE KEYBOARD LAYOUT:
+
+#############################################
+search in this location : /usr/share/kmap
+there are many folder for example for italian
+keyboard :
+
+sudo loadkmap < /usr/share/kmap/qwerty/it-ibm.kmap
+
+To make this permanent, add the command to /opt/bootlocal.sh (missing the sudo, since bootlocal is executed as root)
+############################################
+"
+else
+
+	tput setaf 3
+	echo -ne $"upnpc -d 8110 UDP : Closing port 8110...wait " && upnpc -d 8110 UDP >/dev/null 
+	tput setaf 2 && echo $"port 8110 closed"
 
 
-tput setaf 5
-echo $"
+	tput setaf 5
+	echo $"
 
 HOW CHANGE KEYBOARD LAYOUT:
 
@@ -155,7 +232,12 @@ sudo dpkg-reconfigure console-data
 sudo dpkg-reconfigure keyboard-configuration
 sudo service keyboard restart
 ############################################
+"
+fi
 
+
+tput setaf 5
+echo $"
 HOW START VOIP SEREN 
 
 type in the terminal:
@@ -175,7 +257,7 @@ tput setaf 7
 
 }
 
-if [[ "$(hostname)" == "debianseren" ]]; then 
+if [[ "$hostname" == "debianseren" || "$hostname" == "tinyseren" ]]; then 
 function_ask_keyboard
 fi
 
