@@ -15,14 +15,15 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.3.0
+version=0.3.1
 function_detect_flash_path(){
  
 	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 	
 	filesarray=($(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
+# 	echo ${filesarray[@]}
 	#create an array for firefox ...
 	filesarraytwo=($(ls -l  "/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
- 
+# 	echo ${filesarraytwo[@]}
 	
 if  [[ "${#filesarray[@]}" == 1 && "${#filesarraytwo[@]}" == 0  ]] ; then 
 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
@@ -35,21 +36,34 @@ elif [[ "${#filesarray[@]}" > 1  || "${#filesarraytwo[@]}" > 1 ]]; then
 	a=0
 	for val in ${filesarray[@]} ; do 
 			array[a]="/proc/$(lsof -n | awk '/Flash/{print $2 ; exit}')/fd/$val"
-			echo "path of flash files ${array[a]}"
+# 			echo "path of flash files array  ${array[a]}"
 			a=$(($a+1))
 		done
+	 
 	for val in ${filesarraytwo[@]} ; do 
-			array[a]="/proc/$(lsof -n | awk '/plugin-co/{print $2 ; exit}')/fd/$val"
-			echo "path of flash files ${array[a]}"
-			a=$(($a+1))
+			duplicate="false"
+			echo ARRAY ${#array[@]}
+			for (( c=0; c<=${#array[@]}; c++ )); do 
+				if [[ "${array[$c]}" == ""/proc/$(lsof -n | awk '/plugin-co/{print $2 ; exit}')/fd/$val"" && "${array[$c]}" != "" ]]; then 
+					echo $val already present skipping 
+					duplicate="true"
+				else 
+					echo $val not present
+				fi 
+			done
+			echo DUPLICATE $duplicate
+			if [[ $duplicate == false ]]; then 
+				array[a]="/proc/$(lsof -n | awk '/plugin-co/{print $2 ; exit}')/fd/$val"
+# 				echo "path of flash files  arrayfirefox ${array[a]}"
+				a=$(($a+1))
+			fi
+			echo ${array[@]}
 		done
 else 
 		kdialog --error $"This is a bug please fix it " 
 fi 
-	
-	
-# 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
-	
+ 
+ 
 }
 
 function_help(){
@@ -112,7 +126,7 @@ players=(ffplay mplayer vlc smplayer kaffeine  xine xbmc)
 videoplayerarr=()
 a=0
 for player in ${players[@]} ; do 
-if [[ ! -z "$(type "$player")"  ]] ; then
+if [[ ! -z "$(type "$player" )"  ]] ; then
 	videoplayerarr[$a]="$player"
 	a=$(($a+1))
 fi 
@@ -127,9 +141,9 @@ function_play_flash (){
 	testvariable="$videoplayer"
 	
 	if [[  -z  "$testvariable"    ]] ; then
-		echo "video player  is empty"
-		videoplayer="ffplay"
-		
+		echo "video player  is empty ... exiting function play flash "
+# 		videoplayer="ffplay"
+		exit
 	else
 		echo "video player $testvariable"
 	fi 
@@ -141,7 +155,8 @@ elif [[ "${#array[@]}" == 0  ]]; then
 	kdialog --passivepopup $"sorry no flash found " 
 elif [[ "${#array[@]}" > 1  ]]; then
 	ans="$(kdialog --combobox $"Choose  the path for your flash video " "${array[@]}")" 
-	kdialog --passivepopup  "$ans"
+	
+	if [[ ! -z "$ans" ]]; then 
 	
 		if [[ $videoplayer == "vlc" ]]; then 
 			vlc --control dbus ${array[*]}
@@ -149,9 +164,13 @@ elif [[ "${#array[@]}" > 1  ]]; then
 		else 
 			$videoplayer  "$ans"
 		fi 
+	else
+		echo $"170 No answer... exiting"
+	fi 
 else 
 		kdialog --error $"This is a bug please fix it " 
 fi 
+
 }
 function_save_flash_with_title(){
 
@@ -588,7 +607,7 @@ function_extract(){
 # done
 # echo $youtubetitle $title $url  $cleanurl
 # }
- 
+#  
 
 
 if  [[ $1 == -*  ]]; then
@@ -657,9 +676,9 @@ function_detect_video_players
 	 function_save_flash_with_title
 	 ;;
 # 	 -ttt)
-# 	 #function_test
-# 	 cleanurl="http://www.youtube.com/watch?v=dYw4meRWGd4"
-# 	 function_detect_flash_quality 
+# 	 function_test
+# 	 cleanurl="http://www.youtube.com/watch?v= "
+# 	 function_detect_best_quality
 # 	 ;;
  
 	-v) 
