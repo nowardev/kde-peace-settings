@@ -483,6 +483,10 @@ fi
 
 
 function_extract(){
+
+#check if file exist 
+
+
 	qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading $title...wait <br> Format Quality $format $desc "
 	while read  line &&  [[ "false" == "$(qdbus  $progressbar wasCancelled)" ]] ; do 
 				
