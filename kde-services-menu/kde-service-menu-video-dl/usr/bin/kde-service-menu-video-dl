@@ -15,24 +15,34 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.2.0
+version=0.3.0
 function_detect_flash_path(){
-	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 
-	
+ 
+	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 	
 	filesarray=($(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
+	#create an array for firefox ...
+	filesarraytwo=($(ls -l  "/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
+ 
 	
-if  [[ "${#filesarray[@]}" == 1  ]] ; then 
+if  [[ "${#filesarray[@]}" == 1 && "${#filesarraytwo[@]}" == 0  ]] ; then 
 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
-elif [[ "${#filesarray[@]}" == 0  ]]; then 
-	kdialog --passivepopup $"sorry no flash found " 
-elif [[ "${#filesarray[@]}" > 1  ]]; then
+elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 1 ]]; then 
+	array=("/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
+elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 0 ]]; then 
+	kdialog --passivepopup $"sorry no flash found "
+	exit 
+elif [[ "${#filesarray[@]}" > 1  || "${#filesarraytwo[@]}" > 1 ]]; then
 	a=0
 	for val in ${filesarray[@]} ; do 
-			array[a]="/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$val"
+			array[a]="/proc/$(lsof -n | awk '/Flash/{print $2 ; exit}')/fd/$val"
 			echo "path of flash files ${array[a]}"
 			a=$(($a+1))
 		done
-	
+	for val in ${filesarraytwo[@]} ; do 
+			array[a]="/proc/$(lsof -n | awk '/plugin-co/{print $2 ; exit}')/fd/$val"
+			echo "path of flash files ${array[a]}"
+			a=$(($a+1))
+		done
 else 
 		kdialog --error $"This is a bug please fix it " 
 fi 
@@ -48,28 +58,72 @@ function_help(){
 	kde-service-menu-video-dl   <option>
 	
 	Options :
-	-p   : play Flash video with ffplay
-	-s  :  saves Flash Video , files will be copied in /tmp folder 
-	-y : download the video from youtube with youtube-dl 
-	-y : download the video from youtube with youtube-dl choosign video quality
-	-mp3: download the video from youtube and convert it on mp3
-	-mp3q: download the video from youtube and convert it on mp3 but select the video quality
-	-e: download the video from youtube and extract audio track 
-	-eq: download the video from youtube and extract audio track  selecting before video quality
-	-v : print version 
-	-h : print this help 
+	-l <video_link >	: Allow to download a video from terminal , you need to specify a link 
+	-p			: play Flash video with ffplay
+	-s			: saves Flash Video , files will be copied in /tmp folder 
+	-y			: download the video from youtube with youtube-dl 
+	-yq			: download the video from youtube with youtube-dl choosign video quality
+	-mp3			: download the video from youtube and convert it on mp3
+	-mp3q			: download the video from youtube and convert it on mp3 but select the video quality
+	-e			: download the video from youtube and extract audio track 
+	-eq			: download the video from youtube and extract audio track  selecting before video quality
+	-v			: print version 
+	-h			: print this help 
 	
 	function detect flash based on:
 	
 	array=(\"/proc/\$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/\$(ls -l  \"/proc/\$(lsof -n | awk ' /Flash/{print \$2 ; exit}')/fd\" | awk '/Flash/{print \$9}')\") 
+	
+	for firefox :
+	
+	array=(\"/proc/\$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd/\$(ls -l  \"/proc/\$(lsof -n | awk ' /plugin-co/{print \$2 ; exit}')/fd\" | awk '/Flash/{print \$9}')\") 
  	
 	"
 	exit 
 }
 
-function_play_flash(){
+function_detect_user_folders(){
 	
-	videoplayer="$(kdialog --title $"Video Player"  --combobox  $"Choose your player  " ffplay mplayer vlc smplayer kaffeine  xine xbmc --default  ffplay )"	
+	if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then
+	 	 desktopfolder="$(xdg-user-dir DESKTOP)"
+	 	 documentsfolder="$(xdg-user-dir DOCUMENTS)"
+	 	 downloadfolder="$(xdg-user-dir DOWNLOAD)"
+	 	 musicfolder="$(xdg-user-dir MUSIC)"
+	 	 picturesfolder="$(xdg-user-dir PICTURES)"
+	 	 pubblicsharefolder="$(xdg-user-dir PUBBLICSHARE)"
+	 	 templatesfolder="$(xdg-user-dir TEMPLATES)"
+	 	 videosfolder="$(xdg-user-dir VIDEOS)"
+	else
+	 
+	 	 echo $"sorry no file  ~/.config/user-dirs.dirs , please install xdg stuff "
+	 	 desktopfolder="$HOME"
+	 	 documentsfolder="$HOME"
+	 	 downloadfolder="$HOME"
+	 	 musicfolder="$HOME"
+	 	 picturesfolder="$HOME"
+	 	 pubblicsharefolder="$HOME"
+	 	 templatesfolder="$HOME"
+	 	 videosfolder="$HOME"
+	 fi  
+}
+
+function_detect_video_players() {
+players=(ffplay mplayer vlc smplayer kaffeine  xine xbmc)
+videoplayerarr=()
+a=0
+for player in ${players[@]} ; do 
+if [[ ! -z "$(type "$player")"  ]] ; then
+	videoplayerarr[$a]="$player"
+	a=$(($a+1))
+fi 
+done
+
+}
+ 
+ 
+function_play_flash (){
+	
+	videoplayer="$(kdialog --title $"Video Player"  --combobox  $"Choose your player  " ${videoplayerarr[@]}  --default  ${players[2]} )"	
 	testvariable="$videoplayer"
 	
 	if [[  -z  "$testvariable"    ]] ; then
@@ -87,7 +141,14 @@ elif [[ "${#array[@]}" == 0  ]]; then
 	kdialog --passivepopup $"sorry no flash found " 
 elif [[ "${#array[@]}" > 1  ]]; then
 	ans="$(kdialog --combobox $"Choose  the path for your flash video " "${array[@]}")" 
-	$videoplayer  "$ans"
+	kdialog --passivepopup  "$ans"
+	
+		if [[ $videoplayer == "vlc" ]]; then 
+			vlc --control dbus ${array[*]}
+			 
+		else 
+			$videoplayer  "$ans"
+		fi 
 else 
 		kdialog --error $"This is a bug please fix it " 
 fi 
@@ -211,7 +272,7 @@ fi
 function_detect_flash_quality() {
  
 #detect which formats you can dowload create a menu to choose what user prefer  
- 
+ qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Retrieving Quality options for $title...wait"
  code=() ; format=() ; desc=() 
  
  while IFS="         " read -r c f d; do code+=("$c"); format+=("$f"); desc+=("$d"); done<<<"$(youtube-dl -F  $cleanurl | grep -A 20 DASH )"
@@ -230,7 +291,31 @@ else
 
 detectedquality="-f $SELECTED_OPTIONS"
 fi 
+	echo  "doing ... cd "$outfolder" ; youtube-dl $detectedquality -t  $cleanurl " >/tmp/kde-service-menu-youtube-dl.log
+
 }
+
+function_detect_best_quality() {
+ 
+	#detect which formats you can dowload create a menu to choose what user prefer  
+	qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Retrieving Best Quality Code for $title...wait"
+	code="" ; format="" ; desc="" 
+ 
+	while IFS="         " read -r c f d; do code="$c"; format="$f"; desc="$d"; done<<<"$(youtube-dl -F  $cleanurl | grep best )"
+
+	if [[ -z "$code" ]] ; then 
+		detectedquality=""
+	else
+		detectedquality="-f $code"
+	fi 
+	
+	echo  "doing ... cd "$outfolder" ; youtube-dl $detectedquality -t  $cleanurl " >/tmp/kde-service-menu-youtube-dl.log
+	
+#  kdialog --title $"My App Title"  --passivepopup  $"$detectedquality" 3
+  
+}
+
+
 
 function_download_flash_youtube_start(){
 	
@@ -287,15 +372,16 @@ done
 
 	if [[  -z  "$testvariable"    ]] ; then
 		echo "$testvariable is empty"
-		kdialog --title $"My App Title"  --passivepopup  $"Sorry the script was not able to get url from konqueror so... or it's a bug or you are doing weird stuff :P" 3
+		kdialog --title $"Kde Service Menu Video-dl"  --passivepopup  $"Sorry the script was not able to get url from konqueror so... or it's a bug or you are doing weird stuff :P" 3
 		exit 
 	
 	else
 			echo "detected url ... $testvariable"
 			
  
-			outfolder="$(kdialog --title $"Konqueror Download Service Menu"  --getexistingdirectory  $"OutputFolder" "$HOME" )"
-			
+			outfolder="$(kdialog --title $"Konqueror Download Service Menu"  --getexistingdirectory "$videosfolder" )"
+			 
+  
 			testvariable="$outfolder"
 			if [[  -z  "$testvariable"    ]] ; then
 				echo "$testvariable is empty"
@@ -303,124 +389,222 @@ done
 			else
 					echo "outfolder .... $testvariable"
 			fi 
-			
-			echo  "doing ... cd "$outfolder" ; youtube-dl -t  $cleanurl " >/tmp/kde-service-menu-youtube-dl 
-		 
-			
-			a=$(kdialog --progressbar "Downloading ... $title" 100) 
-			
-			
-			
+
+			progressbar=$(kdialog --progressbar "Downloading ... $title" 100) 
+			qdbus $progressbar showCancelButton true
 		
 	fi 
  
 }
+
+
 
 function_video(){
-	
-	while read  line ; do 
-				
-				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
-				
-			done < <(cd "$outfolder";youtube-dl -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
-			
-			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
-	
+
+qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading $title...wait <br> Format Quality $format $desc "
+ 
+qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  0
+ 
+
+# set -x 
+testfile=""$outfolder"/"$(youtube-dl --get-filename $detectedquality -t   "$cleanurl")""
+if [[ -e "$testfile" ]]; then 
+kdialog --passivepopup $"File already downloaded in $outfolder ...exiting "
+qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+echo $"file already exist please remove it before $testfile"
+exit
+ 
+fi 
+ 
+while read  line &&  [[ "false" == "$(qdbus  $progressbar wasCancelled)" ]] ; do 
+ 
+		
+		if [[ "$line" -ge 0 && "$line" -le 100 ]]; then #remove the problem with youtubedl => the first values are high numbers or video's id 
+		qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line
+# 		qdbus $progressbar   showCancelButton true 
+		
+		else
+		#detected wrong value setting to 0
+		qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  0
+		 
+		
+		fi 
+
+done< <(cd "$outfolder";   youtube-dl $detectedquality -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+
+if [[ "$(qdbus $progressbar Get "" "value")" == "100" ]] ;then 
+	qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+	kdialog --passivepopup $"$cleanurl downloaded"
+fi 
+ 
+qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+#  set +x 
+kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+ 
 }
 
-function_video_quality_detected(){
-	
-	while read  line ; do 
-				
-				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
-				
-			done < <(cd "$outfolder";youtube-dl $detectedquality -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
-			
-			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
-	
-}
 
 function_mp3(){
-	while read  line ; do 
+
+testfile=""$outfolder"/"$(youtube-dl --get-filename $detectedquality -t   "$cleanurl")""
+testfile="${testfile%%.*}.mp3"
+  
+ 
+if [[ -e "$testfile" ]]; then 
+kdialog --passivepopup $"File already downloaded in $outfolder ...exiting "
+qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+echo $"file already exist please remove it before $testfile"
+exit
+ 
+fi 
+
+	qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading $title...wait <br> Format Quality $format $desc "
+	while read  line  &&  [[ "false" == "$(qdbus  $progressbar wasCancelled)" ]]; do 
 				
-				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
+			if [[ "$line" -ge 0 && "$line" -le 100 ]]; then #remove the problem with youtubedl => the first values are high numbers or video's id 
+			qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line
+# 			qdbus $progressbar   showCancelButton true 
+		
+			else
+			#detected wrong value setting to 0
+			qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  0
+		 
+		
+			fi 
+			if [[ "$(qdbus $progressbar Get "" "value")" == "100" ]] ;then 
+				qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+				kdialog --passivepopup $"$cleanurl downloaded"
+			fi 
 				
-			done < <(cd "$outfolder";youtube-dl  -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
-			
-			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+	done < <(cd "$outfolder";youtube-dl $detectedquality  -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+	qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+	kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 }
 
-
-function_mp3_quality(){
-	while read  line ; do 
-				
-				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
-				
-			done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
-			
-			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
-}
 
 function_extract(){
-	while read  line ; do 
+	qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading $title...wait <br> Format Quality $format $desc "
+	while read  line &&  [[ "false" == "$(qdbus  $progressbar wasCancelled)" ]] ; do 
 				
-				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
-				
-			done < <(cd "$outfolder";youtube-dl -t --extract-audio "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
-			
-			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
-}
-
-function_extract_quality(){
-	while read  line ; do 
-				
-				qdbus  $a Set org.kde.kdialog.ProgressDialog value  $line 
-				
-			done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
-			
-			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
-}
-
- 
- function_test(){
- set -x
- 
- 	#get the dbus number 
-	konquerordbus=$(qdbus | grep konqueror)
-	testvariable="$konquerordbus"
-	
-	if [[  -z  "$testvariable"    ]] ; then
-		echo "$testvariable is empty"
-		kdialog --passivepopup "exiting ... no konqueror aviable :P "
-		exit 2
-	else
-		echo "$testvariable"
-	fi 
-#get the active window 
-	for i in $konquerordbus; do
+			if [[ "$line" -ge 0 && "$line" -le 100 ]]; then #remove the problem with youtubedl => the first 		values are high numbers or video's id 
+				qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line
+# 				qdbus $progressbar   showCancelButton true 
 		
-    if [[ $(qdbus $i /konqueror/MainWindow_1 org.qtproject.Qt.QWidget.isActiveWindow) = "true" ]]; then
-	#get the title 
-	youtubetitle="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle)"
-	#blank about:blank
-	#get the title without -youtube weird word 
-	title="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle |awk '{gsub(/- YouTube/,""); print }')"
-	url="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL)"
-	cleanurl="$(qdbus $i /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL  | awk -F '&' '{print $1}')"
-	echo   $"Downloading .. $url clearurl  $cleanurl"  
-	
-	break;
-    fi
-done
-echo $youtubetitle $title $url  $cleanurl
+			else
+			#detected wrong value setting to 0
+				qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  0
+		 
+		
+			fi 
+			if [[ "$(qdbus $progressbar Get "" "value")" == "100" ]] ;then 
+				qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit 
+				kdialog --passivepopup $"$cleanurl downloaded"
+			fi 
+				
+	done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+	qdbus  ${progressbar/\/ProgressDialog/} /MainApplication org.kde.KApplication.quit
+	kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 }
+
+
+# function_video_old(){
+# 
+# 	qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading $title...wait <br> Format Quality $format $desc "
+# 	while read  line &&  [[ "false" == "$(qdbus  $progressbar wasCancelled)" ]]; do 
+# 				
+# 				qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line 
+# 				
+# 			done < <(cd "$outfolder";youtube-dl $detectedquality -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+# 			
+# 	kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+# 		 
+# 	
+# }
+# 
+# function_video_quality_detected(){
+# 	
+# 	while read  line ; do 
+# 				qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading  $title...wait"
+# 				qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line 
+# 				
+# 			done < <(cd "$outfolder";youtube-dl $detectedquality -t   "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+# 			
+# 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+# 	
+# }
+# function_mp3_quality(){
+# 	while read  line ; do 
+# 				qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading  $title...wait"
+# 				qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line 
+# 				
+# 			done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio --audio-format=mp3  "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+# 			
+# 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+# }
+# function_extract_quality(){
+# 	while read  line ; do 
+# 				qdbus $progressbar  org.kde.kdialog.ProgressDialog.setLabelText $"Downloading  $title...wait"
+# 				qdbus  $progressbar Set org.kde.kdialog.ProgressDialog value  $line 
+# 				
+# 			done < <(cd "$outfolder";youtube-dl $detectedquality -t --extract-audio "$cleanurl" |stdbuf -o0 tr '\r' '\n'   |mawk  -W interactive  '{ print int($2+0) }')
+# 			
+# 			kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
+# }
+
+#  
+#  function_test(){
+#  set -x
+#  
+#  	#get the dbus number 
+# 	konquerordbus=$(qdbus | grep konqueror)
+# 	testvariable="$konquerordbus"
+# 	
+# 	if [[  -z  "$testvariable"    ]] ; then
+# 		echo "$testvariable is empty"
+# 		kdialog --passivepopup "exiting ... no konqueror aviable :P "
+# 		exit 2
+# 	else
+# 		echo "$testvariable"
+# 	fi 
+# #get the active window 
+# 	for i in $konquerordbus; do
+# 		
+#     if [[ $(qdbus $i /konqueror/MainWindow_1 org.qtproject.Qt.QWidget.isActiveWindow) = "true" ]]; then
+# 	#get the title 
+# 	youtubetitle="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle)"
+# 	#blank about:blank
+# 	#get the title without -youtube weird word 
+# 	title="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentTitle |awk '{gsub(/- YouTube/,""); print }')"
+# 	url="$(qdbus $i  /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL)"
+# 	cleanurl="$(qdbus $i /konqueror/MainWindow_1 org.kde.konqueror.KonqMainWindow.currentURL  | awk -F '&' '{print $1}')"
+# 	echo   $"Downloading .. $url clearurl  $cleanurl"  
+# 	
+# 	break;
+#     fi
+# done
+# echo $youtubetitle $title $url  $cleanurl
+# }
  
 
 
 if  [[ $1 == -*  ]]; then
+function_detect_user_folders
+function_detect_video_players
+
 	case "$1" in
 	-h|--help|-\?) function_help; exit 0;;
-
+	-l)
+	
+	cleanurl="$2"
+	function_detect_user_folders
+	outfolder="$videosfolder"
+	title="$(youtube-dl --get-filename "$2")"
+	title="${title%%.*}"
+	progressbar="$(kdialog --progressbar "Downloading ... $title" 100)"
+	qdbus $progressbar showCancelButton true
+	function_detect_best_quality
+	function_video
+	;; 
 	-p)
 	#execute the function to play  get the array with flash paths 
 	function_detect_flash_path
@@ -430,27 +614,34 @@ if  [[ $1 == -*  ]]; then
 	-y)
 
 	function_download_flash_youtube_start
+	function_detect_best_quality
+	function_video
+	;;
+	-yq)
+	function_download_flash_youtube_start
+	function_detect_flash_quality
 	function_video
 	;;
 	-e)
-	
 	function_download_flash_youtube_start
+	function_detect_best_quality
 	function_extract
 	;;
 	-eq)
 	function_download_flash_youtube_start
 	function_detect_flash_quality
-	function_extract_quality
+	function_extract
 	;;
 	-mp3)
 	
 	function_download_flash_youtube_start
+	function_detect_best_quality
 	function_mp3
 	;;
 	-mp3q)
 	function_download_flash_youtube_start
 	function_detect_flash_quality
-	function_mp3_quality
+	function_mp3
 	;;
 	#save function 
 	-s)function_detect_flash_path
@@ -466,12 +657,7 @@ if  [[ $1 == -*  ]]; then
 # 	 cleanurl="http://www.youtube.com/watch?v=dYw4meRWGd4"
 # 	 function_detect_flash_quality 
 # 	 ;;
-	 -yq)
-	 function_download_flash_youtube_start
-	 function_detect_flash_quality
-	 function_video_quality_detected
-	 
-	 ;;
+ 
 	-v) 
 	echo "
 

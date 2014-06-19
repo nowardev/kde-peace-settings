@@ -41,8 +41,8 @@ Name[it]=Salva Flash Video in  /tmp Metodo lsof
 [Desktop Action youtubedownload]
 Exec=kde-service-menu-video-dl -y ;  echo  "%u"> /dev/null
 Icon=download
-Name=Youtube-dl Standard Mode
-Name[it]=Youtube-dl Scarica Standard 
+Name=Youtube-dl Best Quality
+Name[it]=Youtube-dl Qualità Massima
 
 [Desktop Action youtubedownloadq]
 Exec=kde-service-menu-video-dl -yq ;  echo  "%u"> /dev/null
@@ -53,8 +53,8 @@ Name[it]=Youtube-dl Con Menu Qualità
 [Desktop Action youtubemp3]
 Exec=kde-service-menu-video-dl -mp3 ;  echo  "%u"> /dev/null
 Icon=download
-Name=Youtube-dl  Extract Audio Mp3
-Name[it]=Youtube-dl  Estrai Audio Mp3
+Name=Youtube-dl  Extract Best Mp3
+Name[it]=Youtube-dl  Estrai Miglior Mp3
 
 [Desktop Action youtubemp3q]
 Exec=kde-service-menu-video-dl -mp3q ;  echo  "%u"> /dev/null
@@ -65,13 +65,13 @@ Name[it]=Estrai Audio Mp3 Menu Qualità
 [Desktop Action youtubeextract]
 Exec=kde-service-menu-video-dl -e ;  echo  "%u"> /dev/null
 Icon=download
-Name=Youtube-dl Extract Original Audio Track
-Name[it]=Youtube-dl  Estrai Traccia Audio Originale
+Name=Youtube-dl Extract Best Audio Track
+Name[it]=Youtube-dl Estrai Miglior Traccia
 
 [Desktop Action youtubeextractq]
 Exec=kde-service-menu-video-dl -eq ;  echo  "%u"> /dev/null
 Icon=download
-Name=Extract Original Audio Menù Qualità
+Name=Extract Original Audio Menu Quality
 Name[it]=Estrai Audio Originale Menu Qualità
 
 [Desktop Action help]
