@@ -15,16 +15,16 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.3.2
+version=0.3.3
 function_detect_flash_path(){
  
 	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 	
 	filesarray=($(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
-# 	echo ${filesarray[@]}
+ 	echo ${filesarray[@]}
 	#create an array for firefox ...
 	filesarraytwo=($(ls -l  "/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
-# 	echo ${filesarraytwo[@]}
-	
+ 	echo ${filesarraytwo[@]}
+set -x	
 if  [[ "${#filesarray[@]}" == 1 && "${#filesarraytwo[@]}" == 0  ]] ; then 
 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
 elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 1 ]]; then 
@@ -32,7 +32,7 @@ elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 1 ]]; then
 elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 0 ]]; then 
 	kdialog --passivepopup $"sorry no flash found "
 	exit 
-elif [[ "${#filesarray[@]}" > 1  || "${#filesarraytwo[@]}" > 1 ]]; then
+elif [[ "${#filesarray[@]}" -ge 1  || "${#filesarraytwo[@]}" -ge 1 ]]; then
 	a=0
 	for val in ${filesarray[@]} ; do 
 			array[a]="/proc/$(lsof -n | awk '/Flash/{print $2 ; exit}')/fd/$val"
@@ -46,8 +46,11 @@ elif [[ "${#filesarray[@]}" > 1  || "${#filesarraytwo[@]}" > 1 ]]; then
 			a=$(($a+1))
 		done
 else 
+ 
 		kdialog --error $"This is a bug please fix it " 
+ 
 fi 
+set +x
 	#remove duplicated files 
 	while read line ; do 
 		c[$i]="$line"
