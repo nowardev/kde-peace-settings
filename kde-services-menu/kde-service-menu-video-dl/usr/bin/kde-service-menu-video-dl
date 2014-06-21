@@ -32,7 +32,7 @@ elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 1 ]]; then
 elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 0 ]]; then 
 	kdialog --passivepopup $"sorry no flash found "
 	exit 
-elif [[ "${#filesarray[@]}" -ge 1  || "${#filesarraytwo[@]}" -ge 1 ]]; then
+elif [[ "${#filesarray[@]}" -ge 1  && "${#filesarraytwo[@]}" -ge 1 ]]; then
 	a=0
 	for val in ${filesarray[@]} ; do 
 			array[a]="/proc/$(lsof -n | awk '/Flash/{print $2 ; exit}')/fd/$val"
