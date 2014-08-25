@@ -15,16 +15,26 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.3.3
+version=0.3.4
+
+#this is the new stuff if you check again chromium funciont
+
+
 function_detect_flash_path(){
  
 	#create an ARRAY which has flash paths  if the script is not working just fix this and it should work again :D 	
 	filesarray=($(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
- 	echo ${filesarray[@]}
+ 	echo "array standard ${filesarray[@]}"
 	#create an array for firefox ...
 	filesarraytwo=($(ls -l  "/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
- 	echo ${filesarraytwo[@]}
-set -x	
+ 	echo "array firefox ${filesarraytwo[@]}"
+ 	#create an array for chromium 
+#  	filesarraythree=($(ls -l  "/proc/$(lsof -n | awk ' /plugin-co/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')) 
+#  	echo ${filesarraythree[@]}
+#  	lsof -n | grep chro| grep "Media Cache" | awk '{print $2; exit}'
+#  	
+ 	
+# set -x	
 if  [[ "${#filesarray[@]}" == 1 && "${#filesarraytwo[@]}" == 0  ]] ; then 
 	array=("/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd/$(ls -l  "/proc/$(lsof -n | awk ' /Flash/{print $2 ; exit}')/fd" | awk '/Flash/{print $9}')") 
 elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 1 ]]; then 
@@ -32,7 +42,7 @@ elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 1 ]]; then
 elif [[ "${#filesarray[@]}" == 0 && "${#filesarraytwo[@]}" == 0 ]]; then 
 	kdialog --passivepopup $"sorry no flash found "
 	exit 
-elif [[ "${#filesarray[@]}" -ge 1  && "${#filesarraytwo[@]}" -ge 1 ]]; then
+elif [[ "${#filesarray[@]}" -ge 1  || "${#filesarraytwo[@]}" -ge 1 ]]; then
 	a=0
 	for val in ${filesarray[@]} ; do 
 			array[a]="/proc/$(lsof -n | awk '/Flash/{print $2 ; exit}')/fd/$val"
@@ -50,7 +60,7 @@ else
 		kdialog --error $"This is a bug please fix it " 
  
 fi 
-set +x
+# set +x
 	#remove duplicated files 
 	while read line ; do 
 		c[$i]="$line"
@@ -121,12 +131,21 @@ players=(ffplay mplayer vlc smplayer kaffeine  xine xbmc)
 videoplayerarr=()
 a=0
 for player in ${players[@]} ; do 
-if [[ ! -z "$(type "$player" )"  ]] ; then
+	if ! type -p "$player" >/dev/null;then 
+	echo $"$player not installed skipped ..."
+else 
 	videoplayerarr[$a]="$player"
 	a=$(($a+1))
 fi 
+
+
 done
 
+
+# if [[ ! -z "$(type "$player" >/dev/null )"  ]] ; then
+# 	videoplayerarr[$a]="$player"
+# 	a=$(($a+1))
+# fi 
 }
  
  
@@ -536,6 +555,70 @@ function_extract(){
 	kdialog --title $"Konqueror Download Service Menu"  --passivepopup  $" All jobs done Videos are in $outfolder" 3
 }
 
+function_chromium_cache(){
+
+#this is the new stuff if you check again
+echo detecting file in chrome cache 
+
+
+for file in "$HOME/.cache/chromium/Default/Media Cache/*" ; do 
+
+if [[ ! -z "$(file "$file" | grep -i 'Media|Flash')" ]] ; then  
+echo "$HOME/.cache/chromium/Default/Media Cache/$file" >>/tmp/filechromium
+fi
+done 
+
+
+for file in "$HOME/.cache/chromium/Default/Cache/*" ; do 
+
+if [[ ! -z "$(file "$file" | grep -i 'Media|Flash')" ]] ; then  
+echo "$HOME/.cache/chromium/Default/Cache/$file" >>/tmp/filechromium
+fi
+done 
+
+for file in "$HOME/.cache/chromium/Cache/*" ; do 
+
+if [[ ! -z "$(file "$file" | grep -i 'Media|Flash')" ]] ; then  
+echo "$HOME/.cache/chromium/Cache/$file" >>/tmp/filechromium
+fi
+done 
+
+ 
+while read line ;do
+ffplay "$line"
+done< "/tmp/filechromium"
+ 
+#  
+#  
+#  echo > /tmp/filechromium
+# 
+# while read line ;do
+# 
+# if [[ ! -z "$(file "$file" | grep -i 'Media|Flash')" ]] ; then  
+# echo "$HOME/.cache/chromium/Default/Media Cache/$file" >>/tmp/filechromium
+# fi
+# 
+# done< <(ls  "$HOME/.cache/chromium/Default/Media Cache/")
+# 
+# 
+# while read line ;do
+# 
+# if [[ ! -z "$(file "$file" | grep -i 'Media|Flash')" ]] ; then  
+# echo "$HOME/.cache/chromium/Default/Media Cache/$file" >>/tmp/filechromium
+# fi
+# 
+# done< <(ls  "$HOME/.cache/chromium/Default/Media Cache/")
+# 
+# while read line ;do
+# 
+# if [[ ! -z "$(file "$file" | grep -i 'Media|Flash')" ]] ; then  
+# echo "$HOME/.cache/chromium/Cache/$file" >>/tmp/filechromium
+# fi
+# 
+# done< <(ls  "$HOME/.cache/chromium/Cache/")
+#  
+
+}
 
  
 # 
@@ -670,11 +753,12 @@ function_detect_video_players
 	 function_detect_flash_path
 	 function_save_flash_with_title
 	 ;;
-# 	 -ttt)
+	 -ttt)
+	 function_chromium_cache
 # 	 function_test
 # 	 cleanurl="http://www.youtube.com/watch?v= "
 # 	 function_detect_best_quality
-# 	 ;;
+	 ;;
  
 	-v) 
 	echo "
