@@ -14,9 +14,9 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-
+#version 0.2.0
 [Desktop Entry]
-Actions=info; 
+Actions=info;inforoot
 Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
 Type=Service
@@ -26,8 +26,14 @@ Type=Service
 
 
 [Desktop Action info]
-Exec=kdialog --msgbox "<pre>$(lsblk)</pre>" ; echo "%u" >/dev/null 
+Exec=kdialog --msgbox "<pre>$(lsblk -o NAME,SIZE,MOUNTPOINT,OWNER,GROUP,LABEL,TYPE)</pre>" ; echo %u >/dev/null
 Icon=dialog-information
 Name=Info partitions
 Name[it]=Info Partizioni
+
+[Desktop Action inforoot]
+Exec=kdialog --msgbox "<pre>$(echo $(kdialog --password "Please insert Root password to show all informations") | sudo -S sudo lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,UUID,OWNER,GROUP,LABEL,MODEL,MAJ:MIN,TYPE,ROTA,STATE )</pre>" ; echo %u >/dev/null
+Icon=dialog-information
+Name=Info partitions Root
+Name[it]=Info Partizioni Root
   
