@@ -249,7 +249,7 @@ done
  
 }
 
-screncastPCIMIC() {
+screencastPCIMIC() {
 i=0
 file=/home/shared/Screencast/test-$i.mp4 
 while [[  -e $file ]] 
@@ -263,7 +263,7 @@ done
 echo $file
 }
 
-screncastMUTE() {
+screencastMUTE() {
 i=0
 file=/home/shared/Screencast/test-$i.mp4 
 while [[  -e $file ]] 
@@ -472,4 +472,15 @@ tar cJvf ${1%%.*}.tar.xz "$1"
 pastebin(){
 curl -F sprunge=@- sprunge.us
 
+}
+
+cmakenowardev_usr(){
+mkdir build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. 
+}
+
+gitffmpeg(){
+cd /home/shared/git ; git clone git://source.ffmpeg.org/ffmpeg.git ffmpeg-$(date +"%m-%d-%y");cd  ffmpeg-$(date +"%m-%d-%y") ; ./configure --help | awk -v ORS=" " '/enable/{print $1} END{printf "\n"}'
+}
+configureffmpeg(){
+ make clean ; ./configure --prefix=/usr/local   $(./configure --help|sort -r | awk  '/enable/{ print $1} END{printf "\n"}' | awk  '!/[A-Z]/ && !/avisynth/ && !/shared/ && !/poison/ && !/incompa/ && !/random/ && !/test/ && !/cross-compile/ && !/memalign-hack/ &&!/deck/ && !/libiec/ && !/libaacplus/ && !/libcelt/ && !/libflite/ && !/libilbc/ && !/libnut/ && !/opencv/ && !/shine/ && !/libstagefright/ && !/utvideo/ && !/vidstab/ && !/x265/ && !/libxavs/ && !/opencl/ && !/-rpath/ && !/ftrapv/ && !/hardcoded/ && !/major/ && !/libfdk-aac/ && !/opengl/ && !/enable-pic/ && !/enable-lto/ && !/small/ && !/gray/{print }'|awk -v ORS=" " '{print $1} END {printf "\n"}')
 }
