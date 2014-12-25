@@ -17,7 +17,7 @@ fi </fillin>
   <match>eof</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
-  <fillin>"(&lt&lt_EOF
+  <fillin>"(EOF
 "${cursor}$mystring"
 _EOF
 )"
