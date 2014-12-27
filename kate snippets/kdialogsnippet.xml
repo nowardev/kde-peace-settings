@@ -10,6 +10,14 @@
   </item>
   <item>
   <displayprefix></displayprefix>
+  <match>kdialog_autoclose</match>
+  <displaypostfix></displaypostfix>
+  <displayarguments></displayarguments>
+  <fillin>a=\$(kdialog --progressbar "hello" 100);sleep 2 ; qdbus $a org.kde.kdialog.ProgressDialog.autoClose true
+  </fillin> 
+  </item>
+   <item>
+  <displayprefix></displayprefix>
   <match>kdialog_yesnocancel</match>
   <displaypostfix></displaypostfix>
   <displayarguments></displayarguments>
