@@ -28,25 +28,25 @@ X-KDE-Submenu[it]=KAxel
 [Desktop Action axel10]
 Exec=kde-service-menu-axel "%u" 10;  echo  "%u"> /dev/null
 Icon=download
-Name=Axel 10 connections
+Name=Kaxel 10 connections
 Name[it]=Axel 10 connessioni
 
 [Desktop Action axel5]
 Exec=kde-service-menu-axel "%u" 5;  echo  "%u"> /dev/null
 Icon=download
-Name=Axel 5 connections
+Name=Kaxel 5 connections
 Name[it]=Axel 5 connessioni
 
 [Desktop Action axel3]
 Exec=kde-service-menu-axel "%u" 3;  echo  "%u"> /dev/null
 Icon=download
-Name=Axel 3 connections
+Name=Kaxel 3 connections
 Name[it]=Axel 3 connessioni
 
 [Desktop Action axel]
 Exec=kde-service-menu-axel "%u" 1;  echo  "%u"> /dev/null
 Icon=download
-Name=Axel 1 connection
+Name=Kaxel 1 connection
 Name[it]=Axel 1 connessione
 
 [Desktop Action help]
