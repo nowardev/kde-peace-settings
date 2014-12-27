@@ -1,0 +1,120 @@
+#!/bin/bash -x
+#Copyright (C) 2015 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+
+
+
+
+function_help(){
+	echo $"Usage : 
+	
+	kde-service-menu-axel link  <n° of connection>  
+	
+	example 
+	
+	kde-service-menu-axel http://myfile.iso  10  
+ 	
+	"
+	exit 
+}
+
+
+function_check_programs_to_run_this_script(){
+
+	program[0]=mawk
+	program[1]=kdialog
+	for program in "${program[@]}";
+	do if ! type -p "$program" >/dev/null;
+	then echo "$program not found; PLEASE INSTALL IT" >&2
+	echo "error exiting..." >&2
+	exit 1;
+	fi; done
+}
+
+
+#$1 link 
+#$2 n° of connections 
+
+function_main(){
+# echo test  $1
+
+name="${1##*/}"         # remove the folders  
+# echo $name
+name="${name%%.*}"     # remove file extension
+# echo $name 
+# 
+# exit
+
+a=$(kdialog --progressbar "Axel  will  download: "$name" " 100) #start kdialog 
+
+qdbus $a  showCancelButton true
+
+
+ 
+	while read line ; do 
+		while [[  $(qdbus  $a wasCancelled) != "false"  ]] ; do
+			echo -e "$COL_RED ECHO KILLING AXEL AND KDIALOG $COL_RESET"
+			qdbus $a  org.kde.kdialog.ProgressDialog.close 
+			exit
+		done
+ 
+		if [[ $lineold != $line ]]; then 
+			qdbus $a Set org.kde.kdialog.ProgressDialog value $line
+		fi
+		lineold=$line
+		
+		done  < <( axel -n $2 "$1" | mawk -W interactive  -F']' '{gsub(/ /,"");gsub(/\[/,"");gsub(/\%/,"");print $1}') 
+		
+ 
+  
+}
+
+
+
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+
+
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	*) function_main;;
+	esac
+else
+	function_main $1 $2; exit 0
+fi
+
+ 
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+
+echo -e "$COL_YELLOW yellow color for your bash script $COL_RESET"
