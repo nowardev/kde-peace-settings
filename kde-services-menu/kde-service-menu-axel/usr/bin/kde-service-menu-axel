@@ -29,21 +29,25 @@ COL_CYAN=$ESC_SEQ"36;01m"
 
 
 function_help(){
-	echo $"Usage : 
+	echo $"Usage :
 	
-	kde-service-menu-axel link  <n° of connection>  
-	
-	example 
-	
-	kde-service-menu-axel http://myfile.iso  10  
-	
- 	
- 	conf file are here $conffile
- 	
- 	to reset this script just run 
- 	
-	kde-service-menu-axel -r 
-	"
+this service menu let you download form konqueror or from shell files , 
+
+kde-service-menu-axel link  <n° of connection>  
+
+example 
+
+kde-service-menu-axel http://myfile.iso  10  
+
+ 
+ conf file are here $conffile
+ 
+Reset this script just run 
+ 
+kde-service-menu-axel -r 
+
+license GPLv3 2014 nowardev@gmail.com
+"
 	exit 
 }
 

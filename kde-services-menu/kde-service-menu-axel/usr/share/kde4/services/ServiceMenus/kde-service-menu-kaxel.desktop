@@ -56,7 +56,7 @@ Name=Reset Configs
 Name[it]=Reset configurazioni
 
 [Desktop Action help]
-Exec=kdialog --msgbox $(kde-service-menu-axel -h) ; echo  "%u"> /dev/null
+Exec=kdialog --msgbox "$(kde-service-menu-axel -h)" ; echo  "%u"> /dev/null
 Icon=system-help
 Name=Help 
 Name[it]=Aiuto
