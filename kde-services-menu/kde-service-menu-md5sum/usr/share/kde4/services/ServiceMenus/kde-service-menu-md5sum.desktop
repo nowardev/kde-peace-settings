@@ -1,0 +1,41 @@
+#Copyright (C) 2014 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+[Desktop Entry]
+Actions=md5sum;help
+Icon=preflight-verifier
+ServiceTypes=application/octet-stream
+Type=Service
+# X-KDE-Priority=TopLevel
+X-KDE-Submenu=md5sum 
+X-KDE-Submenu[it]=md5sum
+ 
+
+[Desktop Action md5sum]
+Exec=kde-service-menu-md5sum "%u";  echo  "%u"> /dev/null
+Icon=preflight-verifier
+Name=md5sum
+Name[it]=md5sum
+
+ 
+
+[Desktop Action help]
+Exec=kdialog --msgbox $"This service menu  allow you test if a md5sum is equal to another one"; echo  "%u"> /dev/null
+Icon=system-help
+Name=Help 
+Name[it]=Aiuto
+ 
