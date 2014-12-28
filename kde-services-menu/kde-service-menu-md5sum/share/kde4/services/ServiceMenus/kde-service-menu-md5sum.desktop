@@ -1,0 +1,57 @@
+#Copyright (C) 2014 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+[Desktop Entry]
+Actions=axel10;axel5;axel3;axel 
+Icon=dolphin
+ServiceTypes=KonqPopupMenu/Plugin,text/html,application/x-cd-image,video/.*,audio/.*,image/*
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Axel 
+X-KDE-Submenu[it]=Axel
+ 
+
+[Desktop Action axel10]
+Exec=konsole --noclose -e axel -n 10 "%u";  echo  "%u"> /dev/null
+Icon=download
+Name=Axel 10 connections
+Name[it]=Axel 10 connessioni
+
+[Desktop Action axel5]
+Exec=konsole --noclose -e axel -n 5 "%u";  echo  "%u"> /dev/null
+Icon=download
+Name=Axel 5 connections
+Name[it]=Axel 5 connessioni
+
+[Desktop Action axel3]
+Exec=konsole --noclose -e axel -n 3 "%u";  echo  "%u"> /dev/null
+Icon=download
+Name=Axel 3 connections
+Name[it]=Axel 3 connessioni
+
+[Desktop Action axel]
+Exec=konsole --noclose -e  axel  "%u";  echo  "%u"> /dev/null
+Icon=download
+Name=Axel 1 connection
+Name[it]=Axel 1 connessione
+
+[Desktop Action help]
+Exec=kdialog --msgbox $"This service menu  allow you download with axel with multiple connections ; echo  "%u"> /dev/null
+Icon=system-help
+Name=Help 
+Name[it]=Aiuto
+ 
