@@ -64,11 +64,7 @@ md5sum="$m"
 
 
 function_start(){
-testmd5sum="$(kdialog --title $"MD5SUM tester" --textinputbox $"PLEASE INSERT YOUR MD5SUM TO TEST " $"you got this
-
-$md5sum
-
-, delete this message and insert only your md5sum to test it" )"
+testmd5sum="$(kdialog --title $"MD5SUM tester" --textinputbox $"THIS IS YOUR MD5SUM, YOU CAN INSERT A VALUE SO THAT I CAN CHECK IF IT'S THE SAME OR NOT OF YOUR VALUE"  $" $md5sum")"
 
 if [[ -z $testmd5sum   ]]; then 
 	kdialog --msgbox $"

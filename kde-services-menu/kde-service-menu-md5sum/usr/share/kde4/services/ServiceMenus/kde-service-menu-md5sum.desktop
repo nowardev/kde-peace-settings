@@ -18,7 +18,8 @@
 [Desktop Entry]
 Actions=md5sum;help
 Icon=preflight-verifier
-ServiceTypes=application/octet-stream
+ServiceTypes=KonqPopupMenu/Plugin 
+MimeType=application/octet-stream
 Type=Service
 # X-KDE-Priority=TopLevel
 X-KDE-Submenu=md5sum 
