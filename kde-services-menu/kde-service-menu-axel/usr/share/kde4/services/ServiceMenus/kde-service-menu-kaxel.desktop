@@ -16,7 +16,7 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [Desktop Entry]
-Actions=axel10;axel5;axel3;axel 
+Actions=axel10;axel5;axel3;axel;reset;help
 Icon=dolphin
 ServiceTypes=KonqPopupMenu/Plugin,text/html,application/x-cd-image,video/.*,audio/.*,image/*
 Type=Service
@@ -46,6 +46,12 @@ Name[it]=Axel 3 connessioni
 [Desktop Action axel]
 Exec=kde-service-menu-axel "%u" 1;  echo  "%u"> /dev/null
 Icon=download
+Name=Kaxel 1 connection
+Name[it]=Axel 1 connessione
+
+[Desktop Action reset]
+Exec=kde-service-menu-axel -r ;  echo  "%u"> /dev/null
+Icon=edit-clear
 Name=Kaxel 1 connection
 Name[it]=Axel 1 connessione
 

@@ -1,4 +1,4 @@
-#!/bin/bash -x
+#!/bin/bash
 #Copyright (C) 2015 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -49,28 +49,114 @@ function_check_programs_to_run_this_script(){
 	for program in "${program[@]}";
 	do if ! type -p "$program" >/dev/null;
 	then echo "$program not found; PLEASE INSTALL IT" >&2
+	kdialog --error $"sorry but i can't locate mawk , install it"
 	echo "error exiting..." >&2
 	exit 1;
 	fi; done
 }
 
+function_detect_xdg_folder(){
 
+if [[ -e "$HOME/.config/user-dirs.dirs" ]] ; then 
+	source "$HOME/.config/user-dirs.dirs"
+		if [[ ! -z $XDG_DOWNLOAD_DIR ]]; then 
+			echo $"folders should be here...good"
+			downloadfolder="$XDG_DOWNLOAD_DIR"
+		else
+			echo $"error no XDG FOLDERS ...  \
+			please install xdg stuff "
+			downloadfolder="$HOME"
+		fi
+fi 
+}
+
+
+
+function_import_settings(){
+
+	if [[ -e "$conffile" ]]; then 
+		source "$conffile"
+	else
+		function_ask_settings
+	fi 
+
+}
+
+function_ask_settings(){
+
+	if [[ "$DEBUG" == "on" ]]; then
+	set -x
+	fi
+
+	bool="$(kdialog --combobox $"Every time i download something  do you want i ask a download folder location" yes no --default no )"
+	if [[ "$bool" == "yes" ]]; then
+		bool="true"
+	else
+		bool="false"
+		downloaddefaultfolder="$(kdialog --title $"KDE SERVICE MENU KAXEL SET DEFAULT DOWNLOAD FOLDER"  --getexistingdirectory "$HOME")"
+	fi 
+# 	kdialog --passivepopup $"set the default folder where i should downlod your stuff"
+	
+
+ 
+ 
+	
+	function_save_settings  
+	
+	if [[ "$DEBUG" == "on" ]]; then
+		set +x
+	fi 
+
+}
+# function_settings(){
+# 
+# 	downloadfolder="$(kdialog --title $"KDE SERVICE MENU KAXEL SET DEFAULT DOWNLOAD FOLDER"  --getexistingdirectory "$HOME")"
+# 	kdelocation="$(kde4-config --localprefix)"
+# 	conffile=""$kdelocation"share/config/kde-service-menu-axelrc"
+# 
+# 	echo "KAXEL_BOOL=false" >"$conffile"
+# 	echo "KAXEL_DOWNLOAD_FOLDER=$downloadfolder" >>"$conffile"
+# 	function_import_settings
+# }
+
+function_save_settings(){
+
+	kdelocation="$(kde4-config --localprefix)"
+	if [[ -z "$kdelocation" ]]; then 
+		mkdir "$HOME/.config/kde-service-menu-axel"
+		conffile="$HOME/.config/kde-service-menu-axel/.kde-service-menu-axelrc"
+	else
+		conffile=""$kdelocation"share/config/kde-service-menu-axelrc"
+	fi
+
+	echo "KAXEL_BOOL="$bool"" >"$conffile"
+	echo "KAXEL_DOWNLOAD_FOLDER="$downloaddefaultfolder"" >>"$conffile"
+	function_import_settings
+	
+ 
+ }
 #$1 link 
 #$2 n° of connections 
 
 function_main(){
-# echo test  $1
 
-name="${1##*/}"         # remove the folders  
-# echo $name
+if [[ "$KAXEL_BOOL" == "true" ]]; then
+	downloaddefaultfolder="$(kdialog --title $"KDE SERVICE MENU KAXEL SET DEFAULT DOWNLOAD FOLDER"  --getexistingdirectory "$downloadfolder")"
+else
+	downloaddefaultfolder="$KAXEL_DOWNLOAD_FOLDER"
+fi 
+cd "$downloaddefaultfolder"
+name="${1##*/}"         #
 name="${name%%.*}"     # remove file extension
-# echo $name 
+ 
 # 
 # exit
 
 a=$(kdialog --progressbar "Axel  will  download: "$name" " 100) #start kdialog 
 
 qdbus $a  showCancelButton true
+qdbus $a org.kde.kdialog.ProgressDialog.autoClose true
+
 
 
  
@@ -80,41 +166,83 @@ qdbus $a  showCancelButton true
 			qdbus $a  org.kde.kdialog.ProgressDialog.close 
 			exit
 		done
- 
-		if [[ $lineold != $line ]]; then 
-			qdbus $a Set org.kde.kdialog.ProgressDialog value $line
-		fi
+		
+		if [[ "$line" == "100" ]]; then 
+			
+			kdialog --title $"kde-service-menu-axel" --passivepopup $"$name Downloaded"
+			
+			exit
+		fi 
+		
+		if [[ "$line" =~ "Downloaded" ]]; then 
+			qdbus $a Set org.kde.kdialog.ProgressDialog value 100
+			kdialog --title $"kde-service-menu-axel" --passivepopup $"$name Downloaded"
+# 			qdbus $a  org.kde.kdialog.ProgressDialog.close 
+			exit
+		fi 
+
+		if [[ "$line" =~ ^[0-9]+$ ]]; then #check if is a number
+		  
+			if [[ "$line" != "$lineold" ]]; then 
+				qdbus $a Set org.kde.kdialog.ProgressDialog value $line
+				
+			fi
 		lineold=$line
+		fi 
 		
-		done  < <( axel -n $2 "$1" | mawk -W interactive  -F']' '{gsub(/ /,"");gsub(/\[/,"");gsub(/\%/,"");print $1}') 
+
+		done  < <(axel -n $2 "$1" | mawk -W interactive  -F']' '{gsub(/ /,"");gsub(/\[/,"");gsub(/\%/,"");print $1}') 
 		
  
+
   
 }
 
+function_reset(){
+	rm "$conffile"
+# 	echo "KAXEL_BOOL=true" >"$conffile"
+# 	echo "KAXEL_DOWNLOAD_FOLDER="$HOME"" >>"$conffile"
+}
 
+KAXEL_BOOL="false" 
+KAXEL_DOWNLOAD_FOLDER="$HOME"
+
+kdelocation="$(kde4-config --localprefix)"
+if [[ -z "$kdelocation" ]]; then 
+	if [[ ! -d "$HOME/.config/kde-service-menu-axel" ]]; then 
+		mkdir "$HOME/.config/kde-service-menu-axel"
+	fi 
+	conffile="$HOME/.config/kde-service-menu-axel/.kde-service-menu-axelrc"
+else
+	conffile=""$kdelocation"share/config/kde-service-menu-axelrc"
+fi
+function_detect_xdg_folder 
+function_import_settings
 
 
 if  [[ $1 == -*  ]]; then
 	case "$1" in
 	-h|--help|-\?) function_help; exit 0;;
+	-r)function_reset; exit 0 ;;
 
 
 	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
-	*) function_main;;
+	*)
+	
+# 	downloaddefaultfolder="$HOME" 
+# 	function_detect_xdg_folder 
+# 	function_import_settings
+	function_main "$1" "$2"
+	;;
 	esac
 else
-	function_main $1 $2; exit 0
+# 	downloaddefaultfolder="$HOME" 
+# 	function_detect_xdg_folder 
+# 	function_import_settings
+	function_main "$1" "$2"; exit 0
 fi
 
  
-ESC_SEQ="\x1b["
-COL_RESET=$ESC_SEQ"39;49;00m"
-COL_RED=$ESC_SEQ"31;01m"
-COL_GREEN=$ESC_SEQ"32;01m"
-COL_YELLOW=$ESC_SEQ"33;01m"
-COL_BLUE=$ESC_SEQ"34;01m"
-COL_MAGENTA=$ESC_SEQ"35;01m"
-COL_CYAN=$ESC_SEQ"36;01m"
+ 
 
-echo -e "$COL_YELLOW yellow color for your bash script $COL_RESET"
+ 

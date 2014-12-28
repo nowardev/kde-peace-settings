@@ -26,25 +26,25 @@ X-KDE-Submenu[it]=Axel
  
 
 [Desktop Action axel10]
-Exec=konsole -e axel -n 10 "%u";  echo  "%u"> /dev/null
+Exec=konsole --noclose -e axel -n 10 "%u";  echo  "%u"> /dev/null
 Icon=download
 Name=Axel 10 connections
 Name[it]=Axel 10 connessioni
 
 [Desktop Action axel5]
-Exec=konsole -e axel -n 5 "%u";  echo  "%u"> /dev/null
+Exec=konsole --noclose -e axel -n 5 "%u";  echo  "%u"> /dev/null
 Icon=download
 Name=Axel 5 connections
 Name[it]=Axel 5 connessioni
 
 [Desktop Action axel3]
-Exec=konsole -e axel -n 3 "%u";  echo  "%u"> /dev/null
+Exec=konsole --noclose -e axel -n 3 "%u";  echo  "%u"> /dev/null
 Icon=download
 Name=Axel 3 connections
 Name[it]=Axel 3 connessioni
 
 [Desktop Action axel]
-Exec=konsole -e  axel  "%u";  echo  "%u"> /dev/null
+Exec=konsole --noclose -e  axel  "%u";  echo  "%u"> /dev/null
 Icon=download
 Name=Axel 1 connection
 Name[it]=Axel 1 connessione
