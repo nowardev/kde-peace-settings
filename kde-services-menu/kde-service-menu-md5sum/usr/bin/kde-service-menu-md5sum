@@ -1,0 +1,114 @@
+#!/bin/bash
+#Copyright (C) 2014 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+
+
+
+
+function_help(){
+	echo $"Usage : 
+	
+	kde-service-menu-md5sum  \"/home/yourtestfile\" 	
+	"
+	exit 
+}
+
+
+function_check_programs_to_run_this_script(){
+
+	program[0]=md5sum
+	program[1]=kdialog
+	for program in "${program[@]}";
+	do if ! type -p "$program" >/dev/null;
+	then echo "$program not found; PLEASE INSTALL IT" >&2
+	kdialog --error $"sorry but i can't locate md5sum , install it"
+	echo "error exiting..." >&2
+	exit 1;
+	fi; done
+}
+
+
+
+function_md5sum(){
+
+md5sum="$(md5sum "$1")"
+read -r m f <<<"$md5sum"
+echo $md5sum
+echo $m 
+md5sum="$m"
+}
+
+
+function_start(){
+testmd5sum="$(kdialog --title $"MD5SUM tester" --textinputbox $"PLEASE INSERT YOUR MD5SUM TO TEST " $"you got this
+
+$md5sum
+
+, delete this message and insert only your md5sum to test it" )"
+
+if [[ -z $testmd5sum   ]]; then 
+	kdialog --msgbox $"
+
+your md5sum it's 
+
+$md5sum 	you left the text input box empty so i can't test for you if everything it's ok .. next time don't do that :P i can be handy"
+elif [[ "$testmd5sum" == "$md5sum" ]] ; then 
+	kdialog --msgbox $"OK MD5SUM MATCH"
+
+
+elif [[ "$testmd5sum" != "$md5sum" ]] ; then 
+	kdialog --error $"MD5SUM DOESN'T MATCH ERROR DO NOT USE THIS FILE."
+fi 
+exit 
+}
+ 
+ 
+
+
+
+
+if  [[ $1 == -*  ]]; then
+	case "$1" in
+	-h|--help|-\?) function_help; exit 0;;
+
+
+	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
+	*)
+	
+	function_check_programs_to_run_this_script
+	function_md5sum "$1"
+	function_start
+	;;
+	esac
+elif [[ ! -z "$1" ]] ; then
+
+	function_check_programs_to_run_this_script
+	function_md5sum "$1"
+	function_start
+else
+	echo "you must specify a file path?" 1>&2; function_help; exit 1
+fi
