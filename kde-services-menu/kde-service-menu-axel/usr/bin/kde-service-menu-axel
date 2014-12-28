@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/bash -x
 #Copyright (C) 2015 nowardev nowardev@gmail.com
  
 #This file is part of kde-peace-settings.
@@ -16,21 +16,14 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-ESC_SEQ="\x1b["
-COL_RESET=$ESC_SEQ"39;49;00m"
-COL_RED=$ESC_SEQ"31;01m"
-COL_GREEN=$ESC_SEQ"32;01m"
-COL_YELLOW=$ESC_SEQ"33;01m"
-COL_BLUE=$ESC_SEQ"34;01m"
-COL_MAGENTA=$ESC_SEQ"35;01m"
-COL_CYAN=$ESC_SEQ"36;01m"
+
 
 
 
 
 function_help(){
-	echo $"Usage :
-	
+echo $"Usage : 
+
 this service menu let you download form konqueror or from shell files , 
 
 kde-service-menu-axel link  <n° of connection>  
@@ -217,17 +210,15 @@ function_reset(){
 KAXEL_BOOL="false" 
 KAXEL_DOWNLOAD_FOLDER="$HOME"
 
-kdelocation="$(kde4-config --localprefix)"
-if [[ -z "$kdelocation" ]]; then 
-	if [[ ! -d "$HOME/.config/kde-service-menu-axel" ]]; then 
-		mkdir "$HOME/.config/kde-service-menu-axel"
-	fi 
-	conffile="$HOME/.config/kde-service-menu-axel/.kde-service-menu-axelrc"
-else
-	conffile=""$kdelocation"share/config/kde-service-menu-axelrc"
-fi
-function_detect_xdg_folder 
-function_import_settings
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+
 
 
 if  [[ $1 == -*  ]]; then
@@ -239,16 +230,34 @@ if  [[ $1 == -*  ]]; then
 	--) shift; echo "invalid option: $1" 1>&2; function_help; exit 1;;
 	*)
 	
-# 	downloaddefaultfolder="$HOME" 
-# 	function_detect_xdg_folder 
-# 	function_import_settings
+	kdelocation="$(kde4-config --localprefix)"
+	if [[ -z "$kdelocation" ]]; then 
+		if [[ ! -d "$HOME/.config/kde-service-menu-axel" ]]; then 
+			mkdir "$HOME/.config/kde-service-menu-axel"
+		fi 
+		conffile="$HOME/.config/kde-service-menu-axel/.kde-service-menu-axelrc"
+	else
+		conffile=""$kdelocation"share/config/kde-service-menu-axelrc"
+	fi
+	function_detect_xdg_folder 
+	function_import_settings
+
 	function_main "$1" "$2"
 	;;
 	esac
 else
-# 	downloaddefaultfolder="$HOME" 
-# 	function_detect_xdg_folder 
-# 	function_import_settings
+	kdelocation="$(kde4-config --localprefix)"
+	if [[ -z "$kdelocation" ]]; then 
+		if [[ ! -d "$HOME/.config/kde-service-menu-axel" ]]; then 
+			mkdir "$HOME/.config/kde-service-menu-axel"
+		fi 
+		conffile="$HOME/.config/kde-service-menu-axel/.kde-service-menu-axelrc"
+	else
+		conffile=""$kdelocation"share/config/kde-service-menu-axelrc"
+	fi
+	function_detect_xdg_folder 
+	function_import_settings
+
 	function_main "$1" "$2"; exit 0
 fi
 
