@@ -36,7 +36,13 @@ function_help(){
 	example 
 	
 	kde-service-menu-axel http://myfile.iso  10  
+	
  	
+ 	conf file are here $conffile
+ 	
+ 	to reset this script just run 
+ 	
+	kde-service-menu-axel -r 
 	"
 	exit 
 }

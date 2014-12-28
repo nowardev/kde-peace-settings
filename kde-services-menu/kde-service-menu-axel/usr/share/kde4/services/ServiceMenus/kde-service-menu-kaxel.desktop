@@ -52,11 +52,11 @@ Name[it]=Axel 1 connessione
 [Desktop Action reset]
 Exec=kde-service-menu-axel -r ;  echo  "%u"> /dev/null
 Icon=edit-clear
-Name=Kaxel 1 connection
-Name[it]=Axel 1 connessione
+Name=Reset Configs
+Name[it]=Reset configurazioni
 
 [Desktop Action help]
-Exec=kdialog --msgbox $"This service menu  allow you download with axel with multiple connections ; echo  "%u"> /dev/null
+Exec=kdialog --msgbox $(kde-service-menu-axel -h) ; echo  "%u"> /dev/null
 Icon=system-help
 Name=Help 
 Name[it]=Aiuto
