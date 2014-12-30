@@ -484,3 +484,14 @@ cd /home/shared/git ; git clone git://source.ffmpeg.org/ffmpeg.git ffmpeg-$(date
 configureffmpeg(){
  make clean ; ./configure --prefix=/usr/local   $(./configure --help|sort -r | awk  '/enable/{ print $1} END{printf "\n"}' | awk  '!/[A-Z]/ && !/avisynth/ && !/shared/ && !/poison/ && !/incompa/ && !/random/ && !/test/ && !/cross-compile/ && !/memalign-hack/ &&!/deck/ && !/libiec/ && !/libaacplus/ && !/libcelt/ && !/libflite/ && !/libilbc/ && !/libnut/ && !/opencv/ && !/shine/ && !/libstagefright/ && !/utvideo/ && !/vidstab/ && !/x265/ && !/libxavs/ && !/opencl/ && !/-rpath/ && !/ftrapv/ && !/hardcoded/ && !/major/ && !/libfdk-aac/ && !/opengl/ && !/enable-pic/ && !/enable-lto/ && !/small/ && !/gray/{print }'|awk -v ORS=" " '{print $1} END {printf "\n"}')
 }
+
+
+#mountvfat
+mount_fat(){
+sudo mount -t vfat 
+}
+
+#mountntfs
+mount_ntfs(){
+sudo mount -t ntfs-3g 
+}
