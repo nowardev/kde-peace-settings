@@ -495,3 +495,91 @@ sudo mount -t vfat
 mount_ntfs(){
 sudo mount -t ntfs-3g 
 }
+
+
+
+clone_partition(){
+ 
+# set -x
+if [[ "$1" == -* ]]; then
+	case "$1" in 
+		-h) echo "clonehdd input_dev ouput_dev" ; return ;;
+	esac
+fi
+echo  
+if [[ ! -z $(ls /dev | grep "${1##*/}") &&  -d  "$2"  ]] ; then 
+	if [[ ! -z $(grep "$1" /proc/mounts) ]]; then 
+		echo $"$1 it's mounted please umount it before."
+		return
+	else
+		date="$(date +"%d-%m-%y")"
+		outname="$2/${1##*/}_$date.img"
+		outname=${outname/\/\//\/} #remove potential // problem 
+		echo $"do you want execute \"sudo dd if=\"$1\" of=\"$outname\" bs=4096 conv=notrunc,noerror\" (y\n) ?"
+		read
+		echo "$REPLY"
+		case "$REPLY" in
+			[yY]|[yY][eE][sS])
+				sudo dd if="$1" of="$outname" bs=4096 conv=notrunc,noerror
+
+			;;
+
+			[nN]|[nN][oO])
+				echo $"user exit"
+				return
+			;;
+		esac
+
+		
+	fi
+else 
+	echo $"$1 it's a valid partition ? and $2 it's really folder ?"
+ 
+fi
+}
+
+restore_partition(){
+
+
+if [[ "$1" == -* ]]; then
+	case "$1" in 
+		-h) echo "restore_partition  output_device  INPUT_FILE" ; return ;;
+	esac
+fi
+
+if [[ ! -z $(ls /dev | grep "$1") &&  -e  "$2"  ]] ; then 
+	if [[ ! -z $(grep "$1" /proc/mounts) ]]; then 
+		echo $"$1 it's mounted please umount it before."
+		return 
+	else
+# 		date="$(date +"%d-%m-%y")"
+# 		outname=${1##*/}_$date.img 
+		echo $"doing sudo dd of="$1" if="$2" ?  (y\n) " 
+		read   
+
+		echo $REPLY
+		case "$REPLY" in
+
+		[yY]|[yY][eE][sS])
+		
+		sudo dd if="$2" of="$1"  
+
+		;;
+
+		[nN]|[nN][oO])
+		echo $"user exit"
+		return
+		;;
+		esac
+
+	fi
+else 
+	echo $"$1 it's a valid partition ? and $2 it's really a file ?"
+ 
+fi
+
+
+ 
+}
+
+ 
