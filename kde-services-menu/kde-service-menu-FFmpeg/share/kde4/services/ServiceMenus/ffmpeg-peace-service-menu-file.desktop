@@ -8,39 +8,32 @@ X-KDE-Submenu=FFmpeg Menu
 X-KDE-Submenu[it]=FFmpeg Menu
 
 [Desktop Action append]
-Exec=echo "%u" >> $HOME/ffmpeg-service-menu-qt.lst
+Exec=echo "%u" >> /tmp/kde-service-menu-FFmpeg.lst
 Icon=list-add
 Name=Append to FFmpeg
 Name[it]=Aggiungi a FFmpeg
 
 [Desktop Action deleteall]
-Exec=ffmpeg-peace-service-menu -d & echo %u >>/dev/null
+Exec=rm /tmp/kde-service-menu-FFmpeg.lst  & echo %u >>/dev/null
 Icon=edit-delete
 Name=Delete list
 Name[it]=Cancella la Lista FFmpeg
 
 [Desktop Action edit]
-Exec=ffmpeg-peace-service-menu -ek && echo %u >>/dev/null
+Exec=kate /tmp/kde-service-menu-FFmpeg.lst && echo %u >>/dev/null
 Icon=story-editor
 Name=Edit List
 Name[it]=Edita Lista
 
 
-[Desktop Action analyze]
-Exec=ffmpeg-peace-service-menu -a %u 
-Icon=dialog-information
-Name=Info File
-Name[it]=Informazioni File
-
-
 [Desktop Action info]
-Exec=ffmpeg-peace-service-menu -hx  && echo %u >>/dev/null
+Exec=kdialog --info this is my service menu  && echo %u >>/dev/null
 Icon=dialog-information
 Name=Version
 Name[it]=Versione
 
 [Desktop Action start]
-Exec=ffmpeg-peace-service-menu -mx  && echo %u >>/dev/null
+Exec=kde-service-menu-FFmpeg "$(kdialog --title "insert your parameters" --textinputbox  Insert your FFmpeg parameters "-ab 128k -b 1000k" )" "$(kdialog --combobox $"choose your output format" mp3 mp4 vp8 webm wav )" "$(kdialog --combobox  $"Enable overwrite?"  false true --default false  )" && echo %u >>/dev/null
 Icon=dialog-ok
 Name=FFmpeg Start!
 Name[it]=FFmpeg Inizia!
