@@ -1,0 +1,277 @@
+#!/bin/bash 
+
+#Copyright (C) 2015 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+#
+nproc=$(grep ^processor /proc/cpuinfo | wc -l)
+nproc_alternative=$(getconf _NPROCESSORS_ONLN)
+listoffile="/tmp/kde-service-menu-FFmpeg.lst"
+
+threads="-threads $nproc"
+
+ESC_SEQ="\x1b["
+COL_RESET=$ESC_SEQ"39;49;00m"
+COL_RED=$ESC_SEQ"31;01m"
+COL_GREEN=$ESC_SEQ"32;01m"
+COL_YELLOW=$ESC_SEQ"33;01m"
+COL_BLUE=$ESC_SEQ"34;01m"
+COL_MAGENTA=$ESC_SEQ"35;01m"
+COL_CYAN=$ESC_SEQ"36;01m"
+
+
+
+ 
+function_ffmpeg_convert(){
+parameters="$1"
+outformat="$2"
+overwrite="$3"
+
+if [[ "$overwrite" == "true" ]] ; then 
+	overwrite="-y"
+else
+	overwrite=""
+fi
+
+# ls -d -1 /home/shared/Musica/*.mp3 > /tmp/listoffile.txt 
+
+	
+a=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"<b>Global Progress : 0%</b>
+
+
+Processing file..... $filetoconvert"
+qdbus $a  showCancelButton true
+numberoffile=$(wc -l <"/tmp/listoffile.txt")
+count=1
+v=0
+
+
+echo "n of files: $numberoffile"
+echo "n of cores: $nproc"
+echo "paramenter: $paramenters"
+echo "out format: $outformat"
+
+
+while  read <&3 filetoconvert ; do		#do ffmpeg bad behavior we need to use <&3 or it will NOT convert everyfiles.
+	name="${filetoconvert%%.*}.$outformat" 	# remove extensions like .ogg .ogv .txt
+	echo $name
+
+	if [[ ! -e "$name" ]]; then 
+		function_core
+
+	elif [[  -e "$name" && -z $overwrite ]]; then 
+	
+		if [[ ! -d "${filetoconvert%/*}/kde-service-menu-emergency-folder" ]] ; then mkdir "${filetoconvert%/*}/kde-service-menu-emergency-folder" ; fi 
+		echo "Dear user this folder has been created because i detected that a file was present in the same folder but the overwrite function was not enabled so i have converted the file in this folder instead of the original one" > "${filetoconvert%/*}/kde-service-menu-emergency-folder/README"
+		
+ 
+		name="${name##*/}"	#remove folders
+		basicname="${name%%.*}" #remove extensions
+		name="${filetoconvert%/*}/kde-service-menu-emergency-folder/$name"		#put the correct path
+		name=${name/\/\//\/}	#remove possible // on the name
+
+		function_core
+	elif [[  -e "$name" && $overwrite == "-y" ]]; then 
+		function_core
+	else
+	kdialog --title $"Kde Service Menu FFmpeg"  --passivepopup  $"Bug! line 102" 3
+  
+	fi
+
+qdbus $a  showCancelButton true
+done 3<"/tmp/listoffile.txt"   
+qdbus $a  org.kde.kdialog.ProgressDialog.close 
+ }
+function_core(){
+
+set -x 
+		while read percentage ; do
+		echo $percentage >> /tmp/percentage
+
+		qdbus  $a Set org.kde.kdialog.ProgressDialog value  "$percentage"
+		qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"<b>Global Progress : $v%</b>
+		
+Processing file..... $filetoconvert"
+ 
+			while [[  $(qdbus  $a wasCancelled) != "false" ]] ; do
+				echo -e "$COL_RED ECHO KILLING THE PROCESS AND KDIALOG $COL_RESET"
+				qdbus $a  org.kde.kdialog.ProgressDialog.close 
+				qdbus $a  org.kde.kdialog.ProgressDialog.close
+				exit
+# 				pkill pv & pkill ffmpeg 
+
+			done
+	
+			
+			
+		done < <((pv -W -n "$filetoconvert" | ffmpeg $parameters $overwrite $threads "$name" -i pipe:0 2>/tmp/logffm.lst) 2>&1 )
+		v=$(( $(($count*100))/$numberoffile ))
+		echo $(($count*100)) and 
+		count=$(($count+1))
+# 		echo "qdbus  $b Set org.kde.kdialog.ProgressDialog value $v"
+# 		qdbus  $b Set org.kde.kdialog.ProgressDialog value $v
+# 		qdbus $a  org.kde.kdialog.ProgressDialog.close 
+qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"<b>Global Progress : $v%</b>
+		
+file processed!...$filetoconvert"
+}
+
+
+function_ffmpeg_convert "$1" "$2"
+
+
+
+
+
+
+
+
+function_ffmpeg_convert_old(){
+parameters="$1"
+outformat="$2"
+overwrite="$3"
+
+if [[ "$overwrite" == "true" ]] ; then 
+	overwrite="-y"
+else
+	overwrite=""
+fi
+
+
+b=$(kdialog --geometry 100x200+10+2 --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Global work..." 100)
+ 
+qdbus $b  showCancelButton true 
+qdbus $b org.kde.kdialog.ProgressDialog.autoClose true
+qdbus $b Set org.kde.kdialog.ProgressDialog value 0
+
+# ls -d -1 /home/shared/Musica/*.mp3 > /tmp/listoffile.txt 
+numberoffile=$(wc -l <"/tmp/listoffile.txt")
+
+echo "n of files: $numberoffile"
+echo "n of cores: $nproc"
+echo "paramenter: $paramenters"
+echo "out format: $outformat"
+count=1
+
+while  read <&3 filetoconvert ; do		#do ffmpeg bad behavior we need to use <&3 or it will NOT convert everyfiles.
+	name="${filetoconvert%%.*}.$outformat" 	# remove extensions like .ogg .ogv .txt
+	echo $name
+			
+		a=$(kdialog --title $"FFmpeg Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+# 		qdbus $a org.kde.kdialog.ProgressDialog.autoClose true
+		qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $filetoconvert"
+	# 	qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Generatiing file..... $name"
+		qdbus $a  showCancelButton true
+		
+	qdbus $b org.kde.kdialog.ProgressDialog.setLabelText $"Global Work: Generatiing file... $name"
+# 	qdbus $b org.kde.kdialog.ProgressDialog.setLabelText "ffmpeg $parameters $threads -y $name"
+# 	name=/tmp/test.mp3
+	if [[ ! -e "$name" ]]; then 
+		function_core
+ 
+	
+	elif [[  -e "$name" && -z $overwrite ]]; then 
+	
+		if [[ ! -d "${filetoconvert%/*}/kde-service-menu-emergency-folder" ]] ; then mkdir "${filetoconvert%/*}/kde-service-menu-emergency-folder" ; fi 
+		echo "Dear user this folder has been created because i detected that a file was present in the same folder but the overwrite function was not enabled so i have converted the file in this folder instead of the original one" > "${filetoconvert%/*}/kde-service-menu-emergency-folder/README"
+		
+ 
+		name="${name##*/}"	#remove folders
+		basicname="${name%%.*}" #remove extensions
+		name="${filetoconvert%/*}/kde-service-menu-emergency-folder/$name"		#put the correct path
+		name=${name/\/\//\/}	#remove possible // on the name
+
+		function_core
+	elif [[  -e "$name" && $overwrite == "-y" ]]; then 
+		function_core
+	else
+	kdialog --title $"Kde Service Menu FFmpeg"  --passivepopup  $"Bug! line 102" 3
+  
+	fi
+done 3<"/tmp/listoffile.txt"   
+ }
+ 
+
+
+
+
+
+function_core_old(){
+		while read percentage ; do
+		qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $filetoconvert"
+	# 	qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Generatiing file..... $name"
+		qdbus $a  showCancelButton true
+			echo "pv -W -n \"$filetoconvert\" | ffmpeg $parameters $overwrite $threads \"$name\" -i pipe:0 2>/tmp/logffm.lst"
+			while [[  $(qdbus  $a wasCancelled) != "false" || $(qdbus  $b wasCancelled) != "false"  ]] ; do
+				echo -e "$COL_RED ECHO KILLING THE PROCESS AND KDIALOG $COL_RESET"
+				qdbus $a  org.kde.kdialog.ProgressDialog.close 
+				qdbus $b  org.kde.kdialog.ProgressDialog.close 
+				exit
+			done
+	
+			qdbus  $a Set org.kde.kdialog.ProgressDialog value  "$percentage"
+			
+		done < <((pv -W -n "$filetoconvert" | ffmpeg $parameters $overwrite $threads "$name" -i pipe:0 2>/tmp/logffm.lst) 2>&1 )
+		v=$(( $(($count*100))/$numberoffile ))
+		echo $(($count*100)) and 
+		count=$(($count+1))
+		echo "qdbus  $b Set org.kde.kdialog.ProgressDialog value $v"
+
+}
+function_coree(){
+		while read percentage ; do
+		qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $filetoconvert"
+	# 	qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Generatiing file..... $name"
+		qdbus $a  showCancelButton true
+			echo "pv -W -n \"$filetoconvert\" | ffmpeg $parameters $overwrite $threads \"$name\" -i pipe:0 2>/tmp/logffm.lst"
+			while [[  $(qdbus  $a wasCancelled) != "false" ]] ; do
+				echo -e "$COL_RED ECHO KILLING THE PROCESS AND KDIALOG $COL_RESET"
+				qdbus $a  org.kde.kdialog.ProgressDialog.close 
+				qdbus $b  org.kde.kdialog.ProgressDialog.close 
+				exit
+			done
+	
+			qdbus  $a Set org.kde.kdialog.ProgressDialog value  "$percentage"
+			
+		done < <((pv -W -n "$filetoconvert" | ffmpeg $parameters $overwrite $threads "$name" -i pipe:0 2>/tmp/logffm.lst) 2>&1 )
+		v=$(( $(($count*100))/$numberoffile ))
+		echo $(($count*100)) and 
+		count=$(($count+1))
+		echo "qdbus  $b Set org.kde.kdialog.ProgressDialog value $v"
+		qdbus  $b Set org.kde.kdialog.ProgressDialog value $v
+}
+# 		while read percentage ; do
+# 		qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Processing file..... $filetoconvert"
+# 	# 	qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"Generatiing file..... $name"
+# 		qdbus $a  showCancelButton true
+# 		
+# 			while [[  $(qdbus  $a wasCancelled) != "false" || $(qdbus  $b wasCancelled) != "false"  ]] ; do
+# 				echo -e "$COL_RED ECHO KILLING THE PROCESS AND KDIALOG $COL_RESET"
+# 				qdbus $a  org.kde.kdialog.ProgressDialog.close 
+# 				qdbus $b  org.kde.kdialog.ProgressDialog.close 
+# 				exit
+# 			done
+# 	
+# 			qdbus  $a Set org.kde.kdialog.ProgressDialog value  "$percentage"
+# 		
+# 		done < <((pv -W -n "$filetoconvert" | ffmpeg $parameters $overwrite $threads "$name" -i pipe:0 2>/tmp/logffm.lst) 2>&1 )
+# 		v=$(( $(($count*100))/$numberoffile ))
+# 		echo $(($count*100)) and 
+# 		count=$(($count+1))
+# 		echo "qdbus  $b Set org.kde.kdialog.ProgressDialog value $v"
+# 		qdbus  $b Set org.kde.kdialog.ProgressDialog value $v
+	
