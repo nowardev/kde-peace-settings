@@ -1,0 +1,202 @@
+#!/bin/bash
+#Copyright (C) 2015 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+version=0.0.1
+
+
+
+
+
+function_core(){
+
+# commandline="pv -n \"$line\" | cvlc  --ignore-config $3 - :sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"  vlc://quit"
+# 
+# 		echo  "
+# $commandline
+# 
+# "
+echo $1
+echo $2
+echo $3
+echo "pv -n \"$line\" | cvlc  --ignore-config $3 - ">>"$logfile"
+echo ":sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"" >>"$logfile" 
+echo "pv -n \"$line\" | cvlc  --ignore-config $3 - \:sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\""  
+ 
+
+		while read percentage ; do
+
+
+		qdbus  $a Set org.kde.kdialog.ProgressDialog value  "$percentage"
+		qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"<font size="15" font color="green"><center><b>Global Progress : $v% </b></center></font> <p>Processing file...$line</p><p>Processed Name...$basicname.$2</p> "
+		
+		
+set +x
+	
+
+ 
+			while [[  $(qdbus  $a wasCancelled) != "false" ]] ; do
+				echo -e "$COL_RED ECHO KILLING THE PROCESS AND KDIALOG $COL_RESET"
+				qdbus $a  org.kde.kdialog.ProgressDialog.close 
+ 
+				exit
+# 		 
+
+			done
+	
+ 	
+			
+		done < <((pv -n "$line" | cvlc  --ignore-config $3 - :sout="#transcode{$1$threads}:std{access=file,mux=$2,dst=$basicname.$2}"  vlc://quit 2>>"$logfile") 2>&1 )
+		count=$(($count+1))
+		v=$(( $(($count*100))/$numberoffile ))
+		
+ set +x
+
+}
+
+function_start_convertions(){
+	rm $logfile
+	a=$(kdialog --title $"Vlc-Transcode Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+	qdbus $a  showCancelButton true
+	while read  line ; do 
+	# name="${line##*/}"	#remove folders
+	basicname="${line%%.*}" #remove extensions
+	set -x 
+	if [[ ! -z "$newdestination"  ]]; then 
+		name="${line##*/}"	#remove folders
+		basicname="$newdestination/${name%%.*}" #remove extensions
+		basicname=${basicname/\/\//\/}	#remove possible // on the name
+	
+	fi 
+	set +x 
+	
+	# pv -n "$line" | cvlc  --ignore-config  --no-sout-video - :sout="#transcode{acodec=mp3,ab=128,channels=2,samplerate=44100}:std{access=file,mux=mp3,dst=$basicname.$outformat}"  vlc://quit 2>/tmp/kde-service-menu-vlc-transcode
+
+	function_core "$SELECTED_OPTIONS" "${outformat[$profileindex]}" "$videosout"
+			qdbus $a org.kde.kdialog.ProgressDialog.setLabelText $"<b>Global Progress : $v%</b>
+			
+	Processing file..... $line"
+	qdbus $a  showCancelButton true
+	done<"$listoffile"
+	if [[ -z "$(cat "$logfile" )" ]]; then 
+		qdbus $a  org.kde.kdialog.ProgressDialog.close
+	else 
+		qdbus $a  org.kde.kdialog.ProgressDialog.close
+		kdialog --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
+		
+		
+			
+	fi
+}
+
+function_load_profiles(){
+# profilesfile="$1"
+# profilesfile="/home/shared/2015/test/kde-peace-settings/kde-services-menu/kde-service-menu-vlctranscode/profiles.lst5"
+# set -x 
+k=0
+while read line; do 
+
+nameprofile[$k]="$(echo "$line" | awk -F'//' '{print $1}')"
+vlcoptionprofile[$k]="$(echo "$line" | awk -F'//' '{print $2}' )"
+ 
+outformat[$k]="$(echo "$line" | awk -F'//' '{gsub(/mux=/,"");print $3}' )"
+k=$(( $k+1 ))
+done < "$profilesfile" 
+# set +x
+}
+
+function_menu(){
+function_load_profiles 
+# set -x
+ARGS="--menu \"choose your profile\" --"
+for ((i=0; i<${#nameprofile[@]}; i++)); do
+    ARGS="$ARGS \"${vlcoptionprofile[$i]}\" \"${nameprofile[$i]}\""
+done
+
+
+SELECTED_OPTIONS=$(echo $ARGS | xargs kdialog)
+# echo $SELECTED_OPTIONS
+
+if [[ -z "$SELECTED_OPTIONS" ]]; then kdialog  --title $"Vlc-Transcode Dolphin Service Menu"  --passivepopup  $" No Profile Selected ... exiting" 3
+exit 
+fi 
+  
+
+
+for ((i=0; i<${#nameprofile[@]}; i++)); do
+
+	if [[ "${vlcoptionprofile[i]}" == "$SELECTED_OPTIONS" ]] ; then  
+		profileindex=$i
+	fi 
+ 
+done 
+
+if [[ ${nameprofile[$profileindex]} =~ "Audio" ]]; then 
+	echo "audio format detected adding  --no-sout-video"
+	 videosout="--no-sout-video"
+	 audioonly="true"
+else 
+	echo $"video format detected"
+	audioonly="false"
+fi 
+# set -x
+newoutfolder="$(kdialog --combobox $"Do you want select a new OUTPUT FOLDER ? instead of the original one ?" true false --default false)"
+if [[ -z "$newoutfolder" || "$newoutfolder" == "true" ]]; then newdestination=$(kdialog --title $"Vlc-Transcode Dolphin Service Menu" --getexistingdirectory $"Select a OUTPUT FOLDER" $HOME); else newdestination="" ; fi 
+echo "outformat: ${outformat[$profileindex]} profile parameters: $SELECTED_OPTIONS audio only : $audioonly newdestination :  $newdestination"
+# set +x
+}
+
+function_create_profile_file(){
+echo 'Audio CD//acodec=s16l,ab=128,channels=2,samplerate=44100//mux=wav
+Audio FLAC//acodec=flac,ab=128,channels=2,samplerate=44100//mux=flac
+Audio MP3//acodec=mp3,ab=128,channels=2,samplerate=44100//mux=mp3
+Audio MP3 (MP4)//acodec=mpga,ab=128,channels=2,samplerate=44100//mux=mp4
+Audio Vorbis (OGG)//acodec=vorb,ab=128,channels=2,samplerate=44100//mux=ogg
+Video Android HD//acodec=mp3,ab=192,channels=2,samplerate=44100,vcodec=h264,vbitrate=2000,vcodec_qp=0,fps=0,width=1280,height=720//mux=mp4
+Video Android SD High//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=500,vcodec_qp=0,fps=0,width=480,height=360//mux=mp4
+Video Android SD Low//acodec=mp3,ab=24,acodec_channels=1,samplerate=44100,vcodec=h264,vbitrate=56,vcodec_qp=0,fps=12,width=176,height=144//mux=mp4
+Video Dirac + MP3 (TS)//vcodec=drac,vbitrate=800,fps=0,width=0,height=0,acodec=mpga,ab=128,channels=2,samplerate=44100//mux=ts
+Video DIV3 + MP3 (ASF)//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=DIV3,vbitrate=800,fps=0,width=0,height=0//mux=asf
+Video DivX compatible player//vcodec=DIV3,vbitrate=900,fps=0,width=720,height=576,acodec=mp3,ab=128,channels=2,samplerate=44100//mux=avi
+Video H.264 + MP3 (MP4)//acodec=mpga,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=0,vcodec_qp=0,fps=0,width=0,height=0//mux=mp4
+Video H.264 + MP3 (TS)//acodec=mpga,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=800,vcodec_qp=0,fps=0,width=0,height=0//mux=ts
+Video iPod HD/iPhone/PSP//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=700,vcodec_qp=0,fps=0,width=480,height=272//mux=mp4
+Video iPod SD//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=600,vcodec_qp=0,fps=0,width=320,height=180//mux=mp4
+Video MPEG-2 + MPGA (TS)//acodec=mpga,ab=128,channels=2,samplerate=44100,vcodec=mp2v,vbitrate=800,fps=0,width=0,height=0//mux=ts
+Video MPEG4 1080p TV/device//acodec=mp3,ab=192,channels=2,samplerate=44100,vcodec=h264,vbitrate=3500,vcodec_qp=0,fps=0,width=1920,height=1080//mux=mp4
+Video MPEG4 720p TV/device//acodec=mp3,ab=192,channels=2,samplerate=44100,vcodec=h264,vbitrate=1500,vcodec_qp=0,fps=0,width=1280,height=720//mux=mp4
+Video Theora + Flac (OGG)//acodec=flac,ab=128,channels=2,samplerate=44100,vcodec=theo,vbitrate=800,fps=0,width=0,height=0//mux=ogg
+Video Theora + Vorbis (OGG)//acodec=vorb,ab=128,channels=2,samplerate=44100,vcodec=theo,vbitrate=800,fps=0,width=0,height=0//mux=ogg
+Video VP80 + Vorbis (Webm)//vcodec=VP80,vbitrate=2000,fps=0,width=0,height=0,acodec=vorb,ab=128,channels=2,samplerate=44100//mux=webm
+Video WMV + WMA (ASF)//acodec=wma2,ab=128,channels=2,samplerate=44100,vcodec=WMV2,vbitrate=800,fps=0,width=0,height=0//mux=asf
+Video Youtube HD//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=1500,vcodec_qp=0,fps=0,width=1280,height=720//mux=mp4
+Video Youtube SD//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=800,vcodec_qp=0,fps=0,width=640,height=480//mux=mp4
+' >"$profilesfile"
+}
+listoffile="/tmp/kde-service-menu-vlc-transcode-list.lst"
+logfile="/tmp/kde-service-menu-vlc-transcode.log"
+profilesfile="$HOME/.kde-service-menu-vlc-transcode-profiles.lst"
+nproc=$(getconf _NPROCESSORS_ONLN)
+if [[ ! -e "$profilesfile" ]] ; then function_create_profile_file ; fi 
+if [[ -z $nproc ]];then threads=",threads=1"; else threads=",threads=$nproc" ; fi 
+numberoffile=$(wc -l <"$listoffile")
+count=0
+v=0
+
+function_menu
+function_start_convertions #"$SELECTED_OPTIONS" "${outformat[$profileindex]}" "$videosout"
+
+ 

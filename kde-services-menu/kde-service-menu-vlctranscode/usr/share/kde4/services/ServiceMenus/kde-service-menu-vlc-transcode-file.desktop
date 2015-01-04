@@ -1,0 +1,46 @@
+[Desktop Entry]
+Actions=append;start;edit;deleteall;log;info;
+Icon=video-x-generic
+ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=Vlc Transcoder Menu
+X-KDE-Submenu[it]=Vlc Transcoder Menu
+
+[Desktop Action append]
+Exec=echo "%u" >> /tmp/kde-service-menu-vlc-transcode-list.lst
+Icon=list-add
+Name=Append to Vlc Transcoder
+Name[it]=Aggiungi a Vlc Transcoder
+
+[Desktop Action deleteall]
+Exec=rm /tmp/kde-service-menu-vlc-transcode-list.lst  & echo %u >>/dev/null
+Icon=edit-delete
+Name=Delete list
+Name[it]=Cancella la Lista Vlc Transcoder
+
+[Desktop Action edit]
+Exec=kate /tmp/kde-service-menu-vlc-transcode-list.lst && echo %u >>/dev/null
+Icon=story-editor
+Name=Edit List
+Name[it]=Edita Lista
+
+
+[Desktop Action info]
+Exec=kdialog --info "This is my service menu that transcode with vlc"  && echo %u >>/dev/null
+Icon=dialog-information
+Name=Version
+Name[it]=Versione
+
+[Desktop Action start]
+Exec=kde-service-menu-vlc-transcode  && echo %u >>/dev/null
+Icon=dialog-ok
+Name=Vlc Transcoder Start!
+Name[it]=Vlc Transcoder Inizia!
+
+
+[Desktop Action log]
+Exec=kdialog --msgbox "<pre>$(cat /tmp/kde-service-menu-vlc-transcode.log)</pre>" && echo %u >>/dev/null
+Icon=dialog-information
+Name=Log
+Name[it]=Log
