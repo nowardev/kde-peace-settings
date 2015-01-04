@@ -91,15 +91,16 @@ function_start_convertions(){
 	Processing file..... $line"
 	qdbus $a  showCancelButton true
 	done<"$listoffile"
-	if [[ -z "$(cat "$logfile" )" ]]; then 
-		qdbus $a  org.kde.kdialog.ProgressDialog.close
-	else 
-		qdbus $a  org.kde.kdialog.ProgressDialog.close
-		kdialog --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
-		
-		
-			
-	fi
+	qdbus $a  org.kde.kdialog.ProgressDialog.close
+# 	if [[ -z "$(cat "$logfile" | grep -Ev "pv|:sout" )" ]]; then 
+# 		qdbus $a  org.kde.kdialog.ProgressDialog.close
+# 	else 
+# 		qdbus $a  org.kde.kdialog.ProgressDialog.close
+# 		kdialog --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
+# 		
+# 		
+# 			
+# 	fi
 }
 
 function_load_profiles(){
