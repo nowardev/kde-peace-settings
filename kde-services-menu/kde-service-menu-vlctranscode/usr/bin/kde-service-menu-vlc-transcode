@@ -32,6 +32,11 @@ function_core(){
 echo $1
 echo $2
 echo $3
+if [[ -e $basicname.$2 ]] ; then 
+	kdialog --error $"SORRY BUT $basicname.$2 ALREADY EXIST TO AVOID LOSS OF DATAS I WILL EXIT "
+	qdbus $a  org.kde.kdialog.ProgressDialog.close
+	exit 
+fi 
 echo "pv -n \"$line\" | cvlc  --ignore-config $3 - ">>"$logfile"
 echo ":sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"" >>"$logfile" 
 echo "pv -n \"$line\" | cvlc  --ignore-config $3 - \:sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\""  
