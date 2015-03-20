@@ -656,5 +656,27 @@ else
 fi
 
 }
+rm-apt-repository(){
+sudo add-apt-repository --remove "$1"
+}
+
+youtube2seren(){
+ofile=$(date | md5sum | cut -b 1-32)                                                                                                   
+youtube-dl -f 171 -o /tmp/$ofile "$1"
+
+echo "ffmpeg -i /tmp/$ofile -ac 2 -ar 48000 -f s16le pipe:1 > ~/.seren/fifo_in"
+ffmpeg -i /tmp/$ofile -ac 2 -ar 48000 -f s16le pipe:1 > ~/.seren/fifo_in
+
+}
+chrootupgrade(){
+a="/mnt/peace/chroot"						#set the folder to mount /
+sudo mkdir -p "$a"						#create the folder 
+sudo mount "$1" "$a"						#mounting the folder
+sudo cp "$a/etc/resolv.conf" "$a/etc/resolv.conf.backup"
+sudo cp  /etc/resolv.conf "$a/etc/resolv.conf"			#copy the resolv.conf file to get internet on chroot machine
+sudo apt-get update 						#update 
+sudo apt-get upgrade 						#upgrade
+sudo mv "$a/etc/resolv.conf.backup" "$a/etc/resolv.conf"	#restore the original resolv.conf
+}
  
  
