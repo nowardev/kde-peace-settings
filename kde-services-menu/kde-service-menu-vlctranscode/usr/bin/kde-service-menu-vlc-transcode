@@ -15,20 +15,82 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.0.1
+version=0.0.2
+listoffile="/tmp/kde-service-menu-vlc-transcode-list.lst"
+logfile="/tmp/kde-service-menu-vlc-transcode.log"
+profilesfile="$HOME/.kde-service-menu-vlc-transcode-profiles.lst"
+nproc=$(getconf _NPROCESSORS_ONLN)
+if [[ ! -e "$profilesfile" ]] ; then function_create_profile_file ; fi 
+if [[ -z $nproc ]];then threads=",threads=1"; else threads=",threads=$nproc" ; fi 
+numberoffile=$(wc -l <"$listoffile")
+count=0
+v=0
+
+
+function_help(){
+
+
+echo "
+
+LICENSE 
+
+
+Copyright (C) 2015 nowardev nowardev@gmail.com
+ 
+This file is part of kde-peace-settings.
+ 
+kde-peace-settings is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 
 
+NAME :
+
+kde-service-menu-vlc-transcode  - The bash script to convert multimedia files with cvlc on kde desktop
+
+USAGE : 
+
+select multiple files  and add them to vlc-transcode list form dolphin or editing the file localed $listoffile then start the program with kde-service-menu-vlc-transcode
+
+PROFILES :
+
+kde-service-menu-vlc-transcode service menu will use profiles localed here 
+
+$HOME/.kde-service-menu-vlc-transcode-profiles.lst
+
+if there is not a profile file it will automatically generate the default one 
+
+AUTHOR 
+
+nowardev@gmail.com 
+"
+exit 0
+}
+
+function_detect_error(){
+	if [[ ! -z "$(cat "$logfile" | grep -Ei "error|No such file or directory|access_output_file access out error:|stream chain failed" )" ]];then
+		qdbus $a  org.kde.kdialog.ProgressDialog.close
+		kdialog --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
+		
+		
+			
+	fi
+}
 
 function_core(){
 
-# commandline="pv -n \"$line\" | cvlc  --ignore-config $3 - :sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"  vlc://quit"
-# 
-# 		echo  "
-# $commandline
-# 
-# "
+
 echo $1
 echo $2
 echo $3
@@ -37,9 +99,12 @@ if [[ -e $basicname.$2 ]] ; then
 	qdbus $a  org.kde.kdialog.ProgressDialog.close
 	exit 
 fi 
-echo "pv -n \"$line\" | cvlc  --ignore-config $3 - ">>"$logfile"
-echo ":sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"" >>"$logfile" 
-echo "pv -n \"$line\" | cvlc  --ignore-config $3 - \:sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\""  
+echo "
+pv -n \"$line\" | cvlc  --ignore-config $3 - :sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"
+
+" >>"$logfile" 
+echo "pv -n \"$line\" | cvlc  --ignore-config $3 - \:sout=\"#transcode{$1}:std{access=file,mux=$2,dst=$basicname.$2}\"
+"  
  
 
 		while read percentage ; do
@@ -69,7 +134,7 @@ set +x
 		v=$(( $(($count*100))/$numberoffile ))
 		
  set +x
-
+function_detect_error
 }
 
 function_start_convertions(){
@@ -97,15 +162,7 @@ function_start_convertions(){
 	qdbus $a  showCancelButton true
 	done<"$listoffile"
 	qdbus $a  org.kde.kdialog.ProgressDialog.close
-# 	if [[ -z "$(cat "$logfile" | grep -Ev "pv|:sout" )" ]]; then 
-# 		qdbus $a  org.kde.kdialog.ProgressDialog.close
-# 	else 
-# 		qdbus $a  org.kde.kdialog.ProgressDialog.close
-# 		kdialog --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
-# 		
-# 		
-# 			
-# 	fi
+
 }
 
 function_load_profiles(){
@@ -125,6 +182,14 @@ done < "$profilesfile"
 }
 
 function_menu(){
+
+if [[ "$1" == "-h" || "$1" == "--h" || "$1" == "-help" || "$1" == "--help"  ]]; then 
+function_help
+elif [[ "$1" == "-ep"  ]] ; then 
+	kate "$profilesfile"
+	exit
+fi 
+
 function_load_profiles 
 # set -x
 ARGS="--menu \"choose your profile\" --"
@@ -192,17 +257,9 @@ Video Youtube HD//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbit
 Video Youtube SD//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbitrate=800,vcodec_qp=0,fps=0,width=640,height=480//mux=mp4
 ' >"$profilesfile"
 }
-listoffile="/tmp/kde-service-menu-vlc-transcode-list.lst"
-logfile="/tmp/kde-service-menu-vlc-transcode.log"
-profilesfile="$HOME/.kde-service-menu-vlc-transcode-profiles.lst"
-nproc=$(getconf _NPROCESSORS_ONLN)
-if [[ ! -e "$profilesfile" ]] ; then function_create_profile_file ; fi 
-if [[ -z $nproc ]];then threads=",threads=1"; else threads=",threads=$nproc" ; fi 
-numberoffile=$(wc -l <"$listoffile")
-count=0
-v=0
 
-function_menu
+
+function_menu "$1"
 function_start_convertions #"$SELECTED_OPTIONS" "${outformat[$profileindex]}" "$videosout"
 
  
