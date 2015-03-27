@@ -22,7 +22,12 @@ profilesfile="$HOME/.kde-service-menu-vlc-transcode-profiles.lst"
 nproc=$(getconf _NPROCESSORS_ONLN)
 if [[ ! -e "$profilesfile" ]] ; then function_create_profile_file ; fi 
 if [[ -z $nproc ]];then threads=",threads=1"; else threads=",threads=$nproc" ; fi 
-numberoffile=$(wc -l <"$listoffile")
+# numberoffile=$(wc -l <"$listoffile")
+if [[ -e "$listoffile" ]] ; then numberoffile=$(wc -l <"$listoffile"); else kdialog --title $"Kde Service Menu Vlc Transcode"  --error  $"Before you need to add some files's paths to this file $listoffile
+
+NO FILE TO CONVERT
+"; echo $"no file to convert please add some files path to $listoffile  "; exit 1  ; fi 
+  
 count=0
 v=0
 
@@ -61,7 +66,10 @@ kde-service-menu-vlc-transcode  - The bash script to convert multimedia files wi
 
 USAGE : 
 
-select multiple files  and add them to vlc-transcode list form dolphin or editing the file localed $listoffile then start the program with kde-service-menu-vlc-transcode
+select multiple files  and add them to vlc-transcode list from dolphin or editing the file localed $listoffile then start the program with :
+
+kde-service-menu-vlc-transcode		#start the program only 
+kde-service-menu-vlc-transcode -h	#print this help
 
 PROFILES :
 
