@@ -21,5 +21,10 @@
 
 INSTALLATION
 
+install manually  kdialog awk vlc   then run the script ./install 
 
-./install
+
+
+for debian for xample 
+
+sudo apt-get install kdialog awk vlc   &&  ./install ##note your must be in the directory where you are reading this readme
