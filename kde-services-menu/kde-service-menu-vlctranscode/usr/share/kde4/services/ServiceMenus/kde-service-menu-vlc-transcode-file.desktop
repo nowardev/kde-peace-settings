@@ -1,5 +1,5 @@
 [Desktop Entry]
-Actions=append;start;edit;deleteall;log;info;
+Actions=append;start;edit;editp;deleteall;log;info;
 Icon=video-x-generic
 ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
 Type=Service
@@ -25,9 +25,15 @@ Icon=story-editor
 Name=Edit List
 Name[it]=Edita Lista
 
+[Desktop Action editp]
+Exec=kate $HOME/.kde-service-menu-vlc-transcode-profiles.lst && echo %u >>/dev/null
+Icon=story-editor
+Name=Edit Profiles
+Name[it]=Edita Profili
+
 
 [Desktop Action info]
-Exec=kdialog --info "This is my service menu that transcode with vlc"  && echo %u >>/dev/null
+Exec=kde-service-menu-vlc-transcode -v  && echo %u >>/dev/null
 Icon=dialog-information
 Name=Version
 Name[it]=Versione

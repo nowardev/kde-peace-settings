@@ -15,23 +15,28 @@
 #
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
-version=0.0.2
+version=0.0.3
 listoffile="/tmp/kde-service-menu-vlc-transcode-list.lst"
 logfile="/tmp/kde-service-menu-vlc-transcode.log"
 profilesfile="$HOME/.kde-service-menu-vlc-transcode-profiles.lst"
 nproc=$(getconf _NPROCESSORS_ONLN)
-if [[ ! -e "$profilesfile" ]] ; then function_create_profile_file ; fi 
-if [[ -z $nproc ]];then threads=",threads=1"; else threads=",threads=$nproc" ; fi 
-# numberoffile=$(wc -l <"$listoffile")
-if [[ -e "$listoffile" ]] ; then numberoffile=$(wc -l <"$listoffile"); else kdialog --title $"Kde Service Menu Vlc Transcode"  --error  $"Before you need to add some files's paths to this file $listoffile
+icon="/usr/share/icons/hicolor/256x256/apps/vlc.png"
+title="Vlc-Transcode Kde Service Menu"
+geometry="--geometry 400x550+10+2"
+if [[ -e "$icon" ]] ; then 
+ 
+	icon="--icon $icon"
+	kdialogbinary="kdialog "$icon" "
+ 
+else 
+	icon=""
+	kdialogbinary="kdialog --title \"$title\""
+fi 
+ 
+ 
 
-NO FILE TO CONVERT
-"; echo $"no file to convert please add some files path to $listoffile  "; exit 1  ; fi 
-  
-count=0
-v=0
 
-
+echo $kdialogbinary
 function_help(){
 
 
@@ -58,10 +63,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
+DEPENDENCIES :
+
+vlc awk kdialog 
 
 
 NAME :
-
 kde-service-menu-vlc-transcode  - The bash script to convert multimedia files with cvlc on kde desktop
 
 USAGE : 
@@ -86,24 +93,54 @@ nowardev@gmail.com
 exit 0
 }
 
+function_geometry(){
+echo 
+}
+
 function_detect_error(){
 	if [[ ! -z "$(cat "$logfile" | grep -Ei "error|No such file or directory|access_output_file access out error:|stream chain failed" )" ]];then
 		qdbus $a  org.kde.kdialog.ProgressDialog.close
-		kdialog --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
+		$kdialogbinary  --error   $"<font size="15" font color="red">I have detected an error here there is the log <p></p></font><pre>$(cat "$logfile")</pre>"
 		
 		
 			
 	fi
 }
 
-function_core(){
+function_check(){
+	program[0]=vlc
+	program[1]=awk
+	program[2]=kdialog 
+	for program in "${program[@]}";
+		do
+			if ! type -p "$program" >/dev/null;then echo $"$program not found; PLEASE INSTALL IT" >&2
+				echo "error exiting..." >&2
+				exit 1;
+			fi
+		done
+	if [[ ! -e "$profilesfile" ]] ; then function_create_profile_file ; fi 
+	if [[ -z $nproc ]];then threads=",threads=1"; else threads=",threads=$nproc" ; fi 
+	# numberoffile=$(wc -l <"$listoffile")
+	if [[ -e "$listoffile" ]] ; then numberoffile=$(wc -l <"$listoffile"); else $kdialogbinary   --error  $"Before you need to add some files's paths to this file $listoffile
 
+	NO FILE TO CONVERT
+	"; echo $"no file to convert please add some files path to $listoffile  "; exit 1  ; fi 
+}
+
+function_core(){
+count=0
+v=0
 
 echo $1
 echo $2
 echo $3
 if [[ -e $basicname.$2 ]] ; then 
-	kdialog --error $"SORRY BUT $basicname.$2 ALREADY EXIST TO AVOID LOSS OF DATAS I WILL EXIT "
+set -x 
+	kdialog $icon --title "$title" --error $"<font size="10" font color="black">SORRY 	BUT
+
+$basicname.$2 </font> 
+
+<font size="15" font color="red">ALREADY EXIST TO AVOID LOSS OF DATAS I WILL EXIT</font> "
 	qdbus $a  org.kde.kdialog.ProgressDialog.close
 	exit 
 fi 
@@ -147,12 +184,12 @@ function_detect_error
 
 function_start_convertions(){
 	rm $logfile
-	a=$(kdialog --title $"Vlc-Transcode Dolphin Service Menu"  --progressbar $"Starting Conversion..." 100)
+	a=$($kdialogbinary  --progressbar $"Starting Conversion..." 100)
 	qdbus $a  showCancelButton true
 	while read  line ; do 
 	# name="${line##*/}"	#remove folders
 	basicname="${line%%.*}" #remove extensions
-	set -x 
+# 	set -x 
 	if [[ ! -z "$newdestination"  ]]; then 
 		name="${line##*/}"	#remove folders
 		basicname="$newdestination/${name%%.*}" #remove extensions
@@ -193,6 +230,12 @@ function_menu(){
 
 if [[ "$1" == "-h" || "$1" == "--h" || "$1" == "-help" || "$1" == "--help"  ]]; then 
 function_help
+elif [[ "$1" == "-v"  ]] ; then 
+kdialog --msgbox $"Version : $version 
+Author : nowardev@gmail.com
+"
+exit 0
+
 elif [[ "$1" == "-ep"  ]] ; then 
 	kate "$profilesfile"
 	exit
@@ -200,16 +243,16 @@ fi
 
 function_load_profiles 
 # set -x
-ARGS="--menu \"choose your profile\" --"
+ARGS=" $icon --title \"Vlc-Transcode Kde Service Menu \" --menu \"choose your profile\" --"
 for ((i=0; i<${#nameprofile[@]}; i++)); do
     ARGS="$ARGS \"${vlcoptionprofile[$i]}\" \"${nameprofile[$i]}\""
 done
 
-
-SELECTED_OPTIONS=$(echo $ARGS | xargs kdialog)
+# set -x
+SELECTED_OPTIONS=$(echo $ARGS | xargs kdialog )
 # echo $SELECTED_OPTIONS
-
-if [[ -z "$SELECTED_OPTIONS" ]]; then kdialog  --title $"Vlc-Transcode Dolphin Service Menu"  --passivepopup  $" No Profile Selected ... exiting" 3
+set +x 
+if [[ -z "$SELECTED_OPTIONS" ]]; then $kdialogbinary --title $"Vlc-Transcode Kde Service Menu "  --passivepopup  $" No Profile Selected ... exiting" 3
 exit 
 fi 
   
@@ -232,8 +275,10 @@ else
 	audioonly="false"
 fi 
 # set -x
-newoutfolder="$(kdialog --combobox $"Do you want select a new OUTPUT FOLDER ? instead of the original one ?" true false --default false)"
-if [[ -z "$newoutfolder" || "$newoutfolder" == "true" ]]; then newdestination=$(kdialog --title $"Vlc-Transcode Dolphin Service Menu" --getexistingdirectory $"Select a OUTPUT FOLDER" $HOME); else newdestination="" ; fi 
+newoutfolder="$(kdialog --title "Vlc-Transcode Kde Service Menu"  --combobox $"Do you want select a new OUTPUT FOLDER ? instead of the original one ?" true false --default false)"
+if [[ "$newoutfolder" == "true" ]]; then newdestination=$($kdialogbinary  --getexistingdirectory $"Select a OUTPUT FOLDER" $HOME); elif [[ -z "$newoutfolder" ]]; then kdialog $icon --title "Vlc-Transcode Kde Service Menu" --passivepopup $"exit by the user "; exit 2 ;  else newdestination="" ; fi 
+
+
 echo "outformat: ${outformat[$profileindex]} profile parameters: $SELECTED_OPTIONS audio only : $audioonly newdestination :  $newdestination"
 # set +x
 }
@@ -266,7 +311,7 @@ Video Youtube SD//acodec=mp3,ab=128,channels=2,samplerate=44100,vcodec=h264,vbit
 ' >"$profilesfile"
 }
 
-
+function_check
 function_menu "$1"
 function_start_convertions #"$SELECTED_OPTIONS" "${outformat[$profileindex]}" "$videosout"
 
