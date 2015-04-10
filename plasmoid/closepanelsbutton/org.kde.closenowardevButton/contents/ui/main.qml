@@ -45,7 +45,7 @@ Item {
     property int bp: plasmoid.configuration.buttonsPosition;
     property bool showControlButtons: plasmoid.configuration.showControlButtons
 //     property bool showMinimize: showControlButtons && plasmoid.configuration.showMinimize
-    property bool doubleClickMaximizes: plasmoid.configuration.doubleClickMaximizes
+    property bool doubleClickClose: plasmoid.configuration.doubleClickClose
     property bool middleClickFullscreen: plasmoid.configuration.middleClickFullscreen
     property bool wheelUpMaximizes: plasmoid.configuration.wheelUpMaximizes
     property bool wheelDownMinimizes: plasmoid.configuration.wheelDownAction === 1
@@ -225,17 +225,17 @@ Item {
         
 
         
-        ControlButton {
-            id: minimizeButton
-            iconElementId: 'remove'
-            windowOperation: 'toggleMaximized'
-            anchors.verticalCenter: parent.verticalCenter
-            anchors.horizontalCenter: parent.horizontalCenter
-//             anchors.right: parent.right; anchors.rightMargin: 0
-            
-            
-            visible: true
-        }
+//         ControlButton {
+//             id: minimizeButton
+//             iconElementId: 'remove'
+//             windowOperation: 'toggleMaximized'
+//             anchors.verticalCenter: parent.verticalCenter
+//             anchors.horizontalCenter: parent.horizontalCenter
+// //             anchors.right: parent.right; anchors.rightMargin: 0
+//             
+//             
+//             visible: true
+//         }
 //         ControlButton {
 //             id: maximizeButton
 //             iconElementId: 'maximize'
@@ -247,15 +247,15 @@ Item {
 //             
 //             visible: true//showMinimize
 //         }
-//         ControlButton {
-//             id: closeButton
-//             iconElementId: 'close'
-//             windowOperation: 'close'
-//             
-//             anchors.left: maximizeButton.right; anchors.leftMargin: 5
-//             anchors.right : parent.rightMargin
-//             visible: true
-//         }
+        ControlButton {
+            id: closeButton
+            iconElementId: 'close'
+            windowOperation: 'close'
+            
+            anchors.verticalCenter: parent.verticalCenter
+            anchors.horizontalCenter: parent.horizontalCenter
+            visible: true
+        }
     }
     
 }

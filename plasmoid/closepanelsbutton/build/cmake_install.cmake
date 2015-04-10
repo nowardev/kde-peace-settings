@@ -1,4 +1,4 @@
-# Install script for directory: /home/shared/git/minizemaximizeclosepanelsbuttons
+# Install script for directory: /home/shared/git/github/kde-peace-settings/plasmoid/closepanelsbutton
 
 # Set the install prefix
 if(NOT DEFINED CMAKE_INSTALL_PREFIX)
@@ -33,11 +33,11 @@ if(NOT DEFINED CMAKE_INSTALL_SO_NO_EXE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/plasma/plasmoids/org.kde.nowardevButtons" TYPE DIRECTORY FILES "/home/shared/git/minizemaximizeclosepanelsbuttons/org.kde.nowardevButtons/" REGEX "/CMakeLists\\.txt$" EXCLUDE REGEX "/README\\.txt$" EXCLUDE REGEX "/Messages\\.sh$" EXCLUDE REGEX "/dummydata$" EXCLUDE)
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/plasma/plasmoids/org.kde.closenowardevButton" TYPE DIRECTORY FILES "/home/shared/git/github/kde-peace-settings/plasmoid/closepanelsbutton/org.kde.closenowardevButton/" REGEX "/CMakeLists\\.txt$" EXCLUDE REGEX "/README\\.txt$" EXCLUDE REGEX "/Messages\\.sh$" EXCLUDE REGEX "/dummydata$" EXCLUDE)
 endif()
 
 if(NOT CMAKE_INSTALL_COMPONENT OR "${CMAKE_INSTALL_COMPONENT}" STREQUAL "Unspecified")
-  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kservices5" TYPE FILE RENAME "plasma-applet-org.kde.nowardevButtons.desktop" FILES "/home/shared/git/minizemaximizeclosepanelsbuttons/org.kde.nowardevButtons/metadata.desktop")
+  file(INSTALL DESTINATION "${CMAKE_INSTALL_PREFIX}/share/kservices5" TYPE FILE RENAME "plasma-applet-org.kde.closenowardevButton.desktop" FILES "/home/shared/git/github/kde-peace-settings/plasmoid/closepanelsbutton/org.kde.closenowardevButton/metadata.desktop")
 endif()
 
 if(CMAKE_INSTALL_COMPONENT)
@@ -46,7 +46,7 @@ else()
   set(CMAKE_INSTALL_MANIFEST "install_manifest.txt")
 endif()
 
-file(WRITE "/home/shared/git/minizemaximizeclosepanelsbuttons/build/${CMAKE_INSTALL_MANIFEST}" "")
+file(WRITE "/home/shared/git/github/kde-peace-settings/plasmoid/closepanelsbutton/build/${CMAKE_INSTALL_MANIFEST}" "")
 foreach(file ${CMAKE_INSTALL_MANIFEST_FILES})
-  file(APPEND "/home/shared/git/minizemaximizeclosepanelsbuttons/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
+  file(APPEND "/home/shared/git/github/kde-peace-settings/plasmoid/closepanelsbutton/build/${CMAKE_INSTALL_MANIFEST}" "${file}\n")
 endforeach()
