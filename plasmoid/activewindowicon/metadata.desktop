@@ -1,0 +1,18 @@
+[Desktop Entry]
+Comment=Plasma five Kwin buttons
+Encoding=UTF-8
+Icon=arrow-up
+Name=minimize maximize close buttons
+Type=Service
+X-KDE-ParentApp=
+X-KDE-PluginInfo-Author=nowardev
+X-KDE-PluginInfo-Category=Windows and Tasks
+X-KDE-PluginInfo-Email=nowardev@gmail.com
+X-KDE-PluginInfo-License=GPL2
+X-KDE-PluginInfo-Name=org.kde.nowardevButtons
+X-KDE-PluginInfo-Version=1.1
+X-KDE-PluginInfo-Website=https://github.com/nowardev
+X-KDE-ServiceTypes=Plasma/Applet
+X-Plasma-API=declarativeappletscript
+X-Plasma-MainScript=ui/main.qml
+X-Plasma-RemoteLocation=
