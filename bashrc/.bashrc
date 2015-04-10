@@ -688,4 +688,82 @@ grep -r "$2" "$1"
 sshrasp(){
 ssh pi@192.168.0.3 
 }
+
+screencastVlc(){
+
+i=0
+while read line ;do
+audiocard[$i]="$line"
+i=$(($i+1))
+done< <( grep capture /proc/asound/pcm | cut -b 2)
+
+i=0
+while read line ;do
+audionamecard[$i]="$line"
+i=$(($i+1))
+done< <(grep capture /proc/asound/pcm | cut -d : -f 2)
+
  
+if [[ ${#audiocard[@]} >1 ]]; then 
+echo $"I have detected more than 1 microphone in your computer please select what you want use (0-$((${#audiocard[@]}-1)))
+"
+
+ 
+ 
+i=0
+for (( i=0 ; i <${#audiocard[@]};i++)); do 
+    echo $"Choose $i for this audio card:  ${audionamecard[$i]} "
+
+done
+
+ 
+read   
+ 
+    if [[ -z "$REPLY" ]];then
+        microphone="${audiocard[0]}"
+    else
+    echo $"MicroPhone selected "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}""
+       microphone="${audiocard["$REPLY"]}"
+    fi
+    
+REPLY=""
+else
+ microphone="${audiocard[0]}"
+ fi 
+
+ echo $microphone
+# cvlc screen:// --screen-fps=12--input-slave=alsa://hw:0,0 --sout "#transcode{venc=x264,quality:100,scale=1,fps=30,acodec=mp4a,ab=128,channels=2, samplerate=44100}:duplicate{dst=std{access=file,mux=mp4,dst=desktop.mp4}}}"
+
+}
+
+kde_restart(){
+
+export DISPLAY=:0
+killall -9 plasmashell 
+killall -9 krunner 
+killall -9 kwin_x11
+plasmashell & krunner & kwin_x11 --replace &
+
+
+}
+
+qemu_nowardev(){
+ram=512 ; vnc="-vnc :1" ; hdd="-hda" ; soundcard=ac97 ;keyboard="it" ; qemu-system-x86_64 -machine pc,accel=kvm -m $ram -k $keyboard -soundhw $soundcard $vnc $hdd "$1"
+}
+
+qemu_iso(){
+ram=512 ; vnc="-vnc :1" ; hdd="-hda /home/shared/virtualboxes/winxp.img" ; soundcard=ac97 ;keyboard="it" ; qemu-system-x86_64 $hdd -smp 2 -machine pc,accel=kvm -m $ram -k $keyboard -boot d -cdrom "$1"
+# -soundhw $soundcard $vnc $hdd "$1"
+}
+
+chrootupgrade(){
+a="/mnt/peace/chroot"						#set the folder to mount /
+sudo mkdir -p "$a"						#create the folder 
+sudo mount "$1" "$a"						#mounting the folder
+sudo cp "$a/etc/resolv.conf" "$a/etc/resolv.conf.backup"
+sudo cp  /etc/resolv.conf "$a/etc/resolv.conf"			#copy the resolv.conf file to get internet on chroot machine
+sudo chroot "$a"
+sudo apt-get update 						#update 
+sudo apt-get upgrade 						#upgrade
+sudo mv "$a/etc/resolv.conf.backup" "$a/etc/resolv.conf"	#restore the original resolv.conf
+}
