@@ -1,8 +1,0 @@
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/contents/config/config.qml
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/contents/config/main.xml
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/contents/ui/ControlButton.qml
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/contents/ui/ConfigAppearance.qml
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/contents/ui/ConfigMouseControl.qml
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/contents/ui/main.qml
-/usr/local/share/plasma/plasmoids/org.kde.closenowardevButton/metadata.desktop
-/usr/local/share/kservices5/plasma-applet-org.kde.closenowardevButton.desktop

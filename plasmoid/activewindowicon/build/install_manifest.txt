@@ -1,8 +1,0 @@
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/contents/config/config.qml
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/contents/config/main.xml
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/contents/ui/ControlButton.qml
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/contents/ui/ConfigAppearance.qml
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/contents/ui/ConfigMouseControl.qml
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/contents/ui/main.qml
-/usr/local/share/plasma/plasmoids/org.kde.activewindownowardevButton/metadata.desktop
-/usr/local/share/kservices5/plasma-applet-org.kde.activewindownowardevButton.desktop
