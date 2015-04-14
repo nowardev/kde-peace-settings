@@ -27,14 +27,15 @@ Item {
 	property bool vertical: (plasmoid.formFactor == PlasmaCore.Types.Vertical)
 	
 //	 property double horizontalScreenWidthPercent: plasmoid.configuration.horizontalScreenWidthPercent
+		
+	//vertical ? parent.width : Screen.width * horizontalScreenWidthPercent //3*plasmoid.configuration.buttonSize + 60 //
+//	 Layout.minimumWidth: Layout.preferredWidth
+//	 Layout.minimumHeight: Layout.preferredHeight
 	property double buttonSize: plasmoid.configuration.buttonSize
 	
 	anchors.fill: parent
 	Layout.preferredWidth: (parent.width <= 1024) ? 32*plasmoid.configuration.buttonSize +20 : 64*plasmoid.configuration.buttonSize +20
-	
-	//vertical ? parent.width : Screen.width * horizontalScreenWidthPercent //3*plasmoid.configuration.buttonSize + 60 //
-//	 Layout.minimumWidth: Layout.preferredWidth
-//	 Layout.minimumHeight: Layout.preferredHeight
+
 	Layout.minimumWidth:  formFactor == PlasmaCore.Types.Horizontal ? height : 1
 	Layout. minimumHeight : formFactor == PlasmaCore.Types.Vertical ? width  : 1
 	Layout.maximumWidth: Layout.preferredWidth
@@ -164,7 +165,7 @@ Item {
 				maximumLineCount: parent.height / 20
 				width: parent.width - iconItem.width
 				elide: Text.ElideRight
-		visible: noWindowVisible
+		visible: showTitle
 			}
 		}
 	}

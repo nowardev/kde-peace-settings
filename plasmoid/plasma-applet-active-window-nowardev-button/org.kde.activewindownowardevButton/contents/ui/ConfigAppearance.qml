@@ -8,11 +8,12 @@ Item {
     height: childrenRect.height
 
     property alias cfg_showControlButtons: showControlButtons.checked
+    property alias cfg_showTitle: showTitle.checked
     property int cfg_buttonsPosition
 //     property alias cfg_showMinimize: showMinimize.checked
 //     property alias cfg_horizontalScreenWidthPercent: horizontalScreenWidthPercent.value
     property alias cfg_buttonSize: buttonSize.value
-    property alias cfg_showTitle : showTitle.checked
+
 
     onCfg_buttonsPositionChanged: {
         switch (cfg_buttonsPosition) {
@@ -66,11 +67,11 @@ Item {
             width: 2
             height: 2
         }
-//         CheckBox {
-//             id: showMaximize
-//             text: i18n("Show maximize button")
-//             enabled: showControlButtons.checked
-//         }
+        CheckBox {
+            id: showTitle
+            text: i18n("Show App Title")
+            enabled: showTitle.checked
+        }
  
 //         Label {
 //             text: i18n("Position:")

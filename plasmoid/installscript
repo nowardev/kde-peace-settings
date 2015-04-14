@@ -1,0 +1,49 @@
+ #!/bin/bash
+#Copyright (C) 2015 nowardev nowardev@gmail.com
+
+#This file is part of kde-peace-settings.
+
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+if [ "$(id -u)" = 0 ]; then 
+	echo "you have the power of Bud Spencer " 
+	echo "installing..."
+	 homefolder="$PWD"
+	for f in */; do 
+	
+		cd $f
+		rm -R build/
+		mkdir build
+		cd build
+		cmake ..
+		make 
+		make install
+		cd "$homefolder"
+		done 
+	kbuildsycoca5
+	echo "
+
+Nowardev Buttons Script End
+
+"
+else 
+	echo "YOU ARE NOT ROOT TO INSTALL  YOU MUST BE ROOT.
+have you typed wrong password?"
+	exit 0
+fi
+
+//use only for test plasmoids
+for a in $(plasmapkg2 --list | grep nowardev) ; do plasmawindowed $a & echo  ; done 
+
+ 
