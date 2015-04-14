@@ -40,9 +40,9 @@ MouseArea {
         height: width
         svg: PlasmaCore.Svg {
             //prefix is: /usr/share/plasma/desktoptheme/default/
-            imagePath: '/usr/local/share/plasma/plasmoids/org.kde.nowardevButtons/minimize.svg'
+            imagePath: 'widgets/configuration-icons' //'/usr/local/share/plasma/plasmoids/org.kde.nowardevButtons/minimize.svg'
         }
-//         elementId: 'remove'//iconElementId
+        elementId: 'remove'//iconElementId
         visible: true //controlButtonsArea.mouseInside
     }
     

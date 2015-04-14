@@ -39,10 +39,14 @@ MouseArea {
         width: parent.width
         height: width
         svg: PlasmaCore.Svg {
-            //prefix is: /usr/share/plasma/desktoptheme/default/
-            imagePath: '/usr/local/share/plasma/plasmoids/org.kde.nowardevButtons/restore.svg'
+		
+	imagePath: 'widgets/configuration-icons' //'/usr/local/share/plasma/plasmoids/org.kde.nowardevButtons/minimize.svg'
         }
-//         elementId: 'remove'//iconElementId
+        elementId: 'maximize' 
+//             //prefix is: /usr/share/plasma/desktoptheme/default/
+//             imagePath: '/usr/local/share/plasma/plasmoids/org.kde.nowardevButtons/restore.svg'
+//         }
+// //         elementId: 'remove'//iconElementId
         visible: true //controlButtonsArea.mouseInside
     }
     

@@ -12,6 +12,7 @@ Item {
 //     property alias cfg_showMinimize: showMinimize.checked
 //     property alias cfg_horizontalScreenWidthPercent: horizontalScreenWidthPercent.value
     property alias cfg_buttonSize: buttonSize.value
+    property alias cfg_showTitle : showTitle.checked
 
     onCfg_buttonsPositionChanged: {
         switch (cfg_buttonsPosition) {
@@ -29,7 +30,13 @@ Item {
             buttonsPositionGroup.current = upperRightRadio;
         }
     }
-
+    onCfg_showTitleChanged:{
+	   switch(cfg_showTitle){
+		   case true: 
+			   
+	   }
+    }
+    
     ExclusiveGroup {
         id: buttonsPositionGroup
     }
