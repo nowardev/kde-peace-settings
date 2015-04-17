@@ -295,17 +295,32 @@ KDE_INSTALL_USE_QT_SYS_PATHS:BOOL=OFF
 //desktop wallpaper images (DATAROOTDIR/wallpapers)
 KDE_INSTALL_WALLPAPERDIR:PATH=
 
+//The directory containing a CMake configuration file for KF5Config.
+KF5Config_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/KF5Config
+
+//The directory containing a CMake configuration file for KF5CoreAddons.
+KF5CoreAddons_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/KF5CoreAddons
+
 //The directory containing a CMake configuration file for KF5Package.
 KF5Package_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/KF5Package
 
 //The directory containing a CMake configuration file for KF5Plasma.
 KF5Plasma_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/KF5Plasma
 
+//The directory containing a CMake configuration file for KF5Service.
+KF5Service_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/KF5Service
+
 //Value Computed by CMake
 Project_BINARY_DIR:STATIC=/home/shared/git/github/kde-peace-settings/plasmoid/plasma-applet-close-nowardev-button/build
 
 //Value Computed by CMake
 Project_SOURCE_DIR:STATIC=/home/shared/git/github/kde-peace-settings/plasmoid/plasma-applet-close-nowardev-button
+
+//The directory containing a CMake configuration file for Qt5Core.
+Qt5Core_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Core
+
+//The directory containing a CMake configuration file for Qt5Xml.
+Qt5Xml_DIR:PATH=/usr/lib/x86_64-linux-gnu/cmake/Qt5Xml
 
 
 ########################

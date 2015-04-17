@@ -7,13 +7,13 @@ Item {
     width: childrenRect.width
     height: childrenRect.height
 
-    property alias cfg_showControlButtons: showControlButtons.checked
-    property alias cfg_showTitle: showTitle.checked
+//     property alias cfg_showControlButtons: showControlButtons.checked
     property int cfg_buttonsPosition
+    property alias cfg_showTitle: showTitle.checked
+//     property int cfg_buttonsPosition
 //     property alias cfg_showMinimize: showMinimize.checked
-//     property alias cfg_horizontalScreenWidthPercent: horizontalScreenWidthPercent.value
-    property alias cfg_buttonSize: buttonSize.value
-
+    property alias cfg_horizontalScreenWidthPercent: horizontalScreenWidthPercent.value
+//     property alias cfg_buttonSize: buttonSize.value
 
     onCfg_buttonsPositionChanged: {
         switch (cfg_buttonsPosition) {
@@ -31,48 +31,38 @@ Item {
             buttonsPositionGroup.current = upperRightRadio;
         }
     }
-    onCfg_showTitleChanged:{
-	   switch(cfg_showTitle){
-		   case true: 
-			   
-	   }
-    }
-    
+
     ExclusiveGroup {
         id: buttonsPositionGroup
     }
     
     GridLayout {
         id: displayPosition
-        columns: 2
-        
-        Label {
-            text: i18n("Control Buttons:")
-            Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
-        }
-        CheckBox {
-            id: showControlButtons
-            text: i18n("Show control buttons")
-        }
+        columns: 3
         Item {
             width: 2
-            height: 2
+            height: 3
+        }        
+        
+        
+        Label {
+            text: i18n("Main Options:")
+            Layout.alignment:Qt.AlignLeft
         }
 //         CheckBox {
-//             id: showMinimize
-//             text: i18n("Show minimize button")
-//             enabled: showControlButtons.checked
+//             id: showControlButtons
+//             text: i18n("Show control buttons")
 //         }
         Item {
             width: 2
-            height: 2
+            height: 3
         }
         CheckBox {
             id: showTitle
-            text: i18n("Show App Title")
-            enabled: showTitle.checked
+            text: i18n("Show Window Title")
+            enabled: true
         }
- 
+        
 //         Label {
 //             text: i18n("Position:")
 //             Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
@@ -110,26 +100,6 @@ Item {
 //             onCheckedChanged: if (checked) cfg_buttonsPosition = 3;
 //             enabled: showControlButtons.checked
 //         }
-//         
-//         Item {
-//             width: 2
-//             height: 10
-//             Layout.columnSpan: 2
-//         }
-        
-        Label {
-            text: i18n("Button size:")
-            Layout.alignment: Qt.AlignVCenter|Qt.AlignLeft
-            Layout.columnSpan: 2
-        }
-        Slider {
-            id: buttonSize
-            stepSize: 0.1
-            minimumValue: 0.1
-            tickmarksEnabled: true
-            width: parent.width
-            Layout.columnSpan: 2
-        }
         
 //         Item {
 //             width: 2
@@ -138,19 +108,39 @@ Item {
 //         }
         
 //         Label {
-//             text: i18n("Width in horizontal panel:")
+//             text: i18n("Button size:")
 //             Layout.alignment: Qt.AlignVCenter|Qt.AlignLeft
 //             Layout.columnSpan: 2
 //         }
 //         Slider {
-//             id: horizontalScreenWidthPercent
-//             stepSize: 0.01
-//             minimumValue: 0.001
-//             value: 0.01
+//             id: buttonSize
+//             stepSize: 0.1
+//             minimumValue: 0.1
 //             tickmarksEnabled: true
 //             width: parent.width
 //             Layout.columnSpan: 2
 //         }
+        
+        Item {
+            width: 2
+            height: 10
+            Layout.columnSpan: 2
+        }
+        
+        Label {
+            text: i18n("Width in horizontal panel:")
+            Layout.alignment: Qt.AlignVCenter|Qt.AlignLeft
+            Layout.columnSpan: 2
+        }
+        Slider {
+            id: horizontalScreenWidthPercent
+            stepSize: 0.001
+            minimumValue: 0.001
+            value: 0.003
+            tickmarksEnabled: true
+            width: parent.width
+            Layout.columnSpan: 2
+        }
     }
     
 }

@@ -47,7 +47,7 @@ Item {
 	property int controlButtonsSpacing: 10
 	
 	property int bp: plasmoid.configuration.buttonsPosition;
-	property bool showControlButtons: plasmoid.configuration.showControlButtons
+	property bool showControlButtons: true //plasmoid.configuration.showControlButtons
 //	 property bool showMinimize: showControlButtons && plasmoid.configuration.showMinimize
 	property bool doubleClickMinimizes: plasmoid.configuration.doubleClickMinimizes
 	property bool middleClickFullscreen: plasmoid.configuration.middleClickFullscreen

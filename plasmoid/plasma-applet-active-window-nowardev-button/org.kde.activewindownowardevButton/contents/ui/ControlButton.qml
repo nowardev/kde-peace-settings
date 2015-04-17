@@ -34,25 +34,24 @@ MouseArea {
     
     // close icon
     PlasmaCore.SvgItem {
-//         elementId : 'close'
         id: svgItem
         width: parent.width
         height: width
         svg: PlasmaCore.Svg {
             //prefix is: /usr/share/plasma/desktoptheme/default/
-            imagePath: '/usr/local/share/plasma/plasmoids/org.kde.nowardevButtons/close.svg'
+            imagePath: 'widgets/configuration-icons'
         }
-//         elementId: 'remove'//iconElementId
+        elementId: iconElementId
         visible: true //controlButtonsArea.mouseInside
     }
     
-   // close icon has now better visibility
+    // close icon has now better visibility
     BrightnessContrast {
         id: svgItemEffect
         anchors.fill: svgItem
         source: svgItem
-        brightness: 0.3
-        contrast: 0.9
+        brightness: 0.5
+        contrast: 0.5
         visible: true //mouseInside
     }
     
@@ -64,18 +63,18 @@ MouseArea {
     }
     
     onExited: {
-        mouseInside = true
+        mouseInside = true // false
         //svgItemEffect.visible = false
     }
     
     // trigger close active window
-    onClicked: {
+//     onClicked: {
 //         if (bp === 4) {
 //             return;
 //         }
-        var service = tasksSource.serviceForSource('tasks')
-        var operation = service.operationDescription(windowOperation)
-        operation.Id = tasksSource.models.tasks.activeTaskId()
-        service.startOperationCall(operation)
-    }
+//         var service = tasksSource.serviceForSource('tasks')
+//         var operation = service.operationDescription(windowOperation)
+//         operation.Id = tasksSource.models.tasks.activeTaskId()
+//         service.startOperationCall(operation)
+//     }
 }

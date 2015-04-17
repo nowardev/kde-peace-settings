@@ -8,6 +8,28 @@ Item {
     height: childrenRect.height
 
     property alias cfg_doubleClickMaximizes: doubleClickMaximizes.checked
+
+
+    ExclusiveGroup {
+        id: wheelDownActionGroup
+    }
+    
+    GridLayout {
+        id: displayPosition
+        columns: 2
+        
+        Label {
+            text: i18n("Mouse Buttons:")
+            Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
+        }
+        CheckBox {
+            id: doubleClickMaximizes
+            text: i18n("Doubleclick to Close Window")
+        }
+    }
+    
+}
+
 //     property alias cfg_middleClickFullscreen: middleClickFullscreen.checked
 //     property alias cfg_wheelUpMaximizes: wheelUpMaximizes.checked
 //     property int cfg_wheelDownAction
@@ -25,27 +47,10 @@ Item {
 //             wheelDownActionGroup.current = wheelDownDisabledRadio;
 //         }
 //     }
-
-    ExclusiveGroup {
-        id: wheelDownActionGroup
-    }
-    
-    GridLayout {
-        id: displayPosition
-        columns: 2
-        
-        Label {
-            text: i18n("Mouse Buttons:")
-            Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
-        }
-        CheckBox {
-            id: doubleClickMaximizes
-            text: i18n("Doubleclick to toggle maximizing")
-        }
-        Item {
-            width: 2
-            height: 2
-        }
+//         Item {
+//             width: 2
+//             height: 2
+//         }
 //         CheckBox {
 //             id: middleClickFullscreen
 //             text: i18n("Middleclick to toggle fullscreen")
@@ -88,6 +93,6 @@ Item {
 //             text: i18n("Mouse wheel down to unmaximize")
 //             onCheckedChanged: if (checked) cfg_wheelDownAction = 2;
 //         }
-    }
-    
-}
+//     }
+//     
+// }

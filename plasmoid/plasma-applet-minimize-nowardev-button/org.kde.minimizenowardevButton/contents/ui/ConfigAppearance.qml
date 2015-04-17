@@ -7,7 +7,7 @@ Item {
     width: childrenRect.width
     height: childrenRect.height
 
-    property alias cfg_showControlButtons: showControlButtons.checked
+//     property alias cfg_showControlButtons: showControlButtons.checked
     property int cfg_buttonsPosition
 //     property alias cfg_showMinimize: showMinimize.checked
 //     property alias cfg_horizontalScreenWidthPercent: horizontalScreenWidthPercent.value
@@ -37,7 +37,7 @@ Item {
     GridLayout {
         id: displayPosition
         columns: 2
-        
+/*        
         Label {
             text: i18n("Control Buttons:")
             Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
@@ -49,7 +49,7 @@ Item {
         Item {
             width: 2
             height: 2
-        }
+        }*/
 //         CheckBox {
 //             id: showMinimize
 //             text: i18n("Show minimize button")

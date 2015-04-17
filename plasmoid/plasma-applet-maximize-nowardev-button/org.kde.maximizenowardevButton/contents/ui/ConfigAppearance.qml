@@ -7,7 +7,7 @@ Item {
     width: childrenRect.width
     height: childrenRect.height
 
-    property alias cfg_showControlButtons: showControlButtons.checked
+//     property alias cfg_showControlButtons: showControlButtons.checked
     property int cfg_buttonsPosition
 //     property alias cfg_showMinimize: showMinimize.checked
 //     property alias cfg_horizontalScreenWidthPercent: horizontalScreenWidthPercent.value
@@ -39,26 +39,43 @@ Item {
         columns: 2
         
         Label {
-            text: i18n("Control Buttons:")
-            Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
+            text: i18n("Button size:")
+            Layout.alignment: Qt.AlignVCenter|Qt.AlignLeft
+            Layout.columnSpan: 2
         }
-        CheckBox {
-            id: showControlButtons
-            text: i18n("Show control buttons")
+        Slider {
+            id: buttonSize
+            stepSize: 0.1
+            minimumValue: 0.1
+            tickmarksEnabled: true
+            width: parent.width
+            Layout.columnSpan: 2
         }
-        Item {
-            width: 2
-            height: 2
-        }
+		}
+    
+}
+        
+//         Label {
+//             text: i18n("Control Buttons:")
+//             Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
+//         }
+//         CheckBox {
+//             id: showControlButtons
+//             text: i18n("Show control buttons")
+//         }
+//         Item {
+//             width: 2
+//             height: 2
+//         }
 //         CheckBox {
 //             id: showMinimize
 //             text: i18n("Show minimize button")
 //             enabled: showControlButtons.checked
 //         }
-        Item {
-            width: 2
-            height: 2
-        }
+//         Item {
+//             width: 2
+//             height: 2
+//         }
 //         CheckBox {
 //             id: showMaximize
 //             text: i18n("Show maximize button")
@@ -108,20 +125,7 @@ Item {
 //             height: 10
 //             Layout.columnSpan: 2
 //         }
-        
-        Label {
-            text: i18n("Button size:")
-            Layout.alignment: Qt.AlignVCenter|Qt.AlignLeft
-            Layout.columnSpan: 2
-        }
-        Slider {
-            id: buttonSize
-            stepSize: 0.1
-            minimumValue: 0.1
-            tickmarksEnabled: true
-            width: parent.width
-            Layout.columnSpan: 2
-        }
+
         
 //         Item {
 //             width: 2
@@ -143,6 +147,4 @@ Item {
 //             width: parent.width
 //             Layout.columnSpan: 2
 //         }
-    }
-    
-}
+

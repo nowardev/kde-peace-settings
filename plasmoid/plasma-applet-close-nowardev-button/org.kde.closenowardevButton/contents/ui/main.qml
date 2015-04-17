@@ -47,7 +47,7 @@ Item {
 	property int controlButtonsSpacing: 10
 	
 	property int bp: plasmoid.configuration.buttonsPosition;
-	property bool showControlButtons: plasmoid.configuration.showControlButtons
+// 	property bool showControlButtons: plasmoid.configuration.showControlButtons
 //	 property bool showMinimize: showControlButtons && plasmoid.configuration.showMinimize
 	property bool doubleClickClose: plasmoid.configuration.doubleClickClose
 	property bool middleClickFullscreen: plasmoid.configuration.middleClickFullscreen
@@ -112,6 +112,12 @@ Item {
 		var operation = service.operationDescription('setMinimized')
 		operation.Id = tasksSource.models.tasks.activeTaskId()
 		operation.minimized = true
+		service.startOperationCall(operation)
+	}
+		function windowClose() {
+		var service = tasksSource.serviceForSource('tasks')
+		var operation = service.operationDescription('close')
+		operation.Id = tasksSource.models.tasks.activeTaskId()
 		service.startOperationCall(operation)
 	}
 	
@@ -199,23 +205,23 @@ Item {
 		}
 		
 		onDoubleClicked: {
-			if (mouse.button == Qt.LeftButton && doubleClickMaximizes) {
-				toggleMaximized()
+			if (mouse.button == Qt.LeftButton && doubleClickClose) {
+				windowClose()
 			}
 		}
 		
-		onClicked: {
-			if (mouse.button == Qt.MiddleButton && middleClickFullscreen) {
-				toggleFullscreen()
-			}
-		}
+// 		onClicked: {
+// 			if (mouse.button == Qt.MiddleButton && middleClickFullscreen) {
+// 				toggleFullscreen()
+// 			}
+// 		}
 		
 	}
 	
 	Item {
 		id: controlButtonsArea
 		
-		visible: showControlButtons
+		visible: true //showControlButtons
 
 		height: parent.height * buttonSize
 		width:  height  // + (showMinimize ? height + controlButtonsSpacing : 0)

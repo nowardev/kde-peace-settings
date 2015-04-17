@@ -16,19 +16,19 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-if [ "$(id -u)" = 0 ]; then 
-	echo "you have the power of Bud Spencer " 
+
+
 	echo "installing..."
 	 homefolder="$PWD"
 	for f in */; do 
 	
 		cd $f
-		rm -R build/
+		rm -Rf build/
 		mkdir build
 		cd build
 		cmake ..
 		make 
-		make install
+		sudo make install
 		cd "$homefolder"
 		done 
 	kbuildsycoca5
@@ -37,13 +37,11 @@ if [ "$(id -u)" = 0 ]; then
 Nowardev Buttons Script End
 
 "
-else 
-	echo "YOU ARE NOT ROOT TO INSTALL  YOU MUST BE ROOT.
-have you typed wrong password?"
-	exit 0
-fi
 
-//use only for test plasmoids
-for a in $(plasmapkg2 --list | grep nowardev) ; do plasmawindowed $a & echo  ; done 
+
+#use only for test plasmoids
+sudo rm $HOME/.cache/ksycoca5
+kbuildsycoca5
+# for a in $(plasmapkg2 --list | grep nowardev |grep active) ; do plasmawindowed $a & echo  ; done 
 
  
