@@ -10,7 +10,7 @@ esac
 
 # don't put duplicate lines or lines starting with space in the history.
 # See bash(1) for more options
-HISTCONTROL=ignoreboth
+HISTCONTROL=ignoredups
 
 # append to the history file, don't overwrite it
 shopt -s histappend
@@ -136,15 +136,19 @@ function wgets()
 # alias screncast_stop="pkill --signal TERM oggenc & pkill --signal TERM ffmpeg "
 # 
 
+alias ugf="sudo apt-get update ; sudo apt-get upgrade -f "
+alias udgf="sudo apt-get update ; sudo apt-get dist-upgrade -f"
 alias u="sudo apt-get update"
 alias g="sudo apt-get upgrade"
 alias uf="echo sudo apt-get upgrade -f  && sudo apt-get upgrade -f"
 alias gf="sudo apt-get dist-upgrade -f"
-alias i="sudo apt-get install"
+alias i="sudo apt-get install -y "
 alias ai="apt-cache show"
 alias li="dpkg --get-selections | grep -v deinstall"
-alias r="sudo apt-get remove "
-alias p="sudo apt-get --purge remove "
+# alias alf="apt-file list | cut -d \" \" -f 2"
+alias ad="apt-cache depends"
+alias r="sudo apt-get remove --auto-remove"
+alias p="sudo apt-get --purge --auto-remove remove "
 alias s="apt-cache search "
 alias a="sudo apt-get autoremove"
 alias save-apt-list="dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst ; echo saved on $HOME/apt-list.lst"
@@ -154,13 +158,21 @@ u			#update repository list			sudo apt-get update
 g			#upgrade				sudo apt-get upgrade
 uf			#force upgrade				sudo apt-get upgrade -f
 gf			#force dist-upgrade			sudo apt-get dist-upgrade -f
-i			#install packages			sudo apt-get install
+i			#install packages			sudo apt-get install -y 
 ai			#information about the package		apt-cache show
 li			#list packages installed		dpkg --get-selections | grep -v deinstall
-r			#remove a package			sudo apt-get remove 
-p			#remove a packate & conf file		sudo apt-get --purge remove 
+r			#remove a package			sudo apt-get --auto-remove remove 
+p			#remove a packate & conf file		sudo apt-get --purge --auto-remove remove
 s			#search for a software			apt-cache search 
 a			#autoremove a software			sudo apt-get autoremove
+
+special ones :
+
+ugf			#update and upgrade			sudo apt-get update ; sudo apt-get upgrade -f 
+udgf			#uodate and dist-upgrade		sudo apt-get update ; sudo apt-get dist-upgrade -f 
+ad			#dependences required by a package	apt-cache depends
+alf			#files installed by a package 		apt-file list 
+
 save-apt-list		#save list of packages installed	dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst
 install-apt-list	#install a list of packages in		sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade\"
 "
@@ -172,11 +184,23 @@ install-apt-list	#install a list of packages in		sudo dpkg --set-selections < $H
 	
 } 
 
-complete -F peacefun $filenames ai 
-complete -F peacefun $filenames i 
-complete -F peacefun $filenames s 
-complete -F peacefun $filenames p 
-complete -F peacefun $filenames r
+alf(){
+
+echo "apt-file list $1"
+apt-file list $1 | cut -d " " -f 2 
+ 
+ 
+}
+
+complete -F peacefun  ai 
+complete -F peacefun  i 
+complete -F peacefun  s 
+complete -F peacefun  p 
+complete -F peacefun  r
+complete -F peacefun  ad 
+complete -F peacefun  alf 
+
+
 
 conferencepulse()
 {
@@ -756,14 +780,12 @@ ram=512 ; vnc="-vnc :1" ; hdd="-hda /home/shared/virtualboxes/winxp.img" ; sound
 # -soundhw $soundcard $vnc $hdd "$1"
 }
 
-chrootupgrade(){
-a="/mnt/peace/chroot"						#set the folder to mount /
-sudo mkdir -p "$a"						#create the folder 
-sudo mount "$1" "$a"						#mounting the folder
-sudo cp "$a/etc/resolv.conf" "$a/etc/resolv.conf.backup"
-sudo cp  /etc/resolv.conf "$a/etc/resolv.conf"			#copy the resolv.conf file to get internet on chroot machine
-sudo chroot "$a"
-sudo apt-get update 						#update 
-sudo apt-get upgrade 						#upgrade
-sudo mv "$a/etc/resolv.conf.backup" "$a/etc/resolv.conf"	#restore the original resolv.conf
+
+locate_nowardev(){
+sudo updatedb 
+locate -i "$1"
+
 }
+
+
+
