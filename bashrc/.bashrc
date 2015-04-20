@@ -787,5 +787,25 @@ locate -i "$1"
 
 }
 
+youtubedlplaylist(){
+musicfolder="$( xdg-user-dir MUSIC)"
+
+if [[ ! -z "$musicfolder" ]] ; then  cd "$musicfolder" ;  fi
+link="$1"
+a="$(echo "${1/list=/ }" | cut -d " " -f 2)"
+b="$(echo "${a/&/ }" | cut -d " " -f 1)"
+echo " 
+
+link:			$1
+playlist:		$a
+corrected playlist:	$b
+
+running youtube-dl -t "$linkcorrected"
+"
+
+ 
+linkcorrected="www.youtube.com/playlist?list=$b"
+youtube-dl -t "$linkcorrected"
+}
 
 
