@@ -136,16 +136,15 @@ function wgets()
 # alias screncast_stop="pkill --signal TERM oggenc & pkill --signal TERM ffmpeg "
 # 
 
-alias ugf="sudo apt-get update ; sudo apt-get upgrade -f "
-alias udgf="sudo apt-get update ; sudo apt-get dist-upgrade -f"
+alias ugf="sudo apt-get update ; sudo apt-get upgrade -y "
+alias udgf="sudo apt-get update ; sudo apt-get dist-upgrade -y"
 alias u="sudo apt-get update"
 alias g="sudo apt-get upgrade"
-alias uf="echo sudo apt-get upgrade -f  && sudo apt-get upgrade -f"
-alias gf="sudo apt-get dist-upgrade -f"
+alias uf="echo sudo apt-get upgrade -y  && sudo apt-get upgrade -y"
+alias gf="sudo apt-get dist-upgrade -y"
 alias i="sudo apt-get install -y "
 alias ai="apt-cache show"
 alias li="dpkg --get-selections | grep -v deinstall"
-# alias alf="apt-file list | cut -d \" \" -f 2"
 alias ad="apt-cache depends"
 alias r="sudo apt-get remove --auto-remove"
 alias p="sudo apt-get --purge --auto-remove remove "
@@ -153,11 +152,13 @@ alias s="apt-cache search "
 alias a="sudo apt-get autoremove"
 alias save-apt-list="dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst ; echo saved on $HOME/apt-list.lst"
 alias install-apt-list="sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade"
+alias remove-apt-lock="sudo  rm /var/lib/apt/lists/lock  ; sudo rm /var/lib/dpkg/lock "
 alias h="echo \"
 u			#update repository list			sudo apt-get update
 g			#upgrade				sudo apt-get upgrade
-uf			#force upgrade				sudo apt-get upgrade -f
-gf			#force dist-upgrade			sudo apt-get dist-upgrade -f
+uf			#force upgrade				sudo apt-get upgrade -y
+gf			#force dist-upgrade			sudo apt-get dist-upgrade -y
+d			#dependences				apt-cache depends with awk 
 i			#install packages			sudo apt-get install -y 
 ai			#information about the package		apt-cache show
 li			#list packages installed		dpkg --get-selections | grep -v deinstall
@@ -168,13 +169,23 @@ a			#autoremove a software			sudo apt-get autoremove
 
 special ones :
 
-ugf			#update and upgrade			sudo apt-get update ; sudo apt-get upgrade -f 
-udgf			#uodate and dist-upgrade		sudo apt-get update ; sudo apt-get dist-upgrade -f 
+ugf			#update and upgrade			sudo apt-get update ; sudo apt-get upgrade -y 
+udgf			#uodate and dist-upgrade		sudo apt-get update ; sudo apt-get dist-upgrade -y 
 ad			#dependences required by a package	apt-cache depends
 alf			#files installed by a package 		apt-file list 
+b			#block update for a package		apt-mark hold package_name
+ub			#block update for a package		apt-mark unhold package_name
+
 
 save-apt-list		#save list of packages installed	dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst
-install-apt-list	#install a list of packages in		sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade\"
+install-apt-list	#install a list of packages in		sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade
+
+remove-apt-lock 	#remove locks  when user kill apt :D	sudo  rm /var/lib/apt/lists/lock  ; sudo rm /var/lib/dpkg/lock
+
+FORMAT 
+
+format_to_fat32		#format to fat 32 format		sudo mkdosfs -F 32 -I \$1
+format_to_btrfs		#format with force option to btrfs	sudo mkfs.btrfs -f \$1\"
 "
  peacefun()
 {
@@ -191,15 +202,20 @@ apt-file list $1 | cut -d " " -f 2
  
  
 }
-
+d(){
+apt-cache show "$1" | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'
+echo 
+}
 complete -F peacefun  ai 
 complete -F peacefun  i 
 complete -F peacefun  s 
 complete -F peacefun  p 
 complete -F peacefun  r
 complete -F peacefun  ad 
+complete -F peacefun  d 
 complete -F peacefun  alf 
-
+complete -F peacefun  b 
+complete -F peacefun  ub 
 
 
 conferencepulse()
@@ -258,6 +274,7 @@ alias parole="/home/shared/git/parole-conference-010alpha17/./parole-conference 
 
 alias sourcehome="source ~/.bashrc"
 alias openbashrc="kde-open ~/.bashrc"
+alias openbashrcgit="kde-open /home/shared/git/github/kde-peace-settings/bashrc/.bashrc"
 alias alsamixer="alsamixer -V all"
 # alias hdmirec=
 screencastUSBMIC() {
@@ -809,3 +826,193 @@ youtube-dl -t "$linkcorrected"
 }
 
 
+
+
+function_scan_to_file(){
+resolution="-r $3"
+mode="-m $2"
+destination="$1"
+
+if [[ -z "$2" ]] ;then mode="-m grey" ; fi 
+if [[ -z "$3" ]] ;then resolution="-r 100" ; fi
+
+a=$(kdialog --progressbar "kde-service-menu-hp-scan: "$destination" " 100) #start kdialog 
+
+qdbus $a  showCancelButton true
+qdbus $a org.kde.kdialog.ProgressDialog.autoClose true
+b="false"
+ 
+	while read line ; do 
+		if [[ $line == 99 ]] ; then b="true" ; fi 
+		
+		while [[  $(qdbus  $a wasCancelled) != "false" && ! -z $(qdbus  $a wasCancelled)  ]] ; do
+			echo -e "$COL_RED ECHO KILLING AXEL AND KDIALOG $COL_RESET"
+			qdbus $a  org.kde.kdialog.ProgressDialog.close 
+			exit
+		done
+set -x		
+		if [[ "$line" =~ ^[0-9]+$ ]]; then #check if is a number
+		  
+			if [[ "$line" != "$lineold" ]]; then 
+				qdbus $a Set org.kde.kdialog.ProgressDialog value $line
+				
+			fi
+		lineold=$line
+		fi 
+		
+		
+		if [[ $line == 0 && $b == "true" ]]; then 
+			kdialog --passivepopup $"Job Done! file is here : $destination"
+			qdbus $a Set org.kde.kdialog.ProgressDialog value 100
+			 
+			exit
+		fi 
+	set +x	
+		
+	done< <(hp-scan   $resolution $mode -o "$destination"  | stdbuf -o0 tr '\r' '\n' |mawk -W interactive -F']' '{ print ($2+0) }'  )
+
+ 
+}
+
+function_scan_to_app() {
+resolution="-r $3"
+mode="-m $2"
+app="-v $1"
+
+if [[ -z "$2" ]] ;then mode="-m grey" ; fi 
+if [[ -z "$3" ]] ;then resolution="-r 100" ; fi
+echo "hp-scan   $resolution $mode  "$app""
+a=$(kdialog --progressbar "kde-service-menu-hp-scan: "$destination" " 100) #start kdialog 
+
+qdbus $a  showCancelButton true
+qdbus $a org.kde.kdialog.ProgressDialog.autoClose true
+b="false"
+ 
+	while read line ; do 
+		if [[ $line == 99 ]] ; then b="true" ; fi 
+		
+		while [[  $(qdbus  $a wasCancelled) != "false" && ! -z $(qdbus  $a wasCancelled)  ]] ; do
+			echo -e "$COL_RED ECHO KILLING AXEL AND KDIALOG $COL_RESET"
+			qdbus $a  org.kde.kdialog.ProgressDialog.close 
+# 			exit
+		done
+		
+		if [[ "$line" =~ ^[0-9]+$ ]]; then #check if is a number
+		  
+			if [[ "$line" != "$lineold" ]]; then 
+				qdbus $a Set org.kde.kdialog.ProgressDialog value $line
+				
+			fi
+		lineold=$line
+		fi 
+		
+		
+		if [[ $line == 0 && $b == "true" ]]; then 
+			kdialog --passivepopup $"Job Done! file is here : $destination"
+			qdbus $a Set org.kde.kdialog.ProgressDialog value 100
+			 
+# 			exit
+		fi 
+		
+		
+	done< <(hp-scan $resolution $mode "$app"  | stdbuf -o0 tr '\r' '\n' |mawk -W interactive -F']' '{ print ($2+0) }'  )
+echo "hp-scan   $resolution $mode  "$app""
+}
+
+copybashrc(){
+location="/home/shared/git/github/kde-peace-settings/bashrc/.bashrc"
+cp "$location" ~/.bashrc
+echo "copied "
+}
+
+
+check_equal_array(){
+a=($1)
+b=($2)
+}
+
+pure_kde(){
+a=($(apt-cache show kubuntu-desktop | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'))
+b=($(apt-cache show ubuntu-desktop | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'))
+c=($(apt-cache show xubuntu-desktop | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'))
+d=($(apt-cache show lubuntu-desktop | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'))
+e=($(apt-cache show mate-desktop | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'))
+toremove=()
+tokeep=()
+
+
+# a=( 1 2 3 )
+# b=(a 2 c)
+# echo ${a[@]}
+# echo ${b[@]}
+j=0
+
+for r in "${a[@]}" ; do
+	i=0
+	for t in "${b[@]}" ; do
+		if [[ "$r" == "$t" ]] ; then 
+		echo "the array kubuntu-desktop contains $r which is even in the array *buntu-desktop so skipping it $t
+unset ${b[$i]}"
+# 			unset b[$i]
+		tokeep+=("$r")
+		
+
+		else
+		toremove+=("$r")
+			
+		fi
+		i=$(($i+1))
+	done
+	
+	j=$(($j+1))
+
+	
+
+
+done
+
+echo "
+
+package to remove to get pure kde 
+
+${toremove[@]}
+
+
+
+
+original metapackage :
+
+${b[@]}
+
+
+"
+}
+
+format_to_fat32(){
+# sudo fdisk -l 
+sudo mkdosfs -F 32 -I "$1"
+}
+
+
+format_to_btrfs(){
+# sudo fdisk -l 
+sudo mkfs.btrfs  -f "$1"
+}
+
+format_to_ext4_nojournal(){
+sudo mke2fs -t ext4 -O ^has_journal "$1"
+}
+
+format_to_ext4(){
+sudo mke2fs -t ext4 "$1"
+}
+
+
+format_to_ext3(){
+sudo mke2fs -t ext3  "$1"
+}
+format_to_ntfs(){
+
+sudo mkfs.ntfs -f "$1"
+
+}
