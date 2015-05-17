@@ -1,0 +1,21 @@
+[Desktop Entry]
+Categories=Qt;KDE;AudioVideo;Audio;
+Comment[en_US]=Showekam settings!
+Comment=Showekam settings!
+Encoding=UTF-8
+Exec=showebkam -as
+GenericName[en_US]=Showekam settings
+GenericName=Showekam settings
+Icon=camera-web
+MimeType=
+Name[en_US]=ShoWebKam settings
+Name=ShoWebKam settings 
+Path=
+StartupNotify=true
+Terminal=false
+TerminalOptions=
+Type=Application
+X-DBUS-ServiceName=
+X-DBUS-StartupType=
+X-KDE-SubstituteUID=false
+X-KDE-Username=

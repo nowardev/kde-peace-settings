@@ -46,6 +46,7 @@ showebkam <options>
 
 example :
 
+showebkam -as			:ask settins again and save it 
 showebkam -b /usr/bin/ffplay	:set the path for ffplay or avplay 
 showebcam -d			:enable debug mode
 showebkam -ds			:remove your config file located here $settingsfile
@@ -120,12 +121,32 @@ fi
 
 
 
-	device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
-	framerate="$(kdialog --textinputbox $"Choose framerate"  "25")"
-	resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
-	binary="$(kdialog --textinputbox $"FFplay or AVplay path"  "$binary")"
-	
-function_save_settings "$directory" "$settingsfile"
+device="$(kdialog --combobox $"Choose your Source for webcam"  ${webcams[@]} --default ${webcams[0]} )"
+	if [[ ! -z "$device" ]] ; then 
+		framerate="$(kdialog --textinputbox $"Choose framerate"  "25")"
+		if [[ ! -z "$framerate" ]] ; then 
+			resolution="$(kdialog --textinputbox $"Choose your Resolution"  "320x240")"
+				if [[ ! -z "$resolution" ]] ; then 
+					binary="$(kdialog --textinputbox $"FFplay or AVplay path"  "$binary")"
+					if [[ ! -z "$binary" ]] ; then 
+						function_save_settings "$directory" "$settingsfile"
+					else 
+						kdialog --passivepopup $"one or more settins are empty dude i am exiting.... restart the application to set your option again"
+						exit 1
+					fi
+				else 
+					kdialog --passivepopup $"one or more settins are empty dude i am exiting.... restart the application to set your option again"
+					exit 1
+				fi
+		else 
+			kdialog --passivepopup $"one or more settins are empty dude i am exiting.... restart the application to set your option again"
+			exit 1
+		fi
+	else 
+		kdialog --passivepopup $"one or more settins are empty dude i am exiting.... restart the application to set your option again"
+		exit 1
+	fi 
+
 
 if [[ "$DEBUG" == "on" ]]; then
 set +x
@@ -317,6 +338,7 @@ function_load_settings
 	-ds) rm "$settingsfile"; shift ;echo $"settings file deleted." ; exit ;;
 	-w) device="$2" ; shift 2;;
 	-log) cat "$logfile";exit ;  shift ;; 
+	-as) function_ask_settings ; function_save_settings "$directory" "$settingsfile" ; kdialog --passivepopup $"Application need restarts... now it's exiting" ; exit ; shift;;
 	-framerate) framerate="$2" ; shift 2 ;;
  
   
