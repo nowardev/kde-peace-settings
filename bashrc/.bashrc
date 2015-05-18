@@ -837,7 +837,7 @@ if [[ -z "$2" ]] ;then mode="-m grey" ; fi
 if [[ -z "$3" ]] ;then resolution="-r 100" ; fi
 
 a=$(kdialog --progressbar "kde-service-menu-hp-scan: "$destination" " 100) #start kdialog 
-
+echo "hp-scan   $resolution $mode -o "$destination" "
 qdbus $a  showCancelButton true
 qdbus $a org.kde.kdialog.ProgressDialog.autoClose true
 b="false"
@@ -850,7 +850,7 @@ b="false"
 			qdbus $a  org.kde.kdialog.ProgressDialog.close 
 			exit
 		done
-set -x		
+# set -x		
 		if [[ "$line" =~ ^[0-9]+$ ]]; then #check if is a number
 		  
 			if [[ "$line" != "$lineold" ]]; then 
@@ -864,13 +864,17 @@ set -x
 		if [[ $line == 0 && $b == "true" ]]; then 
 			kdialog --passivepopup $"Job Done! file is here : $destination"
 			qdbus $a Set org.kde.kdialog.ProgressDialog value 100
-			 
-			exit
+			qdbus $a  org.kde.kdialog.ProgressDialog.close 
+# 			pkill -SIGTERM hp-scan
+# 
+# 			
 		fi 
-	set +x	
+# 	set +x	
 		
-	done< <(hp-scan   $resolution $mode -o "$destination"  | stdbuf -o0 tr '\r' '\n' |mawk -W interactive -F']' '{ print ($2+0) }'  )
-
+	done< <(hp-scan $resolution $mode -o "$destination"  | stdbuf -o0 tr '\r' '\n' |mawk -W interactive -F']' '{ print ($2+0) }'  )
+			kdialog --title $"kde-service-menu-hp-scan"  --yesno  $" Do you want open the file?"
+			if [[ $? == 0 ]] ; then
+echo "kde-open "$1"" ; kde-open "$1"; fi 
  
 }
 
@@ -894,9 +898,9 @@ b="false"
 		while [[  $(qdbus  $a wasCancelled) != "false" && ! -z $(qdbus  $a wasCancelled)  ]] ; do
 			echo -e "$COL_RED ECHO KILLING AXEL AND KDIALOG $COL_RESET"
 			qdbus $a  org.kde.kdialog.ProgressDialog.close 
-# 			exit
+			exit
 		done
-		
+# set -x		
 		if [[ "$line" =~ ^[0-9]+$ ]]; then #check if is a number
 		  
 			if [[ "$line" != "$lineold" ]]; then 
@@ -910,14 +914,18 @@ b="false"
 		if [[ $line == 0 && $b == "true" ]]; then 
 			kdialog --passivepopup $"Job Done! file is here : $destination"
 			qdbus $a Set org.kde.kdialog.ProgressDialog value 100
-			 
-# 			exit
+			qdbus $a  org.kde.kdialog.ProgressDialog.close 
+# 			pkill -SIGTERM hp-scan
+# 
+# 			
 		fi 
+# 	set +x	
 		
 		
 	done< <(hp-scan $resolution $mode "$app"  | stdbuf -o0 tr '\r' '\n' |mawk -W interactive -F']' '{ print ($2+0) }'  )
 echo "hp-scan   $resolution $mode  "$app""
 }
+
 
 copybashrc(){
 location="/home/shared/git/github/kde-peace-settings/bashrc/.bashrc"

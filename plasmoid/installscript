@@ -45,3 +45,4 @@ kbuildsycoca5
 # for a in $(plasmapkg2 --list | grep nowardev |grep active) ; do plasmawindowed $a & echo  ; done 
 
  
+echo "DONE YOU SHOULD BE ABLE TO ADD NOWARDEV BUTTONS NOW"
