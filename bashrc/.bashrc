@@ -1024,3 +1024,16 @@ format_to_ntfs(){
 sudo mkfs.ntfs -f "$1"
 
 }
+
+date-it(){
+LC_ALL=it_IT.utf8 date
+
+}
+
+nocapslock(){
+setxkbmap -option caps:none
+}
+
+yescapslock(){
+setxkbmap -option
+}
