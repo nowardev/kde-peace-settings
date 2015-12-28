@@ -1037,3 +1037,53 @@ setxkbmap -option caps:none
 yescapslock(){
 setxkbmap -option
 }
+
+
+date-it(){
+LC_ALL=it_IT.utf8 date
+
+}
+
+bst_t(){
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27960"
+
+}
+
+
+bst_j(){
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27961"
+
+}
+
+bst_c(){
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27962"
+
+}
+
+bst_m(){
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27963" +password fun
+
+}
+
+urbanterror(){
+/home/shared/game/./gioco.x86_64   
+}
+urbanterrorserver(){
+/home/shared/game/./gioco.x86_64   
+}
+
+urbanterrormyserver(){
+/home/shared/game/./gioco.x86_64 +connect 80.180.80.153:27960
+}
+
+keyboard_disabler(){
+keyboard=$(xinput --list | grep 'AT Translated' | cut -f 2 |cut -d = -f  2)
+xinput set-int-prop "$keyboard"  "Device Enabled" 8 0
+
+}
+
+keyboard_enabler(){
+keyboard=$(xinput --list | grep 'AT Translated' | cut -f 2 |cut -d = -f  2)
+xinput set-int-prop "$keyboard"  "Device Enabled" 8 1
+
+}
