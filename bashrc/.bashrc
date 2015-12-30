@@ -1100,3 +1100,14 @@ echo "copied and sourced"
 dolphingit(){
 dolphin /home/shared/git/github/kde-peace-settings/bashrc/
 }
+
+myip(){
+dig +short myip.opendns.com @resolver1.opendns.com
+}
+
+check_router_door(){
+
+
+ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
+nmap -p U:27960,T:27960 $ip 
+}
