@@ -274,7 +274,6 @@ alias parole="/home/shared/git/parole-conference-010alpha17/./parole-conference 
 
 alias sourcehome="source ~/.bashrc"
 alias openbashrc="kde-open ~/.bashrc"
-alias openbashrcgit="kde-open /home/shared/git/github/kde-peace-settings/bashrc/.bashrc"
 alias alsamixer="alsamixer -V all"
 # alias hdmirec=
 screencastUSBMIC() {
@@ -927,11 +926,11 @@ echo "hp-scan   $resolution $mode  "$app""
 }
 
 
-copybashrc(){
-location="/home/shared/git/github/kde-peace-settings/bashrc/.bashrc"
-cp "$location" ~/.bashrc
-echo "copied "
-}
+# copybashrc(){
+# location="/home/shared/git/github/kde-peace-settings/bashrc/.bashrc"
+# cp "$location" ~/.bashrc
+# echo "copied "
+# }
 
 
 check_equal_array(){
@@ -1086,4 +1085,18 @@ keyboard_enabler(){
 keyboard=$(xinput --list | grep 'AT Translated' | cut -f 2 |cut -d = -f  2)
 xinput set-int-prop "$keyboard"  "Device Enabled" 8 1
 
+}
+
+openbashrcgit(){
+kde-open /home/shared/git/github/kde-peace-settings/bashrc/.bashrc
+}
+
+copybashrc_to_home(){
+cp /home/shared/git/github/kde-peace-settings/bashrc/.bashrc ~/.bashrc
+source ~/.bashrc
+echo "copied and sourced"
+}
+
+dolphingit(){
+dolphin /home/shared/git/github/kde-peace-settings/bashrc/
 }
