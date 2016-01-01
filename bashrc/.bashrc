@@ -1111,3 +1111,7 @@ check_router_door(){
 ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
 nmap -p U:27960,T:27960 $ip 
 }
+
+check_listening_port(){
+ss -tul
+}
