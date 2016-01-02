@@ -1065,14 +1065,14 @@ bst_m(){
 }
 
 urbanterror(){
-/home/shared/game/./gioco.x86_64   
+/home/shared/game/./gioco.x86_64  "$1" "$2"
 }
 urbanterrorserver(){
-/home/shared/game/./gioco.x86_64   
+/home/shared/game/./gioco.x86_64   +exec server.cfg
 }
 
-urbanterrormyserver(){
-/home/shared/game/./gioco.x86_64 +connect 80.180.80.153:27960
+urbanterrormyserverCONNECT(){
+/home/shared/game/./gioco.x86_64 +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
 }
 
 keyboard_disabler(){
@@ -1105,13 +1105,42 @@ myip(){
 dig +short myip.opendns.com @resolver1.opendns.com
 }
 
-check_router_door(){
-
+check_router_door(){ 
+# echo $"Port to scan Example of proper form: \"-100,200-1024,T:3000-4000,U:60000-\""
+# read   
+# 
+#     if [[ -z "$REPLY" ]];then
+#         port="tcp"
+#     else
+#         port="$REPLY"
+#     fi
+# REPLY=""
+# echo
+# 
+# variable="$port" 
+# 
+# case "$variable" in
+# 
+# 1)tcp
+# 
+# ;;
+# 2)
+# ;;
+# *)
+# echo $"invalid option sorry... exiting"
+# exit 2
+# ;;
+# esac
 
 ip=$(dig +short myip.opendns.com @resolver1.opendns.com)
-nmap -p U:27960,T:27960 $ip 
+#nmap -p U:27960,T:27960 $ip 
+sudo nmap -T5 -A -p  27950,27960 -sU $ip 
 }
 
 check_listening_port(){
 ss -tul
+}
+
+swapoff_on(){
+sudo swapoff -a && sudo swapon -a 
 }
