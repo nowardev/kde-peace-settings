@@ -165,6 +165,7 @@ li			#list packages installed		dpkg --get-selections | grep -v deinstall
 r			#remove a package			sudo apt-get --auto-remove remove 
 p			#remove a packate & conf file		sudo apt-get --purge --auto-remove remove
 s			#search for a software			apt-cache search 
+sn 			#search with only names 		apt-cache search --names-only
 a			#autoremove a software			sudo apt-get autoremove
 
 special ones :
@@ -195,6 +196,19 @@ format_to_btrfs		#format with force option to btrfs	sudo mkfs.btrfs -f \$1\"
 	
 } 
 
+# sn(){
+# apt-cache search $1| cut -d " " -f 1
+# }
+
+
+sna(){
+
+echo "apt-cache search $1"
+apt-cache search $1| cut -d " " -f 1
+ 
+ 
+}
+
 alf(){
 
 echo "apt-file list $1"
@@ -209,6 +223,7 @@ echo
 complete -F peacefun  ai 
 complete -F peacefun  i 
 complete -F peacefun  s 
+complete -F peacefun  sn 
 complete -F peacefun  p 
 complete -F peacefun  r
 complete -F peacefun  ad 
@@ -1065,7 +1080,7 @@ bst_m(){
 }
 
 urbanterror(){
-/home/shared/game/./gioco.x86_64  "$1" "$2"
+/home/shared/game/./gioco.x86_64  "$1" "$2" +exec keyboard.cfg
 }
 urbanterrorserver(){
 /home/shared/game/./gioco.x86_64   +exec server.cfg
@@ -1141,6 +1156,24 @@ check_listening_port(){
 ss -tul
 }
 
-swapoff_on(){
+sem_swapoff_on(){
 sudo swapoff -a && sudo swapon -a 
+}
+sem_swapoff(){
+sudo swapoff -a 
+}
+
+lsdate(){
+
+ls -t "$PWD"
+}
+
+
+lsdatereverse(){
+
+ls -tr "$PWD"
+}
+
+dlyoutube(){
+youtube-dl -t "$1"
 }
