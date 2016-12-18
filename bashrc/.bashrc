@@ -1044,6 +1044,11 @@ LC_ALL=it_IT.utf8 date
 
 }
 
+kwinrestarter(){
+export $(dbus-session)
+export DISPLAY=:0
+kwin --replace 
+}
 nocapslock(){
 setxkbmap -option caps:none
 }
@@ -1058,36 +1063,91 @@ LC_ALL=it_IT.utf8 date
 
 }
 
-bst_t(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27960"
+playdemout(){
+
+/home/shared/game/./gioco.x86_64 +exec demowatcher.cfg   "$1"
 
 }
 
+east_c_old(){
+
+/home/shared/game/./gioco.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg 
+
+}
+
+bst_t(){
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg 
+
+}
+
+
+bst_j_old(){
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27961"  +exec keyboard.cfg 
+
+}
 
 bst_j(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27961"
+/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27965"  +exec keyboard.cfg 
 
 }
 
+
+
 bst_c(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27962"
+/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27962"  +exec keyboard.cfg 
 
 }
 
 bst_m(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27963" +password fun
+/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27963"  +exec keyboard.cfg  +password fun
 
 }
 
 urbanterror(){
+if [[ -z $1 ]]; then 
+
 /home/shared/game/./gioco.x86_64  "$1" "$2" +exec keyboard.cfg
+else
+/home/shared/game/./gioco.x86_64  +connect "$1" +exec keyboard.cfg 
+fi 
 }
 urbanterrorserver(){
-/home/shared/game/./gioco.x86_64   +exec server.cfg
+/home/shared/game/./gioco.x86_64   +exec server.cfg  +exec keyboard.cfg
 }
 
+playdemout(){
+
+/home/shared/game/./gioco.x86_64 +exec demowatcher.cfg   "$1"
+
+}
+
+east_c_old(){
+
+/home/shared/game/./gioco.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg +exec keyboard.cfg 
+
+}
+
+east_c(){
+
+for file in /home/sem/.q3a/q3ut4/east/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done  ; rm /home/sem/.q3a/q3ut4/authkey
+/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64   +connect "216.52.148.134:27960" +exec keyboard.cfg 
+for file in /home/sem/.q3a/q3ut4/copy4.3settings/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done 
+}
+
+
+bst_t3(){
+/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg +password vilain
+
+}
+
+
+
+
+
+
+
 urbanterrormyserverCONNECT(){
-/home/shared/game/./gioco.x86_64 +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
+/home/shared/game/./gioco.x86_64  +exec keyboard.cfg +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
 }
 
 keyboard_disabler(){
@@ -1156,7 +1216,7 @@ check_listening_port(){
 ss -tul
 }
 
-sem_swapoff_on(){
+swapoffon(){
 sudo swapoff -a && sudo swapon -a 
 }
 sem_swapoff(){
@@ -1176,4 +1236,48 @@ ls -tr "$PWD"
 
 dlyoutube(){
 youtube-dl -t "$1"
+}
+
+qrencodeauto(){
+qrencode -o /tmp/rencode.jpeg "$1"
+echo "qrencode -o /tmp/rencode.jpeg "$1"" 
+
+}
+wgetwebsite(){
+
+
+#pass="$(read -p "password")"
+#username="$(read -p "username")"
+cd /tmp ; wget --http-user=$username --http-password=$pass https://www.ubibanca.com/
+}
+
+swapcheker(){
+free -m | awk '/buffers\/cache/{print $4}'
+}
+
+linksem(){
+
+read -e -p "
+REMEMBER YOU HAVE TO BE IN THE FOLDER WHERE YOU WANT TO LINK A FOLDER THAT WILL HAVE THE SAME NAME
+
+insert folder to link: 
+
+"
+
+#get last char to check if / or somehting else
+i="$((${#REPLY}-1))"
+lastchar="${REPLY:$i:1}"
+
+if [[ "$lastchar" == "/" ]] ; then 
+name=${REPLY%*/} ; name=${name##*/}
+else
+name="${REPLY%/*} "
+fi
+#pwd the actual folder
+
+ 
+echo doing "ln -s "$REPLY" "$PWD/$name""
+ln -s "$REPLY" "$PWD/$name"
+echo 'done!'
+
 }
