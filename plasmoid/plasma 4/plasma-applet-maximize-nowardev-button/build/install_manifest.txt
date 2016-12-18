@@ -1,0 +1,8 @@
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/contents/config/config.qml
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/contents/config/main.xml
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/contents/ui/ControlButton.qml
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/contents/ui/ConfigAppearance.qml
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/contents/ui/ConfigMouseControl.qml
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/contents/ui/main.qml
+/usr/local/share/plasma/plasmoids/org.kde.maximizenowardevButton/metadata.desktop
+/usr/local/share/kservices5/plasma-applet-org.kde.maximizenowardevButton.desktop
