@@ -1281,3 +1281,7 @@ ln -s "$REPLY" "$PWD/$name"
 echo 'done!'
 
 }
+plasmashellinteractiveconsole(){
+ qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.showInteractiveConsole
+
+}
