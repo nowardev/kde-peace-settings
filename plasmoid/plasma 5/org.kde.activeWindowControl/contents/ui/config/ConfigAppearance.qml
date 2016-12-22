@@ -129,7 +129,7 @@ Item {
 
                 Item {
                     width: 2
-                    height: 10
+                    height: 11
                     Layout.columnSpan: 2
                 }
 

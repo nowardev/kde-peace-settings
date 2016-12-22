@@ -21,16 +21,8 @@
         <entry name="showPinToAllDesktops" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="buttonsOrder" type="Enum">
-            <choices>
-                <choice name="XMm"/>
-                <choice name="XmM"/>
-                <choice name="mMX"/>
-                <choice name="mXM"/>
-                <choice name="MXm"/>
-                <choice name="MmX"/>
-            </choices>
-            <default>3</default>
+        <entry name="buttonsOrder" type="Int">
+            <default>1</default>
         </entry>
         <entry name="doNotHideControlButtons" type="Bool">
             <default>true</default>
@@ -47,7 +39,7 @@
         <entry name="showButtonOnlyWhenMaximized" type="Bool">
             <default>false</default>
         </entry>
-        <entry name="buttonsPosition" type="Enum">
+        <entry name="buttonsPosition" type="Int">
             <choices>
                 <choice name="UpperLeft"/>
                 <choice name="UpperRight"/>

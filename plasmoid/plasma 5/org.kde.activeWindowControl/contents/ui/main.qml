@@ -397,7 +397,7 @@ Item {
     function initializeControlButtonsModel() {
         var preparedArray = []
 
-        var preparedArray = []
+/*        var preparedArray = []
         preparedArray.push({
             iconName: 'close',
             windowOperation: 'close'
@@ -419,9 +419,204 @@ Item {
                 iconName: 'pin',
                 windowOperation: 'togglePinToAllDesktops'
             })
-        }        
+        }    */    
+ 
+
+
+///////////////mMX///////////////////////////////////////////
+    if(plasmoid.configuration.buttonsOrder === 0){
+            
+            if (showMinimize) {
+                preparedArray.push({
+                    iconName: 'minimize',
+                    windowOperation: 'toggleMinimized'
+                })
+
+            if (showMaximize) {
+                preparedArray.push({
+                    iconName: 'maximize',
+                    windowOperation: 'toggleMaximized'
+                })
+            }
+
+            if (showClose) {
+                preparedArray.push({
+                iconName: 'close',
+                windowOperation: 'close'
+            })
+            }
+
+            }
+            if (showPinToAllDesktops) {
+                preparedArray.push({
+                    iconName: 'pin',
+                    windowOperation: 'togglePinToAllDesktops'
+                })
+            }
+        }
+
+//////////////////mXM///////////////////////////////////////////
+    else if(plasmoid.configuration.buttonsOrder === 1){
+            
+            if (showMinimize) {
+                preparedArray.push({
+                    iconName: 'minimize',
+                    windowOperation: 'toggleMinimized'
+                })
+
+            if (showClose) {
+                preparedArray.push({
+                iconName: 'close',
+                windowOperation: 'close'
+            })
+            }
+
+            if (showMaximize) {
+                preparedArray.push({
+                    iconName: 'maximize',
+                    windowOperation: 'toggleMaximized'
+                })
+            }
+
+            }
+
+            if (showPinToAllDesktops) {
+                preparedArray.push({
+                    iconName: 'pin',
+                    windowOperation: 'togglePinToAllDesktops'
+                })
+            }
+    }
+ 
+///////////////MmX///////////////////////////////////////////
+    else if(plasmoid.configuration.buttonsOrder === 2){
+
+            if (showMaximize) {
+                preparedArray.push({
+                    iconName: 'maximize',
+                    windowOperation: 'toggleMaximized'
+                })
+            }
+
+            if (showMinimize) {
+                preparedArray.push({
+                    iconName: 'minimize',
+                    windowOperation: 'toggleMinimized'
+                })
+
+            }
+
+            if (showClose) {
+                preparedArray.push({
+                iconName: 'close',
+                windowOperation: 'close'
+            })
+            }    
+
+            if (showPinToAllDesktops) {
+                preparedArray.push({
+                    iconName: 'pin',
+                    windowOperation: 'togglePinToAllDesktops'
+                })
+            }
+    }            
+    
+//////////////////MXm///////////////////////////////////////////
+    else if(plasmoid.configuration.buttonsOrder === 3){
+
+            if (showMaximize) {
+                preparedArray.push({
+                    iconName: 'maximize',
+                    windowOperation: 'toggleMaximized'
+                })
+            }
+
+            if (showClose) {
+                preparedArray.push({
+                iconName: 'close',
+                windowOperation: 'close'
+            })
+            }     
+    
+            if (showMinimize) {
+                preparedArray.push({
+                    iconName: 'minimize',
+                    windowOperation: 'toggleMinimized'
+                })
+
+            }
+            if (showPinToAllDesktops) {
+                preparedArray.push({
+                    iconName: 'pin',
+                    windowOperation: 'togglePinToAllDesktops'
+                })
+            }
+    }
+
+/////////////////XmM///////////////////////////////////////////    
+    else if(plasmoid.configuration.buttonsOrder === 4) {
+
+    
+            if (showClose) {
+                preparedArray.push({
+                iconName: 'close',
+                windowOperation: 'close'
+            })
+
+            }
+            if (showMinimize) {
+                preparedArray.push({
+                    iconName: 'minimize',
+                    windowOperation: 'toggleMinimized'
+                })
+
+            if (showMaximize) {
+                preparedArray.push({
+                    iconName: 'maximize',
+                    windowOperation: 'toggleMaximized'
+                })
+            }
+
+            }
+            if (showPinToAllDesktops) {
+                preparedArray.push({
+                    iconName: 'pin',
+                    windowOperation: 'togglePinToAllDesktops'
+                })
+            }
+    }
+
+/////////XMm///////////////////////////////////////////
+   else if (plasmoid.configuration.buttonsOrder === 5){
+            if (showClose) {
+                preparedArray.push({
+                iconName: 'close',
+                windowOperation: 'close'
+            })
+            }
+            if (showMaximize) {
+                preparedArray.push({
+                    iconName: 'maximize',
+                    windowOperation: 'toggleMaximized'
+                })
+            }
+            if (showMinimize) {
+                preparedArray.push({
+                    iconName: 'minimize',
+                    windowOperation: 'toggleMinimized'
+                })
+            }
+            if (showPinToAllDesktops) {
+                preparedArray.push({
+                    iconName: 'pin',
+                    windowOperation: 'togglePinToAllDesktops'
+                })
+            }
+    }
+    
+//////////////////////////////////////////////////////////
         
- /*       
+/*    
         switch ( plasmoid.configuration.buttonsOrder) {
 
 ///////////////XMm///////////////////////////////////////////
@@ -481,6 +676,8 @@ Item {
             })
         }
         break;
+        
+        
 ///////////////mMX///////////////////////////////////////////
         case 2:
         

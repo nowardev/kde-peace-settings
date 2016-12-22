@@ -16,7 +16,7 @@ Item {
     property alias cfg_showClose: showClose.checked
     property alias cfg_showMinimize: showMinimize.checked
     property alias cfg_showMaximize: showMaximize.checked
-    property alias cfg_buttonOrder: buttonsOrderCombo.currentIndex
+    property alias cfg_buttonsOrder: buttonsOrderCombo.currentIndex
     property alias cfg_showPinToAllDesktops: showPinToAllDesktops.checked
     property alias cfg_buttonSize: buttonSize.value
     property alias cfg_controlButtonsSpacing: controlButtonsSpacing.value
@@ -64,11 +64,11 @@ Item {
             }
 
             Item {
-                width: 2
-                height: 2
+                width: 5
+                height: 5
                 Layout.rowSpan: 5
             }
-
+            
             CheckBox {
                 id: showMinimize
                 text: i18n("Show minimize button")
@@ -88,16 +88,16 @@ Item {
                 id: showPinToAllDesktops
                 text: i18n("Show pin to all desktops")
             }
-            
             Label {
                     text: i18n('Buttons Order:')
-                    Layout.alignment: Qt.AlignLeft
+                   Layout.alignment: Qt.AlignVCenter|Qt.AlignRight
                 }
                 
             ComboBox {
                     id: buttonsOrderCombo
                     model: [i18n('mMX'), i18n('mXM'), i18n('MmX'), i18n('MXm'), i18n('XmM'), i18n('XMm')]
                 }
+ 
 
             Item {
                 width: 2
