@@ -1,0 +1,6 @@
+/home/shared/git/github/kde-peace-settings/plasmoid/plasma 5/org.kde.activeWindowControl/build/CMakeFiles/install/strip.dir
+/home/shared/git/github/kde-peace-settings/plasmoid/plasma 5/org.kde.activeWindowControl/build/CMakeFiles/install/local.dir
+/home/shared/git/github/kde-peace-settings/plasmoid/plasma 5/org.kde.activeWindowControl/build/CMakeFiles/edit_cache.dir
+/home/shared/git/github/kde-peace-settings/plasmoid/plasma 5/org.kde.activeWindowControl/build/CMakeFiles/rebuild_cache.dir
+/home/shared/git/github/kde-peace-settings/plasmoid/plasma 5/org.kde.activeWindowControl/build/CMakeFiles/list_install_components.dir
+/home/shared/git/github/kde-peace-settings/plasmoid/plasma 5/org.kde.activeWindowControl/build/CMakeFiles/install.dir
