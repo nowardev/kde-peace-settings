@@ -62,6 +62,7 @@ Item {
     property bool buttonsVerticalCenter: plasmoid.configuration.buttonsVerticalCenter
     property bool showControlButtons: plasmoid.configuration.showControlButtons
     property bool showButtonOnlyWhenMaximized: plasmoid.configuration.showButtonOnlyWhenMaximized
+    property bool showButtonAlways: plasmoid.configuration.showButtonAlways
     property bool showClose: showControlButtons && plasmoid.configuration.showClose
     property bool showMinimize: showControlButtons && plasmoid.configuration.showMinimize
     property bool showMaximize: showControlButtons && plasmoid.configuration.showMaximize
@@ -291,7 +292,7 @@ Item {
 
         onEntered: {
             mouseHover = true
-            controlButtonsArea.mouseInWidget = showControlButtons && !noWindowVisible
+            controlButtonsArea.mouseInWidget = showControlButtons && !noWindowVisible || showButtonAlways
         }
 
         onExited: {
@@ -370,8 +371,8 @@ Item {
             property double controlButtonsHeight: parent.height * buttonSize
 
             orientation: ListView.Horizontal
-            opacity: (doNotHideControlButtons || (showControlButtons && mouseInWidget)) && (currentWindowMaximized || !showButtonOnlyWhenMaximized) ? 1 : 0
-            visible: showControlButtons && !noWindowVisible
+            opacity: (doNotHideControlButtons || (showControlButtons && mouseInWidget)) && (currentWindowMaximized || !showButtonOnlyWhenMaximized||showButtonAlways) ? 1 : 0
+            visible: showControlButtons && !noWindowVisible || showButtonAlways
 
             spacing: controlButtonsSpacing
 
