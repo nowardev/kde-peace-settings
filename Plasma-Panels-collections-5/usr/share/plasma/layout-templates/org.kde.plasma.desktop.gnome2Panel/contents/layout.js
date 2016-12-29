@@ -15,7 +15,7 @@
 //You should have received a copy of the GNU General Public License
 //along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-///GNOME2LIKE PANELS  org.kde.plasma.icon //usr/share/applications/org.kde.cuttlefish.desktop org.kde.contextmenu
+///GNOME2LIKE PANELS  
 function remove()
 {
 	for (i in panelIds) {

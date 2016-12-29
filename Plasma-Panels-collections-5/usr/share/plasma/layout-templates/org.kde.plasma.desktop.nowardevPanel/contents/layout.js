@@ -17,6 +17,37 @@
 
 ///nowardev PANEL
 
+function remove()
+{
+	for (i in panelIds) {
+		
+		
+		panelById(panelIds[i]).remove()
+	}
+	
+}
+//////////////////////////////////////////////////////////
+
+
+/////function remove standard///////////////////////////////
+function RemoveOldPanels()
+{
+	for (i in panelIds) {
+		// panelById(panelIds[i]).remove()
+		p = panelById(panelIds[i]);
+		if (typeof p === "undefined") {
+			print("E: Couldn't find first panel")
+			remove() //load the remove function in case of problems
+		}
+		else 	{
+			panelById(panelIds[i]).remove()
+		}
+	}
+}
+
+RemoveOldPanels() //load the function
+//////////////////////////////////////////////////////////
+
 var panel = new Panel
 var panelScreen = panel.screen
 panel.location = "top"
