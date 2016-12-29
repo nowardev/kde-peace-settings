@@ -3,6 +3,7 @@ var panelScreen = panel.screen
 panel.location = "top"
 
 var kickoff = panel.addWidget("org.kde.plasma.kickoff")
+kickoff.currentConfigGroup = ["General"]
 kickoff.writeConfig("favorites","org.kde.kontact.desktop,systemsettings.desktop,google-chrome.desktop,org.kde.ksysguard.desktop,vlc.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop")
 kickoff.writeConfig("showAppsByName","true")
 kickoff.currentConfigGroup = ["Shortcuts"]

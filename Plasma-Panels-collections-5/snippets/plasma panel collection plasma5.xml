@@ -1,0 +1,182 @@
+<snippets namespace="" filetypes="JavaScript" license="LGPL v3+" name="plasma panel collection plasma5" authors="nowarde@gmail.com">
+ <script>function fileName() { return document.fileName(); }
+function fileUrl() { return document.url(); }
+function encoding() { return document.encoding(); }
+function selection() { return view.selectedText(); }
+function year() { return new Date().getFullYear(); }
+function upper(x) { return x.toUpperCase(); }
+function lower(x) { return x.toLowerCase(); }
+</script>
+ <item>
+  <match>activeWindowControlmM</match>
+  <fillin>
+var  activeWindowControlmM = panel.addWidget("org.kde.activeWindowControl")
+activeWindowControlmM.currentConfigGroup = ["Appearance"]
+activeWindowControlmM.writeConfig("buttonSize","1")
+activeWindowControlmM.writeConfig("buttonsOrder","2")
+activeWindowControlmM.writeConfig("buttonsPosition","3")
+activeWindowControlmM.writeConfig("buttonsVerticalCenter","true")
+activeWindowControlmM.writeConfig("controlButtonsSpacing","0")
+activeWindowControlmM.writeConfig("horizontalScreenWidthPercent","0.023")
+activeWindowControlmM.writeConfig("showButtonAlways","true")
+activeWindowControlmM.writeConfig("showControlButtons","true")
+activeWindowControlmM.writeConfig("showMaximize","true")
+activeWindowControlmM.writeConfig("showMinimize","true")
+activeWindowControlmM.writeConfig("showWindowIcon","false")
+activeWindowControlmM.writeConfig("showWindowTitle","false")
+activeWindowControlmM.writeConfig("widthFineTuning","6")
+</fillin>
+ </item>
+ <item>
+  <match>activeWindowControlX</match>
+  <fillin>
+var  activeWindowControlX = panel.addWidget("org.kde.activeWindowControl")
+activeWindowControlX.currentConfigGroup = ["Appearance"]
+activeWindowControlX.writeConfig("buttonSize","1")
+activeWindowControlX.writeConfig("buttonsOrder","4")
+activeWindowControlX.writeConfig("buttonsPosition","3")
+activeWindowControlX.writeConfig("buttonsVerticalCenter","true")
+activeWindowControlX.writeConfig("horizontalScreenWidthPercent","0.022000000000000002")
+activeWindowControlX.writeConfig("showButtonAlways","true")
+activeWindowControlX.writeConfig("showClose","true")
+activeWindowControlX.writeConfig("showControlButtons","true")
+activeWindowControlX.writeConfig("showWindowIcon","false")
+activeWindowControlX.writeConfig("showWindowTitle","false")
+</fillin>
+ </item>
+ <item>
+  <match>panel.reloadConfig</match>
+  <fillin>
+panel.reloadConfig()
+</fillin>
+ </item>
+ <item>
+  <match>panel_bottom</match>
+  <fillin>
+var panel = new Panel
+var panelScreen = panel.screen
+panel.location = "bottom"
+${cursor}
+</fillin>
+ </item>
+ <item>
+  <match>panel_top</match>
+  <fillin>var panel = new Panel
+var panelScreen = panel.screen
+panel.location = "top${cursor}"</fillin>
+ </item>
+ <item>
+  <match>panel_right</match>
+  <fillin>
+var panel = new Panel
+var panelScreen = panel.screen
+panel.location = "right"
+${cursor}</fillin>
+ </item>
+ <item>
+  <match>panel_left</match>
+  <fillin>
+var panel = new Panel
+var panelScreen = panel.screen
+panel.location = "left"
+${cursor}
+</fillin>
+ </item>
+ <item>
+  <match>panel_addWidget</match>
+  <fillin>= panel.addWidget("${cursor}")</fillin>
+ </item>
+ <item>
+  <match>taskmanager_icontask</match>
+  <fillin>
+var icontasks = panel.addWidget("org.kde.plasma.icontasks")
+icontasks.currentConfigGroup = ["General"]
+icontasks.writeConfig("highlightWindows","true")
+icontasks.writeConfig("launchers","file:///usr/share/applications/systemsettings.desktop,file:///usr/share/applications/org.kde.konsole.desktop,file:///usr/share/applications/org.kde.dolphin.desktop,file:///usr/share/applications/org.kde.ksysguard.desktop,file:///usr/share/applications/google-chrome.desktop,file:///usr/share/applications/vlc.desktop,file:///usr/share/applications/org.kde.kdenlive.desktop,file:///usr/share/applications/org.kde.kate.desktop")
+icontasks.writeConfig("middleClickAction","NewInstance")
+icontasks.writeConfig("showToolTips","false")
+</fillin>
+ </item>
+ <item>
+  <match>netspeed</match>
+  <fillin> var netspeed = panel.addWidget("org.kde.netspeedWidget")
+netspeed.currentConfigGroup = ["Appearance"]
+netspeed.writeConfig("fontSize","40")
+${cursor}</fillin>
+ </item>
+ <item>
+  <match>volume</match>
+  <fillin>var volume = panel.addWidget("org.kde.plasma.volume")
+</fillin>
+ </item>
+ <item>
+  <match>kdeconnect</match>
+  <fillin>var kdeconnect = panel.addWidget("org.kde.kdeconnect")
+</fillin>
+ </item>
+ <item>
+  <match>systemtray</match>
+  <fillin>var systemtray = panel.addWidget("org.kde.plasma.systemtray")
+systemtray.currentConfigGroup = ["General"]
+systemtray.writeConfig("extraItems","org.kde.kdeconnect,org.kde.plasma.mediacontroller,org.kde.plasma.notifications,org.kde.plasma.devicenotifier,org.kde.plasma.clipboard,org.kde.plasma.battery")
+systemtray.writeConfig("knownItems","org.kde.kdeconnect,org.kde.ktp-contactlist,org.kde.plasma.mediacontroller,org.kde.plasma.printmanager,org.kde.plasma.notifications,org.kde.plasma.devicenotifier,org.kde.plasma.clipboard,org.kde.plasma.battery")</fillin>
+ </item>
+ <item>
+  <match>calendar</match>
+  <fillin>
+var calendar = panel.addWidget("org.kde.plasma.digitalclock")
+</fillin>
+ </item>
+ <item>
+  <match>username</match>
+  <fillin>
+var userswitcher = panel.addWidget("org.kde.plasma.userswitcher")
+</fillin>
+ </item>
+ <item>
+  <match>lockout</match>
+  <fillin>
+var lockout = panel.addWidget("org.kde.plasma.lock_logout")
+lockout.currentConfigGroup = ["General"]
+lockout.writeConfig("show_lockScreen","false")</fillin>
+ </item>
+ <item>
+  <match>weekday</match>
+  <fillin>
+var dayofweek = panel.addWidget("org.kde.contrib.dayofweek")
+</fillin>
+ </item>
+ <item>
+  <match>daymonth</match>
+  <fillin>
+var dayofmonth = panel.addWidget("org.kde.contrib.dayofmonth")
+</fillin>
+ </item>
+ <item>
+  <match>printer</match>
+  <fillin>
+var printer = panel.addWidget("org.kde.plasma.printmanager")
+</fillin>
+ </item>
+ <item>
+  <match>networkmanager</match>
+  <fillin>
+var network = panel.addWidget("org.kde.plasma.networkmanagement")
+</fillin>
+ </item>
+ <item>
+  <match>menu_standard</match>
+  <fillin>var kickoff = panel.addWidget("org.kde.plasma.kickoff")
+kickoff.currentConfigGroup = ["General"]
+kickoff.writeConfig("favorites","org.kde.kontact.desktop,systemsettings.desktop,google-chrome.desktop,org.kde.ksysguard.desktop,vlc.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop")
+kickoff.writeConfig("showAppsByName","true")
+kickoff.currentConfigGroup = ["Shortcuts"]
+kickoff.writeConfig("global", "Alt+F1")
+
+</fillin>
+ </item>
+ <item>
+  <match>taskmanager_standard</match>
+  <fillin>var taskmanagerstandard =panel.addWidget("org.kde.plasma.taskmanager")</fillin>
+ </item>
+</snippets>
