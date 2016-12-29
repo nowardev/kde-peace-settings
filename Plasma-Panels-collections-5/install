@@ -1,0 +1,107 @@
+#!/bin/bash
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+
+#This file is part of kde-peace-settings.
+
+#kde-peace-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+version=5
+
+#/usr/share/kservices5/ /usr/share/plasma/layout-templates/org.kde.plasma.desktop.nowardevPanel/
+
+function_install(){ 
+	
+	
+	#right actions
+	for file in "$PWD"/usr/share/kservices5/*.desktop ; do
+		cp "$file"    /usr/share/kservices5/
+		
+		done
+		
+		
+		#plasma files 
+		
+		for folders in "$PWD"/usr/share/plasma/layout-templates/*/ ; do
+			cp -r "$folders"   /usr/share/plasma/layout-templates/
+			done
+			
+			
+			
+}
+
+function_uninstall(){
+	
+	for folders in  /usr/share/plasma/layout-templates/org.kde.plasma.desktop.nowardevPanel/ ; do 
+		
+		if [[ -d "$folders" ]]; then
+			rm -R $folders
+			fi 
+			
+			done
+			
+			
+			for file in /usr/share/kservices5/plasma-layout-template-org.kde.plasma.desktop.nowardevPanel.desktop  ; do
+				
+				
+				if [[ -e "$file" ]]; then
+					rm  "$file"
+					fi 
+					
+					done
+					
+					
+					
+}
+
+
+
+if [ "$(id -u)" = 0 ]; then 
+	echo "you have the power lol" 
+	echo "installing..."
+	else 
+		echo "YOU ARE NOT ROOT TO INSTALL  YOU MUST BE ROOT. "
+		echo "have you typed wrong password?"
+		exit 0
+		fi
+		
+		echo "
+		###############################################
+		i     to install Plasma Panels Collection $version
+		u    to unistall Plasma Panels Collection $version
+		###############################################
+		
+		Do you want install or unistall  (i\u)"
+		read
+		case $REPLY in
+		[i/I][n/N][s/S][t/T][a/A][l/L][l/L]|[i/I]) 
+		
+		
+		
+		function_install
+		echo "done"
+		
+		;;
+		
+		[u/U][n/N][s/S][t/T][a/A][l/L][l/L]|[u/U])
+		function_uninstall
+		echo " done"
+		;; 
+		
+		*)
+		echo "dude u to unistall i to install"
+		exit
+		;;
+		esac
+		
+		
