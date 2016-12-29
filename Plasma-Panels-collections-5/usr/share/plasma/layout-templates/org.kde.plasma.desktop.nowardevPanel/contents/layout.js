@@ -1,4 +1,23 @@
- var panel = new Panel
+//Copyright (C) 2016 nowardev nowardev@gmail.com
+
+//This file is part of kde-peace-settings.
+
+//kde-peace-settings is free software: you can redistribute it and/or modify
+//it under the terms of the GNU General Public License as published by
+//the Free Software Foundation, either version 3 of the License, or
+//(at your option) any later version.
+//
+//This program is distributed in the hope that it will be useful,
+//but WITHOUT ANY WARRANTY; without even the implied warranty of
+//MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+//GNU General Public License for more details.
+//
+//You should have received a copy of the GNU General Public License
+//along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+///nowardev PANEL
+
+var panel = new Panel
 var panelScreen = panel.screen
 panel.location = "top"
 
@@ -68,32 +87,4 @@ activeWindowControlX.writeConfig("showClose","true")
 activeWindowControlX.writeConfig("showControlButtons","true")
 activeWindowControlX.writeConfig("showWindowIcon","false")
 activeWindowControlX.writeConfig("showWindowTitle","false")
-
-
-// var kickoff = panel.addWidget("org.kde.plasma.kickoff")
-// kickoff.writeConfig("favorites","org.kde.kontact.desktop,systemsettings.desktop,google-chrome.desktop,org.kde.ksysguard.desktop,vlc.desktop,org.kde.dolphin.desktop,org.kde.kate.desktop)
-// kickoff.writeConfig("showAppsByName"."true")
-// kickoff.currentConfigGroup = ["Shortcuts"]
-// kickoff.writeConfig("global", "Ctrl+Shift+F1")
-
-
-
-//panel.addWidget("org.kde.plasma.showActivityManager")
-// panel.addWidget("org.kde.plasma.pager")
-// panel.addWidget("org.kde.plasma.taskmanager")
-
- 
-//     var  activeWindowControl3= panel.addWidget("org.kde.maximizenowardevButton")
-//       var  activeWindowControl4= panel.addWidget("org.kde.closenowardevButton")
-
-/* 
-var  activeWindowControl= panel.addWidget("org.kde.nowadevButtons")
-activeWindowControl.currentConfigGroup = ["Appearance"]
-activeWindowControl.writeConfig("buttonSize", "1")
-
-activeWindowControl.writeConfig("showControlButtons", "true")
-activeWindowControl.writeConfig("showClose", "true")
-activeWindowControl.writeConfig("showMinimize", "true")
-activeWindowControl.writeConfig("showMaximize", "true")*/
-
 panel.reloadConfig()
