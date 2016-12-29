@@ -2,6 +2,15 @@
 # see /usr/share/doc/bash/examples/startup-files (in the package bash-doc)
 # for examples
 
+#check if your silly $HOME/bin is in your path 
+if [[ -d "$HOME/bin" && $PATH != *"$HOME/bin"*  ]] ; then
+    export PATH=$PATH:$HOME/bin
+elif [[ -d "$HOME/bin" ]] ; then 
+
+    echo "Your PATH contains your $HOME/bin ..OK skipping "
+else 
+    echo "$HOME/bin do not exist.... skipping  "
+fi 
 # If not running interactively, don't do anything
 case $- in
     *i*) ;;
@@ -16,7 +25,7 @@ HISTCONTROL=ignoredups
 shopt -s histappend
 
 # for setting history length see HISTSIZE and HISTFILESIZE in bash(1)
-HISTSIZE=1000
+HISTSIZE=3000
 HISTFILESIZE=2000
 
 # check the window size after each command and, if necessary,
@@ -144,6 +153,7 @@ alias uf="echo sudo apt-get upgrade -y  && sudo apt-get upgrade -y"
 alias gf="sudo apt-get dist-upgrade -y"
 alias i="sudo apt-get install -y "
 alias ai="apt-cache show"
+alias lfd="sudo apt-file update  && apt-file list "
 alias li="dpkg --get-selections | grep -v deinstall"
 alias ad="apt-cache depends"
 alias r="sudo apt-get remove --auto-remove"
@@ -153,6 +163,7 @@ alias a="sudo apt-get autoremove"
 alias save-apt-list="dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst ; echo saved on $HOME/apt-list.lst"
 alias install-apt-list="sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade"
 alias remove-apt-lock="sudo  rm /var/lib/apt/lists/lock  ; sudo rm /var/lib/dpkg/lock "
+alias wdc="apt-file find "
 alias h="echo \"
 u			#update repository list			sudo apt-get update
 g			#upgrade				sudo apt-get upgrade
@@ -162,6 +173,8 @@ d			#dependences				apt-cache depends with awk
 i			#install packages			sudo apt-get install -y 
 ai			#information about the package		apt-cache show
 li			#list packages installed		dpkg --get-selections | grep -v deinstall
+lfd                     #list file in a debian package          apt-file list package_name
+wdc                     #which debian contains this file        apt-file find /my/file
 r			#remove a package			sudo apt-get --auto-remove remove 
 p			#remove a packate & conf file		sudo apt-get --purge --auto-remove remove
 s			#search for a software			apt-cache search 
@@ -220,7 +233,8 @@ d(){
 apt-cache show "$1" | awk '/Depen/ || /Rec/{ gsub(/\,/,"") ;gsub(/Recommends:/,"");gsub(/Depends:/,""); print} ' | awk '{ printf "%s ", $0 }'
 echo 
 }
-complete -F peacefun  ai 
+complete -F peacefun  ai
+complete -F peacefun  lfd
 complete -F peacefun  i 
 complete -F peacefun  s 
 complete -F peacefun  sn 
@@ -233,6 +247,9 @@ complete -F peacefun  b
 complete -F peacefun  ub 
 
 
+search_bashhistory(){
+grep -i "$1" ~/.bash_history
+}
 conferencepulse()
 {
 #license gpl 
@@ -1049,6 +1066,13 @@ export $(dbus-session)
 export DISPLAY=:0
 kwin --replace 
 }
+
+kwinrestarter5(){
+# export $(dbus-session)
+export DISPLAY=:0  && kwin_x11 --replace
+
+}
+
 nocapslock(){
 setxkbmap -option caps:none
 }
@@ -1284,4 +1308,15 @@ echo 'done!'
 plasmashellinteractiveconsole(){
  qdbus org.kde.plasmashell /PlasmaShell org.kde.PlasmaShell.showInteractiveConsole
 
+}
+
+semscreenshotunder(){
+i=0
+file="/tmp/Screenshot-$i.jpeg"
+while [[  -e $file ]] 
+do 
+i=$((i+1)) 
+file="/tmp/Screenshot-$i.jpeg"
+done
+sleep 3;     spectacle -a -f -b -d 3 -o "$file"
 }
