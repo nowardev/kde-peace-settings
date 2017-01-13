@@ -1160,7 +1160,7 @@ for file in /home/sem/.q3a/q3ut4/copy4.3settings/* ; do  cp $file /home/sem/.q3a
 
 
 bst_t3(){
-/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg +password vilain
+/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt2.bsturt.info):27960" +exec keyboard.cfg +password vilain
 
 }
 
@@ -1310,7 +1310,7 @@ plasmashellinteractiveconsole(){
 
 }
 
-semscreenshotunder(){
+screenshotunder(){
 i=0
 file="/tmp/Screenshot-$i.jpeg"
 while [[  -e $file ]] 
@@ -1319,4 +1319,82 @@ i=$((i+1))
 file="/tmp/Screenshot-$i.jpeg"
 done
 sleep 3;     spectacle -a -f -b -d 3 -o "$file"
+}
+
+screenshotunder_text(){
+outfolder="/tmp"
+tempfilename="$outfolder/hello.jpeg"
+i=0
+file="/tmp/Screenshot-$i.jpeg"
+while [[  -e $file ]] 
+do 
+i=$((i+1)) 
+file="/tmp/Screenshot-$i.jpeg"
+done
+kdialog --yesno "Click Yes to grab the screenshot"
+sleep 3;     spectacle -f -b -u  -o "$file" 
+
+convert "$file" -gravity south -stroke '#000C' -strokewidth 2 -pointsize 48 -annotate 0   'Nowardev.wordpress.com' -stroke  none   -fill white  -pointsize 48  -annotate 0 'Nowardev.wordpress.com'  "$tempfilename" 
+cp "$tempfilename" "$file"
+echo "convert "$tempfilename" -gravity south -stroke '#000C' -strokewidth 2 -annotate 0 -pointsize 48  'Nowardev.wordpress.com' -stroke  none   -fill white    -annotate 0 -pointsize 48 'Nowardev.wordpress.com'  "$file" "
+          
+}
+
+mkdirmultiple(){
+mkdir -p "$1"
+}
+
+qemuiso(){
+ram="1024"
+vnc="-vnc :1" #enable vnc
+hdd="-hda"
+soundcard="ac97"
+keyboard="it"
+echo "qemu-system-x86_64  -machine pc,accel=kvm -m $ram -k $keyboard -soundhw $soundcard $vnc $hdd "/home/shared/virtualboxes/mynew_qemu_image.img" -boot d -cdrom /home/shared/iso 2016/neon-devedition-gitstable-20170102-1047-amd64.iso"
+
+qemu-system-x86_64  -machine pc,accel=kvm -m $ram -k $keyboard -soundhw $soundcard $vnc $hdd "/home/shared/virtualboxes/mynew_qemu_image.img" -boot d -cdrom "/home/shared/iso 2016/neon-devedition-gitstable-20170102-1047-amd64.iso"
+
+}
+
+scan-multiple-pages-to-pdf(){
+# hp-scan --adf -o "$1.pdf"
+
+tempimagefolder="$1"
+
+if [[  -d "$tempimagefolder"  ]] ; then
+rm -R "$tempimagefolder" 
+mkdir "$tempimagefolder"
+else
+mkdir "$tempimagefolder"
+fi 
+
+
+resolution=100
+a="$PWD"
+cd "$tempimagefolder" 
+scanimage -b --batch-count=n --source ADF --resolution $resolution 
+b=()
+for file in *.pnm ; do  b=("${b[@]}" "$file") ; done 
+convert "${b[@]}" "$a/$1.pdf"
+cd "$a" 
+}
+
+scan-multiple-images(){
+tempimagefolder="$1"
+directory="$tempimagefolder"
+if [[  -d "$directory"  ]] ; then
+rm -R "$directory" 
+mkdir "$tempimagefolder"
+else
+mkdir "$tempimagefolder"
+fi 
+
+
+resolution=100
+a="$PWD"
+cd "$tempimagefolder" 
+scanimage -b --batch-count=n --source ADF --resolution $resolution 
+for file in *.pnm ; do convert "$file" "${file%%.*}.jpg" ; done 
+
+
 }
