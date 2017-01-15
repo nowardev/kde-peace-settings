@@ -1,0 +1,92 @@
+#Copyright (C) 2012 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-nowardev-settings.
+ 
+#kde-nowardev-settings is free software: you can redistribute it and/or modify
+#it under the terms of the GNU General Public License as published by
+#the Free Software Foundation, either version 3 of the License, or
+#(at your option) any later version.
+#
+#This program is distributed in the hope that it will be useful,
+#but WITHOUT ANY WARRANTY; without even the implied warranty of
+#MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+#GNU General Public License for more details.
+#
+#You should have received a copy of the GNU General Public License
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
+
+#
+#
+#INSTALLATION
+#
+#copy this service menu on $HOME/.kde/share/kde4/services if you are not root
+#
+#if you are root copy this service menu  $(kde4-config --prefix)/share/kde4/services/ServiceMenus/
+#
+#VERSION 0.6 pdf,printpdf
+[Desktop Entry]
+Actions=scanner;scannermultiple;singlepdf;pdf;scanprint;printmultiple;changesettings;deletesettings
+Icon=document-properties-key
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory
+Type=Service
+# X-KDE-Priority=TopLevel
+X-KDE-Submenu=Acquire With Scanner
+X-KDE-Submenu[it]=Acquisisci Da scanner
+X-KDE-Submenu[de]=Vom Scanner holen
+
+[Desktop Action scanner]
+Exec=kde-service-menu-nowardev-scanner -s  %u/$(kdialog --textinputbox $"Insert name ex : NewScannerDocument" NewScannerDocument ).ppm 
+Icon=scanner
+Name=New Document From Scanner 
+Name[it]=Nuovo Documento Da Scanner
+Name[de]=Neues Dokument von Scanner
+
+[Desktop Action singlepdf]
+Exec=kde-service-menu-nowardev-scanner -spdf  %u/$(kdialog --textinputbox $"Insert name ex : NewSinglePdfDocument" NewSinglePdfDocument ).pdf 
+Icon=scanner
+Name=New Pdf Single Page
+Name[it]=Nuovo Pdf Pagina Singola
+
+
+[Desktop Action scannermultiple]
+Exec=kde-service-menu-nowardev-scanner -sm  %u $(kdialog --textinputbox $"Insert base-name ex : NewScannerDocument" NewScannerDocument ) 
+Icon=scanner
+Name=New Multi-Images 
+Name[it]=Nuovo Multi Immagine
+
+[Desktop Action pdf]
+Exec=kde-service-menu-nowardev-scanner -smpdf  %u $(kdialog --textinputbox $"Insert base-name ex : NewPdf" NewPdf ) 
+Icon=scanner
+Name=New Multi Page Pdf 
+Name[it]=Nuovo Multi Pagina PDF
+
+[Desktop Action scanprint]
+Exec=kde-service-menu-nowardev-scanner -sp   && echo %u > /dev/null 
+Icon=printer
+Name=Print From Scanner
+Name[it]=Stampa Da Scanner
+Name[de]=Drucken von Scanner
+
+
+[Desktop Action printmultiple]
+Exec=kde-service-menu-nowardev-scanner -smpdfp   && echo %u > /dev/null 
+Icon=printer
+Name=Print Multiple Documents
+Name[it]=Stampa Multi Documenti
+ 
+
+
+[Desktop Action changesettings]
+Exec=kate "$HOME/.config/kde-service-menu-nowardev-scanner.cfg" && echo %u > /dev/null 
+Icon=story-editor
+Name=Settings
+Name[it]=Impostazioni
+Name[de]=Einstellungen
+
+[Desktop Action deletesettings]
+Exec=rm "$HOME/.config/kde-service-menu-nowardev-scanner.cfg" && echo %u > /dev/null 
+Icon=edit-delete
+Name=Delete Settings
+Name[it]=Cancella Impostazioni
+Name[de]=Einstellungen löschen
+
