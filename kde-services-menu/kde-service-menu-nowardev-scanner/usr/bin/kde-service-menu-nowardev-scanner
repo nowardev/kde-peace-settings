@@ -24,11 +24,13 @@ tempfolder="/tmp/kde-service-menu-scan-folder"
 logfile="/tmp/kde-servicemenu-nowardev-scan.log"
 lprparameters="-o fitplot"
 version="0.6"
-
-
+set -x
+NOTIFIER="echo"
+NOTIFIERERROR="echo" 
+set +x
 
 function_help(){
-	echo "
+a="
 This Service menu  let you to acquire a picture from your scanner directly in Dolphin, kde file manager. 
 it should be able to detect your scanner settings if not just read  he manual of scanimage 
 
@@ -40,9 +42,10 @@ USE :
 
 
 kde-service-menu-nowardev-scanner -s /home/test/filename       Create a file
+kde-service-menu-nowardev-scanner -spdf /home/test basename    Create a pdf File
 kde-service-menu-nowardev-scanner -sp                          Print an image from scanner
-kde-service-menu-nowardev-scanner -sm /home/test/filename      Create a Multiple Files
-kde-service-menu-nowardev-scanner -smpdf /home/test/filename   Create a pdf Multiple Pages
+kde-service-menu-nowardev-scanner -sm /home/test basename      Create a Multiple Pages
+kde-service-menu-nowardev-scanner -smpdf /home/test basename   Create a pdf Multiple Pages
 kde-service-menu-nowardev-scanner -smpdfp                      Create a pdf and Print it Multiple pages
 
 note: 
@@ -60,10 +63,66 @@ size X: 215
 size Y: 297 
 mode: Color
 format: jpeg
+notification: true
 	
 version: $version
 "
+echo "$a" 
+
 }
+function_notify(){
+message="$@"
+if [[ $notification == "true" || -z $notification  ]] ; then 
+	program[1]="notify-send"
+	program[2]="kdialog"
+ 
+	param[1]="-t 3000 \"KDE-service-menu-nowardev-scanner\" "
+	param[2]="--title \"KDE-service-menu-nowardev-scanner\" --passivepopup"
+ 
+	a=1
+# 	set -x
+for p in "${program[@]}";do 
+    if [[ ! -z $(type -p "$p") ]];then
+        NOTIFIER="${program[$a]} ${param[$a]}"
+        break
+    else
+        a=$(($a+1))
+    fi
+    
+done 
+    if [[ ! -z "$1" ]] ; then 
+        $NOTIFIER "$message" 
+    fi
+fi
+
+}
+
+function_notify_error(){
+if [[ $notification == "true" || -z $notification  ]] ; then 
+	program[1]="kdialog"
+	program[2]="notify-send"
+	param[1]="--title \"KDE-service-menu-nowardev-scanner\" --error"
+	param[2]="-t 3000 \"KDE-service-menu-nowardev-scanner\" "
+
+	a=1
+	set -x
+for p in "${program[@]}";do 
+    if [[ ! -z $(type -p "$p") ]];then
+        NOTIFIERERROR="${program[$a]} ${param[$a]}"
+        break
+    else
+        a=$(($a+1))
+    fi
+    
+done 
+    if [[ ! -z "$1" ]] ; then 
+        $NOTIFIERERROR "$1" 
+    fi
+fi
+
+
+}
+
 
 function_check_programs(){
 	program[1]=convert
@@ -117,7 +176,7 @@ function_detect_mode(){
 
 	$NOTIFIER "${d_mode[1]}"
   
-	if [[ ! -z "${d_mode[1]}" ]]; then  defaultmode=""${d_mode[1]}""; else defaultmode="" ; $NOTIFIER "Not Able to detect mode : should be 'Gray', 'Color' or 'Lineart'.Consider to Turn off and turn on your printer " ; fi 
+	if [[ ! -z "${d_mode[1]}" ]]; then  defaultmode=""${d_mode[1]}""; else defaultmode="" ; $NOTIFIER "Not Able to detect mode : should be Gray Color or Lineart . Consider to Turn off and turn on your printer " ; fi 
 }
 
 function_detect_resolution(){
@@ -139,6 +198,7 @@ function_check_file_settings(){
 		format="$( awk     -F':' '/format: /{gsub(/ /,""); print $2}' "$configfile"  )" 
 		xsize="$( awk     -F':' '/size X: /{gsub(/ /,""); print $2}' "$configfile"  )" 
 		ysize="$( awk     -F':' '/size Y: /{gsub(/ /,""); print $2}' "$configfile"  )"
+		notification="$( awk     -F':' '/notification: /{gsub(/ /,""); print $2}' "$configfile"  )"
 	else 
 		kdialog --passivepopup $"No old configs found ...Detecting Settings .. wait"
 		detection1="$(scanimage -L)"
@@ -209,26 +269,38 @@ function_check_settings(){
 
 }
 
-function_print(){
-	if [[ -z "$(lpstat -d )" ]]; then 
-		kdialog --error $"You have not set a Default printer please set it up"
-	else
-		scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
-		if [[ -e  "$tempfile"  ]]; then 
-			kdialog --passivepopup  $"running this command: sscanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" &&lpr $lprparameters  "$tempfile"
-			
-			"
-			
-			lpr $lprparameters  "$tempfile" 
-		else
-			kdialog --error $"$tempfile doesn't exist. this is the command
-			
-scanimage   --resolution $resolution --mode $mode  > "$tempfile"
 
-and it generates empty file ?"
-		fi 
-	fi 
+
+
+
+
+function_single_image(){
+$NOTIFIER "
+scanimage  $scanimageparameters
+--resolution $resolution
+--mode $mode 
+> "$tempfile" 
+convert "$tempfile"
+"${1%%.*}.$format""
+	#STARTTOSCAN
+	scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
+	convert "$tempfile" "${1%%.*}.$format"
 	
+}
+
+
+function_single_pdf(){
+	$NOTIFIER "
+scanimage  $scanimageparameters  
+--resolution $resolution 
+--mode $mode
+> $tempfile 
+convert $tempfile
+${1%%.*}.pdf"
+	#STARTTOSCAN
+	scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
+	function_check_file  "${1%%.*}.pdf"
+	convert "$tempfile" "${1%%.*}.pdf"
 	
 }
 
@@ -243,17 +315,16 @@ fi
 
 
         
-	$NOTIFIER  "KDE-service-menu-nowardev-scanner 
-	
+$NOTIFIER  "rm -R $tempfolder  
+mkdir $tempfolder
 cd "$tempfolder"
 scanimage -b --batch-count=n --source ADF --resolution $resolution --mode $mode
 a=()
 for f in $tempfolder/*.pnm ; do
-                a=("${a[@]}" "$f")
-                done 
-convert "$f" "$outfolder/$basename.pdf"
-
-rm -R "$tempfolder"  "
+a=(${a[@]} $f)
+done 
+convert $f $outfolder/$basename.pdf
+"
  
         mkdir "$tempfolder"
         cd "$tempfolder"  
@@ -265,8 +336,7 @@ rm -R "$tempfolder"  "
         
 COMMAND LINE 	
 cd "$tempfolder"
-scanimage -b --batch-count=n --source ADF --resolution $resolution --mode $mode
-" >>"$logfile"
+scanimage -b --batch-count=n --source ADF --resolution $resolution --mode $mode" >>"$logfile"
 function_check_file "$outfolder/$basename.pdf"
         a=()
 #         b=0
@@ -279,57 +349,7 @@ function_check_file "$outfolder/$basename.pdf"
 
 }
 
-function_notify(){
 
-if [[ $notification == "true" || -z $notification  ]] ; then 
-	program[1]="notify-send"
-	program[2]="kdialog"
- 
-	param[1]="-t 3000 "
-	param[2]="--title \"kde-service-menu-nowardev-scan\" --passivepopup"
- 
-	a=1
-	set -x
-for p in "${program[@]}";do 
-    if [[ ! -z $(type -p "$p") ]];then
-        NOTIFIER="${program[$a]} ${param[$a]}"
-        break
-    else
-        a=$(($a+1))
-    fi
-    
-done 
-    if [[ ! -z "$1" ]] ; then 
-        $NOTIFIER "$1" 
-    fi
-fi
-
-}
-
-function_notify_error(){
-if [[ $notification == "true" || -z $notification  ]] ; then 
-	program[1]="notify-send"
-	program[2]="kdialog"
-	param[1]="-t 3000 "
-	param[2]="--title \"kde-service-menu-nowardev-scan\" --error"
-	a=1
-	set -x
-for p in "${program[@]}";do 
-    if [[ ! -z $(type -p "$p") ]];then
-        NOTIFIERERROR="${program[$a]} ${param[$a]}"
-        break
-    else
-        a=$(($a+1))
-    fi
-    
-done 
-    if [[ ! -z "$1" ]] ; then 
-        $NOTIFIERERROR "$1" 
-    fi
-fi
-
-
-}
 
 function_create_multi_image(){
 # hp-scan --adf -o /tmp/mymultipages.pdf
@@ -383,40 +403,49 @@ scanimage -b --batch-count=n --source ADF --resolution $resolution --mode $mode
                 echo "no file in temp file Document is on the scanner?Scanner turned on ?" >>"$logfile"
             fi 
         done 
-        
+}
 
+function_print(){
+	if [[ -z "$(lpstat -d )" ]]; then 
+		$NOTIFIERERROR $"You have not set a Default printer please set it up"
+	else
+		scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
+		if [[ -e  "$tempfile"  ]]; then 
+			$NOTIFIER  $"running this command:
+scanimage  $scanimageparameters
+--resolution $resolution
+--mode $mode  > 
+$tempfile 
+lpr $lprparameters
+$tempfile
+"
+			
+			lpr $lprparameters  "$tempfile" 
+		else
+			kdialog --error $"$tempfile doesn't exist. this is the command
+			
+scanimage   --resolution $resolution --mode $mode  > "$tempfile"
 
-    
-    
-        }
-
-
-function_single_image(){
-	$NOTIFIER " scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" && convert "$tempfile" "${1%%.*}.$format""
-	#STARTTOSCAN
-	scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
-	convert "$tempfile" "${1%%.*}.$format"
+and it generates empty file ?"
+		fi 
+	fi 
+	
 	
 }
 
-
-function_single_pdf(){
-	$NOTIFIER " scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" && convert "$tempfile" "${1%%.*}.pdf""
-	#STARTTOSCAN
-	scanimage  $scanimageparameters  --resolution $resolution --mode $mode  > "$tempfile" 
-	convert "$tempfile" "${1%%.*}.pdf"
-	
-}
-
-
-NOTIFIER="echo"
-NOTIFIERERROR="echo" 
 function_notify
+function_notify_error
 function_check_programs
 # set -x
 function_check_file_settings
 # set +x 
-
+echo "PARAMETERS:
+mode: $mode
+resolution: $resolution
+param: $scanimageparameters
+notifier: $NOTIFIER
+notifiererror:$NOTIFIERERROR
+"
 
 
 
@@ -426,37 +455,40 @@ if  [[ $1 == -*  ]]; then
 	
 	  
 	-s) if (($# > 1)); then
-			shift ;for file in "$@"; do
-			function_check_file "$file"
-			function_single_image "$file"
+			shift 
+			filename="$@"
+			echo "$\"filename\""
+# 						set -x
+			function_check_file "$filename.$format"
+			function_single_image "$filename"
+#             set +x
 
-		done
 		  else
 			echo $"-s requires files" 1>&2
 			exit 1
 		  fi ;;
-        -smpdf)if (($# > 1)); then
+    -spdf)if (($# > 1)); then
             shift 
-			function_check_file "$2.pdf"
-            function_create_pdf "$1" "$2"
-        
-		  else
-			echo $"-spdf require something like /tmp/newfile" 1>&2
-			exit 1
-		  fi ;;
-        -spdf)if (($# > 1)); then
-            shift ; for file in "$@"; do
-			function_check_file "$file"
-            function_single_pdf "$file"
-        done
+			filename="$@"
+            echo "$\"filename\""
+			function_check_file "$filename"
+			set -x
+            function_single_pdf "$filename"
+            set +x 
 		  else
 			echo $"-spdf require something like /tmp/newfile" 1>&2
 			exit 1
 		  fi ;;
 		  
-        -sm)if (($# > 1)); then
-        shift 
-			function_create_multi_image "$1" "$2"
+    -sm)if (($# > 1)); then
+            shift 
+            foldername="$1"
+			echo "$\"foldername\""
+            shift
+            filename="$@"
+            echo "$\"filename\""			
+            function_create_multi_image "$foldername" "$filename"
+ 
         
 		  else
 			echo $"-sm require something like /tmp/newfile" 1>&2
@@ -464,10 +496,30 @@ if  [[ $1 == -*  ]]; then
 		  fi 
 		  
 		  
-		  ;;
+            ;;
+    -smpdf)if (($# > 1)); then
+            shift 
+            foldername="$1"
+			echo "$\"foldername\""
+            shift
+            filename="$@"
+            echo "$\"filename\""
+			function_check_file "$filename.pdf"
+            function_create_pdf "$foldername" "$filename"
+        
+		  else
+			echo $"-spdf require something like /tmp/newfile" 1>&2
+			exit 1
+		  fi ;;
+		  
+    -sp)  
+            function_print 
+		
+            ;;
         -smpdfp)if (($# >= 1)); then
             rm "/tmp/$temppdf.pdf"
 			function_create_pdf "/tmp" "$temppdf"
+            echo "lpr $lprparameters  "/tmp/$temppdf.pdf""
             lpr $lprparameters  "/tmp/$temppdf.pdf"
         
 		  else
@@ -475,16 +527,13 @@ if  [[ $1 == -*  ]]; then
 			exit 1
 		  fi ;;
 		  
-	-sp)  
-		function_print 
-		
-	;;
+
 	-ds)
 		if [[ -e "$configfile" ]] ; then
 			rm "$configfile"
-			kdialog --passivepopup $"$configfile removed "
+			$NOTIFIER $"$configfile removed "
 		else
-			kdialog --passivepopup $"$configfile do not exist "
+			$NOTIFIERERROR $"$configfile do not exist "
 		fi 
 	;;
 	

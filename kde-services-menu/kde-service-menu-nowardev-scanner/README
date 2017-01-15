@@ -17,19 +17,42 @@
 
 
 
+########MAKE SURE YOU ARE IN lpadmin and lp groups######
 
+sudo adduser $USER lp
+sudo adduser $USER lpadmin
 
-INSTALLATION
-
-dependences 
+###############DEPENDENCES##############################
 
 awk imagemagick scanimage 
+you should even install  notify-send and\ or kdialog 
 
 debian\kubuntu 
 
-sudo apt-get install gawk imagemagick sane-utils
+sudo apt-get install gawk imagemagick sane-utils libnotify-bin
 
-
+###############INSTALLATION#######################################
 the untar and run the script :
 
 ./install 
+
+###############MANUAL INSTALL###################################### 
+
+
+kde-service-menu-nowardev-scanner
+├── usr
+    ├── bin
+    │   └── kde-service-menu-nowardev-scanner <---copy this in /usr/local/bin or $HOME/bin
+    └── share
+        └── kde4
+            └── services
+                └── ServiceMenus
+                    └── kde-service-menu-peace-scanner.desktop  
+                         |
+                        copy this in /usr/share/kservices5/ServiceMenus/ 
+                        or  /usr/local/share/kservices5/ServiceMenus/  
+                        or  $HOME/.local/share/kservices5/ServiceMenus/
+
+
+
+ 
