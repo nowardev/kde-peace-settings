@@ -15,12 +15,37 @@
 #You should have received a copy of the GNU General Public License
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
+#############WHAT IS IT ###############################
+
+kde-service-menu-nowardev-scanner is a service menu to create 
+images and pdf from your scanner it is tested only on hp photosmart 4500series but
+it should work with others printer\scanners 
+
 
 
 ########MAKE SURE YOU ARE IN lpadmin and lp groups######
 
 sudo adduser $USER lp
 sudo adduser $USER lpadmin
+
+type this:
+
+lpstat -d
+
+if it's empty you need to set a printer like default or it will not print!
+so to set you default printer just do 
+
+lpstat -p -d
+
+it should be something like this :
+
+printer Officejet_4500_G510g-m is idle.  enabled since Sun 15 Jan 2017 11:00:53 PM CET
+printer Officejet_4500_G510g-m_fax is idle.  enabled since Mon 19 Dec 2016 02:26:40 PM CET
+system default destination: Officejet_4500_G510g-m
+
+now you can set your default printer with this 
+
+lpoptions -d  Officejet_4500_G510g-m
 
 ###############DEPENDENCES##############################
 
