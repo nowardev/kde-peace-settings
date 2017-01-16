@@ -19,6 +19,37 @@
 
 
 
-INSTALLATION
+AUTO INSTALLATION
+
+install ffmpeg  then untar and just typer this 
+
+for kde5
+
+./install-kde5
+
+for kde4
 
 ./install 
+
+MANUAL INSTALL
+
+├── kde-service-menu-ffplay
+├── LICENSE
+├── README
+└── usr
+    ├── bin
+    │   └── service-menu-ffplay   <---copy this in /usr/local/bin or $HOME/bin
+    └── share
+        └── kde4
+            └── services
+                └── ServiceMenus
+                    └── ffplay-peace-service-menu-file.desktop
+                        |
+                        copy this in /usr/share/kservices5/ServiceMenus/ 
+                        or  /usr/local/share/kservices5/ServiceMenus/  
+                        or  $HOME/.local/share/kservices5/ServiceMenus/
+                        
+                        for kde 4 ONLY the file is located
+                        $HOME/.kde/share/kde4/services/ or 
+                        /usr/share/kde4/services/
+
