@@ -16,9 +16,9 @@
 #along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 [Desktop Entry]
-Actions=play;playsync;flash;help; 
+Actions=play;playsync;play90;play180;play270;playuser;flash;help; 
 Icon=dolphin
-ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+ServiceTypes=KonqPopupMenu/Plugin,video/*,audio/*
 Type=Service
 X-KDE-Priority=TopLevel
 X-KDE-Submenu=FFplay
@@ -30,6 +30,31 @@ Exec=ffplay "%u"
 Icon=play
 Name=Play with FFplay
 Name[it]=Riproduci con FFplay
+
+[Desktop Action play90]
+Exec=ffplay -vf "rotate=90*(PI/180),format=yuv420p" "%u"
+Icon=play
+Name=Play with FFplay 90° 
+Name[it]=Riproduci con FFplay 90°
+
+[Desktop Action play180]
+Exec=ffplay -vf "rotate=PI,format=yuv420p" "%u"
+Icon=play
+Name=Play with FFplay 180° 
+Name[it]=Riproduci con FFplay 180°
+
+[Desktop Action play270]
+Exec=ffplay -vf "rotate=270*(PI/180),format=yuv420p" "%u"
+Icon=play
+Name=Play with FFplay 270° 
+Name[it]=Riproduci con FFplay 270°
+
+[Desktop Action playuser]
+Exec=a=$(kdialog --textinputbox "Insert an angle:" 45) ; ffplay -vf "rotate=$a*(PI/180),format=yuv420p" "%u"
+Icon=play
+Name=Play with FFplay Angle° 
+Name[it]=Riproduci con FFplay Angle°
+
 
 [Desktop Action flash]
 Exec=service-menu-ffplay -p ;  echo  "%u"> /dev/null
@@ -48,6 +73,9 @@ Exec=ffplay -sync video "%u"
 Icon=play
 Name=Play with syncronization function
 Name[it]=Riproduci con FFplay funzione syncronizazzione attivata
+
+
+
 
 [Desktop Action help]
 Exec=kdialog --msgbox $"This service menu  allow you to play video and audios with ffplay , the flash functions will try to play the flash video that is buffering in konqueror , you can even save your flash files after buffering they will be saved on /tmp folder ..   "    ; echo  "%u"> /dev/null
