@@ -77,7 +77,7 @@ Name[it]=Stampa Multi Documenti
 
 
 [Desktop Action changesettings]
-Exec=kate "$HOME/.config/kde-service-menu-nowardev-scanner.cfg" && echo %u > /dev/null 
+Exec=xdg-open "$HOME/.config/kde-service-menu-nowardev-scanner.cfg" && echo %u > /dev/null 
 Icon=story-editor
 Name=Settings
 Name[it]=Impostazioni

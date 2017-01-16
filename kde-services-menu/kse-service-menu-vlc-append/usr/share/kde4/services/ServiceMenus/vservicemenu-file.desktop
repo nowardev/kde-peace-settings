@@ -1,7 +1,7 @@
 [Desktop Entry]
 Actions=append;appendplay;rotate90;rotate180;rotate270;rotate360;rotate;version;
 Icon=vlc
-ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+ServiceTypes=KonqPopupMenu/Plugin,video/*,audio/*
 Type=Service
 X-KDE-Priority=TopLevel
 X-KDE-Submenu=Vlc Append
