@@ -129,20 +129,45 @@ function wgets()
   wget $H='Accept-Language: en-us,en;q=0.5' $H='Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $H='Connection: keep-alive' -U 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2' --referer=http://www.askapache.com/ "$@";
 }
 
+function tempwget()
+{
+cd /tmp
+  local H='--header'
+  wget $H='Accept-Language: en-us,en;q=0.5' $H='Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $H='Connection: keep-alive' -U 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2' --referer=http://www.askapache.com/ "$@";
+}
+
+function enelelettricita()
+{
+ cd Elettricita ;for file in *.pdf ; do a="$file" ;pdftotext "$a" - | awk '/Bolletta/ {for(i=1;i<=2; i++) {getline;  print}}' | awk '/€|¬/{gsub(/€|¬|kWh|\//,"") ;print $1}'| awk 'NF > 0'   ; done ; cd ..
+
+}
+
+function enelgas()
+{
+ cd gas ;for file in *.pdf ; do a="$file" ;pdftotext "$a" - | awk '/Bolletta/ {for(i=1;i<=2; i++) {getline;  print}}' | awk '/€|¬/{gsub(/€|¬|kWh|cliente|\//,"") ;print $1}'| awk 'NF > 0'   ; done ; cd ..
+
+}
+
+function enelhera()
+{
+cd Acqua ; for file in *.pdf ; do a="$file" ;  pdftotext "$a" - | awk '/Totale da pagare/{print $4}' ; done ; cd ..
+
+}
+
 
 # alias kdmnest="Xephyr -query localhost -screen 800x600 :1"
-# #alias ffmpeg="/home/shared/ffmpeg-01-28-13/./ffmpeg"
-# #alias ffprobe="~/ffmpeg-02-15-12/./ffprobe"
+# #alias ="/home/shared/-01-28-13/./"
+# #alias ffprobe="~/-02-15-12/./ffprobe"
 # #alias peacecalc="a=$1 ; b=$2 ; c=$3 ; echo \"scale=3 ; $a $b $c\" | bc" 
-# alias vrec="/home/shared/ffmpeg-01-28-13/./ffmpeg -s video_size  $(xrandr  | awk '/, current /{print $8}')x$(xrandr  | awk '/, current /{gsub(/\,/,"");print $10}') -f x11grab -r 25  -i :0.0  -vcodec  ljpeg -threads 2 -y  $HOME/output.avi"
-# alias vrecb="/home/shared/ffmpeg-01-28-13/./ffmpeg -s $(xrandr  | awk '/, current /{print $8}')x$(xrandr  | awk '/, current /{gsub(/\,/,"");print $10}') -f x11grab -r 30  -i :0.0  -vcodec  ljpeg -threads 2 -y  $HOME/output.avi"
-# alias tffm="/home/shared/ffmpeg-05-22-12/./ffmpeg"
-# alias youconvert="/home/shared/ffmpeg-01-28-13/./ffmpeg -i  \"$HOME/output.avi\" -sameq -threads 2 $HOME/output.webm"
-# alias screncast="arecord -f cd -t raw | oggenc - -r -o $HOME/out_audio.ogg  & ffmpeg -f x11grab  -s $(xrandr  | awk '/, current /{ gsub(/\,/,""); print $8"x"$10}') -i :0.0  -r 25 -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y -vcodec ljpeg $HOME/out_video.avi"
-# alias screncastb=" ffmpeg -f x11grab  -s $(xrandr  | awk '/, current /{ gsub(/\,/,""); print $8"x"$10}') -i :0.0  -r 25 -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y -vcodec libtheora  -b 2000k  $HOME/out_video.ogv"
+# alias vrec="/home/shared/-01-28-13/./ -s video_size  $(xrandr  | awk '/, current /{print $8}')x$(xrandr  | awk '/, current /{gsub(/\,/,"");print $10}') -f x11grab -r 25  -i :0.0  -vcodec  ljpeg -threads 2 -y  $HOME/output.avi"
+# alias vrecb="/home/shared/-01-28-13/./ -s $(xrandr  | awk '/, current /{print $8}')x$(xrandr  | awk '/, current /{gsub(/\,/,"");print $10}') -f x11grab -r 30  -i :0.0  -vcodec  ljpeg -threads 2 -y  $HOME/output.avi"
+# alias tffm="/home/shared/-05-22-12/./"
+# alias youconvert="/home/shared/-01-28-13/./ -i  \"$HOME/output.avi\" -sameq -threads 2 $HOME/output.webm"
+# alias screncast="arecord -f cd -t raw | oggenc - -r -o $HOME/out_audio.ogg  &  -f x11grab  -s $(xrandr  | awk '/, current /{ gsub(/\,/,""); print $8"x"$10}') -i :0.0  -r 25 -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y -vcodec ljpeg $HOME/out_video.avi"
+# alias screncastb="  -f x11grab  -s $(xrandr  | awk '/, current /{ gsub(/\,/,""); print $8"x"$10}') -i :0.0  -r 25 -threads $(awk '/processor/{print}' /proc/cpuinfo | wc -l) -y -vcodec libtheora  -b 2000k  $HOME/out_video.ogv"
 # alias ascreencast="arecord -f cd -t raw | oggenc - -r -o $HOME/out_audio.ogg"
 # alias ascreencast="arecord -f cd -t raw | oggenc - -r -o $HOME/out_audio.ogg"
-# alias screncast_stop="pkill --signal TERM oggenc & pkill --signal TERM ffmpeg "
+# alias screncast_stop="pkill --signal TERM oggenc & pkill --signal TERM  "
 # 
 
 alias ugf="sudo apt-get update ; sudo apt-get upgrade -y "
@@ -317,7 +342,7 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-/home/shared/git/ffmpeg-05-23-13/./ffmpeg -f alsa -ac 1 -ar 48000 -i hw:2,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+ffmpeg -f alsa -ac 1 -ar 48000 -i hw:2,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
  
 }
 
@@ -330,7 +355,7 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-/home/shared/git/ffmpeg-05-23-13/./ffmpeg -f alsa -ac 2 -ar 48000 -i hw:0,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+ffmpeg -f alsa -ac 2 -ar 48000 -i hw:0,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
 
 echo $file
 }
@@ -344,7 +369,7 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-/home/shared/git/ffmpeg-05-23-13/./ffmpeg -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+ffmpeg -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
  
  echo $file
 }
@@ -407,8 +432,8 @@ else
  microphone="${audiocard[0]}"
  fi 
 
- echo "ffmpeg -f  alsa  -ac 1 -ar 48000 -i hw:$microphone,0  -vn $file"
-	 ffmpeg -f  alsa  -ac 1 -ar 48000 -i hw:$microphone,0  -vn $file
+ echo " -f  alsa  -ac 1 -ar 48000 -i hw:$microphone,0  -vn $file"
+	  -f  alsa  -ac 1 -ar 48000 -i hw:$microphone,0  -vn $file
  
 }
 pastebin(){
@@ -550,10 +575,10 @@ cmakenowardev_usr(){
 mkdir build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. 
 }
 
-gitffmpeg(){
-cd /home/shared/git ; git clone git://source.ffmpeg.org/ffmpeg.git ffmpeg-$(date +"%m-%d-%y");cd  ffmpeg-$(date +"%m-%d-%y") ; ./configure --help | awk -v ORS=" " '/enable/{print $1} END{printf "\n"}'
+git(){
+cd /home/shared/git ; git clone git://source..org/.git -$(date +"%m-%d-%y");cd  -$(date +"%m-%d-%y") ; ./configure --help | awk -v ORS=" " '/enable/{print $1} END{printf "\n"}'
 }
-configureffmpeg(){
+configure(){
  make clean ; ./configure --prefix=/usr/local   $(./configure --help|sort -r | awk  '/enable/{ print $1} END{printf "\n"}' | awk  '!/[A-Z]/ && !/avisynth/ && !/shared/ && !/poison/ && !/incompa/ && !/random/ && !/test/ && !/cross-compile/ && !/memalign-hack/ &&!/deck/ && !/libiec/ && !/libaacplus/ && !/libcelt/ && !/libflite/ && !/libilbc/ && !/libnut/ && !/opencv/ && !/shine/ && !/libstagefright/ && !/utvideo/ && !/vidstab/ && !/x265/ && !/libxavs/ && !/opencl/ && !/-rpath/ && !/ftrapv/ && !/hardcoded/ && !/major/ && !/libfdk-aac/ && !/opengl/ && !/enable-pic/ && !/enable-lto/ && !/small/ && !/gray/{print }'|awk -v ORS=" " '{print $1} END {printf "\n"}')
 }
 
@@ -736,8 +761,8 @@ youtube2seren(){
 ofile=$(date | md5sum | cut -b 1-32)                                                                                                   
 youtube-dl -f 171 -o /tmp/$ofile "$1"
 
-echo "ffmpeg -i /tmp/$ofile -ac 2 -ar 48000 -f s16le pipe:1 > ~/.seren/fifo_in"
-ffmpeg -i /tmp/$ofile -ac 2 -ar 48000 -f s16le pipe:1 > ~/.seren/fifo_in
+echo " -i /tmp/$ofile -ac 2 -ar 48000 -f s16le pipe:1 > ~/.seren/fifo_in"
+ -i /tmp/$ofile -ac 2 -ar 48000 -f s16le pipe:1 > ~/.seren/fifo_in
 
 }
 
@@ -1089,78 +1114,81 @@ LC_ALL=it_IT.utf8 date
 
 playdemout(){
 
-/home/shared/game/./gioco.x86_64 +exec demowatcher.cfg   "$1"
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
 
 }
 
 east_c_old(){
 
-/home/shared/game/./gioco.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg 
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg 
 
 }
 
 bst_t(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg 
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg 
 
 }
 
 
 bst_j_old(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27961"  +exec keyboard.cfg 
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27961"  +exec keyboard.cfg 
 
 }
 
 bst_j(){
-/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27965"  +exec keyboard.cfg 
+/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27965"  +exec keyboard.cfg 
 
 }
 
 
 
 bst_c(){
-/home/shared/game/./gioco.x86_64  +connect "$(dig +short urt.bsturt.info):27962"  +exec keyboard.cfg 
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27962"  +exec keyboard.cfg 
 
 }
 
 bst_m(){
-/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27963"  +exec keyboard.cfg  +password fun
+/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27963"  +exec keyboard.cfg  +password fun
 
 }
 
 urbanterror(){
 if [[ -z $1 ]]; then 
 
-/home/shared/game/./gioco.x86_64  "$1" "$2" +exec keyboard.cfg
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  "$1" "$2" +exec keyboard.cfg
 else
-/home/shared/game/./gioco.x86_64  +connect "$1" +exec keyboard.cfg 
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$1" +exec keyboard.cfg 
 fi 
 }
 urbanterrorserver(){
-/home/shared/game/./gioco.x86_64   +exec server.cfg  +exec keyboard.cfg
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +exec normalserver.cfg  +exec keyboard.cfg
 }
 
+urbanterror_ctf_my_server(){
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +exec serverctf.cfg  +exec keyboard.cfg
+}
 playdemout(){
 
-/home/shared/game/./gioco.x86_64 +exec demowatcher.cfg   "$1"
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
 
 }
 
 east_c_old(){
 
-/home/shared/game/./gioco.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg +exec keyboard.cfg 
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg +exec keyboard.cfg 
 
 }
 
 east_c(){
 
 for file in /home/sem/.q3a/q3ut4/east/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done  ; rm /home/sem/.q3a/q3ut4/authkey
-/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64   +connect "216.52.148.134:27960" +exec keyboard.cfg 
+/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +connect "216.52.148.134:27960" +exec keyboard.cfg 
 for file in /home/sem/.q3a/q3ut4/copy4.3settings/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done 
 }
 
 
 bst_t3(){
-/home/shared/game/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt2.bsturt.info):27960" +exec keyboard.cfg +password vilain
+/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt2.bsturt.info):27960" +exec keyboard.cfg +password vilain
 
 }
 
@@ -1171,7 +1199,7 @@ bst_t3(){
 
 
 urbanterrormyserverCONNECT(){
-/home/shared/game/./gioco.x86_64  +exec keyboard.cfg +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
+ /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +exec keyboard.cfg +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
 }
 
 keyboard_disabler(){
@@ -1396,5 +1424,36 @@ cd "$tempimagefolder"
 scanimage -b --batch-count=n --source ADF --resolution $resolution 
 for file in *.pnm ; do convert "$file" "${file%%.*}.jpg" ; done 
 
+
+}
+
+gitdownload_folder(){
+a="$1"
+svn checkout ${a/tree\/master/trunk}
+
+}
+
+sudokate (){
+
+if [[ ! -z "$1" ]] ; then 
+set -x
+folder="${1%/*}"
+filename="${1##*/}"
+cp "$1" /tmp/"$filename"
+set +x 
+kate  /tmp/"$filename"
+set -x 
+kdialog --password $"please insert Root Password to save the file" | sudo -S mv "/tmp/$filename" "$1"
+    if [[ $? != 0 ]] ; then 
+        kdialog  --passivepopup  $" YOUR FILE IS NOT SAVED! WRONG PASSWORD! your modifications are saved in /tmp folder" 3
+    else
+        rm "/tmp/$filename"
+    
+    fi 
+    set +x
+else 
+    kdialog --title $"SudoKate"  --passivepopup  $" No file selected..exiting" 3
+    exit 
+fi
 
 }
