@@ -1114,81 +1114,81 @@ LC_ALL=it_IT.utf8 date
 
 playdemout(){
 
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
 
 }
 
 east_c_old(){
 
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg 
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg 
 
 }
 
 bst_t(){
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg 
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg 
 
 }
 
 
 bst_j_old(){
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27961"  +exec keyboard.cfg 
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27961"  +exec keyboard.cfg 
 
 }
 
 bst_j(){
-/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27965"  +exec keyboard.cfg 
+/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27965"  +exec keyboard.cfg 
 
 }
 
 
 
 bst_c(){
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27962"  +exec keyboard.cfg 
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27962"  +exec keyboard.cfg 
 
 }
 
 bst_m(){
-/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27963"  +exec keyboard.cfg  +password fun
+/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27963"  +exec keyboard.cfg  +password fun
 
 }
 
 urbanterror(){
 if [[ -z $1 ]]; then 
 
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  "$1" "$2" +exec keyboard.cfg
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  "$1" "$2" +exec keyboard.cfg
 else
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$1" +exec keyboard.cfg 
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$1" +exec keyboard.cfg 
 fi 
 }
 urbanterrorserver(){
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +exec normalserver.cfg  +exec keyboard.cfg
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +exec normalserver.cfg  +exec keyboard.cfg
 }
 
 urbanterror_ctf_my_server(){
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +exec serverctf.cfg  +exec keyboard.cfg
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +exec serverctf.cfg  +exec keyboard.cfg
 }
 playdemout(){
 
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
 
 }
 
 east_c_old(){
 
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg +exec keyboard.cfg 
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg +exec keyboard.cfg 
 
 }
 
 east_c(){
 
 for file in /home/sem/.q3a/q3ut4/east/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done  ; rm /home/sem/.q3a/q3ut4/authkey
-/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64   +connect "216.52.148.134:27960" +exec keyboard.cfg 
+/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +connect "216.52.148.134:27960" +exec keyboard.cfg 
 for file in /home/sem/.q3a/q3ut4/copy4.3settings/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done 
 }
 
 
 bst_t3(){
-/home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt2.bsturt.info):27960" +exec keyboard.cfg +password vilain
+/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt2.bsturt.info):27960" +exec keyboard.cfg +password vilain
 
 }
 
@@ -1199,7 +1199,7 @@ bst_t3(){
 
 
 urbanterrormyserverCONNECT(){
- /home/shared/game/UrbanTerror432/UrbanTerror43/./Quake3-UrT.x86_64  +exec keyboard.cfg +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
+ /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +exec keyboard.cfg +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
 }
 
 keyboard_disabler(){
