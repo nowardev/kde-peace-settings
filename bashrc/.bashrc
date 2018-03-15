@@ -342,7 +342,7 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-ffmpeg -f alsa -ac 1 -ar 48000 -i hw:2,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+ffmpeg -thread_queue_size 512 -f alsa -ac 1 -ar 48000 -i hw:2,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
  
 }
 
@@ -355,7 +355,7 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-ffmpeg -f alsa -ac 2 -ar 48000 -i hw:0,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+ffmpeg -thread_queue_size 512 -f alsa -ac 2 -ar 48000 -i hw:0,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
 
 echo $file
 }
@@ -369,7 +369,7 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-ffmpeg -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+ffmpeg -thread_queue_size 512 -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
  
  echo $file
 }
@@ -1456,4 +1456,9 @@ else
     exit 
 fi
 
+}
+
+rotatepdfright90(){
+
+ pdftk "$1" cat 1east output "${1%%.*}_r".pdf 
 }
