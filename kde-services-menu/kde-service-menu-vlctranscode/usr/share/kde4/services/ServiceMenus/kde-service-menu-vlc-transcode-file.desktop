@@ -1,7 +1,7 @@
 [Desktop Entry]
 Actions=append;start;edit;editp;deleteall;log;info;
 Icon=video-x-generic
-ServiceTypes=KonqPopupMenu/Plugin,video/.*,audio/.*
+ServiceTypes=KonqPopupMenu/Plugin,video/*,audio/*
 Type=Service
 X-KDE-Priority=TopLevel
 X-KDE-Submenu=Vlc Transcoder Menu
