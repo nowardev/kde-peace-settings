@@ -129,12 +129,22 @@ function wgets()
   wget $H='Accept-Language: en-us,en;q=0.5' $H='Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $H='Connection: keep-alive' -U 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2' --referer=http://www.askapache.com/ "$@";
 }
 
+# function tempwget()
+# {
+# cd /tmp
+#   local H='--header'
+#   wget $H='Accept-Language: en-us,en;q=0.5' $H='Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $H='Connection: keep-alive' -U 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2' --referer=http://www.askapache.com/ "$@";
+# }
+
 function tempwget()
 {
 cd /tmp
   local H='--header'
-  wget $H='Accept-Language: en-us,en;q=0.5' $H='Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $H='Connection: keep-alive' -U 'Mozilla/5.0 (Windows NT 5.1; rv:10.0.2) Gecko/20100101 Firefox/10.0.2' --referer=http://www.askapache.com/ "$@";
+  wget $H='Accept-Language: en-us,en;q=0.5' $H='Accept: text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8' $H='Connection: keep-alive' -U 'Mozilla/5.0 (X11; CrOS x86_64 13505.63.0) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/87.0.4280.88 Safari/537.36' --referer=http://www.askapache.com/ "$@";
 }
+
+
+
 
 function enelelettricita()
 {
@@ -224,7 +234,23 @@ remove-apt-lock 	#remove locks  when user kill apt :D	sudo  rm /var/lib/apt/list
 FORMAT 
 
 format_to_fat32		#format to fat 32 format		sudo mkdosfs -F 32 -I \$1
-format_to_btrfs		#format with force option to btrfs	sudo mkfs.btrfs -f \$1\"
+format_to_btrfs		#format with force option to btrfs	sudo mkfs.btrfs -f \$1
+
+///////////////
+systemctl 
+//////////////
+
+systemctl_list_sem              systemctl --type=service
+systemctl_list_running_sem      systemctl --type=service --state=running  
+systemctl_list_active_sem       systemctl --type=service --state=active
+
+
+///////////////
+stuff
+////////////
+
+sem_gif record gif
+\"
 "
  peacefun()
 {
@@ -330,10 +356,52 @@ else
 alias parole="/home/shared/git/parole-conference-010alpha17/./parole-conference -n $USER  -D plughw:2"
 
 alias sourcehome="source ~/.bashrc"
-alias openbashrc="kde-open ~/.bashrc"
+alias openbashrc="kde-open5 ~/.bashrc"
 alias alsamixer="alsamixer -V all"
 # alias hdmirec=
 screencastUSBMIC() {
+
+
+i=0
+while read line ;do
+audiocard[$i]="$line"
+i=$(($i+1))
+done< <( grep capture /proc/asound/pcm | cut -b 2)
+
+i=0
+while read line ;do
+audionamecard[$i]="$line"
+i=$(($i+1))
+done< <(grep capture /proc/asound/pcm | cut -d : -f 2)
+
+ 
+if [[ ${#audiocard[@]} >1 ]]; then 
+echo $"I have detected more than 1 microphone in your computer please select what you want use (0-$((${#audiocard[@]}-1)))
+"
+
+ 
+ 
+i=0
+for (( i=0 ; i <${#audiocard[@]};i++)); do 
+    echo $"Choose $i for this audio card:  ${audionamecard[$i]} "
+
+done
+
+ 
+read   
+ 
+    if [[ -z "$REPLY" ]];then
+        microphone="${audiocard[0]}"
+    else
+    echo $"MicroPhone selected "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}""
+       microphone="${audiocard["$REPLY"]}"
+    fi
+    
+REPLY=""
+else
+ microphone="${audiocard[0]}"
+ fi 
+echo microPhone selected $microphone 
 i=0
 file=/home/shared/Screencast/test-$i.mp4 
 while [[  -e $file ]] 
@@ -342,7 +410,18 @@ i=$((i+1))
 file=/home/shared/Screencast/test-$i.mp4 
 done
 
-ffmpeg -thread_queue_size 512 -f alsa -ac 1 -ar 48000 -i hw:2,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $file
+if [[ $microphone == 1 ]] ; then
+    channel="-ac 1"
+    thread_queue_size="-thread_queue_size 8192"
+else 
+    channel="-ac 2"
+    thread_queue_size="-thread_queue_size 512"
+fi 
+probesize="-probesize 2147483647"
+analyzeduration="-analyzeduration 10000000"
+
+echo "ffmpeg $thread_queue_size -f alsa $channel -ar 48000 -i hw:$microphone,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $probesize $analyzeduration $file"
+ffmpeg $thread_queue_size -f alsa $channel -ar 48000 -i hw:$microphone,0  -s 1920x1080  -f x11grab -i :0  -r 30  -vcodec libx264 $probesize $analyzeduration $file
  
 }
 
@@ -575,10 +654,11 @@ cmakenowardev_usr(){
 mkdir build ; cd build ; cmake -DCMAKE_INSTALL_PREFIX:PATH=/usr .. 
 }
 
-git(){
+git_clone_sem(){
 cd /home/shared/git ; git clone git://source..org/.git -$(date +"%m-%d-%y");cd  -$(date +"%m-%d-%y") ; ./configure --help | awk -v ORS=" " '/enable/{print $1} END{printf "\n"}'
+echo hello sem_extract_m4a
 }
-configure(){
+configure_sem(){
  make clean ; ./configure --prefix=/usr/local   $(./configure --help|sort -r | awk  '/enable/{ print $1} END{printf "\n"}' | awk  '!/[A-Z]/ && !/avisynth/ && !/shared/ && !/poison/ && !/incompa/ && !/random/ && !/test/ && !/cross-compile/ && !/memalign-hack/ &&!/deck/ && !/libiec/ && !/libaacplus/ && !/libcelt/ && !/libflite/ && !/libilbc/ && !/libnut/ && !/opencv/ && !/shine/ && !/libstagefright/ && !/utvideo/ && !/vidstab/ && !/x265/ && !/libxavs/ && !/opencl/ && !/-rpath/ && !/ftrapv/ && !/hardcoded/ && !/major/ && !/libfdk-aac/ && !/opengl/ && !/enable-pic/ && !/enable-lto/ && !/small/ && !/gray/{print }'|awk -v ORS=" " '{print $1} END {printf "\n"}')
 }
 
@@ -930,7 +1010,7 @@ b="false"
 	done< <(hp-scan $resolution $mode -o "$destination"  | stdbuf -o0 tr '\r' '\n' |mawk -W interactive -F']' '{ print ($2+0) }'  )
 			kdialog --title $"kde-service-menu-hp-scan"  --yesno  $" Do you want open the file?"
 			if [[ $? == 0 ]] ; then
-echo "kde-open "$1"" ; kde-open "$1"; fi 
+echo "kde-open5 "$1"" ; kde-open5 "$1"; fi 
  
 }
 
@@ -1089,7 +1169,8 @@ LC_ALL=it_IT.utf8 date
 kwinrestarter(){
 export $(dbus-session)
 export DISPLAY=:0
-kwin --replace 
+#kwin --replace 
+kwin_x11 --replace 
 }
 
 kwinrestarter5(){
@@ -1112,95 +1193,6 @@ LC_ALL=it_IT.utf8 date
 
 }
 
-playdemout(){
-
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
-
-}
-
-east_c_old(){
-
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg 
-
-}
-
-bst_t(){
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27960" +exec keyboard.cfg 
-
-}
-
-
-bst_j_old(){
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27961"  +exec keyboard.cfg 
-
-}
-
-bst_j(){
-/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27965"  +exec keyboard.cfg 
-
-}
-
-
-
-bst_c(){
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt.bsturt.info):27962"  +exec keyboard.cfg 
-
-}
-
-bst_m(){
-/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +connect "$(dig +short urt.bsturt.info):27963"  +exec keyboard.cfg  +password fun
-
-}
-
-urbanterror(){
-if [[ -z $1 ]]; then 
-
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  "$1" "$2" +exec keyboard.cfg
-else
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$1" +exec keyboard.cfg 
-fi 
-}
-urbanterrorserver(){
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +exec normalserver.cfg  +exec keyboard.cfg
-}
-
-urbanterror_ctf_my_server(){
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +exec serverctf.cfg  +exec keyboard.cfg
-}
-playdemout(){
-
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64 +exec demowatcher.cfg   "$1"
-
-}
-
-east_c_old(){
-
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "216.52.148.134:27960" +exec keyboard.cfg +exec keyboard.cfg 
-
-}
-
-east_c(){
-
-for file in /home/sem/.q3a/q3ut4/east/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done  ; rm /home/sem/.q3a/q3ut4/authkey
-/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64   +connect "216.52.148.134:27960" +exec keyboard.cfg 
-for file in /home/sem/.q3a/q3ut4/copy4.3settings/* ; do  cp $file /home/sem/.q3a/q3ut4/ ; done 
-}
-
-
-bst_t3(){
-/home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +connect "$(dig +short urt2.bsturt.info):27960" +exec keyboard.cfg +password vilain
-
-}
-
-
-
-
-
-
-
-urbanterrormyserverCONNECT(){
- /home/shared/game/game4/UrbanTerror43/./Quake3-UrT.x86_64  +exec keyboard.cfg +connect $(dig +short myip.opendns.com @resolver1.opendns.com):27960
-}
 
 keyboard_disabler(){
 keyboard=$(xinput --list | grep 'AT Translated' | cut -f 2 |cut -d = -f  2)
@@ -1215,7 +1207,7 @@ xinput set-int-prop "$keyboard"  "Device Enabled" 8 1
 }
 
 openbashrcgit(){
-kde-open /home/shared/git/github/kde-peace-settings/bashrc/.bashrc
+kde-open5 /home/shared/git/github/kde-peace-settings/bashrc/.bashrc
 }
 
 copybashrc_to_home(){
@@ -1384,6 +1376,13 @@ qemu-system-x86_64  -machine pc,accel=kvm -m $ram -k $keyboard -soundhw $soundca
 
 }
 
+
+pdf_agenzia_entrate(){
+
+d=$(date +%d-%m-%Y)
+gs -dPDFA -dBATCH -dNOPAUSE -dNOOUTERSAVE -dUseCIEColor -sProcessColorModel=DeviceCMYK -sDEVICE=pdfwrite -sOutputFile="AGENZIAENTRATE CONTRATTO-$d" "$1"
+
+}
 scan-multiple-pages-to-pdf(){
 # hp-scan --adf -o "$1.pdf"
 
@@ -1458,7 +1457,485 @@ fi
 
 }
 
+rotatepdfright180(){
+ 
+
+ pdftk "$1" cat 1-endsouth output "${1%%.*}_r_180".pdf 
+}
+
+
+
+rotatepdfleft90(){
+
+ pdftk "$1" cat 1-endwest output "${1%%.*}_l_90".pdf 
+
+
+}
 rotatepdfright90(){
 
  pdftk "$1" cat 1east output "${1%%.*}_r".pdf 
 }
+
+grepnegative(){
+grep -v "$1"
+}
+
+merge_jpeg_to_pdf(){
+
+testvariable="$1"
+
+if [[  -z  "$testvariable"    ]] ; then
+echo "you did not specify an outname please use merge_jpeg_to_pdf OUTNAME $testvariable "
+else
+
+filecontent=($( ls "$PWD"| grep jpeg| sort -V))
+echo "convert "${filecontent[@]}"  "$PWD/$1".pdf"
+convert "${filecontent[@]}"  "$PWD/$1".pdf
+
+fi 
+ 
+}
+
+cropto1920x1080(){
+convert "$1"  -crop 1920x1080+0+100 "${1%%.*}-cropped"."${1##*.}"  
+
+ 
+}
+
+mydate(){
+echo $(date +'%Y-%m-%d-%T')
+}
+
+
+sendtoklipper(){
+qdbus org.kde.klipper /klipper org.kde.klipper.klipper.setClipboardContents "$1"
+
+}
+
+starndardscreenshot (){
+
+a=/tmp/screenshot.jpeg
+sleep 5
+import -window root -crop 1920x1080+0+100 "$a"
+}
+
+semscreenshot(){
+a=/tmp/screenshot.jpeg
+sleep 6
+import -window root -crop 1920x1080+0+100 "$a"
+
+source "$HOME/.local/share/imagebin/imagebin"
+qdbus org.kde.klipper /klipper org.kde.klipper.klipper.setClipboardContents "$(curl -s -F key="$imagebinkey" \
+     -F file="@$a" \
+     https://imagebin.ca/upload.php | awk -F':' '/url:/{gsub(/url:/,"") ; print $0 }' )"
+     kdialog --passivepopup "Done"
+     
+}
+
+imagebinupload(){
+source "$HOME/.local/share/imagebin/imagebin"
+
+curl -s -F key="$imagebinkey" \
+     -F file="@$1" \
+     https://imagebin.ca/upload.php | awk -F':' '/url:/{gsub(/url:/,"") ; print $0 }'  
+
+}
+
+imgup(){
+
+source "$HOME/.local/share/imagebin/imagebin"
+qdbus org.kde.klipper /klipper org.kde.klipper.klipper.setClipboardContents "$(curl -s -F key="$imagebinkey" \
+     -F file="@$1" \
+     https://imagebin.ca/upload.php | awk -F':' '/url:/{gsub(/url:/,"") ; print $0 }' )"
+
+##     awk -F':' '/url:/{gsub(/url:/,"") ; print $0 }'
+  
+}
+
+sem_wifi_scan(){
+sudo iwlist wlp7s0 scan | egrep 'Cell |Encryption|Quality|Last beacon|ESSID'
+
+}
+
+sem_tradingview_download (){
+cd /tmp ;rm cropped.jpg ;  wget "$1" ; convert -crop 1429x632+7+20 index.html "cropped.jpg" 
+}
+
+sem_extract_m4a  () {
+ffmpeg -i "$1" -vn -c:a copy "${1%%.*}.m4a"
+
+}
+
+download_website(){
+wget --mirror --convert-links --adjust-extension --page-requisites   "$1"
+##https://www.zerohedge.com 
+
+}
+
+semcrome(){
+google-chrome --disable-extensions 
+}
+
+restart_audio_sem(){
+pulseaudio -k && sudo alsa force-reload
+
+}
+
+stream_youtube_sem(){
+
+
+    i=0;
+    while read line; do
+        audiocard[$i]="$line";
+        i=$(($i+1));
+    done < <( grep capture /proc/asound/pcm | cut -b 2);
+    i=0;
+    while read line; do
+        audionamecard[$i]="$line";
+        i=$(($i+1));
+    done < <(grep capture /proc/asound/pcm | cut -d : -f 2);
+    if [[ ${#audiocard[@]} > 1 ]]; then
+        echo "I have detected more than 1 microphone in your computer please select what you want use (0-$((${#audiocard[@]}-1)))";   
+#set -x
+        i=0;
+        for ((i=0 ; i <${#audiocard[@]}; i++))
+        do
+            echo "Choose $i for this audio card:  ${audionamecard[$i]} ";
+        done;
+            echo "choose $(($i+1))  for MUTE"
+        read;
+        if [[ -z "$REPLY" ]]; then
+            microphone="${audiocard[0]}";
+        
+        elif [[ "$REPLY"  == $(($i+1)) ]] ; then
+            microphone="mute"
+             echo "NO AUDIO CAPTURE SELECTED"
+        else 
+            echo "MicroPhone selected "${audionamecard["$REPLY"]}"  "${audiocard["$REPLY"]}"";
+            microphone="${audiocard["$REPLY"]}";
+        fi;
+        
+    elif [[ "$REPLY"  == $(($i+1)) && ! ${#audiocard[@]} > 1  ]] ; then
+        microphone= "mute"
+        echo "NO AUDIO CAPTURE SELECTED"
+    else
+        echo "No Reply, no mute  , setting the default microphone for you  "
+        microphone="${audiocard[0]}";
+    fi;
+    echo "microPhone selected $microphone";
+    REPLY="";
+    i=0;
+    file=/home/shared/Screencast/test-$i.mp4;
+    
+    while [[ -e $file ]]; do
+        i=$((i+1));
+        file=/home/shared/Screencast/test-$i.mp4;
+    done;
+    if [[ $microphone == 1 ]]; then
+        channel="-ac 1";
+        thread_queue_size="-thread_queue_size 8192";
+    else
+        channel="-ac 1";
+        thread_queue_size="-thread_queue_size 512";
+    fi;
+    probesize="-probesize 2147483647";
+    analyzeduration="-analyzeduration 10000000";
+ 
+
+    
+VBR="2500k"                                    # Bitrate  video
+FPS="30"                                       # FPS 
+QUAL="medium"                                  # Preset  quality FFMPEGrtmp://
+YOUTUBE_URL="rtmp://a.rtmp.youtube.com/live2"  # URL de base RTMP youtube
+
+SOURCE="udp://239.255.139.0:1234"              # Source UDP (voir les annonces SAP)
+KEY="$1"                                     # Clé à récupérer sur l'event youtube
+
+# ##ffmpeg \
+#     -i "$SOURCE" -deinterlace \
+#     -vcodec libx264 -pix_fmt yuv420p -preset $QUAL -r $FPS -g $(($FPS * 2)) -b:v $VBR \
+#     -acodec libmp3lame -ar 44100 -threads 6 -qscale 3 -b:a 712000 -bufsize 512k \
+#     -f flv "$YOUTUBE_URL/$KEY" $thread_queue_size $probesize $analyzeduration
+if [[  $microphone == "mute" ]] ; then 
+        echo " ffmpeg  -s 1920x1080 -f x11grab -i :0 -r 30 -vcodec libx264 -pix_fmt yuv420p  -b:v $VBR -f flv "$YOUTUBE_URL/$KEY" "
+        ffmpeg -f lavfi -i anullsrc=channel_layout=stereo:sample_rate=44100 -s 1920x1080 -f x11grab -i :0 -r 30 -vcodec libx264 -pix_fmt yuv420p  -b:v $VBR -f flv "$YOUTUBE_URL/$KEY" 
+
+    else
+        echo  "ffmpeg  -f alsa $channel -ar 48000 -i hw:$microphone,0 -s 1920x1080 -f x11grab -i :0 -r 30 -vcodec libx264 -pix_fmt yuv420p  -b:v $VBR -f flv "$YOUTUBE_URL/$KEY""
+        ffmpeg  -f alsa $channel -ar 48000 -i hw:$microphone,0 -s 1920x1080 -f x11grab -i :0 -r 30 -vcodec libx264 -pix_fmt yuv420p  -b:v $VBR -f flv "$YOUTUBE_URL/$KEY" 
+fi
+}
+
+parsexml(){
+
+awk '{/<tbody><tr>/gsub(/<tbody><tr>/,"\n \n" ); /<th scope="row" class="text">/; gsub(/<th scope="row" class="text">/,"") ; gsub(/<\/th>/,""); gsub(/<td class="number">/,"        "); gsub(/<\/td>/,""); gsub(/<\/tr><tr>/,"\n") gsub(/<\/tr><\/tbody><\/table><\/body><\/html>/,"\n"); gsub(/00:00:56/,""); gsub(/00:00:00/,"");gsub(/-/,"/") ; print}' "$1"
+
+
+
+}
+
+
+
+posteitalianetrack(){
+testvariable="$1"
+
+if [[  -z  "$testvariable"    ]] ; then
+echo "$testvariable is empty"
+echo checking file ~/postetracking.txt
+source  ~/postetracking.txt
+echo "https://www.poste.it/cerca/index.html#/risultati-spedizioni/$tracking" 
+xdg-open "https://www.poste.it/cerca/index.html#/risultati-spedizioni/$tracking" 
+else
+echo "tracking code $testvariable"
+echo "https://www.poste.it/cerca/index.html#/risultati-spedizioni/$1" 
+xdg-open "https://www.poste.it/cerca/index.html#/risultati-spedizioni/$1" 
+fi 
+
+
+ 
+}
+
+systemctl_list_sem(){
+systemctl --type=service
+} 
+
+systemctl_list_running_sem(){
+systemctl --type=service --state=running
+} 
+
+systemctl_list_active_sem(){
+
+systemctl --type=service --state=active
+} 
+
+systemctl_list_active_sem(){
+
+systemctl --type=service --state=active
+} 
+
+restart_kdeconnect(){
+pkill kdeconnectd
+echo kdeconnect killed
+/usr/lib/x86_64-linux-gnu/libexec/kdeconnectd > /dev/null 2>&1 &
+
+
+}
+
+convert_resize_50(){
+convert "$1"  -resize 50% -quality 80 "${1%%.*}.jpg"
+
+}
+
+
+sem_gif_full(){
+
+default_delay=4
+default_duration=5
+
+default_file="/tmp/gif-0.gif"
+
+echo "\$1 is the duration if empty is $default_duration seconds, \$2 is delay if empty $default_delay seconds" 
+echo "file location $default_file"
+
+
+file="$default_file"
+
+while [[  -e "$file" ]] 
+do 
+i=$((i+1)) 
+file="/tmp/gif-$i.gif"
+done
+
+
+# a="$default_file"  
+# if [[  -e "$a"  ]] ; then
+# elif [[  ]] ; then  
+# else
+# exit 1
+# fi 
+
+testvariable="$2"
+
+if [[  -z  "$testvariable"    ]] ; then
+    testvariable="$1"
+    
+        if [[  -z  "$testvariable"    ]] ; then
+            byzanz-record -c  -d $default_duration --delay $default_delay "$file"
+        else
+           byzanz-record -c  -d $1 --delay  $default_delay "$file"
+        fi 
+
+
+else
+        byzanz-record -c  -d $1 --delay $2 /tmp/$outfile.gif
+fi 
+
+
+
+testvariable="$(read -p "do you want play the gif? ENTER FOR Y or N" )"
+case "$testvariable" in
+
+ [y/Y]|[-y/-Y]|[y/Y][e/E][s/S]|"")
+xdg-open "$file"
+
+;;
+
+[n/N]|[n/N][o/O])
+echo $"exiting... file in $file"
+ 
+;;
+esac
+}
+
+sem_gif_left(){
+default_delay=4
+default_duration=5
+
+default_file="/tmp/gif-0.gif"
+
+echo "\$1 is the duration if empty is $default_duration seconds, \$2 is delay if empty $default_delay seconds" 
+echo "file location $default_file"
+
+
+file="$default_file"
+
+while [[  -e "$file" ]] 
+do 
+i=$((i+1)) 
+file="/tmp/gif-$i.gif"
+done
+
+
+
+# a="$default_file"  
+# if [[  -e "$a"  ]] ; then
+# elif [[  ]] ; then  
+# else
+# exit 1
+# fi 
+
+testvariable="$2"
+
+if [[  -z  "$testvariable"    ]] ; then
+    testvariable="$1"
+    
+        if [[  -z  "$testvariable"    ]] ; then
+            byzanz-record -x 0 -y 0 -h 1080 -w 1920 -c  -d $default_duration --delay $default_delay "$file"
+        else
+           byzanz-record -x 0 -y 0 -h 1080 -w 1920 -c  -d $1 --delay  $default_delay "$file"
+        fi 
+
+
+else
+        byzanz-record -x 0 -y 0 -h 1080 -w 1920 -c  -d $1 --delay $2 /tmp/$outfile.gif
+fi 
+
+
+
+testvariable="$(read -p "do you want play the gif? ENTER FOR Y or N" )"
+case "$testvariable" in
+
+ [y/Y]|[-y/-Y]|[y/Y][e/E][s/S]|"")
+xdg-open "$file"
+
+;;
+
+[n/N]|[n/N][o/O])
+echo $"exiting... file in $file"
+ 
+;;
+esac
+}
+
+
+sem_gif_right(){
+default_delay=4
+default_duration=5
+
+default_file="/tmp/gif-0.gif"
+
+echo "\$1 is the duration if empty is $default_duration seconds, \$2 is delay if empty $default_delay seconds" 
+echo "file location $default_file"
+
+
+file="$default_file"
+
+while [[  -e "$file" ]] 
+do 
+i=$((i+1)) 
+file="/tmp/gif-$i.gif"
+done
+
+
+while [[  -e "$file" ]] 
+do 
+i=$((i+1)) 
+file="/tmp/gif-right-$i.gif"
+done
+
+
+# a="$default_file"  
+# if [[  -e "$a"  ]] ; then
+# elif [[  ]] ; then  
+# else
+# exit 1
+# fi 
+
+testvariable="$2"
+
+if [[  -z  "$testvariable"    ]] ; then
+    testvariable="$1"
+    
+        if [[  -z  "$testvariable"    ]] ; then
+            byzanz-record -x 1920 -y 0 -h 1080 -w 1920 -c  -d $default_duration --delay $default_delay "$file"
+        else
+           byzanz-record -x 1920 -y 0 -h 1080 -w 1920 -c  -d $1 --delay  $default_delay "$file"
+        fi 
+
+
+else
+        byzanz-record -x 1920 -y 0 -h 1080 -w 1920 -c  -d $1 --delay $2 /tmp/$outfile.gif
+fi 
+
+
+
+testvariable="$(read -p "do you want play the gif? ENTER FOR Y or N" )"
+case "$testvariable" in
+
+ [y/Y]|[-y/-Y]|[y/Y][e/E][s/S]|"")
+xdg-open "$file"
+
+;;
+
+[n/N]|[n/N][o/O])
+echo $"exiting... file in $file"
+ 
+;;
+esac
+}
+
+
+sem_mountiso() {
+  if [ "`mount | grep /mnt/iso`" ]; then
+    echo "/mnt/iso is already in use"
+    return
+  fi
+  if [ ! "$1" ]; then
+    echo "missing iso image argument"
+    return
+  fi
+  if [ ! -f $1 ]; then
+    echo "$1: iso image not found"
+    return
+  fi
+  directory="$/mnt/iso"
+ if [[  -d "$directory"  ]] ; then
+ mount -t iso9660 -o loop,ro $1 /mnt/iso
+ 
+else
+mdir $directory 
+mount -t iso9660 -o loop,ro $1 /mnt/iso
+fi 
+
+}
+

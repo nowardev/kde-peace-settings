@@ -77,6 +77,11 @@ kde-service-menu-nowardev-scanner
                         copy this in /usr/share/kservices5/ServiceMenus/ 
                         or  /usr/local/share/kservices5/ServiceMenus/  
                         or  $HOME/.local/share/kservices5/ServiceMenus/
+                        
+                        for kde 4 ONLY the file is located
+                        $HOME/.kde/share/kde4/services/ or 
+                        /usr/share/kde4/services/
+
 
 
 

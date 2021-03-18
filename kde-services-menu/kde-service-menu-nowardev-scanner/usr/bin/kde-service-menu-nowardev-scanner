@@ -105,7 +105,7 @@ if [[ $notification == "true" || -z $notification  ]] ; then
 	param[2]="-t 3000 \"KDE-service-menu-nowardev-scanner\" "
 
 	a=1
-	set -x
+# 	set -x
 for p in "${program[@]}";do 
     if [[ ! -z $(type -p "$p") ]];then
         NOTIFIERERROR="${program[$a]} ${param[$a]}"
@@ -123,6 +123,15 @@ fi
 
 }
 
+function_check_for_errors(){
+
+errors=()
+test1="$(grep 'open of device'  | grep 'failed: Invalid argument'  "$logfile")"
+message1=$"You device is busy or not turned on maybe you should reset it turn on and off try even to plug off ethernet cabl!" 
+
+
+
+}
 
 function_check_programs(){
 	program[1]=convert
@@ -390,19 +399,26 @@ scanimage -b --batch-count=n --source ADF --resolution $resolution --mode $mode
 
         a=()
         b=0
+        multi_imagearray=()
         for f in $tempfolder/*.pnm ; do
+                
 #             name="${f##*/}"
 #             name="${name%%.*}"
             if [[ -e "$f" ]] ; then 
                 function_check_file "$outfolder/$basename-$b.$format"
                 echo "convert \"$f\" \"$outfolder/$basename-$b.$format\"">>"$logfile"
                 convert "$f" "$outfolder/$basename-$b.$format" 
+                echo "adding "$outfolder/$basename-$b.$format" to multi_imagearray ${multi_imagearray[@]}"
+                multi_imagearray=("${multi_imagearray[@]}", "\"$outfolder/$basename-$b.$format\"")
                 b=$(($b+1))
+                set +x
             else 
                 $NOTIFIER "no file in temp file Document is on the scanner?Scanner turned on ?" 
                 echo "no file in temp file Document is on the scanner?Scanner turned on ?" >>"$logfile"
             fi 
         done 
+#         echo ${multi_imagearray[@]}
+#         read
 }
 
 function_print(){
@@ -433,12 +449,223 @@ and it generates empty file ?"
 	
 }
 
+function_enable_gmail_smtp(){
+if [[ ! -z $(type xdg-open) ]] ; then
+    xdg-open "https://www.google.com/settings/u/0/security/lesssecureapps?pageId=none"
+else
+$NOTIFIERERROR "No xdg-open found ! install it"
+fi 
+}
+
+function_gmail(){
+sender="$1"
+password="$2"
+mailto="$3"
+title="$4"
+message="$5"
+shift 5
+
+attachment=$@
+
+
+$NOTIFIER $"Launching the browser to change google settings ... check it!"
+xdg-open "https://www.google.com/settings/u/0/security/lesssecureapps?pageId=none"
+
+kdialog --title $"KDE service menu nowardev scanner" --yesno "Did you Change Google setting to send email SMTP? Click yes to when you did it!"
+if [[ $? != 0 ]] ; then  
+$NOTIFIERERROR $"Without SMTP activated i can't send an e-mail with google exiting"
+exit
+fi
+
+    
+if [[ -z "$attachment" ]] ; then attachment="$(kdialog --title $"KDE service menu nowardev scanner" --multiple   --getopenfilename  $"Select a file to attach! this is strange anyway...")"; fi
+
+if [[ -z $attachment ]] ; then $NOTIFIER $"no file provide exiting.. " ; exit ;fi 
+
+if [[ -z $(type sendemail) ]] ; then 
+    $NOTIFIERERROR $"Please install sendemail first! sudo apt-get install sendemail"
+    exit
+else 
+    echo "sendemail -o tls=yes -f \"$sender\" -t \"$mailto\" -s smtp.gmail.com:587 -xu \"$sender\" -xp \"mypasssss\" -u \"$title\" -m \"$message\" -a \"$attachment\"
+    
+    " >"$logfile"
+
+    sendemail -o tls=yes -f "$sender" -t "$mailto" -s smtp.gmail.com:587 -xu "$sender" -xp "$password" -u "$title" -m "$message" -a "$attachment" &>>"$logfile"
+
+
+    if [[ ! -z "$(cat $logfile | grep 'Authentication to smtp.gmail.com:587 failed')" ]] ; then $NOTIFIERERROR "Remember to  ENABLE SMTP FOR GMAIL visit this page https://www.google.com/settings/u/0/security/lesssecureapps?pageId=none if you did it check your account and password stored on kwallet!"  ; fi 
+fi 
+
+kdialog --title $"KDE service menu nowardev scanner" --yesno "For Security you should now disable SMTP PROTOCOL on gmail do you wish to disable it ?"
+if [[ $? == 0 ]] ; then  
+$NOTIFIER $"Launching the browser to disable Smtp on gmail"
+xdg-open "https://www.google.com/settings/u/0/security/lesssecureapps?pageId=none"
+# else
+# $NOTIFIERERROR $""
+# exit
+fi
+
+}
+
+
+function_store_account(){
+kdialog --yesno $"No account stored on kwallet Do you want store one ?"
+    if [[ $? == 0  ]] ; then 
+        account="$(kdialog --title $"Kde-service-menu-nowardev-scanner"  --textinputbox  $" Your E-mail Account:"  $"test@gmail.com")"
+        testvariable="$account"
+            if [[  -z  "$testvariable"    ]] ; then
+                $NOTIFIER "ACCOUNT  is empty... exiting"
+                exit
+            else    
+                qdbus org.kde.kwalletd5 /modules/kwalletd5 writeEntry "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "$account" test 1  "kde-service-menu-nowardev-scanner" 
+            fi 
+        password="$(kdialog --title $"kde-service-menu-nowardev-scanner"  --password  $" Insert Password for $account")"
+        testvariable="$password"
+            if [[  -z  "$testvariable"    ]] ; then
+                $NOTIFIER "Password  is empty... exiting"
+                exit
+            else    
+                qdbus org.kde.kwalletd5 /modules/kwalletd5 writePassword "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "$account" "$password"  "kde-service-menu-nowardev-scanner" 
+            fi 
+
+    else
+        $NOTIFIER $"No email provided from kwallet, user did not provided one so i can't send e-mail exiting..."
+    exit 
+    fi 
+
+function_ask_for_mail
+}
+
+function_ask_for_mail(){
+
+check_kwallet_folder="$( qdbus org.kde.kwalletd5 /modules/kwalletd5 folderList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner" | grep kde-service-menu-nowardev-scanner)"
+
+if [[ ! -z $check_kwallet_folder ]] ; then 
+
+    owenmail=($(qdbus org.kde.kwalletd5 /modules/kwalletd5 entryList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "kde-service-menu-nowardev-scanner"))
+    if [[ ${#owenmail[@]} >1 ]] ; then 
+        senderemail="$(kdialog --combobox $"You have stored more than an account so which one should i pick ?" ${owenmail[@]})"
+    elif [[  ${#owenmail[@]} == 1 ]] ; then 
+        senderemail="${owenmail[0]}"
+    else 
+        $NOTIFIER $"no account stored on kwallet"
+        account="$(kdialog --title $"Kde-service-menu-nowardev-scanner"  --textinputbox  $" Account:"  $"test@gmail.com")"
+        testvariable="$account"
+            if [[  -z  "$testvariable"    ]] ; then
+                $NOTIFIER "ACCOUNT  is empty... exiting"
+                exit
+            else    
+                qdbus org.kde.kwalletd5 /modules/kwalletd5 writeEntry "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "$account" test 1  "kde-service-menu-nowardev-scanner" 
+            fi 
+    fi 
+
+    if [[ ! -z "$senderemail" ]] ; then 
+        getpasswordfromkwallet="$( qdbus org.kde.kwalletd5 /modules/kwalletd5 readPassword "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner" "$senderemail"  "kde-service-menu-nowardev-scanner")"
+    else
+        $NOTIFIERERROR $"No sender selected exiting..."
+        exit 
+    fi 
+
+else 
+function_store_account 
+    
+fi 
+
+title="$(kdialog --title KDE-service-menu-nowardev-scanner --textinputbox $"E-mail TITLE" $"Email from  Kde service menu nowardev scanner ")"
+testvariable="$title"
+
+if [[  -z  "$testvariable"    ]] ; then
+    $NOTIFIER "E-mail title  is  empty!"
+    title="$default_email_title"
+fi 
+
+message="$(kdialog --title KDE-service-menu-nowardev-scanner --textinputbox $"E-mail MESSAGE" $"This mail is generated from Kde-service-menu-nowardev-scanner to send you a document that you will find in attachments")"
+
+testvariable="$message"
+
+if [[  -z  "$testvariable"    ]] ; then
+    $NOTIFIER "Your Message is  empty!"
+fi 
+
+
+mailto="$(kdialog --title KDE-service-menu-nowardev-scanner --textinputbox $"Send E-mail To" $"nowardev@gmail.com")"
+
+testvariable="$mailto"
+
+if [[  -z  "$testvariable" || "$testvariable" == "newmail@domain.com"   ]] ; then
+    $NOTIFIER "You did not provide an e-mail adress where i should sent the email ugly person i exit :P!"
+    exit 
+fi 
+
+ 
+
+
+# 
+# 
+# #create a wallet folder kde-service-menu-nowardev-scanner
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 createFolder "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "kde-service-menu-nowardev-scanner" 
+# #write an entry for  password 
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 writeEntry "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "mymail@gmail.com" test 1  "kde-service-menu-nowardev-scanner" 
+# #write the pasword
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 writePassword "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "mymail@gmail.com" "silly"  "kde-service-menu-nowardev-scanner"
+# #list the folders
+#  qdbus org.kde.kwalletd5 /modules/kwalletd5 folderList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"
+# #read the entry
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 entryList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  "kde-service-menu-nowardev-scanner"
+# #read the password 
+#  qdbus org.kde.kwalletd5 /modules/kwalletd5 readPassword "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner" "mymail@gmail.com"  "kde-service-menu-nowardev-scanner" 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# 
+# kwalletfolderlist=(qdbus org.kde.kwalletd5 /modules/kwalletd5 folderList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner")
+#  qdbus org.kde.kwalletd5 /modules/kwalletd5 readPasswordList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "ownCloud" " ://192.168.0.3/owncloud/"  "kde-service-menu-nowardev-scanner" 
+# 
+#  
+#  
+#  
+#  kwalletfolderlist=$(qdbus org.kde.kwalletd5 /modules/kwalletd5 folderList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner")
+#  qdbus org.kde.kwalletd5 /modules/kwalletd5 entryList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "Chrome Keys"  "kde-service-menu-nowardev-scanner" 
+# 
+#  qdbus org.kde.kwalletd5 /modules/kwalletd5 readPasswordList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "Chrome Keys"  "kde-service-menu-nowardev-scanner" 
+#  
+#  
+#  qdbus org.kde.kwalletd5 /modules/kwalletd5 readPassword "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "Chrome Keys" "Chrome Safe Storage"  "kde-service-menu-nowardev-scanner" 
+# 
+# ###this write binary 
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 writeEntry "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner" Passwords "nowardev@gmail.com" 0 "kde-service-menu-nowardev-scanner" 
+# 
+# 
+# 
+# #write in maps http://test.com/#form
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 writeEntry "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  Passwords "nowardev@gmail.com" 3  "kde-service-menu-nowardev-scanner" 
+# #read the passworlist for maps
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 readPasswordList "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  http://192.168.0.3/owncloud/#login  "kde-service-menu-nowardev-scanner"
+# #write the passwor for maps
+# qdbus org.kde.kwalletd5 /modules/kwalletd5 writePassword "$(qdbus org.kde.kwalletd5 /modules/kwalletd5 org.kde.KWallet.open kdewallet 0 "kde-service-menu-nowardev-scanner")" "kde-service-menu-nowardev-scanner"  http://192.168.0.3/owncloud/#login asdfasdfasdfa  "kde-service-menu-nowardev-scanner"
+ 
+ 
+}
+
 function_notify
 function_notify_error
 function_check_programs
 # set -x
 function_check_file_settings
 # set +x 
+default_email_title=$"Hello here my documents generated from Kde-service-menu-nowardev-scanner"
 echo "PARAMETERS:
 mode: $mode
 resolution: $resolution
@@ -447,7 +674,13 @@ notifier: $NOTIFIER
 notifiererror:$NOTIFIERERROR
 "
 
-
+# function_ask_for_mail
+# function_gmail "$senderemail" "$getpasswordfromkwallet" "$mailto"  "$title" "$message" "/tmp/testing"
+# 
+# 
+#  
+# 
+# exit 
 
 if  [[ $1 == -*  ]]; then
 	case "$1" in
@@ -497,6 +730,24 @@ if  [[ $1 == -*  ]]; then
 		  
 		  
             ;;
+    -smgmail)if (($# > 1)); then
+            shift 
+            foldername="$1"
+			echo "$\"foldername\""
+            shift
+            filename="$@"
+            echo "$\"filename\""			
+            function_create_multi_image "$foldername" "$filename"
+            function_ask_for_mail
+#             echo  ${multi_imagearray[@]}
+#             read
+            function_gmail "$senderemail" "$getpasswordfromkwallet" "$mailto"  "$title" "$message" ${multi_imagearray[@]:1:${#multi_imagearray[@]}} #give to fucntion gmail the array from index 1 to the end of the array
+        
+		  else
+			echo $"-smgmail require something like /tmp/newfile" 1>&2
+			exit 1
+		  fi 
+            ;;
     -smpdf)if (($# > 1)); then
             shift 
             foldername="$1"
@@ -509,6 +760,24 @@ if  [[ $1 == -*  ]]; then
         
 		  else
 			echo $"-spdf require something like /tmp/newfile" 1>&2
+			exit 1
+		  fi ;;
+    -smpdfgmail)
+#     kdialog --title "KDE-service-menu-nowardev-scanner" --textinputbox $"Your Pdf Name"
+    if (($# > 1)); then
+            shift 
+            foldername="$1"
+			echo "$\"foldername\""
+            shift
+            filename="$@"
+            echo "$\"filename\""
+			function_check_file "$filename.pdf"
+            function_create_pdf "$foldername" "$filename"
+            function_ask_for_mail
+            function_gmail "$senderemail" "$getpasswordfromkwallet" "$mailto"  "$title" "$message" "$outfolder/$basename.pdf" 
+        
+		  else
+			echo $"-spdfmail require something like \"FOLDER\" NAMEFILE " 1>&2
 			exit 1
 		  fi ;;
 		  

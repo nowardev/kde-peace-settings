@@ -56,7 +56,7 @@ function gnome2(){
 var panel = new Panel
 var panelScreen = panel.screen
 panel.location = "top"
-panel.height = screenrect.height/30
+panel.height = screenrect.height/38
 
 var menu_old = panel.addWidget("org.kde.plasma.kicker")
 menu_old.currentConfigGroup = ["General"]
@@ -79,6 +79,24 @@ help.writeConfig("url","file:///usr/share/applications/org.kde.Help.desktop")
 var icon = panel.addWidget("org.kde.plasma.icon")
 icon.writeConfig("url","file:///usr/share/applications/org.kde.konsole.desktop")
 
+
+// var array = ["chromium-browser.desktop","firefox.desktop","google-chrome.desktop","opera-browser.desktop", "org.kde.konversation.desktop","org.kde.dolphin.desktop","org.kde.kate.desktop","org.kde.konsole.desktop","ksnapshot.desktop","org.kde.kdenlive.desktop","vlc.desktop","systemsettings.desktop" ,"org.kde.spectacle.desktop"] 
+// var taskmanager = []
+// for(var i=0; i<array.length; i++){ 
+// 		
+// 		
+// 		if (applicationExists(array[i])){  
+//                     var icon = panel.addWidget("org.kde.plasma.icon")
+//                     icon.writeConfig("url","file:///usr/share/applications/"+array[i])
+// 			taskmanager.push("file:///usr/share/applications/"+array[i])
+// 			
+// 		}
+//                 else{
+//                     print(array[i]+" not installed")
+//                 }
+// }
+//           print ("this is the result "+taskmanager)
+
 // var icon = panel.addWidget("org.kde.plasma.icon")
 // icon.writeConfig("url","preferred://browser")
 var spacer = panel.addWidget("org.kde.plasma.panelspacer")
@@ -92,7 +110,7 @@ var bluetooth = panel.addWidget("org.kde.plasma.bluetooth")
 var kdeconnect = panel.addWidget("org.kde.kdeconnect")
 var netspeed = panel.addWidget("org.kde.netspeedWidget")
 netspeed.currentConfigGroup = ["Appearance"]
-netspeed.writeConfig("fontSize","40")
+netspeed.writeConfig("fontSize","60")
 
 var dayofweek = panel.addWidget("org.kde.contrib.dayofweek")
 var dayofmonth = panel.addWidget("org.kde.contrib.dayofmonth")
@@ -101,6 +119,9 @@ var dayofmonth = panel.addWidget("org.kde.contrib.dayofmonth")
 
 
 var calendar = panel.addWidget("org.kde.plasma.digitalclock")
+calendar.currentConfigGroup = ["Appearance"]
+calendar.writeConfig("boldText","true")
+var notification = panel.addWidget ("org.kde.plasma.notifications")
 var userswitcher = panel.addWidget("org.kde.plasma.userswitcher")
 // var volume = panel.addWidget("org.kde.plasma.volume")
 var lockout = panel.addWidget("org.kde.plasma.lock_logout")
@@ -114,7 +135,7 @@ panel.reloadConfig()
 var panel = new Panel
 var panelScreen = panel.screen
 panel.location = "bottom"
-panel.height = screenrect.height/30
+panel.height = screenrect.height/38
 
 var shodesktop = panel.addWidget("org.kde.plasma.showdesktop")
 var task = panel.addWidget("org.kde.plasma.taskmanager")

@@ -18,7 +18,7 @@
 [Desktop Entry]
 Actions=axel10;axel5;axel3;axel;reset;help
 Icon=dolphin
-ServiceTypes=KonqPopupMenu/Plugin,text/html,application/x-cd-image,video/.*,audio/.*,image/*
+ServiceTypes=KonqPopupMenu/Plugin,text/html,application/x-cd-image,video/*,audio/*,image/*
 Type=Service
 X-KDE-Priority=TopLevel
 X-KDE-Submenu=KAxel 

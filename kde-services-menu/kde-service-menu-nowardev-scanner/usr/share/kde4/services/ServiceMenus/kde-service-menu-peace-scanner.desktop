@@ -23,9 +23,9 @@
 #
 #if you are root copy this service menu  $(kde4-config --prefix)/share/kde4/services/ServiceMenus/
 #
-#VERSION 0.6 pdf,printpdf
+#VERSION 0.6 pdf,printpdf sendmail https://www.google.com/settings/security/lesssecureapps
 [Desktop Entry]
-Actions=scanner;scannermultiple;singlepdf;pdf;scanprint;printmultiple;changesettings;deletesettings
+Actions=scanner;scannermultiple;singlepdf;pdf;scanprint;printmultiple;sendmailmultiple;changesettings;deletesettings
 Icon=document-properties-key
 ServiceTypes=KonqPopupMenu/Plugin,inode/directory
 Type=Service
@@ -73,7 +73,18 @@ Exec=kde-service-menu-nowardev-scanner -smpdfp   && echo %u > /dev/null
 Icon=printer
 Name=Print Multiple Documents
 Name[it]=Stampa Multi Documenti
- 
+
+[Desktop Action sendmailmultiple]
+Exec=kde-service-menu-nowardev-scanner -smpdfgmail %u $(kdialog --textinputbox $"Insert base-name ex : NewPdfForGmail" NewPdfForGmailDocument )  
+Icon=mail-message
+Name=Send Multipage Pdf through Gmail
+Name[it]=Mand Pdf Multipagina Via Gmail
+
+[Desktop Action sendmailmultipleimage]
+Exec=kde-service-menu-nowardev-scanner -smgmail %u $(kdialog --textinputbox $"Insert base-name ex : Base name for documents to attach on your Gmail" NewGmailDocument )  
+Icon=mail-message
+Name=Send Multi Images  through Gmail
+Name[it]=Manda Multi Immagini Via Gmail
 
 
 [Desktop Action changesettings]

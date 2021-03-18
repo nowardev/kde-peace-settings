@@ -52,7 +52,7 @@ MouseArea {
     }
 
     onExited: {
-        mouseInside = false
+        mouseInside = true
     }
 
     // trigger active window action

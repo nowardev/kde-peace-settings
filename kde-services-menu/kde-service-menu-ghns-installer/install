@@ -1,20 +1,76 @@
-#!/bin/bash -x
-##license gpl 
-#This program is free software: you can redistribute it and/or modify
+#!/bin/bash 
+#Copyright (C) 2015 nowardev nowardev@gmail.com
+ 
+#This file is part of kde-peace-settings.
+ 
+#kde-peace-settings is free software: you can redistribute it and/or modify
 #it under the terms of the GNU General Public License as published by
 #the Free Software Foundation, either version 3 of the License, or
-#any later version.
-
+#(at your option) any later version.
+#
 #This program is distributed in the hope that it will be useful,
 #but WITHOUT ANY WARRANTY; without even the implied warranty of
 #MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #GNU General Public License for more details.
-
+#
 #You should have received a copy of the GNU General Public License
-#along with this program.  If not, see <http://www.gnu.org/licenses/>
+#along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
-#NowardevTeam nowardev@gmail.com
 
+
+
+bin="/usr/local/bin/"
+folder_local_bash_scripts="$HOME/bin"
+local_user_outfolder="$(kf5-config --path services | cut -d: -f1)"
+local_system_outfolder="$(kf5-config --path services | cut -d: -f2)"
+
+system_outfolder="$(kf5-config --path services | cut -d: -f3)"
+#remove /local form /usr/local/share/applications
+
+
+local_system_application_folder="$(qtpaths --paths ApplicationsLocation | cut -d: -f3)"
+local_user_application_folder="$( qtpaths --paths ApplicationsLocation | cut -d: -f1)"
+system_application_folder="${local_system_application_folder/\/local/}"
+
+if [[ $(type plasmashell ) ]] ; then refreshcommand="kbuildsycoca5"; elif [[ $(type plasma-desktop) ]]; then refreshcommand="kbuildsycoca4" ; else refreshcommand="" && echo $"no plasma installation detected!!"; fi 
+
+
+prefix="$(kde4-config --prefix)"
+localprefix="$(kde4-config --localprefix)"
+
+
+echo "
+PARAMETERS:
+
+USER BIN folder for script......................$folder_local_bash_scripts
+USER outfolder service menu.....................$local_user_outfolder
+USER application menu entry location............$local_user_application_folder 
+
+
+SYSTEM BIN folder for script....................$bin
+SYSTEM LOCAL out folder service menu............$local_system_outfolder
+SYSTEM outfolder service menu...................$system_outfolder
+ 
+SYSTEM application menu entry...................$system_application_folder
+SYSTEM LOCAL application menu entry.............$local_system_application_folder
+
+"
+
+
+#import extra function from other files if they exit 
+if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
+	echo $"Extra installation file detected loading functions
+. $PWD/extra_bash_function_installation"
+
+. "$PWD/extra_bash_function_installation"  
+fi 
+
+if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
+	echo $"Extra deinstallation file detected loading functions
+. $PWD/extra_bash_function_deinstallation"
+
+. "$PWD/extra_bash_function_deinstallation" 
+fi 
  
 
 
@@ -77,11 +133,11 @@ function_system() {
 
 
 #install the service menu 
-	directory="$PWD/usr/share/kde4/services/ServiceMenus/"
+	directory="$PWD"$system_outfolder""
 	if [[  -d "$directory"  ]] ; then 
-		for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop;  do
-			echo "installing..... sudo -S install -m 644 -D "$file"  ""$prefix"/share/kde4/services/ServiceMenus""
-			echo "$pas" | sudo -S install -m 644 -D "$file"  ""$prefix"/share/kde4/services/ServiceMenus" 
+		for file in "$directory"*.desktop;  do
+			echo "installing..... sudo -S install -m 644 -D "$file"  "$local_system_application_folder""
+			echo "$pas" | sudo -S install -m 644 -D "$file"  "$local_system_application_folder" 
 		done
 	else
 		echo "directory $directory doesn't exit skipping "
@@ -90,23 +146,23 @@ function_system() {
 
 	directory="$PWD/usr/share/applications/kde4/"
 	if [[  -d "$directory"  ]] ; then 
-		if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-			echo "$PWD/usr/share/applications/kde4/  detected "
+# 		if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
+			echo " folder application entry detected $PWD/usr/share/applications/kde4/"
 			
 			for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
-				echo "installing..... sudo -S install -m 755 -D "$file"  ""$prefix"/share/applications/kde4/""
-				echo "$pas" | sudo -S install -m 755 -D "$file"  ""$prefix"/share/applications/kde4/" 
+				echo "installing..... sudo -S install -m 755 -D "$file"  "$local_system_application_folder""
+				echo "$pas" | sudo -S install -m 755 -D "$file"  "$local_system_application_folder" 
 			done 
-				
-		fi 
+# 				
+# 		fi 
 	else
 		echo "directory $directory doesn't exit skipping "
 	fi 
 
-# echo  "running .....kbuildsycoca4  update service menus... wait.."
+# echo  "running .....$refreshcommand  update service menus... wait.."
 echo 
 echo 
- kbuildsycoca4 2>/tmp/servicemenubashinstaller.log  # echo "$pas" | sudo -S -u $SUDO_USER #GET  kbuildsycoca4 running like normal user ..to avoid error message
+ $refreshcommand 2>/tmp/servicemenubashinstaller.log  # echo "$pas" | sudo -S -u $SUDO_USER #GET  $refreshcommand running like normal user ..to avoid error message
 echo
 echo $"END! EVERYTHING DONE!"
 kdialog --passivepopup $"$PWD Service Menu Installed.. bye" 2 2>/dev/null
@@ -132,35 +188,31 @@ if [[ -e "$PWD/extra_bash_function_installation" ]]; then
 fi 
 }
 
+ 
+
 function_local(){
 
 #create a folder to put script and set it to be recognized by the system at every login 
 function_check_folder_and_create_it_if_doesnt_exist "$folder_local_bash_scripts"
+
 # if  [[ ! -d "$folder_local_bash_scripts"  ]] ; then
 # echo "mkdir "$folder_local_bash_scripts""
 # mkdir "$folder_local_bash_scripts"
 # fi
 
 #if the variable is NOT EMPTY then don't do again export 
-if  [[ $PATH != *$folder_local_bash_scripts* ]]; then
-	export "PATH=$PATH:$folder_local_bash_scripts"
+if  [[ $PATH != *"$folder_local_bash_scripts"* ]]; then
+# 	export "PATH=$PATH:$folder_local_bash_scripts"
 	 
 	#execute the command everytiem you login
 	kdialog --title $"INFO"  --yes-label $"Yes, i want Add"  --no-label $"Noo" --cancel-label $"Cancell"  --warningyesnocancel   $" I have detected that in your \$PATH there is not this folder $HOME/bin , so you will not be able to execute this script the program locally , DO YOU WANT ADD $HOME/bin to your path?" 
 	
 	if [[ $? == 0 ]] ; then 
-		echo "export PATH=$PATH" >> "$HOME/.bash_profile" 
-  	#check if bash_profile has bashrc  sourced  within 
-		if  [[ -z $(  grep "source "$HOME/.bashrc"" "$HOME/.bash_profile" )  ]];then
-			echo "source "$HOME/.bashrc"" >> "$HOME/.bash_profile"
-		else
-			echo $"source $HOME/.bashrc already present"
-		fi
-
+		echo "export PATH=$PATH" >> "$HOME/.bashrc" 
 		#load the new stuff into bash shell 
 		source "$HOME/.bash_profile"
 	else
-		kdialog --title $"Service Menu Installer"  --msgbox  $" This Program is installed locally but you will not be able to run it properly: this is your current $PATH , and should be $PATH::$folder_local_bash_scripts"
+		kdialog --title $"Service Menu Installer"  --msgbox  $" This Program is installed locally but you will not be able to run it properly: this is your current $PATH , and should be $PATH:$folder_local_bash_scripts"
   
 	fi 
 	 
@@ -185,26 +237,26 @@ fi
 	fi 
 
 #install the service menu 
-	if [[ -d "$PWD/usr/share/kde4/services/ServiceMenus/" ]]; then 
+	if [[ -d "$PWD"$system_outfolder"ServiceMenus/" ]]; then 
 		for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop ;  do
-			echo "installing.....install -m 644 -D "$file"  "$localprefix"share/kde4/services/ServiceMenus"
-			install -m 644 -D "$file"  ""$localprefix"share/kde4/services/ServiceMenus" 
+			echo "installing.....install -m 644 -D "$file"  "$local_user_outfolder""
+			install -m 644 -D "$file"  "$local_user_outfolder" 
 		done
 	fi 
 #install the menu entry if exist 
 
-  #install menu entry in ~/.kde/share/applnk
+  #install menu entry in ~/.local/share/applications/
 	if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
-		function_check_folder_and_create_it_if_doesnt_exist ""$localprefix"share/applnk"
+		function_check_folder_and_create_it_if_doesnt_exist "$local_user_application_folder"
 		
 	
 		for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
- 			echo "installing.....install -m 755 -D $file "$localprefix"share/applnk" 
-			install -m 755 -D "$file"  ""$localprefix"share/applnk"
+ 			echo "installing.....install -m 755 -D $file "$local_user_application_folder"" 
+			install -m 755 -D "$file"  "$local_user_application_folder"
 		done
 	fi 
 
-	kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
+	$refreshcommand 2>/tmp/servicemenubashinstaller.log
 
 	kdialog --passivepopup $"$PWD Service Menu Installed.. bye" 2 2>/dev/null
 	kdialog --msgbox $"if you can't launch the program Please login and logout , this should load the new bash_profile" 2>/dev/null
@@ -250,16 +302,16 @@ messageremoved=""
 
 #remove the service menu 
   
-   for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop ;  do
+   for file in "$PWD"$local_user_outfolder"ServiceMenus/"*.desktop ;  do
  file="${file##*/}" 
 #  file="${file%%.*}"
- 	if [[ -e ""$localprefix"/share/kde4/services/ServiceMenus/"$file""  ]]; then 
-		echo "rm  "$localprefix/share/kde4/services/ServiceMenus/$file""
-		rm  "$localprefix/share/kde4/services/ServiceMenus/$file" 
-		messageremoved="$messageremoved  "$localprefix"share/kde4/services/ServiceMenus/$file"
-	else 
-		echo $" ""$localprefix"share/kde4/services/ServiceMenus/$file"  file does not exit... skipping"
-	fi
+#  	if [[ -e ""$localprefix"/share/kde4/services/ServiceMenus/"$file""  ]]; then 
+		echo "rm  "$local_user_outfolder"ServiceMenus/$file"
+		rm  ""$local_user_outfolder"ServiceMenus/$file" 
+		messageremoved="$messageremoved  "$local_user_outfolder"ServiceMenus/$file"
+# 	else 
+# 		echo $" ""$localprefix"share/kde4/services/ServiceMenus/$file"  file does not exit... skipping"
+# 	fi
  
   done
   
@@ -270,14 +322,14 @@ messageremoved=""
 	if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then 
 		for file in $PWD/usr/share/applications/kde4/*.desktop ; do
 			file="${file##*/}"
- 			echo "removing ... "$localprefix"share/applnk/$file " 
-			rm  ""$localprefix"share/applnk/$file"
-			messageremoved="$messageremoved  "$localprefix"share/applnk/$file "
+ 			echo "removing ... $local_user_application_folder/$file" 
+			rm  "$local_user_application_folder/$file"
+			messageremoved="$messageremoved  "$local_user_application_folder"/$file "
 		done
 	fi 
 
 ####################################################################
-kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
+$refreshcommand 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2 2>/dev/null
 
 if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
@@ -331,16 +383,16 @@ done
 
 #remove the service menu 
 
-for file in $PWD/usr/share/kde4/services/ServiceMenus/*.desktop;  do
+for file in "$PWD"$local_user_outfolder"ServiceMenus/"*.desktop ;  do
 file="${file##*/}" 
 # file="${file%%.*}"
  
-	if [[ -e ""$prefix"/share/kde4/services/ServiceMenus/"$file""  ]]; then 
+	if [[ -e ""$local_user_outfolder"ServiceMenus/"$file""  ]]; then 
 	echo "rm   $prefix/share/kde4/services/ServiceMenus/$file"
-	echo "$pas" | sudo -S rm  ""$prefix"/share/kde4/services/ServiceMenus/"$file"" 
-	messageremoved="$messageremoved  $prefix/share/kde4/services/ServiceMenus/$file"
+	echo "$pas" | sudo -S rm  ""$local_user_outfolder"ServiceMenus/"$file"" 
+	messageremoved="$messageremoved ""$local_user_outfolder"ServiceMenus/$file""
 	else 
-	echo $""$prefix"/share/kde4/services/ServiceMenus/"$file" file doesn't exit"
+	echo $""$local_user_outfolder"ServiceMenus/"$file" file doesn't exit"
 	fi
 done
 
@@ -349,16 +401,16 @@ if [[ -d "$PWD/usr/share/applications/kde4/" ]]; then
 	echo $"Folder Menu entry detected"
 	for file in $PWD/usr/share/applications/kde4/*.desktop ; do 
 		file="${file##*/}"
-		if [[ -e "$prefix/share/applications/kde4/$file"  ]]; then 
-			echo "rm  "$prefix/share/applications/kde4/$file""
-			echo "$pas" | sudo -S rm  ""$prefix"/share/applications/kde4/$file"
-			messageremoved="$messageremoved  "$prefix"share/applications/kde4/$file"
+		if [[ -e ""$local_system_application_folder"/$file"  ]]; then 
+			echo "rm   "$local_system_application_folder"/$file"
+			echo "$pas" | sudo -S rm  ""$local_system_application_folder"/$file"
+			messageremoved="$messageremoved "$local_system_application_folder"/$file"
 		fi 
 	done
 			
 fi 
 			
-kbuildsycoca4 2>/tmp/servicemenubashinstaller.log
+$refreshcommand 2>/tmp/servicemenubashinstaller.log
 kdialog --passivepopup $"Removed these files  $messageremoved" 2>/dev/null
   
 if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
@@ -413,36 +465,8 @@ esac
 }
 
 
-bin="/usr/local/bin/"
-folder_local_bash_scripts="$HOME/bin"
-prefix="$(kde4-config --prefix)"
-localprefix="$(kde4-config --localprefix)"
-
-#import extra function from other files if they exit 
-if [[ -e "$PWD/extra_bash_function_installation" ]]; then 
-	echo $"Extra installation file detected loading functions
-. $PWD/extra_bash_function_installation"
-
-. "$PWD/extra_bash_function_installation"  
-fi 
-
-if [[ -e "$PWD/extra_bash_function_deinstallation" ]]; then 
-	echo $"Extra deinstallation file detected loading functions
-. $PWD/extra_bash_function_deinstallation"
-
-. "$PWD/extra_bash_function_deinstallation" 
-fi 
 
 
 
 
-echo "
-PARAMETERS:
-
-system folder for script $bin
-local folder for script $folder_local_bash_scripts
-prefix: $prefix
-local prefix: $localprefix
-
-"
 function_main

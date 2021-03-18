@@ -49,7 +49,7 @@ Name[it]=Rilascia script
 [Desktop Entry]
 Actions=enqueque;editlist;delete;deleteall;_SEPARATOR_;generate;kdenlive;unlock;info
 Icon=kdenlive
-ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,video/.*
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,video/*
 Type=Service
 X-KDE-Priority=TopLevel
 X-KDE-Submenu=Create a VIDEO presentation

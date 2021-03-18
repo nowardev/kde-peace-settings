@@ -91,6 +91,25 @@ Item {
     //
     // MODEL
     //
+    
+//   PlasmaCore.DataSource {
+//         id: tasksSource
+//         engine: 'tasks'
+//         onSourceAdded: {
+//             connectSource(source);
+//         }
+//         connectedSources: 'tasks'
+//     }
+//     // should return always one item
+//     PlasmaCore.SortFilterModel {
+//         id: activeWindowModel
+//         filterRole: 'Active'
+//         filterRegExp: 'true'
+//         sourceModel: tasksSource.models.tasks
+//         onCountChanged: {
+//             noWindowVisible = count === 0
+//         }
+//     }
     TaskManager.TasksModel {
         id: tasksModel
         sortMode: TaskManager.TasksModel.SortVirtualDesktop
@@ -100,16 +119,17 @@ Item {
             if (!activeWindowModelInitialized) {
                 activeWindowModel.sourceModel = tasksModel
                 activeWindowModelInitialized = true
+                
             }
             updateActiveWindowInfo()
         }
     }
-    // should return always one item
+//     should return always one item
     PlasmaCore.SortFilterModel {
         id: activeWindowModel
         filterRole: 'IsActive'
         filterRegExp: 'true'
-        //sourceModel: tasksModel
+//         sourceModel: tasksModel
         onDataChanged: {
             updateActiveWindowInfo()
             updateTooltip()
@@ -140,7 +160,7 @@ Item {
     }
 
     function ensureUpdatedTasksModel() {
-        //activeWindowModel.sourceModel = tasksModel;
+//         activeWindowModel.sourceModel = tasksModel;
     }
 
     function toggleMaximized() {
@@ -182,7 +202,7 @@ Item {
         property double noWindowTextMargin: (parent.height - implicitHeight) / 2
         anchors.verticalCenter: parent.verticalCenter
         anchors.leftMargin: noWindowTextMargin
-        anchors.left: parent.left
+//         anchors.left: parent.right
         text: i18n('Plasma Desktop')
         font.pixelSize: fontPixelSize
         font.pointSize: -1
