@@ -659,7 +659,7 @@ cd /home/shared/git ; git clone git://source..org/.git -$(date +"%m-%d-%y");cd  
 echo hello sem_extract_m4a
 }
 configure_sem(){
- make clean ; ./configure --prefix=/usr/local   $(./configure --help|sort -r | awk  '/enable/{ print $1} END{printf "\n"}' | awk  '!/[A-Z]/ && !/avisynth/ && !/shared/ && !/poison/ && !/incompa/ && !/random/ && !/test/ && !/cross-compile/ && !/memalign-hack/ &&!/deck/ && !/libiec/ && !/libaacplus/ && !/libcelt/ && !/libflite/ && !/libilbc/ && !/libnut/ && !/opencv/ && !/shine/ && !/libstagefright/ && !/utvideo/ && !/vidstab/ && !/x265/ && !/libxavs/ && !/opencl/ && !/-rpath/ && !/ftrapv/ && !/hardcoded/ && !/major/ && !/libfdk-aac/ && !/opengl/ && !/enable-pic/ && !/enable-lto/ && !/small/ && !/gray/{print }'|awk -v ORS=" " '{print $1} END {printf "\n"}')
+ make clean ; ./configure --prefix=/usr/local   $(./configure --help|sort -r | awk  '/enable/{ print $1} END{printf "\n"}' | awk  '!/[A-Z]/ && !/avisynth/ && !/shared/ && !/poison/ && !/incompa/ && !/random/ && !/test/ && !/cross-compile/ && !/memalign-hack/ &&!/deck/ && !/libiec/ && !/libaacplus/ && !/libcelt/ && !/libflite/ && !/libilbc/ && !/libnut/ && !/opencv/ && !/shine/ && !/libstagefright/ && !/utvideo/ && !/vidstab/ && !/x265/ && !/libxavs/ && !/opencl/ && !/-rpath/ && !/ftrapv/ && !/hardcoded/ && !/major/ && !/libfdk-aac/ && !/opengl/ && !/enable-pic/ && !/enable-lto/ && !/small/ && !/gray/ &&!/will/ &&! /libraries/ &&!/explicitly/ &&!/gnutls/ &&!/nvcc/ &&!/mbedtls/ &&!/jni/ &&!/libdav1d/{print }'|awk -v ORS=" " '{print $1} END {printf "\n"}' --enable-cross-compile)
 }
 
 
@@ -863,7 +863,11 @@ grep -r "$2" "$1"
 }
 
 sshrasp(){
-ssh pi@192.168.0.3 
+ssh pi@192.168.178.9 
+}
+
+sshxrasp(){
+ssh -X pi@192.168.178.9 
 }
 
 screencastVlc(){
@@ -1939,3 +1943,25 @@ fi
 
 }
 
+gamma_sem(){
+if [ ! "$1" ]; then
+    echo "missing value for gamma usage : gamma_sem 2 # or gamma_sem 1"
+    return
+fi
+xrandr --output HDMI-0 --gamma $1:$1:$1
+
+
+}
+
+#source other bashrcgit for game
+a="/home/shared/git/github/kde-peace-settings/bashrc/.bashrcgame"  
+if [[  -e "$a"  ]] ; then
+. "$a"
+fi 
+
+#ls with permission 
+
+ls-permission(){
+  ls -l | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/) \
+             *2^(8-i));if(k)printf("%0o ",k);print}'
+}
