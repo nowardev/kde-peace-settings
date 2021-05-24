@@ -1,0 +1,77 @@
+alias ugf="sudo apt-get update ; sudo apt-get upgrade -y "
+alias udgf="sudo apt-get update ; sudo apt-get dist-upgrade -y"
+alias u="sudo apt-get update"
+alias g="sudo apt-get upgrade"
+alias uf="echo sudo apt-get upgrade -y  && sudo apt-get upgrade -y"
+alias gf="sudo apt-get dist-upgrade -y"
+alias i="sudo apt-get install -y "
+alias ai="apt-cache show"
+alias lfd="sudo apt-file update  && apt-file list "
+alias li="dpkg --get-selections | grep -v deinstall"
+alias ad="apt-cache depends"
+alias r="sudo apt-get remove --auto-remove"
+alias p="sudo apt-get --purge --auto-remove remove "
+alias s="apt-cache search "
+alias a="sudo apt-get autoremove"
+alias save-apt-list="dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst ; echo saved on $HOME/apt-list.lst"
+alias install-apt-list="sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade"
+alias remove-apt-lock="sudo  rm /var/lib/apt/lists/lock  ; sudo rm /var/lib/dpkg/lock "
+alias wdc="apt-file find "
+alias h="echo \"
+u			#update repository list			sudo apt-get update
+g			#upgrade				sudo apt-get upgrade
+uf			#force upgrade				sudo apt-get upgrade -y
+gf			#force dist-upgrade			sudo apt-get dist-upgrade -y
+d			#dependences				apt-cache depends with awk 
+i			#install packages			sudo apt-get install -y 
+ai			#information about the package		apt-cache show
+li			#list packages installed		dpkg --get-selections | grep -v deinstall
+lfd                     #list file in a debian package          apt-file list package_name
+wdc                     #which debian contains this file        apt-file find /my/file
+r			#remove a package			sudo apt-get --auto-remove remove 
+p			#remove a packate & conf file		sudo apt-get --purge --auto-remove remove
+s			#search for a software			apt-cache search 
+sn 			#search with only names 		apt-cache search --names-only
+a			#autoremove a software			sudo apt-get autoremove
+
+special ones :
+
+ugf			#update and upgrade			sudo apt-get update ; sudo apt-get upgrade -y 
+udgf			#uodate and dist-upgrade		sudo apt-get update ; sudo apt-get dist-upgrade -y 
+ad			#dependences required by a package	apt-cache depends
+alf			#files installed by a package 		apt-file list 
+b			#block update for a package		apt-mark hold package_name
+ub			#block update for a package		apt-mark unhold package_name
+
+
+save-apt-list		#save list of packages installed	dpkg --get-selections | grep -v deinstall >$HOME/apt-list.lst
+install-apt-list	#install a list of packages in		sudo dpkg --set-selections < $HOME/apt-list.lst ; sudo apt-get -u dselect-upgrade
+
+remove-apt-lock 	#remove locks  when user kill apt :D	sudo  rm /var/lib/apt/lists/lock  ; sudo rm /var/lib/dpkg/lock
+
+
+ peacefun()
+{
+	cur=`_get_cword`
+	COMPREPLY=( $( apt-cache pkgnames $cur 2> /dev/null ) )
+	return 0
+	
+} 
+
+complete -F peacefun  ai
+complete -F peacefun  lfd
+complete -F peacefun  i 
+complete -F peacefun  s 
+complete -F peacefun  sn 
+complete -F peacefun  p 
+complete -F peacefun  r
+complete -F peacefun  ad 
+complete -F peacefun  d 
+complete -F peacefun  alf 
+complete -F peacefun  b 
+complete -F peacefun  ub 
+
+
+search_bashhistory(){
+grep -i "$1" ~/.bash_history
+}
