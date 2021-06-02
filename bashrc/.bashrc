@@ -1219,7 +1219,7 @@ kde-open5 /home/shared/git/github/kde-peace-settings/bashrc/.bashrc
 }
 
 copybashrc_to_homegit(){
-wget https://raw.githubusercontent.com/nowardev/kde-peace-settings/master/bashrc/.bashrc -P "$HOME"
+wget https://raw.githubusercontent.com/nowardev/kde-peace-settings/master/bashrc/.bashrc -O -P "$HOME"
 source ~/.bashrc
 echo "copied and sourced"
 #cp .bashrc ~
