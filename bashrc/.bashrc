@@ -870,6 +870,10 @@ sshxrasp(){
 ssh -X pi@192.168.178.9 
 }
 
+sshxraspzero(){
+ssh -X pi@192.168.178.40
+}
+
 screencastVlc(){
 
 i=0
@@ -1214,11 +1218,21 @@ openbashrcgit(){
 kde-open5 /home/shared/git/github/kde-peace-settings/bashrc/.bashrc
 }
 
+copybashrc_to_homegit(){
+wget https://raw.githubusercontent.com/nowardev/kde-peace-settings/master/bashrc/.bashrc -P "$HOME"
+source ~/.bashrc
+echo "copied and sourced"
+#cp .bashrc ~
+}
+
 copybashrc_to_home(){
 cp /home/shared/git/github/kde-peace-settings/bashrc/.bashrc ~/.bashrc
 source ~/.bashrc
 echo "copied and sourced"
 }
+
+
+
 
 dolphingit(){
 dolphin /home/shared/git/github/kde-peace-settings/bashrc/
@@ -1964,4 +1978,84 @@ fi
 ls-permission(){
   ls -l | awk '{k=0;for(i=0;i<=8;i++)k+=((substr($1,i+2,1)~/[rwx]/) \
              *2^(8-i));if(k)printf("%0o ",k);print}'
+}
+
+
+ls-all(){
+ls -a
+}
+weather2(){
+a="https://www.accuweather.com/en/it/peschiera-del-garda/216553/weather-forecast/216553"
+wget -q -O- "$a" | awk -F\' '/acm_RecentLocationsCarousel\.push/{print $2": "$16", "$12"°" }'| head -1
+
+}
+
+copy_partition_dd(){
+
+echo "Printing Partition Table...need sudo"
+
+sudo lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,UUID,OWNER,GROUP,LABEL,MODEL,MAJ:MIN,TYPE,ROTA,STATE
+
+echo "enter SOURCE PARTITION"
+read -e
+echo "$REPLY"
+SOURCE="$REPLY"
+
+echo "enter the TARGET PARTITION"
+read -e
+TARGET="$REPLY"
+
+echo $"do you want execute \"sudo dd if=\"$SOURCE\" of=\"$TARGET\" bs=4096 conv=notrunc,noerror\" (y\n) ?"
+		read
+		echo "$REPLY"
+		case "$REPLY" in
+			[yY]|[yY][eE][sS])
+				sudo dd if="$SOURCE" of="$TARGET" bs=4096 conv=notrunc,noerror
+				echo $"you need to sync"
+				sudo sync
+			;;
+
+			[nN]|[nN][oO])
+				echo $"user exit"
+				return
+			;;
+		esac
+}
+
+copyimgtopartition(){
+
+echo "Printing Partition Table...need sudo"
+
+sudo lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,UUID,OWNER,GROUP,LABEL,MODEL,MAJ:MIN,TYPE,ROTA,STATE
+
+echo "Select img file "
+read -e 
+echo "$REPLY"
+SOURCE="$REPLY"
+
+echo "enter the TARGET PARTITION"
+read -e
+TARGET="$REPLY"
+
+if [[ -z $SOURCE || -z $TARGET ]]; then 
+echo "exit... no source or no target selected"
+exit 
+fi 
+
+echo $"do you want execute \"sudo dd if=\"$SOURCE\" of=\"$TARGET\" bs=4096 conv=notrunc,noerror\" (y\n) ?"
+		read
+		echo "$REPLY"
+		case "$REPLY" in
+			[yY]|[yY][eE][sS])
+				sudo dd if="$SOURCE" of="$TARGET" bs=4096 conv=notrunc,noerror
+				echo $"you need to sync"
+				sudo sync
+			;;
+
+			[nN]|[nN][oO])
+				echo $"user exit"
+				return
+			;;
+        esac
+			
 }
