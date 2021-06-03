@@ -2063,3 +2063,7 @@ echo $"do you want execute \"sudo dd if=\"$SOURCE\" of=\"$TARGET\" bs=4096 conv=
         esac
 			
 }
+
+partition_table(){
+lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT,UUID,OWNER,GROUP,LABEL,MODEL,MAJ:MIN,TYPE,ROTA,STATE
+}
