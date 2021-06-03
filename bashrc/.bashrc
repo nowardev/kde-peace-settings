@@ -869,6 +869,9 @@ ssh pi@192.168.178.9
 sshxrasp(){
 ssh -X pi@192.168.178.9 
 }
+sshxraspwifi(){
+ssh -X pi@192.168.178.23
+}
 
 sshxraspzero(){
 ssh -X pi@192.168.178.40
