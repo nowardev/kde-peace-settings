@@ -5,7 +5,7 @@ Name=Backup your packages
 Name[it]=Salva i tuoi pacchetti.
 
 [Desktop Action syncronize]
-Exec=rsync -av $(kdialog --title "Resyncronize Select a IPUT FOLDER" --getexistingdirectory  "%u" && kdialog --title "Resyncronize Select a OUTPUT FOLDER" --getexistingdirectory  %u) &&  kdialog  --passivepopup "Syncronization made"
+Exec=rsync -av $(kdialog --title "Resyncronize Select a IPUT FOLDER" --getexistingdirectory  "%u" && kdialog --title "Resyncronize Select a OUTPUT FOLDER" --getexistingdirectory  "%u") &&  kdialog  --passivepopup "Syncronization made"
 Icon=svn-update
 Name=Resyncronize me!
 Name[it]=Rinsincronizzami!
