@@ -1,0 +1,13 @@
+
+function_extra_deinstall_global(){
+	echo my global commands when i deinstall 
+}
+
+
+function_extra_deinstall_system(){
+	echo my  when i deinstall system
+}
+
+function_extra_deinstall_local(){
+	echo my  when i deinstall  local
+}

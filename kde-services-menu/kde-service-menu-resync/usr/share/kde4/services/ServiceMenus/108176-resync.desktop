@@ -1,0 +1,20 @@
+[Desktop Action aptbackup]
+Exec=rsync -av  $(kdialog --title "Resyncronize Select a IPUT FOLDER" --getexistingdirectory  /var/cache/apt/archives/  && kdialog --title "Resyncronize Select a OUTPUT FOLDER" --getexistingdirectory  /media )  && echo %u >/dev/null && kdialog  --passivepopup "Syncronization made"
+Icon=application-x-deb
+Name=Backup your packages
+Name[it]=Salva i tuoi pacchetti.
+
+[Desktop Action syncronize]
+Exec=rsync -av $(kdialog --title "Resyncronize Select a IPUT FOLDER" --getexistingdirectory  "%u" && kdialog --title "Resyncronize Select a OUTPUT FOLDER" --getexistingdirectory  %u) &&  kdialog  --passivepopup "Syncronization made"
+Icon=svn-update
+Name=Resyncronize me!
+Name[it]=Rinsincronizzami!
+
+[Desktop Entry]
+Actions=syncronize;aptbackup
+Icon=repository
+ServiceTypes=KonqPopupMenu/Plugin,inode/directory,inode/directory-locked,all/all
+Type=Service
+X-KDE-Priority=TopLevel
+X-KDE-Submenu=syncronize
+X-KDE-Submenu[it]=sincronizza
