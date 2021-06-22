@@ -1,0 +1,63 @@
+<snippets license="LGPL v3+" name="python Nowardev" authors="samuele bordignon" namespace="" filetypes="*">
+ <script>function fileName() { return document.fileName(); }
+function fileUrl() { return document.url(); }
+function encoding() { return document.encoding(); }
+function selection() { return view.selectedText(); }
+function year() { return new Date().getFullYear(); }
+function upper(x) { return x.toUpperCase(); }
+function lower(x) { return x.toLowerCase(); }
+</script>
+ <item>
+  <match>print</match>
+  <fillin>variable="${cursor} hello World"
+print("title: ",variable)</fillin>
+ </item>
+ <item>
+  <match>split1</match>
+  <fillin>paramstr=str(param)
+rainmm= paramstr.split()</fillin>
+ </item>
+ <item>
+  <match>defurl</match>
+  <fillin>class Weather:
+    def __init__(self):
+        self.url = "http://api.weatherapi.com"
+        self.token = "mytoken ${cursor}"</fillin>
+ </item>
+ <item>
+  <match>new_variable</match>
+  <fillin>variable_1${cursor}=</fillin>
+ </item>
+ <item>
+  <match>re.match</match>
+  <fillin>#import re #add this!
+#will match the pattern after ?&lt;=...
+m = re.search('(?&lt;=abc)def', 'abcdef')
+m.group(0) #will give you: def
+ </fillin>
+ </item>
+ <item>
+  <match>if_elif_else</match>
+  <fillin>if conditiontrue:
+    #print("condition true")
+elif conditiontruetwo:  
+    #print("condition 2 true")
+else:
+     #print("conditions false")
+</fillin>
+ </item>
+ <item>
+  <match>exec_konsole</match>
+  <fillin>import os 
+command = "konsole${cursor}"
+os.system(command) </fillin>
+ </item>
+ <item>
+  <match>import_os</match>
+  <fillin>import os</fillin>
+ </item>
+ <item>
+  <match>import_subprocess</match>
+  <fillin>import subprocess</fillin>
+ </item>
+</snippets>
