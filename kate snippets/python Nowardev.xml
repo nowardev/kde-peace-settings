@@ -60,4 +60,63 @@ os.system(command) </fillin>
   <match>import_subprocess</match>
   <fillin>import subprocess</fillin>
  </item>
+ <item>
+  <match>execute_sub_command</match>
+  <fillin>import subprocess
+command = "ls${cursor}"
+subprocess.Popen(command) </fillin>
+ </item>
+ <item>
+  <match>check_if_exist_file</match>
+  <fillin>try:
+    f= open("/home/pi/.config/testfile.txt${Cursor}","w+")
+except FileNotFoundError: 
+        print ('Sorry this file does not exist!')
+except Exception:
+    print('Sorry. Something went wrong!')</fillin>
+ </item>
+ <item>
+  <match>check_if_file_exist2</match>
+  <fillin>try:
+    f= open("/home/pi/.config/testfile.txt${Cursor}","w+")
+except FileNotFoundError as e: 
+        print (e)
+except Exception as e:
+    print(e)</fillin>
+ </item>
+ <item>
+  <match>print</match>
+  <fillin>variable="mystuff"
+print (variable)</fillin>
+ </item>
+ <item>
+  <match>file_read</match>
+  <fillin>f.read()
+${cursor}</fillin>
+ </item>
+ <item>
+  <match>file_open</match>
+  <fillin>f=open("${cursor})")</fillin>
+ </item>
+ <item>
+  <match>file_open_w</match>
+  <fillin>f= open("/home/pi/.config/testfile.txt${cursor})","w+") </fillin>
+ </item>
+ <item>
+  <match>try</match>
+  <fillin>try:
+    f= open("/tmp/hello.txt")
+    #if f.name == "/tmp/hello.txt"
+    #   raise Exception
+except FileNotFoundError as e: 
+        print (e)
+except Exception as e:
+    print(e)
+else: #if it's ok then execute 
+    print(f.read())
+    f.close()
+finally: #execute always 
+    variable="Exectute always"
+    print("title: ",variable))</fillin>
+ </item>
 </snippets>
