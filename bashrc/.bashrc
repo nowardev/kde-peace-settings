@@ -870,11 +870,11 @@ sshxrasp(){
 ssh -X pi@192.168.178.9 
 }
 sshxraspwifi(){
-ssh -X pi@192.168.178.23
+ssh -X pi@192.168.178.28
 }
 
 sshxraspzero(){
-ssh -X pi@192.168.178.40
+ssh -X pi@192.168.178.24
 }
 
 screencastVlc(){
